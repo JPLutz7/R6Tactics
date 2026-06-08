@@ -7,7 +7,7 @@ alt-tab to between ranked rounds.
 It is a **single self-contained `index.html`** — all CSS/JS inlined, no build
 step, no dependencies. Open the file (or the GitHub Pages URL) and it just runs.
 
-> **Live URL:** `https://jplutz7.github.io/r6tactics/`  ← _(set this after you enable Pages — see below)_
+> **Live URL:** **https://jplutz7.github.io/R6Tactics/** &nbsp;_(live — note the capital **R**/**T**; the path is case-sensitive)_
 
 ---
 
@@ -61,8 +61,8 @@ design. (GitHub Pages here is *only* static file hosting.)
 3. Under **Build and deployment → Source**, choose **Deploy from a branch**.
 4. Set **Branch** to `main` and folder to **`/ (root)`**, then **Save**.
 5. Wait ~1 minute. Your site goes live at
-   `https://jplutz7.github.io/r6tactics/`. Paste that into the **Live URL** line
-   above and share it with the stack.
+   `https://jplutz7.github.io/R6Tactics/` — **case-sensitive**, so match the repo
+   name's capital **R**/**T**. Share that link with the stack.
 
 No pipeline, no Actions, no build — Pages just serves the static file.
 
