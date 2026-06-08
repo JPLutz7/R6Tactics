@@ -25,14 +25,16 @@ no dependencies, no external calls. Open the file (or the Pages URL) and it runs
 - Inside a map you see **one floor at a time**, with **floor tabs above** the image
   — click `Basement / 1F / 2F / …` to switch floors (or `[` / `]` to flip maps,
   `Esc` to go back to the gallery).
-- The floor area is a **plain placeholder** until you add a real top-down image;
-  **callouts** are labelled on top, with **bomb-site objectives** highlighted (amber
-  ◆) and listed in a strip below.
-- **Layer toggles:** show/hide **Room names** and **Bomb sites**.
+- Each floor is a real top-down plan you can **drag to pan** and **scroll / +−** to
+  **zoom** (use ⟲ to reset). Labels and the on-map toggles stay put while you move.
+- **On-map toggles** (top-left): **Room names**, **Bomb sites**, and **Spawn peeks**.
+  Spawn-peek markers (red) come from [peekaboor6.com](https://peekaboor6.com) for the
+  maps it covers — names + approximate spots you can fine-tune.
 - **✎ Edit** mode lets you:
   - **⬆ upload a cover image** per map (gallery) and a **top-down image** per floor,
-  - rename the map, add/remove floors, add/rename/delete callouts,
-  - **drag callout pins** to position them (or type x/y 0–100).
+  - rename the map, add/remove floors,
+  - add **＋ room** or **＋ spawn peek** labels and **drag the pins** to position them
+    (or type x/y) — dragging works at any zoom.
 
 > **Cover art** is Ubisoft's official map images (from ubisoft.com) in `assets/covers/`.
 > **Top-down floor plans** are current layouts captured from
