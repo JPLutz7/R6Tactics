@@ -17,6 +17,9 @@ no dependencies, no external calls. Open the file (or the Pages URL) and it runs
 ### 🗺 Maps  (callouts reference, r6calls-style)
 - A **table of contents**: a gallery of **map cover tiles** for **every Siege map**
   (all 25, including **Calypso Casino**). Click a tile to open that map.
+- Tiles are split into a **★ Ranked Pool** section and **Other Maps**. Click the
+  **☆ / ★** on any tile (or the toggle inside a map) to move it in or out as the
+  pool rotates each season.
 - Inside a map you see **one floor at a time**, with **floor tabs above** the image
   — click `Basement / 1F / 2F / …` to switch floors (or `[` / `]` to flip maps,
   `Esc` to go back to the gallery).
