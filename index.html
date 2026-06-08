@@ -164,16 +164,39 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 
 .plan{position:relative;width:100%;aspect-ratio:16/10;background-color:#eef2f6;overflow:hidden}
 .plan.placeholder{background-image:repeating-linear-gradient(45deg,#e8edf2 0 14px,#eef2f6 14px 28px)}
-.plan.has-img{background-image:none;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#dde4ec}
 .plan .ph{position:absolute;inset:0;display:grid;place-items:center;color:#8694a3;font-size:13px;font-weight:600;letter-spacing:.3px;pointer-events:none;text-align:center;padding:20px}
-.callout{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:5px;cursor:default;z-index:2}
-.callout .lb{font-size:11.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.92);border:1px solid var(--line2);
-  padding:2px 7px;border-radius:6px;white-space:nowrap;box-shadow:0 1px 3px rgba(20,30,45,.12)}
-.callout.dotonly .lb{display:none}
-.callout .dt{width:7px;height:7px;border-radius:50%;background:var(--muted2);box-shadow:0 0 0 2px #ffffffcc}
-.callout.obj .lb{background:var(--obj-bg);border-color:var(--obj-line);color:#7a6200;font-weight:700}
-.callout.obj .dt{width:9px;height:9px;background:var(--obj);box-shadow:0 0 0 2px #ffffffcc,0 0 6px rgba(202,160,7,.5);border-radius:2px;transform:rotate(45deg)}
-.callout.edit{cursor:grab} .callout.edit:active{cursor:grabbing}
+
+/* ---------- pan/zoom floor viewer ---------- */
+.viewport{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;background:#0b0e13;cursor:grab;touch-action:none;user-select:none}
+.viewport.grabbing{cursor:grabbing}
+.stage{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.stage .floorimg{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+/* markers: a 0-size anchor point; inner body is counter-scaled so labels stay put & constant-size */
+.mk{position:absolute;width:0;height:0;z-index:2}
+.mk .mkb{position:absolute;left:0;top:0;transform:translate(-50%,-50%) scale(var(--inv,1));transform-origin:center;display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:none}
+.mk .mdot{width:9px;height:9px;border-radius:50%;background:var(--muted2);box-shadow:0 0 0 2px #ffffffcc;flex:none}
+.mk .mlb{font-size:11.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.93);border:1px solid var(--line2);padding:2px 7px;border-radius:6px;box-shadow:0 1px 3px rgba(20,30,45,.2)}
+.mk.obj .mlb{background:var(--obj-bg);border-color:var(--obj-line);color:#7a6200;font-weight:700}
+.mk.obj .mdot{background:var(--obj);box-shadow:0 0 0 2px #ffffffcc,0 0 6px rgba(202,160,7,.5);border-radius:2px;width:11px;height:11px;transform:rotate(45deg)}
+.mk.peek .mlb{background:#3a1014;border-color:#c2434f;color:#ffd9de;font-weight:700}
+.mk.peek .mdot{background:#ff4d5e;box-shadow:0 0 0 2px #ffffffcc,0 0 7px rgba(255,77,94,.7);width:11px;height:11px}
+.viewport.show-edit .mk .mkb{pointer-events:auto;cursor:grab}
+.viewport.show-edit .mk .mkb:active{cursor:grabbing}
+.viewport:not(.show-names) .mk.room{display:none}
+.viewport:not(.show-sites) .mk.obj{display:none}
+.viewport:not(.show-peeks) .mk.peek{display:none}
+/* fixed overlay controls (don't move when panning/zooming) */
+.vp-ctrl{position:absolute;top:10px;left:10px;z-index:6;display:flex;gap:6px;flex-wrap:wrap}
+.vt{background:rgba(15,21,30,.86);border:1px solid var(--line2);color:var(--muted);font-size:12px;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;backdrop-filter:blur(4px)}
+.vt .vbox{width:13px;height:13px;border-radius:4px;border:1px solid var(--line2);display:grid;place-items:center;font-size:10px;color:transparent;flex:none}
+.vt.on{color:var(--text);border-color:#3a4a5c}
+.vt.on .vbox{background:var(--def);border-color:var(--def);color:#fff}
+.vt.sites.on .vbox{background:var(--obj);border-color:var(--obj)}
+.vt.peek.on .vbox{background:#ff4d5e;border-color:#ff4d5e}
+.vp-zoom{position:absolute;right:10px;bottom:10px;z-index:6;display:flex;flex-direction:column;gap:5px}
+.vp-zoom button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);background:rgba(15,21,30,.86);color:var(--text);font-size:18px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);line-height:1}
+.vp-zoom button:hover{background:rgba(30,40,54,.95)}
+.vp-hint{position:absolute;left:10px;bottom:10px;z-index:6;font-size:11px;color:#8aa0b6;background:rgba(15,21,30,.66);padding:3px 8px;border-radius:6px;pointer-events:none}
 
 /* callout editor */
 .coeditor{padding:12px 14px;border-top:1px solid var(--line);background:var(--panel2)}
@@ -246,7 +269,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
   <main class="main">
     <div id="bannerSlot"></div>
     <div id="view" class="view"></div>
-    <div class="foot">100% client-side · manual data only · <b>no game / Ubisoft / tracker integration</b> — ToS-safe by design.<br>Map covers © Ubisoft · floor plans from <a href="https://r6calls.com" target="_blank" rel="noopener">r6calls.com</a> (map data © Ubisoft).</div>
+    <div class="foot">100% client-side · manual data only · <b>no game / Ubisoft / tracker integration</b> — ToS-safe by design.<br>Map covers © Ubisoft · floor plans from <a href="https://r6calls.com" target="_blank" rel="noopener">r6calls.com</a> · spawn peeks from <a href="https://peekaboor6.com" target="_blank" rel="noopener">peekabooR6</a> (map data © Ubisoft).</div>
   </main>
 </div>
 
@@ -266,7 +289,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 7,
+  "version": 8,
   "publishedAt": "2026-06-08",
   "maps": [
     {
@@ -278,17 +301,86 @@ const SEED_DATA =
         {
           "name": "Basement",
           "layoutImage": "assets/floors/clubhouse/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Dirt wall",
+              "x": 45.1,
+              "y": 24.4,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/clubhouse/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Kitchen hallway",
+              "x": 54.9,
+              "y": 32.2,
+              "type": "peek"
+            },
+            {
+              "name": "Stock door",
+              "x": 68,
+              "y": 38.8,
+              "type": "peek"
+            },
+            {
+              "name": "Storage window",
+              "x": 71.9,
+              "y": 44.7,
+              "type": "peek"
+            },
+            {
+              "name": "Garage wall",
+              "x": 57.9,
+              "y": 73.6,
+              "type": "peek"
+            },
+            {
+              "name": "Boiler door",
+              "x": 20.9,
+              "y": 70.3,
+              "type": "peek"
+            },
+            {
+              "name": "Lounge door",
+              "x": 21.5,
+              "y": 47.1,
+              "type": "peek"
+            },
+            {
+              "name": "Freezer Door",
+              "x": 48.1,
+              "y": 21.2,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/clubhouse/2.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Gym window",
+              "x": 43.3,
+              "y": 47.8,
+              "type": "peek"
+            },
+            {
+              "name": "CCTV Window",
+              "x": 58.1,
+              "y": 51.6,
+              "type": "peek"
+            },
+            {
+              "name": "Main stair window",
+              "x": 47.2,
+              "y": 25.7,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -363,17 +455,110 @@ const SEED_DATA =
         {
           "name": "Basement",
           "layoutImage": "assets/floors/oregon/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Bunker run out",
+              "x": 61,
+              "y": 37.3,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/oregon/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Garage window",
+              "x": 71.5,
+              "y": 60.5,
+              "type": "peek"
+            },
+            {
+              "name": "Main stairs door",
+              "x": 61.7,
+              "y": 72.4,
+              "type": "peek"
+            },
+            {
+              "name": "Bathroom hallway",
+              "x": 43.3,
+              "y": 68.9,
+              "type": "peek"
+            },
+            {
+              "name": "Small tower",
+              "x": 23.3,
+              "y": 61.1,
+              "type": "peek"
+            },
+            {
+              "name": "Kitchen hallway",
+              "x": 51.5,
+              "y": 39.5,
+              "type": "peek"
+            },
+            {
+              "name": "Tower 1",
+              "x": 62.9,
+              "y": 25.9,
+              "type": "peek"
+            },
+            {
+              "name": "Classroom runout",
+              "x": 53.7,
+              "y": 68.3,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/oregon/2.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Bedroom",
+              "x": 59.3,
+              "y": 67.7,
+              "type": "peek"
+            },
+            {
+              "name": "Big window",
+              "x": 42.5,
+              "y": 54,
+              "type": "peek"
+            },
+            {
+              "name": "Attic",
+              "x": 57.3,
+              "y": 39.7,
+              "type": "peek"
+            },
+            {
+              "name": "Games room window",
+              "x": 52.3,
+              "y": 62.9,
+              "type": "peek"
+            },
+            {
+              "name": "Main hallway",
+              "x": 63.2,
+              "y": 48.3,
+              "type": "peek"
+            },
+            {
+              "name": "Tower 2",
+              "x": 61.9,
+              "y": 29.7,
+              "type": "peek"
+            },
+            {
+              "name": "Armory",
+              "x": 70.8,
+              "y": 57.9,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "3rd Floor",
@@ -500,17 +685,98 @@ const SEED_DATA =
         {
           "name": "Basement",
           "layoutImage": "assets/floors/consulate/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Garage wall",
+              "x": 33.4,
+              "y": 52.6,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/consulate/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Piano hallway window",
+              "x": 32,
+              "y": 45.6,
+              "type": "peek"
+            },
+            {
+              "name": "Closet window",
+              "x": 31.4,
+              "y": 60.4,
+              "type": "peek"
+            },
+            {
+              "name": "Tellers hallway",
+              "x": 54.8,
+              "y": 39.4,
+              "type": "peek"
+            },
+            {
+              "name": "Main entrance door",
+              "x": 49.3,
+              "y": 72.9,
+              "type": "peek"
+            },
+            {
+              "name": "Visual door",
+              "x": 69.5,
+              "y": 60.4,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/consulate/2.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "balcony wall",
+              "x": 49.7,
+              "y": 66,
+              "type": "peek"
+            },
+            {
+              "name": "Consul office window",
+              "x": 31.4,
+              "y": 52.8,
+              "type": "peek"
+            },
+            {
+              "name": "Meeting window",
+              "x": 43.2,
+              "y": 64.5,
+              "type": "peek"
+            },
+            {
+              "name": "Top yellow window",
+              "x": 34.6,
+              "y": 32.8,
+              "type": "peek"
+            },
+            {
+              "name": "Admin office windows",
+              "x": 70.5,
+              "y": 49.3,
+              "type": "peek"
+            },
+            {
+              "name": "Bathroom window",
+              "x": 41.3,
+              "y": 39.7,
+              "type": "peek"
+            },
+            {
+              "name": "Copy room window",
+              "x": 58.3,
+              "y": 40,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -624,12 +890,86 @@ const SEED_DATA =
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/border/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Passport door",
+              "x": 51.2,
+              "y": 69,
+              "type": "peek"
+            },
+            {
+              "name": "Vent Window",
+              "x": 39.4,
+              "y": 31.5,
+              "type": "peek"
+            },
+            {
+              "name": "Tellers window",
+              "x": 63.9,
+              "y": 42.9,
+              "type": "peek"
+            },
+            {
+              "name": "Main entrence door",
+              "x": 36.3,
+              "y": 41.4,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/border/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Gen door runout",
+              "x": 66.1,
+              "y": 65.9,
+              "type": "peek"
+            },
+            {
+              "name": "Break room door",
+              "x": 50.3,
+              "y": 68.9,
+              "type": "peek"
+            },
+            {
+              "name": "Armory balcony",
+              "x": 36.2,
+              "y": 49.9,
+              "type": "peek"
+            },
+            {
+              "name": "Cement door",
+              "x": 54.5,
+              "y": 31.7,
+              "type": "peek"
+            },
+            {
+              "name": "Top square window",
+              "x": 62.2,
+              "y": 69.4,
+              "type": "peek"
+            },
+            {
+              "name": "CCTV window",
+              "x": 35.2,
+              "y": 57.3,
+              "type": "peek"
+            },
+            {
+              "name": "East balcony door",
+              "x": 63.5,
+              "y": 43.9,
+              "type": "peek"
+            },
+            {
+              "name": "Office window",
+              "x": 62.1,
+              "y": 35,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -652,17 +992,92 @@ const SEED_DATA =
         {
           "name": "Basement",
           "layoutImage": "assets/floors/chalet/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Vent door",
+              "x": 31.1,
+              "y": 35.7,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/chalet/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Mud room",
+              "x": 50.8,
+              "y": 71.9,
+              "type": "peek"
+            },
+            {
+              "name": "Fireplace window",
+              "x": 68.3,
+              "y": 47.6,
+              "type": "peek"
+            },
+            {
+              "name": "West main window",
+              "x": 37.3,
+              "y": 52.6,
+              "type": "peek"
+            },
+            {
+              "name": "Lounge window",
+              "x": 58.2,
+              "y": 72.8,
+              "type": "peek"
+            },
+            {
+              "name": "Fireplace door",
+              "x": 57,
+              "y": 38.4,
+              "type": "peek"
+            },
+            {
+              "name": "Trophy window",
+              "x": 33.7,
+              "y": 33.3,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/chalet/2.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Library window",
+              "x": 67.2,
+              "y": 66.8,
+              "type": "peek"
+            },
+            {
+              "name": "Astro window",
+              "x": 30.7,
+              "y": 38,
+              "type": "peek"
+            },
+            {
+              "name": "Bedroom window",
+              "x": 44.2,
+              "y": 30.6,
+              "type": "peek"
+            },
+            {
+              "name": "Balcony window",
+              "x": 57.3,
+              "y": 38.8,
+              "type": "peek"
+            },
+            {
+              "name": "Bathroom window",
+              "x": 39.6,
+              "y": 52.4,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -685,12 +1100,74 @@ const SEED_DATA =
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/coastline/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Sunrise bar window",
+              "x": 67,
+              "y": 49.3,
+              "type": "peek"
+            },
+            {
+              "name": "Main door",
+              "x": 33.4,
+              "y": 37.5,
+              "type": "peek"
+            },
+            {
+              "name": "Pool entrance door",
+              "x": 70.7,
+              "y": 67.2,
+              "type": "peek"
+            },
+            {
+              "name": "Service door",
+              "x": 27.2,
+              "y": 63.9,
+              "type": "peek"
+            },
+            {
+              "name": "Office door",
+              "x": 56.5,
+              "y": 22.5,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/coastline/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Top white window",
+              "x": 32.6,
+              "y": 27.6,
+              "type": "peek"
+            },
+            {
+              "name": "Hookah door",
+              "x": 67.9,
+              "y": 58.7,
+              "type": "peek"
+            },
+            {
+              "name": "VIP balcony",
+              "x": 37.3,
+              "y": 74.2,
+              "type": "peek"
+            },
+            {
+              "name": "Hookah window",
+              "x": 64.9,
+              "y": 69.2,
+              "type": "peek"
+            },
+            {
+              "name": "Pool Table window",
+              "x": 66.6,
+              "y": 39.2,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -959,17 +1436,98 @@ const SEED_DATA =
         {
           "name": "Basement",
           "layoutImage": "assets/floors/nighthaven-labs/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Animus single wall",
+              "x": 37.5,
+              "y": 70.3,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/nighthaven-labs/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Control hallway window",
+              "x": 32.2,
+              "y": 39.7,
+              "type": "peek"
+            },
+            {
+              "name": "Storage window",
+              "x": 54.1,
+              "y": 68.9,
+              "type": "peek"
+            },
+            {
+              "name": "Games Hallway",
+              "x": 50.3,
+              "y": 35.1,
+              "type": "peek"
+            },
+            {
+              "name": "Lobby door",
+              "x": 57,
+              "y": 22,
+              "type": "peek"
+            },
+            {
+              "name": "Warehouse wall",
+              "x": 38.1,
+              "y": 68.6,
+              "type": "peek"
+            },
+            {
+              "name": "Vending window",
+              "x": 58.1,
+              "y": 51.6,
+              "type": "peek"
+            },
+            {
+              "name": "Warehouse entrance door",
+              "x": 21.8,
+              "y": 72.4,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/nighthaven-labs/2.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Warehouse window",
+              "x": 28.4,
+              "y": 59.4,
+              "type": "peek"
+            },
+            {
+              "name": "CC Stairs door",
+              "x": 33.2,
+              "y": 40.3,
+              "type": "peek"
+            },
+            {
+              "name": "Top warehouse door",
+              "x": 42.5,
+              "y": 75.9,
+              "type": "peek"
+            },
+            {
+              "name": "Electrical window",
+              "x": 65.6,
+              "y": 55.1,
+              "type": "peek"
+            },
+            {
+              "name": "Electrical wall",
+              "x": 58.1,
+              "y": 67.7,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -1053,12 +1611,74 @@ const SEED_DATA =
         {
           "name": "1st Floor",
           "layoutImage": "assets/floors/skyscraper/0.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Closet window",
+              "x": 66.7,
+              "y": 71.3,
+              "type": "peek"
+            },
+            {
+              "name": "Toilet window",
+              "x": 38.4,
+              "y": 27.2,
+              "type": "peek"
+            },
+            {
+              "name": "Lobby window",
+              "x": 62.3,
+              "y": 37.7,
+              "type": "peek"
+            },
+            {
+              "name": "Coat window runout",
+              "x": 48.9,
+              "y": 36.7,
+              "type": "peek"
+            },
+            {
+              "name": "Lobby entrence door",
+              "x": 68,
+              "y": 39.4,
+              "type": "peek"
+            },
+            {
+              "name": "Kitchen window",
+              "x": 32,
+              "y": 64,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
           "layoutImage": "assets/floors/skyscraper/1.webp",
-          "callouts": []
+          "callouts": [
+            {
+              "name": "Top black door",
+              "x": 39.8,
+              "y": 24.1,
+              "type": "peek"
+            },
+            {
+              "name": "Vip single wall",
+              "x": 63.9,
+              "y": 35.2,
+              "type": "peek"
+            },
+            {
+              "name": "Mini bar wall",
+              "x": 59.9,
+              "y": 68.6,
+              "type": "peek"
+            },
+            {
+              "name": "Shrine window",
+              "x": 56.8,
+              "y": 25.3,
+              "type": "peek"
+            }
+          ]
         },
         {
           "name": "Roof",
@@ -2186,7 +2806,7 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
  * =================================================================== */
 const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"]];
 const UI={ tab:"maps",
-  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true },
+  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true },
   roster:{ edit:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 
@@ -2315,9 +2935,6 @@ function renderMapDetail(root){
       <button class="btn sm" id="backToc">← Maps</button>
       ${edit?`<input type="text" id="mapName" value="${esc(m.name)}" style="max-width:230px;font-weight:800;font-size:18px">`:`<h2 style="font-size:22px">${esc(m.name)}</h2>`}
       <div class="grow"></div>
-      <div class="toggle ${UI.maps.layerNames?"on":""}" id="tgNames"><span class="box">✓</span> Room names</div>
-      <div class="toggle obj ${UI.maps.layerSites?"on":""}" id="tgSites"><span class="box">✓</span> Bomb sites</div>
-      <span class="sep"></span>
       ${edit?poolSelectHTML(m.id):poolBadgeHTML(m.id)}
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
@@ -2326,8 +2943,6 @@ function renderMapDetail(root){
     <div id="floorView"></div>
     ${m.bombsites.length?`<div class="sitestrip" style="margin-top:18px"><span class="lab">Bomb sites</span>${m.bombsites.map(b=>`<span class="sitepill"><span class="dm">◆</span>${esc(b.name)}</span>`).join("")}</div>`:""}`;
   byId("backToc").onclick=()=>{ UI.maps.view="toc"; renderMaps(root); };
-  byId("tgNames").onclick=()=>{ UI.maps.layerNames=!UI.maps.layerNames; byId("tgNames").classList.toggle("on",UI.maps.layerNames); renderFloorView(); };
-  byId("tgSites").onclick=()=>{ UI.maps.layerSites=!UI.maps.layerSites; byId("tgSites").classList.toggle("on",UI.maps.layerSites); renderFloorView(); };
   const poolSel=root.querySelector("[data-pool]"); if(poolSel) poolSel.onchange=()=>{ setMapPool(m.id, poolSel.value); renderMapDetail(root); };
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMapDetail(root); };
   if(edit){
@@ -2344,59 +2959,99 @@ function renderFloorTabs(){
   t.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{ UI.maps.floorIdx=+b.dataset.fi; renderFloorTabs(); renderFloorView(); });
   const af=byId("addFloor"); if(af) af.onclick=()=>{ m.floors.push({name:"New Floor",layoutImage:null,callouts:[]}); UI.maps.floorIdx=m.floors.length-1; markDirty(); renderFloorTabs(); renderFloorView(); };
 }
+let MV={s:1,tx:0,ty:0,baseW:0,baseH:0};
 function renderFloorView(){
   const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit; const f=m.floors[UI.maps.floorIdx];
   const host=byId("floorView");
   if(!f){ host.innerHTML=`<div class="empty" style="padding:30px">No floors.${edit?" Add one above.":""}</div>`; return; }
-  const objSet=objectiveRooms(m);
-  const planStyle=f.layoutImage?`class="plan has-img" style="background-image:url('${esc(f.layoutImage)}')"`:`class="plan placeholder"`;
-  const pins=f.callouts.map((c,ci)=>{
-    const isObj=objSet.has(fold(c.name));
-    const cls=["callout",edit?"edit":"",(isObj&&UI.maps.layerSites)?"obj":"",(!UI.maps.layerNames&&!edit)?"dotonly":""].filter(Boolean).join(" ");
-    return `<div class="${cls}" data-pin="${ci}" style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><span class="dt"></span><span class="lb">${esc(c.name)}</span></div>`;
-  }).join("");
-  host.innerHTML=`<div class="floorwrap">
-    <div class="fbar"><h3>${esc(f.name)}</h3><div class="grow"></div>
+  const fbar=`<div class="fbar"><h3>${esc(f.name)}</h3><div class="grow"></div>
       ${edit?`<input type="text" class="fname-input" data-fname value="${esc(f.name)}"><button class="btn sm" data-upload>${f.layoutImage?"Replace image":"⬆ Upload image"}</button>${f.layoutImage?`<button class="iconbtn" data-clearimg title="Remove image">🗑</button>`:""}<button class="iconbtn" data-delfloor title="Delete floor">✕</button>`:""}
-    </div>
-    <div ${planStyle}>
-      ${f.layoutImage?"":`<div class="ph">📐 ${esc(f.name)} — top-down image goes here${edit?" · ⬆ Upload image, then ＋ callout below":""}</div>`}
-      ${pins}
+    </div>`;
+  if(!f.layoutImage){
+    host.innerHTML=`<div class="floorwrap">${fbar}<div class="plan placeholder"><div class="ph">📐 ${esc(f.name)} — no image yet.${edit?" ⬆ Upload one above.":""}</div></div>${edit?calloutEditorHTML(f):""}</div>`;
+    if(edit) bindFloorEdit(m,f); return;
+  }
+  const objSet=objectiveRooms(m);
+  const markers=f.callouts.map((c,ci)=>{
+    const peek=c.type==="peek"; const isObj=!peek&&objSet.has(fold(c.name));
+    const cls="mk "+(peek?"peek":(isObj?"obj":"room"));
+    const lb=(peek&&c.rate!=null&&c.rate!=="")?`${esc(c.name)} · ${esc(c.rate)}%`:esc(c.name);
+    return `<div class="${cls}" data-pin="${ci}" style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
+  }).join("");
+  const vpCls=["viewport",UI.maps.layerNames&&"show-names",UI.maps.layerSites&&"show-sites",UI.maps.layerPeeks&&"show-peeks",edit&&"show-edit"].filter(Boolean).join(" ");
+  host.innerHTML=`<div class="floorwrap">${fbar}
+    <div class="${vpCls}" id="vp">
+      <div class="stage" id="stage"><img class="floorimg" id="floorimg" src="${esc(f.layoutImage)}" draggable="false" alt=""><div id="markers">${markers}</div></div>
+      <div class="vp-ctrl">
+        <button class="vt names ${UI.maps.layerNames?"on":""}" data-layer="names"><span class="vbox">✓</span>Room names</button>
+        <button class="vt sites ${UI.maps.layerSites?"on":""}" data-layer="sites"><span class="vbox">✓</span>Bomb sites</button>
+        <button class="vt peek ${UI.maps.layerPeeks?"on":""}" data-layer="peeks"><span class="vbox">✓</span>Spawn peeks</button>
+      </div>
+      <div class="vp-zoom"><button data-zoom="in" title="Zoom in">+</button><button data-zoom="out" title="Zoom out">−</button><button data-zoom="reset" title="Reset view">⟲</button></div>
+      <div class="vp-hint">drag to pan · scroll to zoom</div>
     </div>
     ${edit?calloutEditorHTML(f):""}
   </div>`;
+  setupViewer(edit);
   if(edit) bindFloorEdit(m,f);
+}
+function setupViewer(edit){
+  const vp=byId("vp"), stage=byId("stage"), img=byId("floorimg"); if(!vp) return;
+  const apply=()=>{ stage.style.transform=`translate(${MV.tx}px,${MV.ty}px) scale(${MV.s})`; stage.style.setProperty("--inv",1/MV.s); };
+  const clamp=()=>{ const vw=vp.clientWidth,vh=vp.clientHeight,w=MV.baseW*MV.s,h=MV.baseH*MV.s,mg=60;
+    if(w<=vw) MV.tx=(vw-w)/2; else MV.tx=Math.min(mg,Math.max(vw-w-mg,MV.tx));
+    if(h<=vh) MV.ty=(vh-h)/2; else MV.ty=Math.min(mg,Math.max(vh-h-mg,MV.ty)); };
+  const fit=()=>{ const vw=vp.clientWidth,vh=vp.clientHeight,nw=img.naturalWidth||1600,nh=img.naturalHeight||1000;
+    const sf=Math.min(vw/nw,vh/nh); MV.baseW=nw*sf; MV.baseH=nh*sf; stage.style.width=MV.baseW+"px"; stage.style.height=MV.baseH+"px";
+    MV.s=1; MV.tx=(vw-MV.baseW)/2; MV.ty=(vh-MV.baseH)/2; apply(); };
+  if(img.complete&&img.naturalWidth) fit(); else img.onload=fit;
+  const zoomAt=(px,py,fac)=>{ const ns=Math.min(8,Math.max(1,MV.s*fac)),k=ns/MV.s; MV.tx=px-(px-MV.tx)*k; MV.ty=py-(py-MV.ty)*k; MV.s=ns; clamp(); apply(); };
+  vp.addEventListener("wheel",e=>{ e.preventDefault(); const r=vp.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.18:1/1.18); },{passive:false});
+  vp.querySelectorAll("[data-zoom]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const r=vp.getBoundingClientRect(); b.dataset.zoom==="reset"?fit():zoomAt(r.width/2,r.height/2,b.dataset.zoom==="in"?1.35:1/1.35); });
+  vp.querySelectorAll("[data-layer]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const L=b.dataset.layer,key={names:"layerNames",sites:"layerSites",peeks:"layerPeeks"}[L];
+    UI.maps[key]=!UI.maps[key]; b.classList.toggle("on",UI.maps[key]); vp.classList.toggle("show-"+L,UI.maps[key]); });
+  let sx,sy;
+  const pm=e=>{ MV.tx=e.clientX-sx; MV.ty=e.clientY-sy; clamp(); apply(); };
+  const pu=()=>{ vp.classList.remove("grabbing"); document.removeEventListener("mousemove",pm); document.removeEventListener("mouseup",pu); };
+  vp.addEventListener("mousedown",e=>{ if(e.target.closest(".vp-ctrl,.vp-zoom,.vp-hint"))return; if(edit&&e.target.closest(".mk"))return;
+    sx=e.clientX-MV.tx; sy=e.clientY-MV.ty; vp.classList.add("grabbing"); document.addEventListener("mousemove",pm); document.addEventListener("mouseup",pu); });
 }
 function bindFloorEdit(m,f){
   const host=byId("floorView");
-  host.querySelector("[data-fname]").onchange=e=>{ f.name=e.target.value; markDirty(); renderFloorTabs(); };
-  host.querySelector("[data-upload]").onclick=()=>{ imgTarget={kind:"floor",mapId:m.id,floorIdx:UI.maps.floorIdx}; byId("imgInput").click(); };
+  const fn=host.querySelector("[data-fname]"); if(fn) fn.onchange=e=>{ f.name=e.target.value; markDirty(); renderFloorTabs(); };
+  const up=host.querySelector("[data-upload]"); if(up) up.onclick=()=>{ imgTarget={kind:"floor",mapId:m.id,floorIdx:UI.maps.floorIdx}; byId("imgInput").click(); };
   const ci=host.querySelector("[data-clearimg]"); if(ci) ci.onclick=()=>{ f.layoutImage=null; markDirty(); renderFloorView(); };
-  host.querySelector("[data-delfloor]").onclick=()=>{ if(confirm(`Delete floor "${f.name}"?`)){ m.floors.splice(UI.maps.floorIdx,1); UI.maps.floorIdx=0; markDirty(); renderFloorTabs(); renderFloorView(); } };
-  const add=host.querySelector("[data-addco]"); if(add) add.onclick=()=>{ f.callouts.push({name:"New callout",x:50,y:50}); markDirty(); renderFloorView(); };
+  const df=host.querySelector("[data-delfloor]"); if(df) df.onclick=()=>{ if(confirm(`Delete floor "${f.name}"?`)){ m.floors.splice(UI.maps.floorIdx,1); UI.maps.floorIdx=0; markDirty(); renderFloorTabs(); renderFloorView(); } };
+  const addco=host.querySelector("[data-addco]"); if(addco) addco.onclick=()=>{ f.callouts.push({name:"New room",x:50,y:50}); markDirty(); renderFloorView(); };
+  const addpk=host.querySelector("[data-addpeek]"); if(addpk) addpk.onclick=()=>{ f.callouts.push({name:"New peek",x:50,y:50,type:"peek"}); markDirty(); renderFloorView(); };
   host.querySelectorAll("[data-co]").forEach(row=>{
     const k=+row.dataset.co; const c=f.callouts[k]; if(!c)return;
-    row.querySelector("[data-coname]").oninput=e=>{ c.name=e.target.value; markDirty(); const lb=host.querySelector(`.callout[data-pin="${k}"] .lb`); if(lb)lb.textContent=e.target.value; };
-    row.querySelector("[data-cox]").oninput=e=>{ c.x=numOr(e.target.value,c.x); markDirty(); syncPin(host,k,c); };
-    row.querySelector("[data-coy]").oninput=e=>{ c.y=numOr(e.target.value,c.y); markDirty(); syncPin(host,k,c); };
+    row.querySelector("[data-coname]").oninput=e=>{ c.name=e.target.value; markDirty(); const lb=host.querySelector(`.mk[data-pin="${k}"] .mlb`); if(lb)lb.textContent=e.target.value+((c.type==="peek"&&c.rate!=null&&c.rate!=="")?` · ${c.rate}%`:""); };
+    row.querySelector("[data-cox]").oninput=e=>{ c.x=numOr(e.target.value,c.x); markDirty(); setPin(host,k,c); };
+    row.querySelector("[data-coy]").oninput=e=>{ c.y=numOr(e.target.value,c.y); markDirty(); setPin(host,k,c); };
     row.querySelector("[data-codel]").onclick=()=>{ f.callouts.splice(k,1); markDirty(); renderFloorView(); };
   });
-  host.querySelectorAll(".callout.edit").forEach(pin=>{
-    pin.onmousedown=ev=>{ ev.preventDefault(); const k=+pin.dataset.pin; const c=f.callouts[k]; const plan=pin.parentElement;
-      const move=e=>{ const r=plan.getBoundingClientRect();
-        c.x=Math.round(Math.min(100,Math.max(0,((e.clientX-r.left)/r.width)*100)));
-        c.y=Math.round(Math.min(100,Math.max(0,((e.clientY-r.top)/r.height)*100)));
-        syncPin(host,k,c); const row=host.querySelector(`[data-co="${k}"]`); if(row){ row.querySelector("[data-cox]").value=c.x; row.querySelector("[data-coy]").value=c.y; } };
-      const up=()=>{ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up); markDirty(); };
-      document.addEventListener("mousemove",move); document.addEventListener("mouseup",up); };
+  host.querySelectorAll(".mk").forEach(pin=>{
+    const k=+pin.dataset.pin; const c=f.callouts[k]; if(!c)return;
+    const body=pin.querySelector(".mkb");
+    body.onmousedown=ev=>{ ev.preventDefault(); ev.stopPropagation(); const vp=byId("vp");
+      const move=e=>{ const r=vp.getBoundingClientRect();
+        const sxp=(e.clientX-r.left-MV.tx)/MV.s, syp=(e.clientY-r.top-MV.ty)/MV.s;
+        c.x=Math.round(Math.min(100,Math.max(0,sxp/MV.baseW*100))*10)/10;
+        c.y=Math.round(Math.min(100,Math.max(0,syp/MV.baseH*100))*10)/10;
+        pin.style.left=c.x+"%"; pin.style.top=c.y+"%";
+        const row=host.querySelector(`[data-co="${k}"]`); if(row){ row.querySelector("[data-cox]").value=c.x; row.querySelector("[data-coy]").value=c.y; } };
+      const up2=()=>{ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up2); markDirty(); };
+      document.addEventListener("mousemove",move); document.addEventListener("mouseup",up2); };
   });
 }
+function setPin(host,k,c){ const pin=host.querySelector(`.mk[data-pin="${k}"]`); if(pin){ pin.style.left=c.x+"%"; pin.style.top=c.y+"%"; } }
 function calloutEditorHTML(f){
   return `<div class="coeditor">
-    <div class="spread" style="margin-bottom:8px"><span class="lab" style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700">Callouts <span class="muted">(drag pins, or edit x/y 0–100)</span></span>
-      <button class="btn sm" data-addco>＋ callout</button></div>
+    <div class="spread" style="margin-bottom:8px"><span class="lab" style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700">Labels <span class="muted">(drag pins on the map, or edit x/y)</span></span>
+      <span class="row" style="gap:6px"><button class="btn sm" data-addco>＋ room</button><button class="btn sm" data-addpeek>＋ spawn peek</button></span></div>
     ${f.callouts.map((c,ci)=>`<div class="corow" data-co="${ci}">
-      <input type="text" data-coname value="${esc(c.name)}" placeholder="Room name">
+      <input type="text" data-coname value="${esc(c.name)}" placeholder="${c.type==="peek"?"Spawn peek":"Room name"}"${c.type==="peek"?' style="border-color:#7a2a33"':""}>
       <input type="text" data-cox value="${esc(c.x)}"><input type="text" data-coy value="${esc(c.y)}">
       <button class="iconbtn" data-codel title="Remove">✕</button></div>`).join("")}
   </div>`;
