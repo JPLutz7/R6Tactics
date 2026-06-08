@@ -1,0 +1,5 @@
+Floor plan images in this folder were captured from r6calls.com
+(https://r6calls.com) for non-commercial team use, and reflect the current
+in-game map layouts. The underlying Rainbow Six Siege maps are © Ubisoft.
+Map cover images in assets/covers are © Ubisoft (from ubisoft.com).
+If you are a rights holder and want these removed, open an issue on the repo.
