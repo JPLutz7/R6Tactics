@@ -124,19 +124,33 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
   color:#7a6200;padding:5px 11px;border-radius:8px;font-size:13px;font-weight:600}
 .sitepill .dm{color:var(--obj)}
 
-/* ---------- floors grid ---------- */
-.floors{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:18px}
-.floorcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
-.floorcard .fh{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel2)}
-.floorcard .fh h3{font-size:14px;letter-spacing:.5px}
-.floorcard .fh .grow{flex:1}
-.floorcard .fname-input{max-width:150px;font-weight:700;padding:5px 8px}
+/* ---------- map table of contents (cover grid) ---------- */
+.covergrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.mapcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.mapcard:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(20,30,45,.14)}
+.mapcard .cover{position:relative;aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#34465b,#48647f);overflow:hidden}
+.mapcard .cover.has-img{background:#dde4ec;background-size:cover;background-position:center}
+.mapcard .cover-ph{color:#fff;font-weight:800;font-size:18px;letter-spacing:.5px;text-align:center;padding:0 16px;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.mapcard .cover-up{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.94);border:1px solid var(--line2);border-radius:7px;font-size:11px;font-weight:600;padding:4px 8px;cursor:pointer;color:var(--text)}
+.mapcard-foot{display:flex;align-items:center;gap:8px;padding:10px 13px;border-top:1px solid var(--line)}
+.mapcard-foot .nm{font-weight:700;font-size:14px;flex:1}
+.mapcard-foot .fl{color:var(--muted2);font-size:11px;font-family:var(--mono)}
 
-.plan{position:relative;width:100%;aspect-ratio:16/10;background-color:#f3f6f9;
-  background-image:linear-gradient(#e7edf2 1px,transparent 1px),linear-gradient(90deg,#e7edf2 1px,transparent 1px);
-  background-size:30px 30px;overflow:hidden}
+/* ---------- floor tabs + single-floor view ---------- */
+.floortabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.floortab{background:var(--panel);border:1px solid var(--line2);color:var(--muted);padding:8px 17px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow-sm)}
+.floortab:hover{color:var(--text);background:var(--panel2)}
+.floortab.active{background:var(--text);border-color:var(--text);color:#fff;box-shadow:0 3px 10px rgba(27,37,48,.2)}
+.floortab.add{border-style:dashed;color:var(--muted);background:transparent;box-shadow:none}
+.floorwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);max-width:1040px}
+.floorwrap .fbar{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.floorwrap .fbar h3{font-size:15px;letter-spacing:.5px}
+.fname-input{max-width:160px;font-weight:700;padding:5px 8px}
+
+.plan{position:relative;width:100%;aspect-ratio:16/10;background-color:#eef2f6;overflow:hidden}
+.plan.placeholder{background-image:repeating-linear-gradient(45deg,#e8edf2 0 14px,#eef2f6 14px 28px)}
 .plan.has-img{background-image:none;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#dde4ec}
-.plan .ph{position:absolute;inset:0;display:grid;place-items:center;color:#aab6c4;font-size:12px;letter-spacing:1px;text-transform:uppercase;pointer-events:none;text-align:center;padding:20px}
+.plan .ph{position:absolute;inset:0;display:grid;place-items:center;color:#8694a3;font-size:13px;font-weight:600;letter-spacing:.3px;pointer-events:none;text-align:center;padding:20px}
 .callout{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:5px;cursor:default;z-index:2}
 .callout .lb{font-size:11.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.92);border:1px solid var(--line2);
   padding:2px 7px;border-radius:6px;white-space:nowrap;box-shadow:0 1px 3px rgba(20,30,45,.12)}
@@ -237,7 +251,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 1,
+  "version": 2,
   "publishedAt": "2026-06-08",
   "maps": [
     {
@@ -362,7 +376,47 @@ const SEED_DATA =
         {"id":"kafe-1f-kitchen-service","name":"1F · Kitchen / Service","rooms":["Cooking","Service Entrance"]}
       ],
       "tactics":{"attack":{},"defense":{}}
-    }
+    },
+    {"id":"border","name":"Border","coverImage":null,"notes":"Scaffold — upload a cover + per-floor top-down images, then place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"chalet","name":"Chalet","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"coastline","name":"Coastline","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"emerald-plains","name":"Emerald Plains","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"favela","name":"Favela","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"fortress","name":"Fortress","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"Roof","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"hereford-base","name":"Hereford Base","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"house","name":"House","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"kanal","name":"Kanal","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"lair","name":"Lair","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"nighthaven-labs","name":"Nighthaven Labs","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"outback","name":"Outback","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"presidential-plane","name":"Presidential Plane","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"skyscraper","name":"Skyscraper","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"stadium","name":"Stadium","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"theme-park","name":"Theme Park","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"tower","name":"Tower","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"villa","name":"Villa","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"yacht","name":"Yacht","coverImage":null,"notes":"Scaffold — upload images and place callouts.","floors":[
+      {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
+    {"id":"calypso-casino","name":"Calypso Casino","coverImage":null,"notes":"Newest map (scaffold) — upload images and place callouts; verify floors.","floors":[
+      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}}
   ],
 
   "operators":[
@@ -518,7 +572,7 @@ function normalizeDB(db){
   db.version=db.version||1;
   ["maps","operators","roles","roster","playerStats"].forEach(k=>{ if(!Array.isArray(db[k])) db[k]=[]; });
   db.maps.forEach(m=>{
-    m.id=m.id||slug(m.name||"map"); m.name=m.name||m.id; m.notes=m.notes||"";
+    m.id=m.id||slug(m.name||"map"); m.name=m.name||m.id; m.notes=m.notes||""; if(!("coverImage"in m))m.coverImage=null;
     if(!Array.isArray(m.floors)) m.floors=[];
     m.floors.forEach(f=>{ f.name=f.name||"Floor"; if(!("layoutImage"in f))f.layoutImage=null;
       if(!Array.isArray(f.callouts))f.callouts=[];
@@ -559,7 +613,7 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
  * =================================================================== */
 const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"]];
 const UI={ tab:"maps",
-  maps:{ selectedId:null, edit:false, layerNames:true, layerSites:true },
+  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true },
   roster:{ edit:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 
@@ -581,7 +635,7 @@ function renderBanner(){
   slot.innerHTML=`<div class="banner"><span style="font-size:18px">📡</span>
     <div class="grow"><b>New data published (v${SEED_DATA.version}).</b> You have local edits — load the update to match the stack, or keep yours.</div>
     <button class="btn primary sm" id="bnLoad">Load update</button><button class="btn ghost sm" id="bnKeep">Keep mine</button></div>`;
-  byId("bnLoad").onclick=()=>{ if(confirm("Replace your local copy with published v"+SEED_DATA.version+"? Export first if unsure.")){ adoptSeed(); UI.maps.selectedId=null; renderBanner(); render(); toast("Loaded published v"+SEED_DATA.version);} };
+  byId("bnLoad").onclick=()=>{ if(confirm("Replace your local copy with published v"+SEED_DATA.version+"? Export first if unsure.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toast("Loaded published v"+SEED_DATA.version);} };
   byId("bnKeep").onclick=()=>{ dismissUpdate(); renderBanner(); toast("Keeping your local copy"); };
 }
 
@@ -599,7 +653,7 @@ function renderDataMenu(){
   byId("dmExport").onclick=exportJSON;
   byId("dmImport").onclick=()=>byId("importInput").click();
   byId("dmPublish").onclick=copyPublish;
-  byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
+  byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
 }
 function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.classList.contains("show"):force; if(show)renderDataMenu(); m.classList.toggle("show",show); }
 
@@ -613,75 +667,129 @@ function render(){ const v=byId("view"); v.innerHTML=""; VIEWS[UI.tab](v); }
  *  MAPS  (r6calls-style callouts reference)
  * =================================================================== */
 function renderMaps(root){
-  if(!UI.maps.selectedId && DB.maps[0]) UI.maps.selectedId=DB.maps[0].id;
+  if(UI.maps.view==="detail" && !mapById(UI.maps.selectedId)) UI.maps.view="toc";
+  if(UI.maps.view==="detail") renderMapDetail(root); else renderMapTOC(root);
+}
+
+/* ----- table of contents: grid of map cover tiles ----- */
+function renderMapTOC(root){
   const edit=UI.maps.edit;
   root.innerHTML=`
     <div class="toolbar">
-      <div class="mapchips" id="mapChips"></div>
+      <div class="section-title" style="margin:0">Maps <span class="muted" style="text-transform:none;letter-spacing:0">· pick a map</span></div>
+      <div class="grow"></div>
+      ${edit?`<button class="btn sm" id="addMap">＋ map</button>`:""}
+      <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
+    </div>
+    <div class="covergrid" id="coverGrid"></div>`;
+  byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMaps(root); };
+  const am=byId("addMap"); if(am) am.onclick=addMap;
+  renderCoverGrid();
+}
+function renderCoverGrid(){
+  const grid=byId("coverGrid"); const edit=UI.maps.edit;
+  grid.innerHTML=DB.maps.map(m=>{
+    const cv=m.coverImage?` style="background-image:url('${esc(m.coverImage)}')"`:"";
+    return `<div class="mapcard" data-open="${esc(m.id)}">
+      <div class="cover ${m.coverImage?"has-img":""}"${cv}>
+        ${m.coverImage?"":`<span class="cover-ph">${esc(m.name)}</span>`}
+        ${edit?`<button class="cover-up" data-cover="${esc(m.id)}">⬆ cover</button>`:""}
+      </div>
+      <div class="mapcard-foot"><span class="nm">${esc(m.name)}</span><span class="fl">${m.floors.length} floors</span>
+        ${edit?`<button class="iconbtn" data-delmap="${esc(m.id)}" title="Delete map">✕</button>`:""}</div>
+    </div>`;
+  }).join("")||`<div class="empty">No maps.${edit?" Use ＋ map.":""}</div>`;
+  grid.querySelectorAll("[data-open]").forEach(card=>card.onclick=e=>{ if(e.target.closest("[data-cover],[data-delmap]"))return; openMap(card.dataset.open); });
+  if(edit){
+    grid.querySelectorAll("[data-cover]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); imgTarget={kind:"cover",mapId:b.dataset.cover}; byId("imgInput").click(); });
+    grid.querySelectorAll("[data-delmap]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const m=mapById(b.dataset.delmap); if(m&&confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); markDirty(); renderCoverGrid(); } });
+  }
+}
+function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
+
+/* ----- map detail: ONE floor at a time, with floor tabs above ----- */
+function renderMapDetail(root){
+  const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit;
+  if(!m){ UI.maps.view="toc"; return renderMapTOC(root); }
+  if(UI.maps.floorIdx>=m.floors.length) UI.maps.floorIdx=0;
+  root.innerHTML=`
+    <div class="toolbar">
+      <button class="btn sm" id="backToc">← Maps</button>
+      ${edit?`<input type="text" id="mapName" value="${esc(m.name)}" style="max-width:230px;font-weight:800;font-size:18px">`:`<h2 style="font-size:22px">${esc(m.name)}</h2>`}
       <div class="grow"></div>
       <div class="toggle ${UI.maps.layerNames?"on":""}" id="tgNames"><span class="box">✓</span> Room names</div>
       <div class="toggle obj ${UI.maps.layerSites?"on":""}" id="tgSites"><span class="box">✓</span> Bomb sites</div>
       <span class="sep"></span>
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
-    <div id="mapBody"></div>`;
-  renderMapChips();
-  byId("tgNames").onclick=()=>{ UI.maps.layerNames=!UI.maps.layerNames; byId("tgNames").classList.toggle("on",UI.maps.layerNames); renderMapBody(); };
-  byId("tgSites").onclick=()=>{ UI.maps.layerSites=!UI.maps.layerSites; byId("tgSites").classList.toggle("on",UI.maps.layerSites); renderMapBody(); };
-  byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMaps(root); };
-  renderMapBody();
-}
-function renderMapChips(){
-  const c=byId("mapChips");
-  c.innerHTML=DB.maps.map(m=>`<button class="mapchip ${m.id===UI.maps.selectedId?"active":""}" data-map="${esc(m.id)}">${esc(m.name)}</button>`).join("")
-    + (UI.maps.edit?`<button class="mapchip add" id="addMap">＋ map</button>`:"");
-  c.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ UI.maps.selectedId=b.dataset.map; renderMapChips(); renderMapBody(); });
-  const am=byId("addMap"); if(am) am.onclick=addMap;
-}
-function renderMapBody(){
-  const body=byId("mapBody"); const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit;
-  if(!m){ body.innerHTML=`<div class="empty" style="padding:30px">No map selected.${edit?" Use ＋ map to add one.":""}</div>`; return; }
-  const objSet=objectiveRooms(m);
-  const sites=m.bombsites.length?`<div class="sitestrip"><span class="lab">Bomb sites</span>${m.bombsites.map(b=>`<span class="sitepill"><span class="dm">◆</span>${esc(b.name)}</span>`).join("")}</div>`:"";
-  body.innerHTML=`
-    <div class="maphead">
-      ${edit?`<input type="text" id="mapName" value="${esc(m.name)}" style="max-width:280px;font-size:20px;font-weight:800">`:`<h2>${esc(m.name)}</h2>`}
-      <span class="count">${m.floors.length} floors · ${m.bombsites.length} sites</span>
-      <div class="grow"></div>
-      ${edit?`<button class="btn sm" id="addFloor">＋ floor</button> <button class="btn sm danger" id="delMap">Delete map</button>`:""}
-    </div>
-    ${edit?`<div style="margin-bottom:14px"><textarea id="mapNotes" placeholder="Map notes…">${esc(m.notes)}</textarea></div>`:(m.notes?`<div class="mapnotes">${esc(m.notes)}</div>`:"")}
-    ${sites}
-    <div class="floors" id="floors">
-      ${m.floors.map((f,i)=>floorCardHTML(m,f,i,objSet,edit)).join("")||`<div class="empty">No floors.${edit?" Add one above.":""}</div>`}
-    </div>`;
+    ${edit?`<div class="row" style="margin-bottom:12px"><textarea id="mapNotes" placeholder="Map notes…" style="flex:1">${esc(m.notes)}</textarea><button class="btn sm danger" id="delMap">Delete map</button></div>`:(m.notes?`<div class="mapnotes">${esc(m.notes)}</div>`:"")}
+    <div class="floortabs" id="floorTabs"></div>
+    <div id="floorView"></div>
+    ${m.bombsites.length?`<div class="sitestrip" style="margin-top:18px"><span class="lab">Bomb sites</span>${m.bombsites.map(b=>`<span class="sitepill"><span class="dm">◆</span>${esc(b.name)}</span>`).join("")}</div>`:""}`;
+  byId("backToc").onclick=()=>{ UI.maps.view="toc"; renderMaps(root); };
+  byId("tgNames").onclick=()=>{ UI.maps.layerNames=!UI.maps.layerNames; byId("tgNames").classList.toggle("on",UI.maps.layerNames); renderFloorView(); };
+  byId("tgSites").onclick=()=>{ UI.maps.layerSites=!UI.maps.layerSites; byId("tgSites").classList.toggle("on",UI.maps.layerSites); renderFloorView(); };
+  byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMapDetail(root); };
   if(edit){
-    byId("mapName").onchange=e=>{ m.name=e.target.value; markDirty(); renderMapChips(); };
+    byId("mapName").onchange=e=>{ m.name=e.target.value; markDirty(); };
     byId("mapNotes").oninput=e=>{ m.notes=e.target.value; markDirty(); };
-    byId("addFloor").onclick=()=>{ m.floors.push({name:"New Floor",layoutImage:null,callouts:[]}); markDirty(); renderMapBody(); };
-    byId("delMap").onclick=()=>{ if(confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); UI.maps.selectedId=DB.maps[0]?DB.maps[0].id:null; markDirty(); renderMaps(byId("view")); } };
+    byId("delMap").onclick=()=>{ if(confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); UI.maps.view="toc"; markDirty(); renderMaps(root); } };
   }
-  bindFloors(m,edit);
+  renderFloorTabs(); renderFloorView();
 }
-function floorCardHTML(m,f,i,objSet,edit){
-  const planStyle=f.layoutImage?`class="plan has-img" style="background-image:url('${esc(f.layoutImage)}')"`:`class="plan"`;
+function renderFloorTabs(){
+  const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit; const t=byId("floorTabs");
+  t.innerHTML=m.floors.map((f,i)=>`<button class="floortab ${i===UI.maps.floorIdx?"active":""}" data-fi="${i}">${esc(f.name)}</button>`).join("")
+    + (edit?`<button class="floortab add" id="addFloor">＋ floor</button>`:"");
+  t.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{ UI.maps.floorIdx=+b.dataset.fi; renderFloorTabs(); renderFloorView(); });
+  const af=byId("addFloor"); if(af) af.onclick=()=>{ m.floors.push({name:"New Floor",layoutImage:null,callouts:[]}); UI.maps.floorIdx=m.floors.length-1; markDirty(); renderFloorTabs(); renderFloorView(); };
+}
+function renderFloorView(){
+  const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit; const f=m.floors[UI.maps.floorIdx];
+  const host=byId("floorView");
+  if(!f){ host.innerHTML=`<div class="empty" style="padding:30px">No floors.${edit?" Add one above.":""}</div>`; return; }
+  const objSet=objectiveRooms(m);
+  const planStyle=f.layoutImage?`class="plan has-img" style="background-image:url('${esc(f.layoutImage)}')"`:`class="plan placeholder"`;
   const pins=f.callouts.map((c,ci)=>{
     const isObj=objSet.has(fold(c.name));
     const cls=["callout",edit?"edit":"",(isObj&&UI.maps.layerSites)?"obj":"",(!UI.maps.layerNames&&!edit)?"dotonly":""].filter(Boolean).join(" ");
     return `<div class="${cls}" data-pin="${ci}" style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><span class="dt"></span><span class="lb">${esc(c.name)}</span></div>`;
   }).join("");
-  return `<div class="floorcard" data-floor="${i}">
-    <div class="fh">
-      ${edit?`<input type="text" class="fname-input" data-fname value="${esc(f.name)}">`:`<h3>${esc(f.name)}</h3>`}
-      <div class="grow"></div>
-      ${edit?`<button class="btn sm" data-upload>${f.layoutImage?"Replace img":"⬆ Image"}</button>${f.layoutImage?`<button class="iconbtn" data-clearimg title="Remove image">🗑</button>`:""}<button class="iconbtn" data-delfloor title="Delete floor">✕</button>`:""}
+  host.innerHTML=`<div class="floorwrap">
+    <div class="fbar"><h3>${esc(f.name)}</h3><div class="grow"></div>
+      ${edit?`<input type="text" class="fname-input" data-fname value="${esc(f.name)}"><button class="btn sm" data-upload>${f.layoutImage?"Replace image":"⬆ Upload image"}</button>${f.layoutImage?`<button class="iconbtn" data-clearimg title="Remove image">🗑</button>`:""}<button class="iconbtn" data-delfloor title="Delete floor">✕</button>`:""}
     </div>
     <div ${planStyle}>
-      ${(!f.layoutImage && f.callouts.length===0)?`<div class="ph">${esc(f.name)}${edit?" — ⬆ Image to drop in a real layout, then ＋ callout":" · empty floor"}</div>`:""}
+      ${f.layoutImage?"":`<div class="ph">📐 ${esc(f.name)} — top-down image goes here${edit?" · ⬆ Upload image, then ＋ callout below":""}</div>`}
       ${pins}
     </div>
     ${edit?calloutEditorHTML(f):""}
   </div>`;
+  if(edit) bindFloorEdit(m,f);
+}
+function bindFloorEdit(m,f){
+  const host=byId("floorView");
+  host.querySelector("[data-fname]").onchange=e=>{ f.name=e.target.value; markDirty(); renderFloorTabs(); };
+  host.querySelector("[data-upload]").onclick=()=>{ imgTarget={kind:"floor",mapId:m.id,floorIdx:UI.maps.floorIdx}; byId("imgInput").click(); };
+  const ci=host.querySelector("[data-clearimg]"); if(ci) ci.onclick=()=>{ f.layoutImage=null; markDirty(); renderFloorView(); };
+  host.querySelector("[data-delfloor]").onclick=()=>{ if(confirm(`Delete floor "${f.name}"?`)){ m.floors.splice(UI.maps.floorIdx,1); UI.maps.floorIdx=0; markDirty(); renderFloorTabs(); renderFloorView(); } };
+  const add=host.querySelector("[data-addco]"); if(add) add.onclick=()=>{ f.callouts.push({name:"New callout",x:50,y:50}); markDirty(); renderFloorView(); };
+  host.querySelectorAll("[data-co]").forEach(row=>{
+    const k=+row.dataset.co; const c=f.callouts[k]; if(!c)return;
+    row.querySelector("[data-coname]").oninput=e=>{ c.name=e.target.value; markDirty(); const lb=host.querySelector(`.callout[data-pin="${k}"] .lb`); if(lb)lb.textContent=e.target.value; };
+    row.querySelector("[data-cox]").oninput=e=>{ c.x=numOr(e.target.value,c.x); markDirty(); syncPin(host,k,c); };
+    row.querySelector("[data-coy]").oninput=e=>{ c.y=numOr(e.target.value,c.y); markDirty(); syncPin(host,k,c); };
+    row.querySelector("[data-codel]").onclick=()=>{ f.callouts.splice(k,1); markDirty(); renderFloorView(); };
+  });
+  host.querySelectorAll(".callout.edit").forEach(pin=>{
+    pin.onmousedown=ev=>{ ev.preventDefault(); const k=+pin.dataset.pin; const c=f.callouts[k]; const plan=pin.parentElement;
+      const move=e=>{ const r=plan.getBoundingClientRect();
+        c.x=Math.round(Math.min(100,Math.max(0,((e.clientX-r.left)/r.width)*100)));
+        c.y=Math.round(Math.min(100,Math.max(0,((e.clientY-r.top)/r.height)*100)));
+        syncPin(host,k,c); const row=host.querySelector(`[data-co="${k}"]`); if(row){ row.querySelector("[data-cox]").value=c.x; row.querySelector("[data-coy]").value=c.y; } };
+      const up=()=>{ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up); markDirty(); };
+      document.addEventListener("mousemove",move); document.addEventListener("mouseup",up); };
+  });
 }
 function calloutEditorHTML(f){
   return `<div class="coeditor">
@@ -693,50 +801,22 @@ function calloutEditorHTML(f){
       <button class="iconbtn" data-codel title="Remove">✕</button></div>`).join("")}
   </div>`;
 }
-function bindFloors(m,edit){
-  const root=byId("floors");
-  root.querySelectorAll("[data-floor]").forEach(card=>{
-    const i=+card.dataset.floor; const f=m.floors[i]; if(!f) return;
-    if(edit){
-      card.querySelector("[data-fname]").onchange=e=>{ f.name=e.target.value; markDirty(); };
-      card.querySelector("[data-upload]").onclick=()=>{ imgTarget={mapId:m.id,floorIdx:i}; byId("imgInput").click(); };
-      const ci=card.querySelector("[data-clearimg]"); if(ci) ci.onclick=()=>{ f.layoutImage=null; markDirty(); renderMapBody(); };
-      card.querySelector("[data-delfloor]").onclick=()=>{ if(confirm(`Delete floor "${f.name}"?`)){ m.floors.splice(i,1); markDirty(); renderMapBody(); } };
-      const add=card.querySelector("[data-addco]"); if(add) add.onclick=()=>{ f.callouts.push({name:"New callout",x:50,y:50}); markDirty(); renderMapBody(); };
-      card.querySelectorAll("[data-co]").forEach(row=>{
-        const k=+row.dataset.co; const c=f.callouts[k]; if(!c)return;
-        row.querySelector("[data-coname]").oninput=e=>{ c.name=e.target.value; markDirty(); const lb=card.querySelector(`.callout[data-pin="${k}"] .lb`); if(lb)lb.textContent=e.target.value; };
-        row.querySelector("[data-cox]").oninput=e=>{ c.x=numOr(e.target.value,c.x); markDirty(); syncPin(card,k,c); };
-        row.querySelector("[data-coy]").oninput=e=>{ c.y=numOr(e.target.value,c.y); markDirty(); syncPin(card,k,c); };
-        row.querySelector("[data-codel]").onclick=()=>{ f.callouts.splice(k,1); markDirty(); renderMapBody(); };
-      });
-      // drag pins
-      card.querySelectorAll(".callout.edit").forEach(pin=>{
-        pin.onmousedown=ev=>{ ev.preventDefault(); const k=+pin.dataset.pin; const c=f.callouts[k]; const plan=pin.parentElement;
-          const move=e=>{ const r=plan.getBoundingClientRect();
-            c.x=Math.round(Math.min(100,Math.max(0,((e.clientX-r.left)/r.width)*100)));
-            c.y=Math.round(Math.min(100,Math.max(0,((e.clientY-r.top)/r.height)*100)));
-            syncPin(card,k,c); const row=card.querySelector(`[data-co="${k}"]`); if(row){ row.querySelector("[data-cox]").value=c.x; row.querySelector("[data-coy]").value=c.y; } };
-          const up=()=>{ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up); markDirty(); };
-          document.addEventListener("mousemove",move); document.addEventListener("mouseup",up); };
-      });
-    }
-  });
-}
-function syncPin(card,k,c){ const pin=card.querySelector(`.callout[data-pin="${k}"]`); if(pin){ pin.style.left=c.x+"%"; pin.style.top=c.y+"%"; } }
-function addMap(){ const id=uid("map"); DB.maps.push({id,name:"New Map",notes:"",floors:[{name:"1F",layoutImage:null,callouts:[]}],bombsites:[],tactics:{attack:{},defense:{}}});
-  UI.maps.selectedId=id; UI.maps.edit=true; markDirty(); renderMaps(byId("view")); }
+function syncPin(host,k,c){ const pin=host.querySelector(`.callout[data-pin="${k}"]`); if(pin){ pin.style.left=c.x+"%"; pin.style.top=c.y+"%"; } }
+function addMap(){ const id=uid("map"); DB.maps.push({id,name:"New Map",coverImage:null,notes:"",floors:[{name:"1F",layoutImage:null,callouts:[]}],bombsites:[],tactics:{attack:{},defense:{}}});
+  UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.view="detail"; UI.maps.edit=true; markDirty(); renderMaps(byId("view")); }
 
-/* floor image upload */
+/* image upload — cover (TOC) or floor (detail) */
 function onImagePicked(e){
   const file=e.target.files[0]; e.target.value=""; if(!file||!imgTarget) return;
-  const m=mapById(imgTarget.mapId); const f=m&&m.floors[imgTarget.floorIdx]; if(!f) return;
+  const kind=imgTarget.kind; const m=mapById(imgTarget.mapId); if(!m) return;
+  const target=(kind==="cover")?m:m.floors[imgTarget.floorIdx]; if(!target) return;
+  const prop=(kind==="cover")?"coverImage":"layoutImage";
   if(file.size>2*1024*1024 && !confirm("That image is "+(file.size/1048576).toFixed(1)+"MB. Large images may exceed the browser's storage limit (~5MB total). Use it anyway?")) return;
   const r=new FileReader();
-  r.onload=()=>{ const prev=f.layoutImage; f.layoutImage=r.result;
+  r.onload=()=>{ const prev=target[prop]; target[prop]=r.result;
     if(!META.dirty){ META.dirty=true; writeMeta(META); }
-    try{ persist(); refreshStatus(); renderMapBody(); toast("Image added to "+f.name); }
-    catch(err){ f.layoutImage=prev; alert("Too large to store (browser localStorage is ~5MB total). Try an image under ~500KB, or fewer images."); } };
+    try{ persist(); refreshStatus(); if(kind==="cover") renderCoverGrid(); else renderFloorView(); toast("Image added"); }
+    catch(err){ target[prop]=prev; alert("Too large to store (browser localStorage is ~5MB total). Try an image under ~500KB, or fewer images."); } };
   r.readAsDataURL(file);
 }
 
@@ -847,7 +927,7 @@ function loadFromText(text){
   if(!parsed||typeof parsed!=="object"||!Array.isArray(parsed.maps)){ if(!confirm("Doesn't look like a full R6 Stack export (no maps array). Load anyway?")) return; }
   if(!confirm("Replace ALL current data with the imported JSON? Export first if unsure.")) return;
   DB=parsed; normalizeDB(DB); META.dirty=true; writeMeta(META); saveData();
-  UI.maps.selectedId=null; toggleMenu(false); render(); toast("Imported "+DB.maps.length+" maps");
+  UI.maps.selectedId=null; UI.maps.view="toc"; toggleMenu(false); render(); toast("Imported "+DB.maps.length+" maps");
 }
 function copyPublish(){
   const out=clone(DB); out.version=(SEED_DATA.version||1)+1; out.publishedAt=new Date().toISOString().slice(0,10);
@@ -871,10 +951,13 @@ function isTyping(){ const a=document.activeElement; return a&&(a.tagName==="INP
 document.addEventListener("keydown",e=>{
   if(e.metaKey||e.ctrlKey||e.altKey||isTyping()) return;
   if(/^[1-2]$/.test(e.key)){ switchTab(TABS[+e.key-1][0]); return; }
-  if(UI.tab==="maps" && (e.key==="["||e.key==="]")){ cycleMap(e.key==="]"?1:-1); }
+  if(UI.tab==="maps" && UI.maps.view==="detail"){
+    if(e.key==="["||e.key==="]") cycleMap(e.key==="]"?1:-1);
+    else if(e.key==="Escape"){ UI.maps.view="toc"; renderMaps(byId("view")); }
+  }
 });
-function cycleMap(dir){ const i=DB.maps.findIndex(m=>m.id===UI.maps.selectedId); if(i<0)return;
-  UI.maps.selectedId=DB.maps[(i+dir+DB.maps.length)%DB.maps.length].id; renderMapChips(); renderMapBody(); }
+function cycleMap(dir){ if(UI.maps.view!=="detail")return; const i=DB.maps.findIndex(m=>m.id===UI.maps.selectedId); if(i<0)return;
+  UI.maps.selectedId=DB.maps[(i+dir+DB.maps.length)%DB.maps.length].id; UI.maps.floorIdx=0; renderMaps(byId("view")); }
 
 /* =================================================================== *
  *  BOOT

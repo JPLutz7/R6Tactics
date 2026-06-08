@@ -14,18 +14,23 @@ no dependencies, no external calls. Open the file (or the Pages URL) and it runs
 
 ## The two tabs
 
-### 🗺 Maps  (callouts reference)
-- **Map switcher** chips across the top — click a map (or `[` / `]` to cycle).
-- **All floors shown at once**, each as a card with the room **callouts** labelled
-  on a schematic.
-- **Bomb-site objectives** are highlighted (amber ◆) and listed in a strip up top.
+### 🗺 Maps  (callouts reference, r6calls-style)
+- A **table of contents**: a gallery of **map cover tiles** for **every Siege map**
+  (all 25, including **Calypso Casino**). Click a tile to open that map.
+- Inside a map you see **one floor at a time**, with **floor tabs above** the image
+  — click `Basement / 1F / 2F / …` to switch floors (or `[` / `]` to flip maps,
+  `Esc` to go back to the gallery).
+- The floor area is a **plain placeholder** until you add a real top-down image;
+  **callouts** are labelled on top, with **bomb-site objectives** highlighted (amber
+  ◆) and listed in a strip below.
 - **Layer toggles:** show/hide **Room names** and **Bomb sites**.
 - **✎ Edit** mode lets you:
+  - **⬆ upload a cover image** per map (gallery) and a **top-down image** per floor,
   - rename the map, add/remove floors, add/rename/delete callouts,
-  - **drag callout pins** to position them (or type x/y 0–100),
-  - **⬆ upload your own top-down floor image** per floor — the callouts then sit
-    on top of *your* image, so it looks just like r6calls. (Schematic placeholders
-    are used until you add an image.)
+  - **drag callout pins** to position them (or type x/y 0–100).
+
+> No copyrighted Ubisoft/r6calls art is bundled — you drop in images you have the
+> rights to, and the callouts overlay on them.
 
 ### 👥 Roster
 - **Players** occupy **roles**; the recommended **operator pools live on the role**
