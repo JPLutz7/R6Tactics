@@ -135,6 +135,14 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .mapcard-foot{display:flex;align-items:center;gap:8px;padding:10px 13px;border-top:1px solid var(--line)}
 .mapcard-foot .nm{font-weight:700;font-size:14px;flex:1}
 .mapcard-foot .fl{color:var(--muted2);font-size:11px;font-family:var(--mono)}
+.mapcard .star{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:8px;border:1px solid var(--line2);background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;font-size:15px;color:#9aa6b3;z-index:3;line-height:1;padding:0}
+.mapcard .star:hover{color:#e0a400}
+.mapcard .star.on{color:#e0a400;background:#fff8e1;border-color:var(--obj-line)}
+.toc-sec-h{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+.toc-sec-h .ttl{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
+.toc-sec-h.ranked .ttl{color:#b8860b}
+.toc-sec-h .pill{font-size:11px;font-family:var(--mono);color:var(--muted);background:var(--panel2);border:1px solid var(--line);padding:2px 8px;border-radius:6px}
+.toc-sec-h .ln{flex:1;height:1px;background:var(--line)}
 
 /* ---------- floor tabs + single-floor view ---------- */
 .floortabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px}
@@ -251,7 +259,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 2,
+  "version": 3,
   "publishedAt": "2026-06-08",
   "maps": [
     {
@@ -533,7 +541,8 @@ const SEED_DATA =
     {"name":"unknown","roleId":"flex-hardbreach","notes":"Placeholder — not recruited yet. Prioritise a team player who'll play utility, not another fragger."}
   ],
 
-  "playerStats":[]
+  "playerStats":[],
+  "rankedPool":["clubhouse","bank","consulate","kafe","oregon","border","chalet","skyscraper","lair","theme-park"]
 }
 /* ====== END EMBEDDED DATA ====== */
 ;
@@ -570,7 +579,7 @@ const DEF_FIELDS=["reinforcements","anchorPositions","roamPaths","defaultSetup",
 function blankTactic(f){ const o={}; f.forEach(k=>o[k]=""); return o; }
 function normalizeDB(db){
   db.version=db.version||1;
-  ["maps","operators","roles","roster","playerStats"].forEach(k=>{ if(!Array.isArray(db[k])) db[k]=[]; });
+  ["maps","operators","roles","roster","playerStats","rankedPool"].forEach(k=>{ if(!Array.isArray(db[k])) db[k]=[]; });
   db.maps.forEach(m=>{
     m.id=m.id||slug(m.name||"map"); m.name=m.name||m.id; m.notes=m.notes||""; if(!("coverImage"in m))m.coverImage=null;
     if(!Array.isArray(m.floors)) m.floors=[];
@@ -589,6 +598,7 @@ function normalizeDB(db){
     r.attackRoleLabel=r.attackRoleLabel||""; r.defenseRoleLabel=r.defenseRoleLabel||"";
     if(!Array.isArray(r.attackOps))r.attackOps=[]; if(!Array.isArray(r.defenseOps))r.defenseOps=[]; r.notes=r.notes||""; });
   db.roster.forEach(p=>{ p.name=p.name||""; p.roleId=p.roleId||""; p.notes=p.notes||""; });
+  db.rankedPool=db.rankedPool.filter(id=>db.maps.some(m=>m.id===id));
 }
 function numOr(v,d){ const n=Number(v); return Number.isFinite(n)?n:d; }
 
@@ -676,35 +686,46 @@ function renderMapTOC(root){
   const edit=UI.maps.edit;
   root.innerHTML=`
     <div class="toolbar">
-      <div class="section-title" style="margin:0">Maps <span class="muted" style="text-transform:none;letter-spacing:0">· pick a map</span></div>
+      <div class="section-title" style="margin:0">Maps <span class="muted" style="text-transform:none;letter-spacing:0">· ★ = ranked pool · click a tile to open</span></div>
       <div class="grow"></div>
       ${edit?`<button class="btn sm" id="addMap">＋ map</button>`:""}
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
-    <div class="covergrid" id="coverGrid"></div>`;
+    <div id="tocSections"></div>`;
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMaps(root); };
   const am=byId("addMap"); if(am) am.onclick=addMap;
-  renderCoverGrid();
+  renderTocSections();
 }
-function renderCoverGrid(){
-  const grid=byId("coverGrid"); const edit=UI.maps.edit;
-  grid.innerHTML=DB.maps.map(m=>{
-    const cv=m.coverImage?` style="background-image:url('${esc(m.coverImage)}')"`:"";
-    return `<div class="mapcard" data-open="${esc(m.id)}">
-      <div class="cover ${m.coverImage?"has-img":""}"${cv}>
-        ${m.coverImage?"":`<span class="cover-ph">${esc(m.name)}</span>`}
-        ${edit?`<button class="cover-up" data-cover="${esc(m.id)}">⬆ cover</button>`:""}
-      </div>
-      <div class="mapcard-foot"><span class="nm">${esc(m.name)}</span><span class="fl">${m.floors.length} floors</span>
-        ${edit?`<button class="iconbtn" data-delmap="${esc(m.id)}" title="Delete map">✕</button>`:""}</div>
-    </div>`;
-  }).join("")||`<div class="empty">No maps.${edit?" Use ＋ map.":""}</div>`;
-  grid.querySelectorAll("[data-open]").forEach(card=>card.onclick=e=>{ if(e.target.closest("[data-cover],[data-delmap]"))return; openMap(card.dataset.open); });
+function coverCardHTML(m){
+  const edit=UI.maps.edit; const isR=DB.rankedPool.includes(m.id);
+  const cv=m.coverImage?` style="background-image:url('${esc(m.coverImage)}')"`:"";
+  return `<div class="mapcard" data-open="${esc(m.id)}">
+    <div class="cover ${m.coverImage?"has-img":""}"${cv}>
+      <button class="star ${isR?"on":""}" data-star="${esc(m.id)}" title="${isR?"In ranked pool — click to remove":"Add to ranked pool"}">${isR?"★":"☆"}</button>
+      ${m.coverImage?"":`<span class="cover-ph">${esc(m.name)}</span>`}
+      ${edit?`<button class="cover-up" data-cover="${esc(m.id)}">⬆ cover</button>`:""}
+    </div>
+    <div class="mapcard-foot"><span class="nm">${esc(m.name)}</span><span class="fl">${m.floors.length} floors</span>
+      ${edit?`<button class="iconbtn" data-delmap="${esc(m.id)}" title="Delete map">✕</button>`:""}</div>
+  </div>`;
+}
+function renderTocSections(){
+  const host=byId("tocSections"); const edit=UI.maps.edit;
+  const ranked=DB.rankedPool.map(id=>mapById(id)).filter(Boolean);
+  const others=DB.maps.filter(m=>!DB.rankedPool.includes(m.id));
+  host.innerHTML=`
+    <div class="toc-sec-h ranked"><span class="ttl">★ Ranked Pool</span><span class="pill">${ranked.length}</span><span class="ln"></span></div>
+    <div class="covergrid">${ranked.length?ranked.map(coverCardHTML).join(""):`<div class="empty" style="grid-column:1/-1;padding:6px 2px">No maps in the ranked pool — click the ☆ on a map below to add it.</div>`}</div>
+    <div class="toc-sec-h" style="margin-top:26px"><span class="ttl">Other Maps</span><span class="pill">${others.length}</span><span class="ln"></span></div>
+    <div class="covergrid">${others.length?others.map(coverCardHTML).join(""):`<div class="empty" style="grid-column:1/-1;padding:6px 2px">Every map is in the ranked pool.</div>`}</div>`;
+  host.querySelectorAll("[data-open]").forEach(card=>card.onclick=e=>{ if(e.target.closest("[data-star],[data-cover],[data-delmap]"))return; openMap(card.dataset.open); });
+  host.querySelectorAll("[data-star]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toggleRanked(b.dataset.star); renderTocSections(); });
   if(edit){
-    grid.querySelectorAll("[data-cover]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); imgTarget={kind:"cover",mapId:b.dataset.cover}; byId("imgInput").click(); });
-    grid.querySelectorAll("[data-delmap]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const m=mapById(b.dataset.delmap); if(m&&confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); markDirty(); renderCoverGrid(); } });
+    host.querySelectorAll("[data-cover]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); imgTarget={kind:"cover",mapId:b.dataset.cover}; byId("imgInput").click(); });
+    host.querySelectorAll("[data-delmap]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const m=mapById(b.dataset.delmap); if(m&&confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); DB.rankedPool=DB.rankedPool.filter(id=>id!==m.id); markDirty(); renderTocSections(); } });
   }
 }
+function toggleRanked(id){ const i=DB.rankedPool.indexOf(id); if(i>=0)DB.rankedPool.splice(i,1); else DB.rankedPool.push(id); markDirty(); }
 function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
 
 /* ----- map detail: ONE floor at a time, with floor tabs above ----- */
@@ -720,6 +741,7 @@ function renderMapDetail(root){
       <div class="toggle ${UI.maps.layerNames?"on":""}" id="tgNames"><span class="box">✓</span> Room names</div>
       <div class="toggle obj ${UI.maps.layerSites?"on":""}" id="tgSites"><span class="box">✓</span> Bomb sites</div>
       <span class="sep"></span>
+      <button class="btn sm ${DB.rankedPool.includes(m.id)?"on":""}" id="rankToggle">${DB.rankedPool.includes(m.id)?"★ Ranked":"☆ Add to ranked"}</button>
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
     ${edit?`<div class="row" style="margin-bottom:12px"><textarea id="mapNotes" placeholder="Map notes…" style="flex:1">${esc(m.notes)}</textarea><button class="btn sm danger" id="delMap">Delete map</button></div>`:(m.notes?`<div class="mapnotes">${esc(m.notes)}</div>`:"")}
@@ -729,6 +751,7 @@ function renderMapDetail(root){
   byId("backToc").onclick=()=>{ UI.maps.view="toc"; renderMaps(root); };
   byId("tgNames").onclick=()=>{ UI.maps.layerNames=!UI.maps.layerNames; byId("tgNames").classList.toggle("on",UI.maps.layerNames); renderFloorView(); };
   byId("tgSites").onclick=()=>{ UI.maps.layerSites=!UI.maps.layerSites; byId("tgSites").classList.toggle("on",UI.maps.layerSites); renderFloorView(); };
+  byId("rankToggle").onclick=()=>{ toggleRanked(m.id); renderMapDetail(root); };
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMapDetail(root); };
   if(edit){
     byId("mapName").onchange=e=>{ m.name=e.target.value; markDirty(); };
@@ -815,7 +838,7 @@ function onImagePicked(e){
   const r=new FileReader();
   r.onload=()=>{ const prev=target[prop]; target[prop]=r.result;
     if(!META.dirty){ META.dirty=true; writeMeta(META); }
-    try{ persist(); refreshStatus(); if(kind==="cover") renderCoverGrid(); else renderFloorView(); toast("Image added"); }
+    try{ persist(); refreshStatus(); if(kind==="cover") renderTocSections(); else renderFloorView(); toast("Image added"); }
     catch(err){ target[prop]=prev; alert("Too large to store (browser localStorage is ~5MB total). Try an image under ~500KB, or fewer images."); } };
   r.readAsDataURL(file);
 }
