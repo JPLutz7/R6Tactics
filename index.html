@@ -143,6 +143,13 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .toc-sec-h.ranked .ttl{color:#b8860b}
 .toc-sec-h .pill{font-size:11px;font-family:var(--mono);color:var(--muted);background:var(--panel2);border:1px solid var(--line);padding:2px 8px;border-radius:6px}
 .toc-sec-h .ln{flex:1;height:1px;background:var(--line)}
+.toc-sec-h.pool .ttl{color:#b8860b}
+.toc-sec-h .note{color:var(--muted);font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52ch}
+.toc-sec-h .poolname{max-width:190px;font-weight:700;padding:4px 8px;font-size:13px}
+.toc-sec-h .poolnote{flex:1;min-width:140px;padding:4px 8px;font-size:12px}
+.poolsel{font-size:12px;padding:4px 6px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);color:var(--text);max-width:130px;cursor:pointer}
+.mapcard-foot .poolsel{flex:1;min-width:0}
+.poolbadge{font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#9a7b10;background:#fff8e1;border:1px solid var(--obj-line);padding:5px 11px;border-radius:6px}
 
 /* ---------- floor tabs + single-floor view ---------- */
 .floortabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px}
@@ -259,11 +266,11 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 5,
+  "version": 6,
   "publishedAt": "2026-06-08",
   "maps": [
     {
-      "id":"clubhouse","name":"Clubhouse","coverImage":"assets/covers/clubhouse.jpg?v=2",
+      "id":"clubhouse","name":"Clubhouse","coverImage":"assets/covers/clubhouse.jpg?v=3",
       "notes":"Flagship example — tactics are filled on the 2F Bedroom/CCTV site for both sides as a demo. Roof control (Master hatch) and the Garage/Basement macro fights decide most rounds.",
       "floors":[
         {"name":"Basement","layoutImage":null,"callouts":[
@@ -309,7 +316,7 @@ const SEED_DATA =
       }
     },
     {
-      "id":"oregon","name":"Oregon","coverImage":"assets/covers/oregon.jpg?v=2",
+      "id":"oregon","name":"Oregon","coverImage":"assets/covers/oregon.jpg?v=3",
       "notes":"Scaffold — bombsites & callouts are placeholders to verify; fill tactics from VOD review. Tower control and the basement/laundry fight are the classic macro decisions.",
       "floors":[
         {"name":"Basement","layoutImage":null,"callouts":[
@@ -330,7 +337,7 @@ const SEED_DATA =
       "tactics":{"attack":{},"defense":{}}
     },
     {
-      "id":"bank","name":"Bank","coverImage":"assets/covers/bank.jpg?v=2",
+      "id":"bank","name":"Bank","coverImage":"assets/covers/bank.jpg?v=3",
       "notes":"Scaffold — verify sites/callouts and fill tactics. CCTV/Lockers basement and the open-area lobby control are the staple fights.",
       "floors":[
         {"name":"Basement","layoutImage":null,"callouts":[
@@ -349,7 +356,7 @@ const SEED_DATA =
       "tactics":{"attack":{},"defense":{}}
     },
     {
-      "id":"consulate","name":"Consulate","coverImage":"assets/covers/consulate.jpg?v=2",
+      "id":"consulate","name":"Consulate","coverImage":"assets/covers/consulate.jpg?v=3",
       "notes":"Scaffold — Consulate bombsites/callouts are placeholders; set your real sites in the editor. Garage push and the 2F admin fight are the classic macro calls.",
       "floors":[
         {"name":"Basement","layoutImage":null,"callouts":[
@@ -367,7 +374,7 @@ const SEED_DATA =
       "tactics":{"attack":{},"defense":{}}
     },
     {
-      "id":"kafe","name":"Kafe Dostoyevsky","coverImage":"assets/covers/kafe.jpg?v=2",
+      "id":"kafe","name":"Kafe Dostoyevsky","coverImage":"assets/covers/kafe.jpg?v=3",
       "notes":"Scaffold — verify sites & fill tactics. Long sightlines and verticality (3F cocktail down to 2F) are the defining traits.",
       "floors":[
         {"name":"1F","layoutImage":null,"callouts":[
@@ -385,45 +392,45 @@ const SEED_DATA =
       ],
       "tactics":{"attack":{},"defense":{}}
     },
-    {"id":"border","name":"Border","coverImage":"assets/covers/border.jpg?v=2","notes":"Scaffold — upload a cover + per-floor top-down images, then place callouts.","floors":[
+    {"id":"border","name":"Border","coverImage":"assets/covers/border.jpg?v=3","notes":"Scaffold — upload a cover + per-floor top-down images, then place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"chalet","name":"Chalet","coverImage":"assets/covers/chalet.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"chalet","name":"Chalet","coverImage":"assets/covers/chalet.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"coastline","name":"Coastline","coverImage":"assets/covers/coastline.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"coastline","name":"Coastline","coverImage":"assets/covers/coastline.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"emerald-plains","name":"Emerald Plains","coverImage":"assets/covers/emerald-plains.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"emerald-plains","name":"Emerald Plains","coverImage":"assets/covers/emerald-plains.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"favela","name":"Favela","coverImage":"assets/covers/favela.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"favela","name":"Favela","coverImage":"assets/covers/favela.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"fortress","name":"Fortress","coverImage":"assets/covers/fortress.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"fortress","name":"Fortress","coverImage":"assets/covers/fortress.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"Roof","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"hereford-base","name":"Hereford Base","coverImage":"assets/covers/hereford-base.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"hereford-base","name":"Hereford Base","coverImage":"assets/covers/hereford-base.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"house","name":"House","coverImage":"assets/covers/house.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"house","name":"House","coverImage":"assets/covers/house.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"kanal","name":"Kanal","coverImage":"assets/covers/kanal.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"kanal","name":"Kanal","coverImage":"assets/covers/kanal.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"lair","name":"Lair","coverImage":"assets/covers/lair.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"lair","name":"Lair","coverImage":"assets/covers/lair.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"nighthaven-labs","name":"Nighthaven Labs","coverImage":"assets/covers/nighthaven-labs.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"nighthaven-labs","name":"Nighthaven Labs","coverImage":"assets/covers/nighthaven-labs.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"outback","name":"Outback","coverImage":"assets/covers/outback.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"outback","name":"Outback","coverImage":"assets/covers/outback.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"presidential-plane","name":"Presidential Plane","coverImage":"assets/covers/presidential-plane.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"presidential-plane","name":"Presidential Plane","coverImage":"assets/covers/presidential-plane.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"skyscraper","name":"Skyscraper","coverImage":"assets/covers/skyscraper.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"skyscraper","name":"Skyscraper","coverImage":"assets/covers/skyscraper.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"stadium","name":"Stadium","coverImage":"assets/covers/stadium.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"stadium","name":"Stadium","coverImage":"assets/covers/stadium.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"theme-park","name":"Theme Park","coverImage":"assets/covers/theme-park.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"theme-park","name":"Theme Park","coverImage":"assets/covers/theme-park.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"tower","name":"Tower","coverImage":"assets/covers/tower.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"tower","name":"Tower","coverImage":"assets/covers/tower.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"villa","name":"Villa","coverImage":"assets/covers/villa.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"villa","name":"Villa","coverImage":"assets/covers/villa.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"yacht","name":"Yacht","coverImage":"assets/covers/yacht.jpg?v=2","notes":"Scaffold — upload images and place callouts.","floors":[
+    {"id":"yacht","name":"Yacht","coverImage":"assets/covers/yacht.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
       {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"calypso-casino","name":"Calypso Casino","coverImage":"assets/covers/calypso-casino.jpg?v=2","notes":"Newest map (scaffold) — upload images and place callouts; verify floors.","floors":[
+    {"id":"calypso-casino","name":"Calypso Casino","coverImage":"assets/covers/calypso-casino.jpg?v=3","notes":"Newest map (scaffold) — upload images and place callouts; verify floors.","floors":[
       {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}}
   ],
 
@@ -542,7 +549,11 @@ const SEED_DATA =
   ],
 
   "playerStats":[],
-  "rankedPool":["clubhouse","bank","consulate","kafe","oregon","border","chalet","skyscraper","lair","theme-park"]
+  "pools":[
+    {"id":"pro","name":"Pro Pool","note":"Locked all season — mirrors the competitive / esports pool.","mapIds":["bank","border","chalet","clubhouse","consulate","kafe","lair","nighthaven-labs","fortress"]},
+    {"id":"seasonal","name":"Seasonal Pool","note":"Rotates between updates — in at the season's start.","mapIds":["oregon","coastline","emerald-plains","outback"]},
+    {"id":"showcased","name":"Showcased","note":"A single spotlight map that changes every few weeks.","mapIds":["calypso-casino"]}
+  ]
 }
 /* ====== END EMBEDDED DATA ====== */
 ;
@@ -579,7 +590,7 @@ const DEF_FIELDS=["reinforcements","anchorPositions","roamPaths","defaultSetup",
 function blankTactic(f){ const o={}; f.forEach(k=>o[k]=""); return o; }
 function normalizeDB(db){
   db.version=db.version||1;
-  ["maps","operators","roles","roster","playerStats","rankedPool"].forEach(k=>{ if(!Array.isArray(db[k])) db[k]=[]; });
+  ["maps","operators","roles","roster","playerStats","pools"].forEach(k=>{ if(!Array.isArray(db[k])) db[k]=[]; });
   db.maps.forEach(m=>{
     m.id=m.id||slug(m.name||"map"); m.name=m.name||m.id; m.notes=m.notes||""; if(!("coverImage"in m))m.coverImage=null;
     if(!Array.isArray(m.floors)) m.floors=[];
@@ -598,7 +609,12 @@ function normalizeDB(db){
     r.attackRoleLabel=r.attackRoleLabel||""; r.defenseRoleLabel=r.defenseRoleLabel||"";
     if(!Array.isArray(r.attackOps))r.attackOps=[]; if(!Array.isArray(r.defenseOps))r.defenseOps=[]; r.notes=r.notes||""; });
   db.roster.forEach(p=>{ p.name=p.name||""; p.roleId=p.roleId||""; p.notes=p.notes||""; });
-  db.rankedPool=db.rankedPool.filter(id=>db.maps.some(m=>m.id===id));
+  if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
+    db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
+  const claimed=new Set();
+  db.pools.forEach(p=>{ p.id=p.id||slug(p.name||"pool"); p.name=p.name||p.id; p.note=p.note||"";
+    p.mapIds=(Array.isArray(p.mapIds)?p.mapIds:[]).filter(id=>{
+      if(!db.maps.some(m=>m.id===id)||claimed.has(id)) return false; claimed.add(id); return true; }); });
 }
 function numOr(v,d){ const n=Number(v); return Number.isFinite(n)?n:d; }
 
@@ -686,46 +702,60 @@ function renderMapTOC(root){
   const edit=UI.maps.edit;
   root.innerHTML=`
     <div class="toolbar">
-      <div class="section-title" style="margin:0">Maps <span class="muted" style="text-transform:none;letter-spacing:0">· ★ = ranked pool · click a tile to open</span></div>
+      <div class="section-title" style="margin:0">Maps <span class="muted" style="text-transform:none;letter-spacing:0">· pools shown first · click a tile to open</span></div>
       <div class="grow"></div>
-      ${edit?`<button class="btn sm" id="addMap">＋ map</button>`:""}
+      ${edit?`<button class="btn sm" id="addPool">＋ pool</button> <button class="btn sm" id="addMap">＋ map</button>`:""}
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
     <div id="tocSections"></div>`;
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMaps(root); };
   const am=byId("addMap"); if(am) am.onclick=addMap;
+  const ap=byId("addPool"); if(ap) ap.onclick=()=>{ DB.pools.push({id:uid("pool"),name:"New Pool",note:"",mapIds:[]}); markDirty(); renderTocSections(); };
   renderTocSections();
 }
+function mapPoolId(mapId){ const p=DB.pools.find(p=>p.mapIds.includes(mapId)); return p?p.id:""; }
+function setMapPool(mapId,poolId){ DB.pools.forEach(p=>p.mapIds=p.mapIds.filter(id=>id!==mapId)); if(poolId){ const p=DB.pools.find(x=>x.id===poolId); if(p&&!p.mapIds.includes(mapId)) p.mapIds.push(mapId); } markDirty(); }
+function poolSelectHTML(mapId){ const cur=mapPoolId(mapId);
+  return `<select class="poolsel" data-pool="${esc(mapId)}"><option value="">— no pool —</option>${DB.pools.map(p=>`<option value="${esc(p.id)}" ${p.id===cur?"selected":""}>${esc(p.name)}</option>`).join("")}</select>`; }
+function poolBadgeHTML(mapId){ const id=mapPoolId(mapId); if(!id)return ""; const p=DB.pools.find(x=>x.id===id); return `<span class="poolbadge">${esc(p?p.name:"")}</span>`; }
 function coverCardHTML(m){
-  const edit=UI.maps.edit; const isR=DB.rankedPool.includes(m.id);
+  const edit=UI.maps.edit;
   const cv=m.coverImage?` style="background-image:url('${esc(m.coverImage)}')"`:"";
   return `<div class="mapcard" data-open="${esc(m.id)}">
     <div class="cover ${m.coverImage?"has-img":""}"${cv}>
-      <button class="star ${isR?"on":""}" data-star="${esc(m.id)}" title="${isR?"In ranked pool — click to remove":"Add to ranked pool"}">${isR?"★":"☆"}</button>
       ${m.coverImage?"":`<span class="cover-ph">${esc(m.name)}</span>`}
       ${edit?`<button class="cover-up" data-cover="${esc(m.id)}">⬆ cover</button>`:""}
     </div>
-    <div class="mapcard-foot"><span class="nm">${esc(m.name)}</span><span class="fl">${m.floors.length} floors</span>
-      ${edit?`<button class="iconbtn" data-delmap="${esc(m.id)}" title="Delete map">✕</button>`:""}</div>
+    <div class="mapcard-foot">
+      <span class="nm">${esc(m.name)}</span>
+      ${edit?`${poolSelectHTML(m.id)}<button class="iconbtn" data-delmap="${esc(m.id)}" title="Delete map">✕</button>`:`<span class="fl">${m.floors.length} floors</span>`}
+    </div>
   </div>`;
 }
 function renderTocSections(){
   const host=byId("tocSections"); const edit=UI.maps.edit;
-  const ranked=DB.rankedPool.map(id=>mapById(id)).filter(Boolean);
-  const others=DB.maps.filter(m=>!DB.rankedPool.includes(m.id));
-  host.innerHTML=`
-    <div class="toc-sec-h ranked"><span class="ttl">★ Ranked Pool</span><span class="pill">${ranked.length}</span><span class="ln"></span></div>
-    <div class="covergrid">${ranked.length?ranked.map(coverCardHTML).join(""):`<div class="empty" style="grid-column:1/-1;padding:6px 2px">No maps in the ranked pool — click the ☆ on a map below to add it.</div>`}</div>
-    <div class="toc-sec-h" style="margin-top:26px"><span class="ttl">Other Maps</span><span class="pill">${others.length}</span><span class="ln"></span></div>
-    <div class="covergrid">${others.length?others.map(coverCardHTML).join(""):`<div class="empty" style="grid-column:1/-1;padding:6px 2px">Every map is in the ranked pool.</div>`}</div>`;
-  host.querySelectorAll("[data-open]").forEach(card=>card.onclick=e=>{ if(e.target.closest("[data-star],[data-cover],[data-delmap]"))return; openMap(card.dataset.open); });
-  host.querySelectorAll("[data-star]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toggleRanked(b.dataset.star); renderTocSections(); });
+  const pooled=new Set(); DB.pools.forEach(p=>p.mapIds.forEach(id=>pooled.add(id)));
+  const others=DB.maps.filter(m=>!pooled.has(m.id));
+  const grid=(maps,empty)=>`<div class="covergrid">${maps.length?maps.map(coverCardHTML).join(""):`<div class="empty" style="grid-column:1/-1;padding:6px 2px">${empty}</div>`}</div>`;
+  const poolsHTML=DB.pools.map((p,i)=>{
+    const maps=p.mapIds.map(id=>mapById(id)).filter(Boolean); const mt=i?' style="margin-top:26px"':'';
+    const head=edit
+      ? `<div class="toc-sec-h pool"${mt}><input class="poolname" data-pname="${esc(p.id)}" value="${esc(p.name)}"><span class="pill">${maps.length}</span><input class="poolnote" data-pnote="${esc(p.id)}" value="${esc(p.note)}" placeholder="description…"><button class="iconbtn" data-pdel="${esc(p.id)}" title="Delete pool">✕</button></div>`
+      : `<div class="toc-sec-h pool"${mt}><span class="ttl">${esc(p.name)}</span><span class="pill">${maps.length}</span>${p.note?`<span class="note">${esc(p.note)}</span>`:""}<span class="ln"></span></div>`;
+    return head+grid(maps, edit?"No maps yet — assign one with the dropdown on a tile below.":"No maps in this pool.");
+  }).join("");
+  const otherHead=`<div class="toc-sec-h" style="margin-top:26px"><span class="ttl">Other Maps</span><span class="pill">${others.length}</span><span class="ln"></span></div>`;
+  host.innerHTML=poolsHTML+otherHead+grid(others,"Every map is in a pool.");
+  host.querySelectorAll("[data-open]").forEach(card=>card.onclick=e=>{ if(e.target.closest("[data-pool],[data-cover],[data-delmap],[data-pname],[data-pnote],[data-pdel]"))return; openMap(card.dataset.open); });
   if(edit){
     host.querySelectorAll("[data-cover]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); imgTarget={kind:"cover",mapId:b.dataset.cover}; byId("imgInput").click(); });
-    host.querySelectorAll("[data-delmap]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const m=mapById(b.dataset.delmap); if(m&&confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); DB.rankedPool=DB.rankedPool.filter(id=>id!==m.id); markDirty(); renderTocSections(); } });
+    host.querySelectorAll("[data-delmap]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const m=mapById(b.dataset.delmap); if(m&&confirm(`Delete map "${m.name}"?`)){ DB.maps=DB.maps.filter(x=>x.id!==m.id); DB.pools.forEach(p=>p.mapIds=p.mapIds.filter(id=>id!==m.id)); markDirty(); renderTocSections(); } });
+    host.querySelectorAll("[data-pool]").forEach(sel=>sel.onchange=e=>{ e.stopPropagation(); setMapPool(sel.dataset.pool, sel.value); renderTocSections(); });
+    host.querySelectorAll("[data-pname]").forEach(inp=>inp.onchange=()=>{ const p=DB.pools.find(x=>x.id===inp.dataset.pname); if(p){ p.name=inp.value; markDirty(); } });
+    host.querySelectorAll("[data-pnote]").forEach(inp=>inp.oninput=()=>{ const p=DB.pools.find(x=>x.id===inp.dataset.pnote); if(p){ p.note=inp.value; markDirty(); } });
+    host.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ const p=DB.pools.find(x=>x.id===b.dataset.pdel); if(p&&confirm(`Delete pool "${p.name}"? Its maps move to Other Maps.`)){ DB.pools=DB.pools.filter(x=>x.id!==p.id); markDirty(); renderTocSections(); } });
   }
 }
-function toggleRanked(id){ const i=DB.rankedPool.indexOf(id); if(i>=0)DB.rankedPool.splice(i,1); else DB.rankedPool.push(id); markDirty(); }
 function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
 
 /* ----- map detail: ONE floor at a time, with floor tabs above ----- */
@@ -741,7 +771,7 @@ function renderMapDetail(root){
       <div class="toggle ${UI.maps.layerNames?"on":""}" id="tgNames"><span class="box">✓</span> Room names</div>
       <div class="toggle obj ${UI.maps.layerSites?"on":""}" id="tgSites"><span class="box">✓</span> Bomb sites</div>
       <span class="sep"></span>
-      <button class="btn sm ${DB.rankedPool.includes(m.id)?"on":""}" id="rankToggle">${DB.rankedPool.includes(m.id)?"★ Ranked":"☆ Add to ranked"}</button>
+      ${edit?poolSelectHTML(m.id):poolBadgeHTML(m.id)}
       <button class="btn ${edit?"on":""}" id="mapEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
     ${edit?`<div class="row" style="margin-bottom:12px"><textarea id="mapNotes" placeholder="Map notes…" style="flex:1">${esc(m.notes)}</textarea><button class="btn sm danger" id="delMap">Delete map</button></div>`:(m.notes?`<div class="mapnotes">${esc(m.notes)}</div>`:"")}
@@ -751,7 +781,7 @@ function renderMapDetail(root){
   byId("backToc").onclick=()=>{ UI.maps.view="toc"; renderMaps(root); };
   byId("tgNames").onclick=()=>{ UI.maps.layerNames=!UI.maps.layerNames; byId("tgNames").classList.toggle("on",UI.maps.layerNames); renderFloorView(); };
   byId("tgSites").onclick=()=>{ UI.maps.layerSites=!UI.maps.layerSites; byId("tgSites").classList.toggle("on",UI.maps.layerSites); renderFloorView(); };
-  byId("rankToggle").onclick=()=>{ toggleRanked(m.id); renderMapDetail(root); };
+  const poolSel=root.querySelector("[data-pool]"); if(poolSel) poolSel.onchange=()=>{ setMapPool(m.id, poolSel.value); renderMapDetail(root); };
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMapDetail(root); };
   if(edit){
     byId("mapName").onchange=e=>{ m.name=e.target.value; markDirty(); };
