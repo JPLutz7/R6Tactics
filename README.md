@@ -32,8 +32,10 @@ no dependencies, no external calls. Open the file (or the Pages URL) and it runs
   - rename the map, add/remove floors, add/rename/delete callouts,
   - **drag callout pins** to position them (or type x/y 0–100).
 
-> No copyrighted Ubisoft/r6calls art is bundled — you drop in images you have the
-> rights to, and the callouts overlay on them.
+> **Cover art** is Ubisoft's official map images (pulled from ubisoft.com), bundled
+> in `assets/covers/`. **Top-down floor plans aren't bundled** — Ubisoft doesn't
+> publish them and the community wikis block automated download — so add those per
+> floor via **Edit → ⬆ Upload image** (or send them to me and I'll commit them).
 
 ### 👥 Roster
 - **Players** occupy **roles**; the recommended **operator pools live on the role**
@@ -60,13 +62,16 @@ tracker.gg, Overwolf, or BattlEye — manual data only. ToS-safe by design.
 
 ---
 
-## About floor images
-Real r6calls/Ubisoft map images are copyrighted, so they're **not** bundled.
-Instead, every floor has an **upload slot** (Edit → ⬆ Image) so you can drop in
-top-down images you're allowed to use, and the callouts overlay on them. Images
-are stored in your browser and travel with **Export / Copy publish JSON**.
-Keep them small — browser storage is ~5 MB total, so aim for images under ~500 KB
-each (the app warns if one is too large to save).
+## About images
+- **Map covers:** Ubisoft's official map art, committed as files under
+  `assets/covers/<id>.jpg` and referenced by path (so they don't bloat browser
+  storage). This is why the project is no longer *strictly* one file — it's
+  `index.html` + an `assets/` folder, still pure static hosting.
+- **Top-down floor plans:** add per floor via **Edit → ⬆ Upload image**. These are
+  stored in your browser (as data URLs) and travel with **Export / Copy publish
+  JSON** — so keep them small (under ~500 KB each; the app warns if one is too big).
+  For the whole stack to share floor images long-term, send them to me and I'll
+  commit them under `assets/` and reference them by path like the covers.
 
 ---
 
