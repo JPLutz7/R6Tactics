@@ -34,10 +34,11 @@ no dependencies, no external calls. Open the file (or the Pages URL) and it runs
   - rename the map, add/remove floors, add/rename/delete callouts,
   - **drag callout pins** to position them (or type x/y 0–100).
 
-> **Cover art** is Ubisoft's official map images (pulled from ubisoft.com), bundled
-> in `assets/covers/`. **Top-down floor plans aren't bundled** — Ubisoft doesn't
-> publish them and the community wikis block automated download — so add those per
-> floor via **Edit → ⬆ Upload image** (or send them to me and I'll commit them).
+> **Cover art** is Ubisoft's official map images (from ubisoft.com) in `assets/covers/`.
+> **Top-down floor plans** are current layouts captured from
+> [r6calls.com](https://r6calls.com) in `assets/floors/<map>/<n>.webp` (see
+> `assets/floors/CREDITS.txt`; map data © Ubisoft). To swap one, **Edit → ⬆ Upload
+> image** on a floor, or replace the file.
 
 ### 👥 Roster
 - **Players** occupy **roles**; the recommended **operator pools live on the role**

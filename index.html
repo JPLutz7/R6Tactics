@@ -246,7 +246,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
   <main class="main">
     <div id="bannerSlot"></div>
     <div id="view" class="view"></div>
-    <div class="foot">100% client-side · manual data only · <b>no game / Ubisoft / tracker integration</b> — ToS-safe by design.</div>
+    <div class="foot">100% client-side · manual data only · <b>no game / Ubisoft / tracker integration</b> — ToS-safe by design.<br>Map covers © Ubisoft · floor plans from <a href="https://r6calls.com" target="_blank" rel="noopener">r6calls.com</a> (map data © Ubisoft).</div>
   </main>
 </div>
 
@@ -266,293 +266,1840 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 6,
+  "version": 7,
   "publishedAt": "2026-06-08",
   "maps": [
     {
-      "id":"clubhouse","name":"Clubhouse","coverImage":"assets/covers/clubhouse.jpg?v=3",
-      "notes":"Flagship example — tactics are filled on the 2F Bedroom/CCTV site for both sides as a demo. Roof control (Master hatch) and the Garage/Basement macro fights decide most rounds.",
-      "floors":[
-        {"name":"Basement","layoutImage":null,"callouts":[
-          {"name":"Church","x":30,"y":42},{"name":"Arsenal Room","x":62,"y":46},
-          {"name":"Blue Stairs","x":46,"y":20},{"name":"Junk Hall","x":74,"y":72},{"name":"Pump Room","x":20,"y":70}]},
-        {"name":"1F","layoutImage":null,"callouts":[
-          {"name":"Bar","x":34,"y":40},{"name":"Gaming Room","x":60,"y":40},{"name":"Stock Room","x":63,"y":63},
-          {"name":"Main Stairs","x":46,"y":24},{"name":"Construction","x":24,"y":60},{"name":"Cash Trailer","x":78,"y":30}]},
-        {"name":"2F","layoutImage":null,"callouts":[
-          {"name":"Master Bedroom","x":30,"y":35},{"name":"CCTV Room","x":28,"y":62},{"name":"Cash Room","x":63,"y":40},
-          {"name":"Gym","x":67,"y":66},{"name":"Bathroom","x":47,"y":75},{"name":"Top Stairs","x":50,"y":24}]},
-        {"name":"Roof","layoutImage":null,"callouts":[
-          {"name":"Garage Roof","x":42,"y":40},{"name":"Master Hatch","x":32,"y":56},{"name":"CCTV Hatch","x":30,"y":72}]}
+      "id": "clubhouse",
+      "name": "Clubhouse",
+      "coverImage": "assets/covers/clubhouse.jpg?v=3",
+      "notes": "Flagship example — tactics are filled on the 2F Bedroom/CCTV site for both sides as a demo. Roof control (Master hatch) and the Garage/Basement macro fights decide most rounds.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/clubhouse/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/clubhouse/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/clubhouse/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/clubhouse/3.webp",
+          "callouts": []
+        }
       ],
-      "bombsites":[
-        {"id":"club-2f-bed-cctv","name":"2F · Bedroom / CCTV","rooms":["Master Bedroom","CCTV Room"]},
-        {"id":"club-2f-gym-cash","name":"2F · Gym / Cash","rooms":["Gym","Cash Room"]},
-        {"id":"club-1f-bar-stock","name":"1F · Bar / Stock Room","rooms":["Bar","Stock Room"]},
-        {"id":"club-b-church-arsenal","name":"B · Church / Arsenal","rooms":["Church","Arsenal Room"]}
+      "bombsites": [
+        {
+          "id": "club-2f-bed-cctv",
+          "name": "2F · Bedroom / CCTV",
+          "rooms": [
+            "Master Bedroom",
+            "CCTV Room"
+          ]
+        },
+        {
+          "id": "club-2f-gym-cash",
+          "name": "2F · Gym / Cash",
+          "rooms": [
+            "Gym",
+            "Cash Room"
+          ]
+        },
+        {
+          "id": "club-1f-bar-stock",
+          "name": "1F · Bar / Stock Room",
+          "rooms": [
+            "Bar",
+            "Stock Room"
+          ]
+        },
+        {
+          "id": "club-b-church-arsenal",
+          "name": "B · Church / Arsenal",
+          "rooms": [
+            "Church",
+            "Arsenal Room"
+          ]
+        }
       ],
-      "tactics":{
-        "attack":{
-          "club-2f-bed-cctv":{
-            "breachPoints":"Cash↔Bedroom reinforced wall (open for crossfire), hatch above Bedroom from roof/Gym, CCTV↔Bathroom wall.",
-            "entryPoints":"Top stairs, Gym, Bathroom window, roof hatches into Master.",
-            "utilityToBring":"Hard breach (Thermite/Ace) for the Cash–Bedroom wall · Thatcher/Kali/IQ for Bandit · drones for CCTV/Gym.",
-            "commonPushes":"Take roof + Master, open the Cash wall for crossfire, contest Gym, then collapse on CCTV.",
-            "plantSpots":"Bedroom safe corner by the bunk (out of Cash LOS); CCTV behind the desk.",
-            "postPlant":"Hold Gym, Master and top stairs; deny Bathroom retake; watch the Bandit run-out from Cash.",
-            "notes":"Roof control is the tempo lever — if you own Master hatch, the site folds."
+      "tactics": {
+        "attack": {
+          "club-2f-bed-cctv": {
+            "breachPoints": "Cash↔Bedroom reinforced wall (open for crossfire), hatch above Bedroom from roof/Gym, CCTV↔Bathroom wall.",
+            "entryPoints": "Top stairs, Gym, Bathroom window, roof hatches into Master.",
+            "utilityToBring": "Hard breach (Thermite/Ace) for the Cash–Bedroom wall · Thatcher/Kali/IQ for Bandit · drones for CCTV/Gym.",
+            "commonPushes": "Take roof + Master, open the Cash wall for crossfire, contest Gym, then collapse on CCTV.",
+            "plantSpots": "Bedroom safe corner by the bunk (out of Cash LOS); CCTV behind the desk.",
+            "postPlant": "Hold Gym, Master and top stairs; deny Bathroom retake; watch the Bandit run-out from Cash.",
+            "notes": "Roof control is the tempo lever — if you own Master hatch, the site folds."
           }
         },
-        "defense":{
-          "club-2f-bed-cctv":{
-            "reinforcements":"Bedroom–Cash wall, CCTV–Bathroom wall, Bedroom floor hatch, Cash floor hatch.",
-            "anchorPositions":"One anchor on bomb in CCTV/Bedroom, one in Cash holding the open-wall crossfire.",
-            "roamPaths":"Gym ↔ Master ↔ top stairs early; drop to Bar/Cash trailer for 2F flanks.",
-            "defaultSetup":"Optional Mira on the Cash–Bedroom wall, Bandit/Kaid the breach walls, cams on stairs + Gym.",
-            "runOuts":"Bathroom window onto roof, Gym door — time them with the attacker plant.",
-            "notes":"Deny roof control; the Master hatch above Bedroom is the most-breached surface."
+        "defense": {
+          "club-2f-bed-cctv": {
+            "reinforcements": "Bedroom–Cash wall, CCTV–Bathroom wall, Bedroom floor hatch, Cash floor hatch.",
+            "anchorPositions": "One anchor on bomb in CCTV/Bedroom, one in Cash holding the open-wall crossfire.",
+            "roamPaths": "Gym ↔ Master ↔ top stairs early; drop to Bar/Cash trailer for 2F flanks.",
+            "defaultSetup": "Optional Mira on the Cash–Bedroom wall, Bandit/Kaid the breach walls, cams on stairs + Gym.",
+            "runOuts": "Bathroom window onto roof, Gym door — time them with the attacker plant.",
+            "notes": "Deny roof control; the Master hatch above Bedroom is the most-breached surface."
           }
         }
       }
     },
     {
-      "id":"oregon","name":"Oregon","coverImage":"assets/covers/oregon.jpg?v=3",
-      "notes":"Scaffold — bombsites & callouts are placeholders to verify; fill tactics from VOD review. Tower control and the basement/laundry fight are the classic macro decisions.",
-      "floors":[
-        {"name":"Basement","layoutImage":null,"callouts":[
-          {"name":"Laundry Room","x":40,"y":45},{"name":"Supply Room","x":62,"y":48},{"name":"Blue Stairs","x":30,"y":24},{"name":"White Stairs","x":72,"y":24}]},
-        {"name":"1F","layoutImage":null,"callouts":[
-          {"name":"Kitchen","x":34,"y":40},{"name":"Dining Hall","x":58,"y":42},{"name":"Meeting Hall","x":50,"y":66},{"name":"Kids Dorms","x":72,"y":62},{"name":"Lobby","x":24,"y":66}]},
-        {"name":"2F","layoutImage":null,"callouts":[
-          {"name":"Master Bedroom","x":40,"y":40},{"name":"Aviator Room","x":64,"y":42},{"name":"Games Room","x":30,"y":66},{"name":"Tower","x":74,"y":24}]},
-        {"name":"Attic / Tower","layoutImage":null,"callouts":[
-          {"name":"Tower Top","x":70,"y":40},{"name":"Attic","x":42,"y":48}]}
+      "id": "oregon",
+      "name": "Oregon",
+      "coverImage": "assets/covers/oregon.jpg?v=3",
+      "notes": "Scaffold — bombsites & callouts are placeholders to verify; fill tactics from VOD review. Tower control and the basement/laundry fight are the classic macro decisions.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/oregon/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/oregon/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/oregon/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/oregon/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/oregon/4.webp",
+          "callouts": []
+        }
       ],
-      "bombsites":[
-        {"id":"ore-2f-master-aviator","name":"2F · Master / Aviator","rooms":["Master Bedroom","Aviator Room"]},
-        {"id":"ore-1f-kitchen-dining","name":"1F · Kitchen / Dining Hall","rooms":["Kitchen","Dining Hall"]},
-        {"id":"ore-1f-meeting-dorms","name":"1F · Meeting Hall / Kids Dorms","rooms":["Meeting Hall","Kids Dorms"]},
-        {"id":"ore-b-laundry-supply","name":"B · Laundry / Supply","rooms":["Laundry Room","Supply Room"]}
+      "bombsites": [
+        {
+          "id": "ore-2f-master-aviator",
+          "name": "2F · Master / Aviator",
+          "rooms": [
+            "Master Bedroom",
+            "Aviator Room"
+          ]
+        },
+        {
+          "id": "ore-1f-kitchen-dining",
+          "name": "1F · Kitchen / Dining Hall",
+          "rooms": [
+            "Kitchen",
+            "Dining Hall"
+          ]
+        },
+        {
+          "id": "ore-1f-meeting-dorms",
+          "name": "1F · Meeting Hall / Kids Dorms",
+          "rooms": [
+            "Meeting Hall",
+            "Kids Dorms"
+          ]
+        },
+        {
+          "id": "ore-b-laundry-supply",
+          "name": "B · Laundry / Supply",
+          "rooms": [
+            "Laundry Room",
+            "Supply Room"
+          ]
+        }
       ],
-      "tactics":{"attack":{},"defense":{}}
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
     },
     {
-      "id":"bank","name":"Bank","coverImage":"assets/covers/bank.jpg?v=3",
-      "notes":"Scaffold — verify sites/callouts and fill tactics. CCTV/Lockers basement and the open-area lobby control are the staple fights.",
-      "floors":[
-        {"name":"Basement","layoutImage":null,"callouts":[
-          {"name":"CCTV Room","x":36,"y":44},{"name":"Lockers","x":60,"y":46},{"name":"Server Room","x":48,"y":66},{"name":"Garage","x":22,"y":30}]},
-        {"name":"1F","layoutImage":null,"callouts":[
-          {"name":"Open Area","x":48,"y":42},{"name":"Staff Room","x":68,"y":40},{"name":"Tellers' Office","x":34,"y":58},{"name":"Archives","x":58,"y":64},{"name":"Lobby","x":24,"y":30}]},
-        {"name":"2F","layoutImage":null,"callouts":[
-          {"name":"Executive Lounge","x":40,"y":42},{"name":"CEO Office","x":64,"y":44},{"name":"Admin Office","x":30,"y":64},{"name":"Terrace","x":74,"y":26}]}
+      "id": "bank",
+      "name": "Bank",
+      "coverImage": "assets/covers/bank.jpg?v=3",
+      "notes": "Scaffold — verify sites/callouts and fill tactics. CCTV/Lockers basement and the open-area lobby control are the staple fights.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/bank/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/bank/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/bank/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/bank/3.webp",
+          "callouts": []
+        }
       ],
-      "bombsites":[
-        {"id":"bank-2f-exec-ceo","name":"2F · Executive / CEO Office","rooms":["Executive Lounge","CEO Office"]},
-        {"id":"bank-1f-open-staff","name":"1F · Open Area / Staff Room","rooms":["Open Area","Staff Room"]},
-        {"id":"bank-1f-tellers-archives","name":"1F · Tellers / Archives","rooms":["Tellers' Office","Archives"]},
-        {"id":"bank-b-cctv-lockers","name":"B · CCTV / Lockers","rooms":["CCTV Room","Lockers"]}
+      "bombsites": [
+        {
+          "id": "bank-2f-exec-ceo",
+          "name": "2F · Executive / CEO Office",
+          "rooms": [
+            "Executive Lounge",
+            "CEO Office"
+          ]
+        },
+        {
+          "id": "bank-1f-open-staff",
+          "name": "1F · Open Area / Staff Room",
+          "rooms": [
+            "Open Area",
+            "Staff Room"
+          ]
+        },
+        {
+          "id": "bank-1f-tellers-archives",
+          "name": "1F · Tellers / Archives",
+          "rooms": [
+            "Tellers' Office",
+            "Archives"
+          ]
+        },
+        {
+          "id": "bank-b-cctv-lockers",
+          "name": "B · CCTV / Lockers",
+          "rooms": [
+            "CCTV Room",
+            "Lockers"
+          ]
+        }
       ],
-      "tactics":{"attack":{},"defense":{}}
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
     },
     {
-      "id":"consulate","name":"Consulate","coverImage":"assets/covers/consulate.jpg?v=3",
-      "notes":"Scaffold — Consulate bombsites/callouts are placeholders; set your real sites in the editor. Garage push and the 2F admin fight are the classic macro calls.",
-      "floors":[
-        {"name":"Basement","layoutImage":null,"callouts":[
-          {"name":"Garage","x":36,"y":44},{"name":"Cafeteria","x":62,"y":46},{"name":"Server","x":50,"y":68},{"name":"Garage Ramp","x":24,"y":28}]},
-        {"name":"1F","layoutImage":null,"callouts":[
-          {"name":"Lobby","x":34,"y":40},{"name":"Press Room","x":58,"y":42},{"name":"Front Office","x":48,"y":64},{"name":"Piano Room","x":72,"y":58}]},
-        {"name":"2F","layoutImage":null,"callouts":[
-          {"name":"Admin Office","x":40,"y":42},{"name":"Meeting Room","x":64,"y":44},{"name":"Consul Office","x":30,"y":64},{"name":"Balcony","x":74,"y":26}]}
+      "id": "consulate",
+      "name": "Consulate",
+      "coverImage": "assets/covers/consulate.jpg?v=3",
+      "notes": "Scaffold — Consulate bombsites/callouts are placeholders; set your real sites in the editor. Garage push and the 2F admin fight are the classic macro calls.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/consulate/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/consulate/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/consulate/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/consulate/3.webp",
+          "callouts": []
+        }
       ],
-      "bombsites":[
-        {"id":"cons-2f-admin-meeting","name":"2F · Admin / Meeting","rooms":["Admin Office","Meeting Room"]},
-        {"id":"cons-1f-lobby-press","name":"1F · Lobby / Press Room","rooms":["Lobby","Press Room"]},
-        {"id":"cons-b-garage-cafeteria","name":"B · Garage / Cafeteria","rooms":["Garage","Cafeteria"]}
+      "bombsites": [
+        {
+          "id": "cons-2f-admin-meeting",
+          "name": "2F · Admin / Meeting",
+          "rooms": [
+            "Admin Office",
+            "Meeting Room"
+          ]
+        },
+        {
+          "id": "cons-1f-lobby-press",
+          "name": "1F · Lobby / Press Room",
+          "rooms": [
+            "Lobby",
+            "Press Room"
+          ]
+        },
+        {
+          "id": "cons-b-garage-cafeteria",
+          "name": "B · Garage / Cafeteria",
+          "rooms": [
+            "Garage",
+            "Cafeteria"
+          ]
+        }
       ],
-      "tactics":{"attack":{},"defense":{}}
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
     },
     {
-      "id":"kafe","name":"Kafe Dostoyevsky","coverImage":"assets/covers/kafe.jpg?v=3",
-      "notes":"Scaffold — verify sites & fill tactics. Long sightlines and verticality (3F cocktail down to 2F) are the defining traits.",
-      "floors":[
-        {"name":"1F","layoutImage":null,"callouts":[
-          {"name":"Cooking","x":36,"y":42},{"name":"Service Entrance","x":62,"y":44},{"name":"White Stairs","x":28,"y":26},{"name":"Christmas Hallway","x":68,"y":66}]},
-        {"name":"2F","layoutImage":null,"callouts":[
-          {"name":"Reading Room","x":34,"y":40},{"name":"Fireplace Hall","x":56,"y":42},{"name":"Mining Room","x":40,"y":66},{"name":"Train Museum","x":68,"y":62}]},
-        {"name":"3F","layoutImage":null,"callouts":[
-          {"name":"Cocktail Lounge","x":40,"y":42},{"name":"Bar","x":64,"y":44},{"name":"Red Stairs","x":28,"y":26}]}
+      "id": "kafe",
+      "name": "Kafe Dostoyevsky",
+      "coverImage": "assets/covers/kafe.jpg?v=3",
+      "notes": "Scaffold — verify sites & fill tactics. Long sightlines and verticality (3F cocktail down to 2F) are the defining traits.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/kafe/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/kafe/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/kafe/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/kafe/3.webp",
+          "callouts": []
+        }
       ],
-      "bombsites":[
-        {"id":"kafe-3f-cocktail-bar","name":"3F · Cocktail / Bar","rooms":["Cocktail Lounge","Bar"]},
-        {"id":"kafe-2f-reading-fireplace","name":"2F · Reading Room / Fireplace Hall","rooms":["Reading Room","Fireplace Hall"]},
-        {"id":"kafe-2f-mining-train","name":"2F · Mining Room / Train Museum","rooms":["Mining Room","Train Museum"]},
-        {"id":"kafe-1f-kitchen-service","name":"1F · Kitchen / Service","rooms":["Cooking","Service Entrance"]}
+      "bombsites": [
+        {
+          "id": "kafe-3f-cocktail-bar",
+          "name": "3F · Cocktail / Bar",
+          "rooms": [
+            "Cocktail Lounge",
+            "Bar"
+          ]
+        },
+        {
+          "id": "kafe-2f-reading-fireplace",
+          "name": "2F · Reading Room / Fireplace Hall",
+          "rooms": [
+            "Reading Room",
+            "Fireplace Hall"
+          ]
+        },
+        {
+          "id": "kafe-2f-mining-train",
+          "name": "2F · Mining Room / Train Museum",
+          "rooms": [
+            "Mining Room",
+            "Train Museum"
+          ]
+        },
+        {
+          "id": "kafe-1f-kitchen-service",
+          "name": "1F · Kitchen / Service",
+          "rooms": [
+            "Cooking",
+            "Service Entrance"
+          ]
+        }
       ],
-      "tactics":{"attack":{},"defense":{}}
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
     },
-    {"id":"border","name":"Border","coverImage":"assets/covers/border.jpg?v=3","notes":"Scaffold — upload a cover + per-floor top-down images, then place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"chalet","name":"Chalet","coverImage":"assets/covers/chalet.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"coastline","name":"Coastline","coverImage":"assets/covers/coastline.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"emerald-plains","name":"Emerald Plains","coverImage":"assets/covers/emerald-plains.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"favela","name":"Favela","coverImage":"assets/covers/favela.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"fortress","name":"Fortress","coverImage":"assets/covers/fortress.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"Roof","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"hereford-base","name":"Hereford Base","coverImage":"assets/covers/hereford-base.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]},{"name":"3F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"house","name":"House","coverImage":"assets/covers/house.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"kanal","name":"Kanal","coverImage":"assets/covers/kanal.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"lair","name":"Lair","coverImage":"assets/covers/lair.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"nighthaven-labs","name":"Nighthaven Labs","coverImage":"assets/covers/nighthaven-labs.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"outback","name":"Outback","coverImage":"assets/covers/outback.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"presidential-plane","name":"Presidential Plane","coverImage":"assets/covers/presidential-plane.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"skyscraper","name":"Skyscraper","coverImage":"assets/covers/skyscraper.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"stadium","name":"Stadium","coverImage":"assets/covers/stadium.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"theme-park","name":"Theme Park","coverImage":"assets/covers/theme-park.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"tower","name":"Tower","coverImage":"assets/covers/tower.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"villa","name":"Villa","coverImage":"assets/covers/villa.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"yacht","name":"Yacht","coverImage":"assets/covers/yacht.jpg?v=3","notes":"Scaffold — upload images and place callouts.","floors":[
-      {"name":"Lower Deck","layoutImage":null,"callouts":[]},{"name":"Main Deck","layoutImage":null,"callouts":[]},{"name":"Upper Deck","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}},
-    {"id":"calypso-casino","name":"Calypso Casino","coverImage":"assets/covers/calypso-casino.jpg?v=3","notes":"Newest map (scaffold) — upload images and place callouts; verify floors.","floors":[
-      {"name":"Basement","layoutImage":null,"callouts":[]},{"name":"1F","layoutImage":null,"callouts":[]},{"name":"2F","layoutImage":null,"callouts":[]}],"bombsites":[],"tactics":{"attack":{},"defense":{}}}
+    {
+      "id": "border",
+      "name": "Border",
+      "coverImage": "assets/covers/border.jpg?v=3",
+      "notes": "Scaffold — upload a cover + per-floor top-down images, then place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/border/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/border/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/border/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "chalet",
+      "name": "Chalet",
+      "coverImage": "assets/covers/chalet.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/chalet/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/chalet/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/chalet/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/chalet/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "coastline",
+      "name": "Coastline",
+      "coverImage": "assets/covers/coastline.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/coastline/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/coastline/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/coastline/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "emerald-plains",
+      "name": "Emerald Plains",
+      "coverImage": "assets/covers/emerald-plains.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/emerald-plains/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/emerald-plains/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/emerald-plains/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "favela",
+      "name": "Favela",
+      "coverImage": "assets/covers/favela.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/favela/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/favela/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/favela/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/favela/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/favela/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "fortress",
+      "name": "Fortress",
+      "coverImage": "assets/covers/fortress.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/fortress/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/fortress/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/fortress/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "4th Floor",
+          "layoutImage": "assets/floors/fortress/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/fortress/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "hereford-base",
+      "name": "Hereford Base",
+      "coverImage": "assets/covers/hereford-base.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/hereford-base/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/hereford-base/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/hereford-base/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/hereford-base/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/hereford-base/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "house",
+      "name": "House",
+      "coverImage": "assets/covers/house.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/house/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/house/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/house/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/house/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "kanal",
+      "name": "Kanal",
+      "coverImage": "assets/covers/kanal.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Sub-Basement",
+          "layoutImage": "assets/floors/kanal/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/kanal/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/kanal/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/kanal/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/kanal/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "lair",
+      "name": "Lair",
+      "coverImage": "assets/covers/lair.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/lair/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/lair/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/lair/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/lair/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "nighthaven-labs",
+      "name": "Nighthaven Labs",
+      "coverImage": "assets/covers/nighthaven-labs.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/nighthaven-labs/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/nighthaven-labs/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/nighthaven-labs/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/nighthaven-labs/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "outback",
+      "name": "Outback",
+      "coverImage": "assets/covers/outback.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/outback/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/outback/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/outback/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "presidential-plane",
+      "name": "Presidential Plane",
+      "coverImage": "assets/covers/presidential-plane.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/presidential-plane/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/presidential-plane/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/presidential-plane/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/presidential-plane/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "skyscraper",
+      "name": "Skyscraper",
+      "coverImage": "assets/covers/skyscraper.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/skyscraper/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/skyscraper/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/skyscraper/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "stadium",
+      "name": "Stadium",
+      "coverImage": "assets/covers/stadium.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/stadium/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/stadium/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/stadium/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/stadium/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "theme-park",
+      "name": "Theme Park",
+      "coverImage": "assets/covers/theme-park.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/theme-park/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/theme-park/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/theme-park/2.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "tower",
+      "name": "Tower",
+      "coverImage": "assets/covers/tower.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/tower/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/tower/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/tower/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "4th Floor",
+          "layoutImage": "assets/floors/tower/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/tower/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "villa",
+      "name": "Villa",
+      "coverImage": "assets/covers/villa.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/villa/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/villa/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/villa/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/villa/3.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "yacht",
+      "name": "Yacht",
+      "coverImage": "assets/covers/yacht.jpg?v=3",
+      "notes": "Scaffold — upload images and place callouts.",
+      "floors": [
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/yacht/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/yacht/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/yacht/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "4th Floor",
+          "layoutImage": "assets/floors/yacht/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/yacht/4.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    },
+    {
+      "id": "calypso-casino",
+      "name": "Calypso Casino",
+      "coverImage": "assets/covers/calypso-casino.jpg?v=3",
+      "notes": "Newest map (scaffold) — upload images and place callouts; verify floors.",
+      "floors": [
+        {
+          "name": "Sub-Basement",
+          "layoutImage": "assets/floors/calypso-casino/0.webp",
+          "callouts": []
+        },
+        {
+          "name": "Basement",
+          "layoutImage": "assets/floors/calypso-casino/1.webp",
+          "callouts": []
+        },
+        {
+          "name": "1st Floor",
+          "layoutImage": "assets/floors/calypso-casino/2.webp",
+          "callouts": []
+        },
+        {
+          "name": "2nd Floor",
+          "layoutImage": "assets/floors/calypso-casino/3.webp",
+          "callouts": []
+        },
+        {
+          "name": "3rd Floor",
+          "layoutImage": "assets/floors/calypso-casino/4.webp",
+          "callouts": []
+        },
+        {
+          "name": "4th Floor",
+          "layoutImage": "assets/floors/calypso-casino/5.webp",
+          "callouts": []
+        },
+        {
+          "name": "Roof",
+          "layoutImage": "assets/floors/calypso-casino/6.webp",
+          "callouts": []
+        }
+      ],
+      "bombsites": [],
+      "tactics": {
+        "attack": {},
+        "defense": {}
+      }
+    }
   ],
-
-  "operators":[
-    {"id":"ash","name":"Ash","side":"attack","role":"entry","notes":"Fast entry; breaching rounds destroy gadgets/hatches from range.","howToCounter":"Hold unpredictable off-angles and slow her with barbed wire + traps (Kapkan/Frost/Ela). Don't peek the obvious lane into her R4-C. Deny the space her breaching rounds open by repositioning."},
-    {"id":"sledge","name":"Sledge","side":"attack","role":"entry","notes":"Hammer opens soft walls/floors/hatches silently for new angles & vertical.","howToCounter":"Reinforce key walls, watch your ceiling/floor, and listen for hammer hits. Bandit/Mute don't stop the hammer — reposition off the new holes and hold a trade angle."},
-    {"id":"thatcher","name":"Thatcher","side":"attack","role":"support","notes":"EMP grenades disable electronics to enable the hard breach.","howToCounter":"Spread your electronics, place Bandit batteries late & hidden, and re-apply gadgets after the EMP window. Expect a hard breach the moment he throws — be ready to re-Bandit."},
-    {"id":"thermite","name":"Thermite","side":"attack","role":"hardbreach","notes":"Exothermic charges open reinforced walls (if Bandit/Mute are cleared).","howToCounter":"Protect reinforcements with Bandit/Mute/Kaid, deny the charge plant, and punish him as he places it. Killing the hard breacher stalls the entire attack — make him your priority."},
-    {"id":"twitch","name":"Twitch","side":"attack","role":"support","notes":"Shock drones snipe gadgets (batteries, Mira, traps, cams) and zap you.","howToCounter":"Hunt the drones early (shoot, Mozzie pests, bait with Jäger). Hide Bandit batteries out of drone sightlines and re-apply gadgets after she leaves the room."},
-    {"id":"montagne","name":"Montagne","side":"attack","role":"support","notes":"Full-body extendable shield; gathers intel and bodies the plant.","howToCounter":"Flank and melee/Caveira from behind, or use impacts/Capitão/Gridlock/Twitch. Don't tunnel the shield head-on — he's stalling for time and pushing the defuser in."},
-    {"id":"glaz","name":"Glaz","side":"attack","role":"flex","notes":"Thermal scope sees through his own smoke at range.","howToCounter":"Don't hold still in smoke or open lanes; break his sightlines and relocate after he tags you. Punish his static scope with a wide flank."},
-    {"id":"fuze","name":"Fuze","side":"attack","role":"support","notes":"Cluster charges spam soft walls/hatches/shields — lethal area denial.","howToCounter":"Don't anchor against a breakable wall; move off the wall the instant you hear the charge, and shoot the visible pucks. Reinforce or reposition the bomb away from the wall."},
-    {"id":"blitz","name":"Blitz","side":"attack","role":"entry","notes":"Shield flashes blind you for an aggressive push.","howToCounter":"Hold off-angles, back up to keep distance, and trade with a teammate. Nitro/impact/Caveira from the side punish him — never peek his flash head-on."},
-    {"id":"iq","name":"IQ","side":"attack","role":"support","notes":"Detects electronics through walls and destroys/calls them out.","howToCounter":"Hide or delay your electronics (nitro, batteries, traps, phones). Expect her to pre-aim your gadget spots — relocate them. She enables clean hard breaches, so respect the wall."},
-    {"id":"buck","name":"Buck","side":"attack","role":"flex","notes":"Skeleton Key shotgun opens soft surfaces for vertical play.","howToCounter":"Watch floors/ceilings and reinforce; listen for shotgun vertical above/below the bomb. Trade his peeks and don't stand under an obvious vertical spot."},
-    {"id":"blackbeard","name":"Blackbeard","side":"attack","role":"entry","notes":"Rifle shield blocks headshots while aiming.","howToCounter":"Body-shot him, flank, or force him to move with utility/grenades. Don't trade headshot duels into the shield — bait it, then push or angle his exposed body."},
-    {"id":"capitao","name":"Capitão","side":"attack","role":"flex","notes":"Asphyxiating fire bolts deny plant/area; micro-smokes cover pushes.","howToCounter":"Don't hold burning plant spots — reposition out of the fire and punish his peek windows. A flexible entry; trade him with a teammate."},
-    {"id":"hibana","name":"Hibana","side":"attack","role":"hardbreach","notes":"X-Kairos pellets open reinforced walls & hatches at range.","howToCounter":"Bandit/Mute/Kaid the walls and hatches, punish her as she aims the launcher, and watch hatches she can open from a floor away. Kill the hard breacher to stall."},
-    {"id":"jackal","name":"Jackal","side":"attack","role":"intel","notes":"Eyenox tracks footprints and pings roamers repeatedly.","howToCounter":"Roamers keep moving, vault, and avoid leaving fresh tracks; bait the scan then relocate. Mute jammers don't stop him — kill him or break the chain of pings."},
-    {"id":"ying","name":"Ying","side":"attack","role":"entry","notes":"Candela flash clusters blind through walls/floors for pushes.","howToCounter":"Look away / back off on the deploy sound and pre-aim the push. Warden negates the flash. Bandit/Mute don't stop candelas — trade post-flash."},
-    {"id":"zofia","name":"Zofia","side":"attack","role":"entry","notes":"Concussion + impact grenades; can self-revive from down.","howToCounter":"Respect the concussion before a push and confirm your kills — she stands herself up. Hold trade angles; impacts open vertical and gadgets."},
-    {"id":"dokkaebi","name":"Dokkaebi","side":"attack","role":"intel","notes":"Rings defender phones (reveals you) and reads cams after a kill.","howToCounter":"Shoot/silence your phone the instant it rings and don't rely on cams late round. Expect intel parity — she also frags, so respect the peek."},
-    {"id":"lion","name":"Lion","side":"attack","role":"intel","notes":"EX scans detect any MOVING defender through walls, repeatedly.","howToCounter":"FREEZE during his scan (red icon), then reposition. Coordinate so the whole team holds still — punishes roamers who keep moving."},
-    {"id":"finka","name":"Finka","side":"attack","role":"support","notes":"Adrenal surge heals/revives team, boosts aim, negates flash/concussion.","howToCounter":"Push downs to deny the rez-from-down, expect aggressive trades during the surge, and don't rely on flashes/concussions in that window."},
-    {"id":"maverick","name":"Maverick","side":"attack","role":"hardbreach","notes":"Blowtorch melts precise holes in reinforced walls/hatches quietly.","howToCounter":"Listen for the torch, vary Bandit timing, and watch for pixel-peek holes. Re-check reinforced walls — he bypasses standard breach denial. Push or trade him off the wall."},
-    {"id":"nomad","name":"Nomad","side":"attack","role":"flex","notes":"Airjab repels knock you back off flanks/peeks.","howToCounter":"Roamers watch for jabs on flank doors/windows and shoot the projectile; time pushes around the bump. Disrupts roam timing — don't peek right after the jab."},
-    {"id":"gridlock","name":"Gridlock","side":"attack","role":"support","notes":"Trax stingers carpet floors with caltrops to slow/deny flanks.","howToCounter":"Shoot a path clear, avoid the spikes (slow + chip), and don't get caught crossing them in a gunfight. Area denial — reroute your flank."},
-    {"id":"nokk","name":"Nøkk","side":"attack","role":"intel","notes":"HEL silences footsteps and hides her from cams/Echo/Maestro.","howToCounter":"Don't trust an empty cam feed — hold angles manually and listen close. She appears off-cam, so watch dead drone feeds and roam lanes."},
-    {"id":"amaru","name":"Amaru","side":"attack","role":"entry","notes":"Garra hook zips through windows/hatches for surprise entries.","howToCounter":"Watch windows/hatches and pre-aim the vault — she's exposed mid-zip and loud. Trap windows (Kapkan/Frost) to punish the entry."},
-    {"id":"kali","name":"Kali","side":"attack","role":"flex","notes":"LV lance breaches small reinforced openings; DMR one-taps.","howToCounter":"Don't hold static long angles; expect the lance on your Bandit batteries/gadgets and break her sightlines. Pairs with hard breach — protect the wall."},
-    {"id":"iana","name":"Iana","side":"attack","role":"intel","notes":"Replicator hologram scouts site risk-free and baits your shots.","howToCounter":"Don't shoot the holo (it reveals you) — look for the shimmer/no-damage and hold position. She frags well after, so respect the real entry."},
-    {"id":"ace","name":"Ace","side":"attack","role":"hardbreach","notes":"SELMA charges auto-open reinforced walls/hatches in a spreading line.","howToCounter":"Bandit/Mute/Kaid the surfaces and shoot the SELMA device as it deploys. Protect hatches — he's self-sufficient, so killing him stalls the breach."},
-    {"id":"zero","name":"Zero","side":"attack","role":"intel","notes":"Argus cams drill through walls for intel and can shoot to ping/kill gadgets.","howToCounter":"Hunt the small in-wall cams and expect global intel; relocate gadgets he's seen. Mute jammers help vs the cams — check walls high and low."},
-    {"id":"flores","name":"Flores","side":"attack","role":"support","notes":"RCE-Ratero drones drive in and explode — kill gadgets, open soft walls.","howToCounter":"Shoot the drone before it locks (it can't reverse), watch your batteries/traps, and listen for the beep. Clears denial util — re-apply after."},
-    {"id":"osa","name":"Osa","side":"attack","role":"support","notes":"Talon-8 transparent shields give attackers safe angles & plant cover.","howToCounter":"Shoot her as she deploys, flank the shield, or impact/EMP it. Don't peek the protected angle — it stalls and enables the plant."},
-    {"id":"sens","name":"Sens","side":"attack","role":"support","notes":"R.O.U. projectors roll out light-screens that block your LOS across a lane.","howToCounter":"You can shoot through/around the screen — it isn't solid cover. Reposition and pre-aim the covered lane; don't let them cross free."},
-    {"id":"grim","name":"Grim","side":"attack","role":"intel","notes":"Kawan swarm grenades tag and reveal anyone passing through the bees.","howToCounter":"Avoid the cloud and shoot it down; don't cross while tagged. Expect a push on the ping — hold your trade angle."},
-    {"id":"brava","name":"Brava","side":"attack","role":"support","notes":"Kludge drone hacks your electronics to her side (cams, traps, Mira, gadgets).","howToCounter":"Hide/delay electronics, shoot the yellow drone, and re-deploy after. Don't bunch gadgets where one hack flips them all against you."},
-    {"id":"ram","name":"Ram","side":"attack","role":"entry","notes":"BU-GI module destroys floors/soft walls/gadgets in a heavy area.","howToCounter":"Move off soft floors/walls when it deploys, reinforce, and watch verticality. Aggressive soft-destruction entry — don't anchor on a breakable surface."},
-    {"id":"deimos","name":"Deimos","side":"attack","role":"intel","notes":"Tracker locks onto one defender, reveals them, and forces a duel (he gets a magnum).","howToCounter":"The targeted player breaks LOS, uses cover and teammates to trade, and repositions — don't duel him isolated. The whole team should collapse to protect the tracked defender."},
-    {"id":"striker","name":"Striker","side":"attack","role":"entry","notes":"Recruit attacker — flexible loadout (frags, claymore, smoke, hard-hitting primaries).","howToCounter":"No special gadget — treat as a generalist entry and play standard anti-entry. Read his utility choices (frags vs claymore) and counter accordingly."},
-    {"id":"solid-snake","name":"Solid Snake","side":"attack","role":"flex","notes":"Custom/collab pick in your IGL pool — treat as a stealth flex entry.","howToCounter":"Play it like a quiet flanker: watch back lines and silent approaches, hold angles manually. Verify the exact kit in-app before relying on a hard counter."},
-    {"id":"smoke","name":"Smoke","side":"defense","role":"anchor","notes":"Toxic gas denies plant/defuse and pushes; can gas through tiny gaps.","howToCounter":"Pre-fire and clear before stepping in, never plant in open gas range, and drone for his position to trade. Lion/Dokkaebi pressure him off the canister."},
-    {"id":"mute","name":"Mute","side":"defense","role":"support","notes":"Signal jammers block drones and disable hard-breach charges in radius.","howToCounter":"Shoot the visible jammer domes or EMP them (Thatcher/Kali/IQ); bring Twitch to clear, or breach a wall a jammer doesn't cover. Find the gap in his coverage."},
-    {"id":"castle","name":"Castle","side":"defense","role":"anchor","notes":"Armor panels barricade doors/windows to reroute and stall.","howToCounter":"Sledge/Buck/Ace/explosive/hard-melee remove panels; Kali/Twitch too. Don't waste time meleeing a panel under fire — breach a different way."},
-    {"id":"pulse","name":"Pulse","side":"defense","role":"roamer","notes":"Heartbeat sensor gives short-range intel through walls/floors.","howToCounter":"Vary your plant spot, bait his peek, and use Lion/Dokkaebi/Nøkk to cut his info. Watch for cheeky floor pushes from below/above the bomb."},
-    {"id":"doc","name":"Doc","side":"defense","role":"anchor","notes":"Stim pistol self-revives, team-heals and overheals.","howToCounter":"Commit to confirmed kills (push the down), focus-fire, and deny the res window. Expect a re-peek after you tag him — he can stand himself up."},
-    {"id":"rook","name":"Rook","side":"defense","role":"anchor","notes":"Armor plates give the whole site downs-instead-of-kills survivability.","howToCounter":"Plan for extra shots and confirm downs (watch for Doc revives). Don't expect one-taps to kill — trade and push the down."},
-    {"id":"kapkan","name":"Kapkan","side":"defense","role":"anchor","notes":"EDDs on doorways/windows deal chip damage and reveal.","howToCounter":"Drone and shoot the visible cylinder, or vault/destroy the frame. Cheap to clear with any throwaway — just don't run through unscouted."},
-    {"id":"tachanka","name":"Tachanka","side":"defense","role":"anchor","notes":"Shumikha launcher lobs incendiary grenades for area denial; strong LMG.","howToCounter":"Clear fire from plant spots, don't push through the flames, and bait the grenade arc. Respect the LMG on long angles."},
-    {"id":"jager","name":"Jäger","side":"defense","role":"support","notes":"ADS destroys thrown projectiles (nades, candelas, smokes) in radius.","howToCounter":"Bait the ADS empty with cheap throwables before committing real utility (Ash/Zofia/Fuze). Each ADS holds limited charges — track resets, drone it out and shoot it."},
-    {"id":"bandit","name":"Bandit","side":"defense","role":"support","notes":"Electrifies reinforced walls / barbed wire / shields — denies hard breach.","howToCounter":"Beat the timing with 'Bandit tricking', or remove him first: Twitch shock-drones the batteries, Thatcher/Kali/IQ EMP them, Nomad/Flores flush him off the wall."},
-    {"id":"frost","name":"Frost","side":"defense","role":"anchor","notes":"Welcome Mats down you on rappels/windows/prone spots.","howToCounter":"Drone vulnerable entries, vault carefully, and have a teammate ready to trade/clear the trap. Watch windows and short drops near site."},
-    {"id":"valkyrie","name":"Valkyrie","side":"defense","role":"roamer","notes":"Black Eye cams give global intel; often thrown to long/outside angles.","howToCounter":"Hunt and shoot the small dark cam domes early; Twitch/IQ punish. Assume she sees your approach — vary timing and use Lion/Dokkaebi/Nøkk."},
-    {"id":"caveira","name":"Caveira","side":"defense","role":"roamer","notes":"Silent Step roamer; interrogates downs to reveal your whole team.","howToCounter":"Don't get isolated, watch flanks and sound, and finish her fast or pull the downed teammate. She's near-silent — hold angles in pairs."},
-    {"id":"echo","name":"Echo","side":"defense","role":"anchor","notes":"Yokai drones cling to ceilings and concuss to deny plant/defuse.","howToCounter":"Look up and shoot the drones; Twitch/IQ/Mozzie hunt them, EMP disables. Drone the ceiling before planting — he often double-roams or anchors."},
-    {"id":"mira","name":"Mira","side":"defense","role":"anchor","notes":"Black Mirror one-way windows give intel & angles.","howToCounter":"Break the canister behind it (shoot the magnet) or melee it once placed; Twitch/a thrown projectile pops it. Never push the lit-up side blind."},
-    {"id":"lesion","name":"Lesion","side":"defense","role":"roamer","notes":"Gu mines cloak when armed, poison + slow on step and reveal you.","howToCounter":"Drone for them, shoot on sight, and don't sprint blind through doorways. Each hit DOTs you — back off and heal; clear lanes before pushing."},
-    {"id":"ela","name":"Ela","side":"defense","role":"roamer","notes":"Grzmot concussion mines disorient for pushes/flanks; strong SMG.","howToCounter":"Drone and shoot mines on walls/frames, push the post-concussion window carefully, and trade her in 1v1s — her recoil is high but lethal."},
-    {"id":"vigil","name":"Vigil","side":"defense","role":"roamer","notes":"Erebus cloak hides him from drones and scans.","howToCounter":"Don't trust an empty drone feed in roam lanes — clear corners manually and use Lion/Dokkaebi/Pulse-bait. He'll flank, so watch your back lines."},
-    {"id":"maestro","name":"Maestro","side":"defense","role":"anchor","notes":"Evil Eye cams are bulletproof while the shutter is up; see through smoke.","howToCounter":"Bait the shutter then shoot the lens, EMP it (Thatcher/Kali/IQ), or Twitch shock-dart it. Destroy with a hard hit (Sledge/Buck/explosive)."},
-    {"id":"alibi","name":"Alibi","side":"defense","role":"anchor","notes":"Prisma decoys reveal anyone who shoots them and mimic operators.","howToCounter":"Don't shoot holograms (it pings you) — check for the shimmer or duplicate gadget. Clear decoys with drones; she's a strong anchor/roamer."},
-    {"id":"clash","name":"Clash","side":"defense","role":"anchor","notes":"CCE shield slows & shocks from the front; stalls pushes, roams with intel.","howToCounter":"Flank/melee from behind, shoot her exposed feet/hands, or use Twitch/Nomad/impacts. Don't tunnel the shield head-on — she's baiting time."},
-    {"id":"kaid","name":"Kaid","side":"defense","role":"support","notes":"Electroclaw electrifies reinforced walls/hatches from another room.","howToCounter":"Same as Bandit — Twitch, Thatcher/Kali/IQ, or flush him. Check the hatches above your breach point; his claw can reach from out of sight."},
-    {"id":"mozzie","name":"Mozzie","side":"defense","role":"roamer","notes":"Pests hijack your drones, feeding him your intel.","howToCounter":"Hold drones back until needed, shoot pests, and don't leave drones idle in the open. He's also a strong roamer — clear flank lanes."},
-    {"id":"warden","name":"Warden","side":"defense","role":"anchor","notes":"Glasses negate smoke/flash for a few seconds while still/aiming.","howToCounter":"Don't rely on flashes to clear him — bait the glasses, flank, or trade. He anchors hard near plant; force him to move."},
-    {"id":"goyo","name":"Goyo","side":"defense","role":"anchor","notes":"Volcán shields explode into fire when shot — deny plant/pushes.","howToCounter":"Shoot the shield from a safe distance to pop it early, then push; never plant next to one. Watch shields on flank doors."},
-    {"id":"wamai","name":"Wamai","side":"defense","role":"support","notes":"Mag-NETs pull and detonate your thrown utility, with extra reach.","howToCounter":"Bait them with throwaways (they reset on a timer), shoot the discs or EMP. Coordinate utility dumps to overwhelm Jäger + Wamai together."},
-    {"id":"oryx","name":"Oryx","side":"defense","role":"roamer","notes":"Dashes through soft walls and climbs hatches without rappel.","howToCounter":"Watch for wall-dash flanks, hold angles, and don't assume a soft wall is safe. Trade fast — he's an unpredictable flanker."},
-    {"id":"melusi","name":"Melusi","side":"defense","role":"anchor","notes":"Banshees slow nearby attackers and screech intel; tanky from the front.","howToCounter":"Destroy with explosives/impact/Twitch or shoot when exposed from the side/behind; EMP disables. Don't get caught slowed in the open."},
-    {"id":"aruni","name":"Aruni","side":"defense","role":"support","notes":"Surya Gates laser-seal hatches/doorways and damage anyone shooting through.","howToCounter":"Disable lasers with EMP (Thatcher/Kali/IQ) or destroy the emitter; Twitch drone works. Don't melee the gate (it hurts) — break it from range."},
-    {"id":"thunderbird","name":"Thunderbird","side":"defense","role":"support","notes":"Kona stations auto-heal nearby defenders (and can heal attackers).","howToCounter":"Destroy/watch the stations, push downs fast, and don't let her reset the site. Beware heals near the plant prolonging trades."},
-    {"id":"thorn","name":"Thorn","side":"defense","role":"anchor","notes":"Razorbloom proximity charges deny plant/defuse after a short delay.","howToCounter":"Shoot the disc, EMP it, or back off when it arms. Clear plant spots and chokes before committing the defuser."},
-    {"id":"azami","name":"Azami","side":"defense","role":"anchor","notes":"Kiba Barriers re-cover breaches and seal hatches/lines of sight.","howToCounter":"Force her to burn barriers early with chip damage, then push the gap before reset. Shoot the petals; explosives/hard breach overpower a single barrier. Watch run-out re-walls."},
-    {"id":"solis","name":"Solis","side":"defense","role":"intel","notes":"SPEC-IO detects active electronics (drones, phones, gadgets) through walls.","howToCounter":"Stop your drones when she scans, run silent approaches, and don't telegraph pushes with active gadgets. Lion/Dokkaebi punish; she's an anchor with eyes on your tech."},
-    {"id":"fenrir","name":"Fenrir","side":"defense","role":"support","notes":"F-NATT dread mines fear-gas you (blur + slow) when triggered.","howToCounter":"Shoot the mine before it triggers (red light) or eat it from cover; EMP (Thatcher/Kali/IQ) disables them. Watch plant-denial placements on/below the bomb."},
-    {"id":"tubarao","name":"Tubarão","side":"defense","role":"support","notes":"Zoto canisters freeze/slow and disable gadgets & Bandit-counter timing in radius.","howToCounter":"Don't linger in the frost; pop the canister from range. He's a breach-denial support — clear before committing the hard breach."},
-    {"id":"skopos","name":"Skopós","side":"defense","role":"roamer","notes":"Two-body operator (controls two TALOS units) — holds two angles and trades itself.","howToCounter":"Expect double info and a second body after a pick — clear BOTH units and don't over-rotate to one kill. Newer defender; verify exact behavior in-app."},
-    {"id":"sentry","name":"Sentry","side":"defense","role":"anchor","notes":"Recruit defender — flexible loadout (barbed wire, deployable shield, prox alarm, etc.).","howToCounter":"No special gadget — read his loadout choices and counter accordingly. Treat as a generalist anchor."}
+  "operators": [
+    {
+      "id": "ash",
+      "name": "Ash",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Fast entry; breaching rounds destroy gadgets/hatches from range.",
+      "howToCounter": "Hold unpredictable off-angles and slow her with barbed wire + traps (Kapkan/Frost/Ela). Don't peek the obvious lane into her R4-C. Deny the space her breaching rounds open by repositioning."
+    },
+    {
+      "id": "sledge",
+      "name": "Sledge",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Hammer opens soft walls/floors/hatches silently for new angles & vertical.",
+      "howToCounter": "Reinforce key walls, watch your ceiling/floor, and listen for hammer hits. Bandit/Mute don't stop the hammer — reposition off the new holes and hold a trade angle."
+    },
+    {
+      "id": "thatcher",
+      "name": "Thatcher",
+      "side": "attack",
+      "role": "support",
+      "notes": "EMP grenades disable electronics to enable the hard breach.",
+      "howToCounter": "Spread your electronics, place Bandit batteries late & hidden, and re-apply gadgets after the EMP window. Expect a hard breach the moment he throws — be ready to re-Bandit."
+    },
+    {
+      "id": "thermite",
+      "name": "Thermite",
+      "side": "attack",
+      "role": "hardbreach",
+      "notes": "Exothermic charges open reinforced walls (if Bandit/Mute are cleared).",
+      "howToCounter": "Protect reinforcements with Bandit/Mute/Kaid, deny the charge plant, and punish him as he places it. Killing the hard breacher stalls the entire attack — make him your priority."
+    },
+    {
+      "id": "twitch",
+      "name": "Twitch",
+      "side": "attack",
+      "role": "support",
+      "notes": "Shock drones snipe gadgets (batteries, Mira, traps, cams) and zap you.",
+      "howToCounter": "Hunt the drones early (shoot, Mozzie pests, bait with Jäger). Hide Bandit batteries out of drone sightlines and re-apply gadgets after she leaves the room."
+    },
+    {
+      "id": "montagne",
+      "name": "Montagne",
+      "side": "attack",
+      "role": "support",
+      "notes": "Full-body extendable shield; gathers intel and bodies the plant.",
+      "howToCounter": "Flank and melee/Caveira from behind, or use impacts/Capitão/Gridlock/Twitch. Don't tunnel the shield head-on — he's stalling for time and pushing the defuser in."
+    },
+    {
+      "id": "glaz",
+      "name": "Glaz",
+      "side": "attack",
+      "role": "flex",
+      "notes": "Thermal scope sees through his own smoke at range.",
+      "howToCounter": "Don't hold still in smoke or open lanes; break his sightlines and relocate after he tags you. Punish his static scope with a wide flank."
+    },
+    {
+      "id": "fuze",
+      "name": "Fuze",
+      "side": "attack",
+      "role": "support",
+      "notes": "Cluster charges spam soft walls/hatches/shields — lethal area denial.",
+      "howToCounter": "Don't anchor against a breakable wall; move off the wall the instant you hear the charge, and shoot the visible pucks. Reinforce or reposition the bomb away from the wall."
+    },
+    {
+      "id": "blitz",
+      "name": "Blitz",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Shield flashes blind you for an aggressive push.",
+      "howToCounter": "Hold off-angles, back up to keep distance, and trade with a teammate. Nitro/impact/Caveira from the side punish him — never peek his flash head-on."
+    },
+    {
+      "id": "iq",
+      "name": "IQ",
+      "side": "attack",
+      "role": "support",
+      "notes": "Detects electronics through walls and destroys/calls them out.",
+      "howToCounter": "Hide or delay your electronics (nitro, batteries, traps, phones). Expect her to pre-aim your gadget spots — relocate them. She enables clean hard breaches, so respect the wall."
+    },
+    {
+      "id": "buck",
+      "name": "Buck",
+      "side": "attack",
+      "role": "flex",
+      "notes": "Skeleton Key shotgun opens soft surfaces for vertical play.",
+      "howToCounter": "Watch floors/ceilings and reinforce; listen for shotgun vertical above/below the bomb. Trade his peeks and don't stand under an obvious vertical spot."
+    },
+    {
+      "id": "blackbeard",
+      "name": "Blackbeard",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Rifle shield blocks headshots while aiming.",
+      "howToCounter": "Body-shot him, flank, or force him to move with utility/grenades. Don't trade headshot duels into the shield — bait it, then push or angle his exposed body."
+    },
+    {
+      "id": "capitao",
+      "name": "Capitão",
+      "side": "attack",
+      "role": "flex",
+      "notes": "Asphyxiating fire bolts deny plant/area; micro-smokes cover pushes.",
+      "howToCounter": "Don't hold burning plant spots — reposition out of the fire and punish his peek windows. A flexible entry; trade him with a teammate."
+    },
+    {
+      "id": "hibana",
+      "name": "Hibana",
+      "side": "attack",
+      "role": "hardbreach",
+      "notes": "X-Kairos pellets open reinforced walls & hatches at range.",
+      "howToCounter": "Bandit/Mute/Kaid the walls and hatches, punish her as she aims the launcher, and watch hatches she can open from a floor away. Kill the hard breacher to stall."
+    },
+    {
+      "id": "jackal",
+      "name": "Jackal",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Eyenox tracks footprints and pings roamers repeatedly.",
+      "howToCounter": "Roamers keep moving, vault, and avoid leaving fresh tracks; bait the scan then relocate. Mute jammers don't stop him — kill him or break the chain of pings."
+    },
+    {
+      "id": "ying",
+      "name": "Ying",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Candela flash clusters blind through walls/floors for pushes.",
+      "howToCounter": "Look away / back off on the deploy sound and pre-aim the push. Warden negates the flash. Bandit/Mute don't stop candelas — trade post-flash."
+    },
+    {
+      "id": "zofia",
+      "name": "Zofia",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Concussion + impact grenades; can self-revive from down.",
+      "howToCounter": "Respect the concussion before a push and confirm your kills — she stands herself up. Hold trade angles; impacts open vertical and gadgets."
+    },
+    {
+      "id": "dokkaebi",
+      "name": "Dokkaebi",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Rings defender phones (reveals you) and reads cams after a kill.",
+      "howToCounter": "Shoot/silence your phone the instant it rings and don't rely on cams late round. Expect intel parity — she also frags, so respect the peek."
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "side": "attack",
+      "role": "intel",
+      "notes": "EX scans detect any MOVING defender through walls, repeatedly.",
+      "howToCounter": "FREEZE during his scan (red icon), then reposition. Coordinate so the whole team holds still — punishes roamers who keep moving."
+    },
+    {
+      "id": "finka",
+      "name": "Finka",
+      "side": "attack",
+      "role": "support",
+      "notes": "Adrenal surge heals/revives team, boosts aim, negates flash/concussion.",
+      "howToCounter": "Push downs to deny the rez-from-down, expect aggressive trades during the surge, and don't rely on flashes/concussions in that window."
+    },
+    {
+      "id": "maverick",
+      "name": "Maverick",
+      "side": "attack",
+      "role": "hardbreach",
+      "notes": "Blowtorch melts precise holes in reinforced walls/hatches quietly.",
+      "howToCounter": "Listen for the torch, vary Bandit timing, and watch for pixel-peek holes. Re-check reinforced walls — he bypasses standard breach denial. Push or trade him off the wall."
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "side": "attack",
+      "role": "flex",
+      "notes": "Airjab repels knock you back off flanks/peeks.",
+      "howToCounter": "Roamers watch for jabs on flank doors/windows and shoot the projectile; time pushes around the bump. Disrupts roam timing — don't peek right after the jab."
+    },
+    {
+      "id": "gridlock",
+      "name": "Gridlock",
+      "side": "attack",
+      "role": "support",
+      "notes": "Trax stingers carpet floors with caltrops to slow/deny flanks.",
+      "howToCounter": "Shoot a path clear, avoid the spikes (slow + chip), and don't get caught crossing them in a gunfight. Area denial — reroute your flank."
+    },
+    {
+      "id": "nokk",
+      "name": "Nøkk",
+      "side": "attack",
+      "role": "intel",
+      "notes": "HEL silences footsteps and hides her from cams/Echo/Maestro.",
+      "howToCounter": "Don't trust an empty cam feed — hold angles manually and listen close. She appears off-cam, so watch dead drone feeds and roam lanes."
+    },
+    {
+      "id": "amaru",
+      "name": "Amaru",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Garra hook zips through windows/hatches for surprise entries.",
+      "howToCounter": "Watch windows/hatches and pre-aim the vault — she's exposed mid-zip and loud. Trap windows (Kapkan/Frost) to punish the entry."
+    },
+    {
+      "id": "kali",
+      "name": "Kali",
+      "side": "attack",
+      "role": "flex",
+      "notes": "LV lance breaches small reinforced openings; DMR one-taps.",
+      "howToCounter": "Don't hold static long angles; expect the lance on your Bandit batteries/gadgets and break her sightlines. Pairs with hard breach — protect the wall."
+    },
+    {
+      "id": "iana",
+      "name": "Iana",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Replicator hologram scouts site risk-free and baits your shots.",
+      "howToCounter": "Don't shoot the holo (it reveals you) — look for the shimmer/no-damage and hold position. She frags well after, so respect the real entry."
+    },
+    {
+      "id": "ace",
+      "name": "Ace",
+      "side": "attack",
+      "role": "hardbreach",
+      "notes": "SELMA charges auto-open reinforced walls/hatches in a spreading line.",
+      "howToCounter": "Bandit/Mute/Kaid the surfaces and shoot the SELMA device as it deploys. Protect hatches — he's self-sufficient, so killing him stalls the breach."
+    },
+    {
+      "id": "zero",
+      "name": "Zero",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Argus cams drill through walls for intel and can shoot to ping/kill gadgets.",
+      "howToCounter": "Hunt the small in-wall cams and expect global intel; relocate gadgets he's seen. Mute jammers help vs the cams — check walls high and low."
+    },
+    {
+      "id": "flores",
+      "name": "Flores",
+      "side": "attack",
+      "role": "support",
+      "notes": "RCE-Ratero drones drive in and explode — kill gadgets, open soft walls.",
+      "howToCounter": "Shoot the drone before it locks (it can't reverse), watch your batteries/traps, and listen for the beep. Clears denial util — re-apply after."
+    },
+    {
+      "id": "osa",
+      "name": "Osa",
+      "side": "attack",
+      "role": "support",
+      "notes": "Talon-8 transparent shields give attackers safe angles & plant cover.",
+      "howToCounter": "Shoot her as she deploys, flank the shield, or impact/EMP it. Don't peek the protected angle — it stalls and enables the plant."
+    },
+    {
+      "id": "sens",
+      "name": "Sens",
+      "side": "attack",
+      "role": "support",
+      "notes": "R.O.U. projectors roll out light-screens that block your LOS across a lane.",
+      "howToCounter": "You can shoot through/around the screen — it isn't solid cover. Reposition and pre-aim the covered lane; don't let them cross free."
+    },
+    {
+      "id": "grim",
+      "name": "Grim",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Kawan swarm grenades tag and reveal anyone passing through the bees.",
+      "howToCounter": "Avoid the cloud and shoot it down; don't cross while tagged. Expect a push on the ping — hold your trade angle."
+    },
+    {
+      "id": "brava",
+      "name": "Brava",
+      "side": "attack",
+      "role": "support",
+      "notes": "Kludge drone hacks your electronics to her side (cams, traps, Mira, gadgets).",
+      "howToCounter": "Hide/delay electronics, shoot the yellow drone, and re-deploy after. Don't bunch gadgets where one hack flips them all against you."
+    },
+    {
+      "id": "ram",
+      "name": "Ram",
+      "side": "attack",
+      "role": "entry",
+      "notes": "BU-GI module destroys floors/soft walls/gadgets in a heavy area.",
+      "howToCounter": "Move off soft floors/walls when it deploys, reinforce, and watch verticality. Aggressive soft-destruction entry — don't anchor on a breakable surface."
+    },
+    {
+      "id": "deimos",
+      "name": "Deimos",
+      "side": "attack",
+      "role": "intel",
+      "notes": "Tracker locks onto one defender, reveals them, and forces a duel (he gets a magnum).",
+      "howToCounter": "The targeted player breaks LOS, uses cover and teammates to trade, and repositions — don't duel him isolated. The whole team should collapse to protect the tracked defender."
+    },
+    {
+      "id": "striker",
+      "name": "Striker",
+      "side": "attack",
+      "role": "entry",
+      "notes": "Recruit attacker — flexible loadout (frags, claymore, smoke, hard-hitting primaries).",
+      "howToCounter": "No special gadget — treat as a generalist entry and play standard anti-entry. Read his utility choices (frags vs claymore) and counter accordingly."
+    },
+    {
+      "id": "solid-snake",
+      "name": "Solid Snake",
+      "side": "attack",
+      "role": "flex",
+      "notes": "Custom/collab pick in your IGL pool — treat as a stealth flex entry.",
+      "howToCounter": "Play it like a quiet flanker: watch back lines and silent approaches, hold angles manually. Verify the exact kit in-app before relying on a hard counter."
+    },
+    {
+      "id": "smoke",
+      "name": "Smoke",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Toxic gas denies plant/defuse and pushes; can gas through tiny gaps.",
+      "howToCounter": "Pre-fire and clear before stepping in, never plant in open gas range, and drone for his position to trade. Lion/Dokkaebi pressure him off the canister."
+    },
+    {
+      "id": "mute",
+      "name": "Mute",
+      "side": "defense",
+      "role": "support",
+      "notes": "Signal jammers block drones and disable hard-breach charges in radius.",
+      "howToCounter": "Shoot the visible jammer domes or EMP them (Thatcher/Kali/IQ); bring Twitch to clear, or breach a wall a jammer doesn't cover. Find the gap in his coverage."
+    },
+    {
+      "id": "castle",
+      "name": "Castle",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Armor panels barricade doors/windows to reroute and stall.",
+      "howToCounter": "Sledge/Buck/Ace/explosive/hard-melee remove panels; Kali/Twitch too. Don't waste time meleeing a panel under fire — breach a different way."
+    },
+    {
+      "id": "pulse",
+      "name": "Pulse",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Heartbeat sensor gives short-range intel through walls/floors.",
+      "howToCounter": "Vary your plant spot, bait his peek, and use Lion/Dokkaebi/Nøkk to cut his info. Watch for cheeky floor pushes from below/above the bomb."
+    },
+    {
+      "id": "doc",
+      "name": "Doc",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Stim pistol self-revives, team-heals and overheals.",
+      "howToCounter": "Commit to confirmed kills (push the down), focus-fire, and deny the res window. Expect a re-peek after you tag him — he can stand himself up."
+    },
+    {
+      "id": "rook",
+      "name": "Rook",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Armor plates give the whole site downs-instead-of-kills survivability.",
+      "howToCounter": "Plan for extra shots and confirm downs (watch for Doc revives). Don't expect one-taps to kill — trade and push the down."
+    },
+    {
+      "id": "kapkan",
+      "name": "Kapkan",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "EDDs on doorways/windows deal chip damage and reveal.",
+      "howToCounter": "Drone and shoot the visible cylinder, or vault/destroy the frame. Cheap to clear with any throwaway — just don't run through unscouted."
+    },
+    {
+      "id": "tachanka",
+      "name": "Tachanka",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Shumikha launcher lobs incendiary grenades for area denial; strong LMG.",
+      "howToCounter": "Clear fire from plant spots, don't push through the flames, and bait the grenade arc. Respect the LMG on long angles."
+    },
+    {
+      "id": "jager",
+      "name": "Jäger",
+      "side": "defense",
+      "role": "support",
+      "notes": "ADS destroys thrown projectiles (nades, candelas, smokes) in radius.",
+      "howToCounter": "Bait the ADS empty with cheap throwables before committing real utility (Ash/Zofia/Fuze). Each ADS holds limited charges — track resets, drone it out and shoot it."
+    },
+    {
+      "id": "bandit",
+      "name": "Bandit",
+      "side": "defense",
+      "role": "support",
+      "notes": "Electrifies reinforced walls / barbed wire / shields — denies hard breach.",
+      "howToCounter": "Beat the timing with 'Bandit tricking', or remove him first: Twitch shock-drones the batteries, Thatcher/Kali/IQ EMP them, Nomad/Flores flush him off the wall."
+    },
+    {
+      "id": "frost",
+      "name": "Frost",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Welcome Mats down you on rappels/windows/prone spots.",
+      "howToCounter": "Drone vulnerable entries, vault carefully, and have a teammate ready to trade/clear the trap. Watch windows and short drops near site."
+    },
+    {
+      "id": "valkyrie",
+      "name": "Valkyrie",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Black Eye cams give global intel; often thrown to long/outside angles.",
+      "howToCounter": "Hunt and shoot the small dark cam domes early; Twitch/IQ punish. Assume she sees your approach — vary timing and use Lion/Dokkaebi/Nøkk."
+    },
+    {
+      "id": "caveira",
+      "name": "Caveira",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Silent Step roamer; interrogates downs to reveal your whole team.",
+      "howToCounter": "Don't get isolated, watch flanks and sound, and finish her fast or pull the downed teammate. She's near-silent — hold angles in pairs."
+    },
+    {
+      "id": "echo",
+      "name": "Echo",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Yokai drones cling to ceilings and concuss to deny plant/defuse.",
+      "howToCounter": "Look up and shoot the drones; Twitch/IQ/Mozzie hunt them, EMP disables. Drone the ceiling before planting — he often double-roams or anchors."
+    },
+    {
+      "id": "mira",
+      "name": "Mira",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Black Mirror one-way windows give intel & angles.",
+      "howToCounter": "Break the canister behind it (shoot the magnet) or melee it once placed; Twitch/a thrown projectile pops it. Never push the lit-up side blind."
+    },
+    {
+      "id": "lesion",
+      "name": "Lesion",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Gu mines cloak when armed, poison + slow on step and reveal you.",
+      "howToCounter": "Drone for them, shoot on sight, and don't sprint blind through doorways. Each hit DOTs you — back off and heal; clear lanes before pushing."
+    },
+    {
+      "id": "ela",
+      "name": "Ela",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Grzmot concussion mines disorient for pushes/flanks; strong SMG.",
+      "howToCounter": "Drone and shoot mines on walls/frames, push the post-concussion window carefully, and trade her in 1v1s — her recoil is high but lethal."
+    },
+    {
+      "id": "vigil",
+      "name": "Vigil",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Erebus cloak hides him from drones and scans.",
+      "howToCounter": "Don't trust an empty drone feed in roam lanes — clear corners manually and use Lion/Dokkaebi/Pulse-bait. He'll flank, so watch your back lines."
+    },
+    {
+      "id": "maestro",
+      "name": "Maestro",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Evil Eye cams are bulletproof while the shutter is up; see through smoke.",
+      "howToCounter": "Bait the shutter then shoot the lens, EMP it (Thatcher/Kali/IQ), or Twitch shock-dart it. Destroy with a hard hit (Sledge/Buck/explosive)."
+    },
+    {
+      "id": "alibi",
+      "name": "Alibi",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Prisma decoys reveal anyone who shoots them and mimic operators.",
+      "howToCounter": "Don't shoot holograms (it pings you) — check for the shimmer or duplicate gadget. Clear decoys with drones; she's a strong anchor/roamer."
+    },
+    {
+      "id": "clash",
+      "name": "Clash",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "CCE shield slows & shocks from the front; stalls pushes, roams with intel.",
+      "howToCounter": "Flank/melee from behind, shoot her exposed feet/hands, or use Twitch/Nomad/impacts. Don't tunnel the shield head-on — she's baiting time."
+    },
+    {
+      "id": "kaid",
+      "name": "Kaid",
+      "side": "defense",
+      "role": "support",
+      "notes": "Electroclaw electrifies reinforced walls/hatches from another room.",
+      "howToCounter": "Same as Bandit — Twitch, Thatcher/Kali/IQ, or flush him. Check the hatches above your breach point; his claw can reach from out of sight."
+    },
+    {
+      "id": "mozzie",
+      "name": "Mozzie",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Pests hijack your drones, feeding him your intel.",
+      "howToCounter": "Hold drones back until needed, shoot pests, and don't leave drones idle in the open. He's also a strong roamer — clear flank lanes."
+    },
+    {
+      "id": "warden",
+      "name": "Warden",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Glasses negate smoke/flash for a few seconds while still/aiming.",
+      "howToCounter": "Don't rely on flashes to clear him — bait the glasses, flank, or trade. He anchors hard near plant; force him to move."
+    },
+    {
+      "id": "goyo",
+      "name": "Goyo",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Volcán shields explode into fire when shot — deny plant/pushes.",
+      "howToCounter": "Shoot the shield from a safe distance to pop it early, then push; never plant next to one. Watch shields on flank doors."
+    },
+    {
+      "id": "wamai",
+      "name": "Wamai",
+      "side": "defense",
+      "role": "support",
+      "notes": "Mag-NETs pull and detonate your thrown utility, with extra reach.",
+      "howToCounter": "Bait them with throwaways (they reset on a timer), shoot the discs or EMP. Coordinate utility dumps to overwhelm Jäger + Wamai together."
+    },
+    {
+      "id": "oryx",
+      "name": "Oryx",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Dashes through soft walls and climbs hatches without rappel.",
+      "howToCounter": "Watch for wall-dash flanks, hold angles, and don't assume a soft wall is safe. Trade fast — he's an unpredictable flanker."
+    },
+    {
+      "id": "melusi",
+      "name": "Melusi",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Banshees slow nearby attackers and screech intel; tanky from the front.",
+      "howToCounter": "Destroy with explosives/impact/Twitch or shoot when exposed from the side/behind; EMP disables. Don't get caught slowed in the open."
+    },
+    {
+      "id": "aruni",
+      "name": "Aruni",
+      "side": "defense",
+      "role": "support",
+      "notes": "Surya Gates laser-seal hatches/doorways and damage anyone shooting through.",
+      "howToCounter": "Disable lasers with EMP (Thatcher/Kali/IQ) or destroy the emitter; Twitch drone works. Don't melee the gate (it hurts) — break it from range."
+    },
+    {
+      "id": "thunderbird",
+      "name": "Thunderbird",
+      "side": "defense",
+      "role": "support",
+      "notes": "Kona stations auto-heal nearby defenders (and can heal attackers).",
+      "howToCounter": "Destroy/watch the stations, push downs fast, and don't let her reset the site. Beware heals near the plant prolonging trades."
+    },
+    {
+      "id": "thorn",
+      "name": "Thorn",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Razorbloom proximity charges deny plant/defuse after a short delay.",
+      "howToCounter": "Shoot the disc, EMP it, or back off when it arms. Clear plant spots and chokes before committing the defuser."
+    },
+    {
+      "id": "azami",
+      "name": "Azami",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Kiba Barriers re-cover breaches and seal hatches/lines of sight.",
+      "howToCounter": "Force her to burn barriers early with chip damage, then push the gap before reset. Shoot the petals; explosives/hard breach overpower a single barrier. Watch run-out re-walls."
+    },
+    {
+      "id": "solis",
+      "name": "Solis",
+      "side": "defense",
+      "role": "intel",
+      "notes": "SPEC-IO detects active electronics (drones, phones, gadgets) through walls.",
+      "howToCounter": "Stop your drones when she scans, run silent approaches, and don't telegraph pushes with active gadgets. Lion/Dokkaebi punish; she's an anchor with eyes on your tech."
+    },
+    {
+      "id": "fenrir",
+      "name": "Fenrir",
+      "side": "defense",
+      "role": "support",
+      "notes": "F-NATT dread mines fear-gas you (blur + slow) when triggered.",
+      "howToCounter": "Shoot the mine before it triggers (red light) or eat it from cover; EMP (Thatcher/Kali/IQ) disables them. Watch plant-denial placements on/below the bomb."
+    },
+    {
+      "id": "tubarao",
+      "name": "Tubarão",
+      "side": "defense",
+      "role": "support",
+      "notes": "Zoto canisters freeze/slow and disable gadgets & Bandit-counter timing in radius.",
+      "howToCounter": "Don't linger in the frost; pop the canister from range. He's a breach-denial support — clear before committing the hard breach."
+    },
+    {
+      "id": "skopos",
+      "name": "Skopós",
+      "side": "defense",
+      "role": "roamer",
+      "notes": "Two-body operator (controls two TALOS units) — holds two angles and trades itself.",
+      "howToCounter": "Expect double info and a second body after a pick — clear BOTH units and don't over-rotate to one kill. Newer defender; verify exact behavior in-app."
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry",
+      "side": "defense",
+      "role": "anchor",
+      "notes": "Recruit defender — flexible loadout (barbed wire, deployable shield, prox alarm, etc.).",
+      "howToCounter": "No special gadget — read his loadout choices and counter accordingly. Treat as a generalist anchor."
+    }
   ],
-
-  "roles":[
-    {"id":"igl","name":"IGL",
-      "attackRoleLabel":"Entry + Intel","defenseRoleLabel":"Shotcaller-Anchor",
-      "attackOps":["ash","ram","zofia","solid-snake","jackal","dokkaebi","lion","iana","zero","capitao"],
-      "defenseOps":["azami","mira","maestro","echo","solis","lesion","kapkan","thorn","aruni","alibi"],
-      "notes":"Experienced, current game knowledge; the caller. Aggressive on attack (frags but gathers info to call the round), anchors on defense to stay with the team and run the round."},
-    {"id":"fragger-roamer","name":"Fragger / Roamer",
-      "attackRoleLabel":"Primary Entry / Duelist","defenseRoleLabel":"Roamer",
-      "attackOps":["ash","sledge","zofia","buck","blackbeard","amaru","finka","ying","glaz","striker"],
-      "defenseOps":["vigil","caveira","pulse","ela","alibi","skopos","jager","bandit","mozzie"],
-      "notes":"Best mechanical aim; dedicated fragger. Returning player. Insulated from utility on attack (just wins the opening); solo-flanks and picks away from site on defense."},
-    {"id":"support","name":"Support",
-      "attackRoleLabel":"Utility Support + Frag","defenseRoleLabel":"Site Support / Breach-Denial",
-      "attackOps":["twitch","thatcher","flores","brava","kali","iq","gridlock","nomad","fuze","zero"],
-      "defenseOps":["bandit","kaid","mute","jager","wamai","mozzie","tubarao","aruni","fenrir"],
-      "notes":"FPS background, new to Siege; start on the most aim-forward picks (Twitch on attack, Jäger on defense) and grow into the utility ops. Clears defender utility / protects anchors and stops the hard breach."},
-    {"id":"site-anchor","name":"Site Anchor",
-      "attackRoleLabel":"Simple Frag / Soft-Destruction","defenseRoleLabel":"Pure Anchor",
-      "attackOps":["ash","sledge","buck","fuze","montagne","gridlock","striker"],
-      "defenseOps":["rook","doc","smoke","mute","tachanka","castle","sentry"],
-      "notes":"Newest player, lowest decision load; this pool is intentionally the simplest operators in the game — point-and-shoot with forgiving gadgets. Expand it as he improves."},
-    {"id":"flex-hardbreach","name":"Flex / Hard Breach",
-      "attackRoleLabel":"Hard Breach + Enabler","defenseRoleLabel":"Breach-Denial / Utility Support",
-      "attackOps":["thermite","hibana","ace","maverick","kali","thatcher","flores"],
-      "defenseOps":["bandit","kaid","mute","wamai","aruni","tubarao","maestro"],
-      "notes":"Not recruited yet — placeholder. Opens reinforced surfaces and clears denial on attack. When recruiting, prioritise a team player who'll play utility, not another fragger."}
+  "roles": [
+    {
+      "id": "igl",
+      "name": "IGL",
+      "attackRoleLabel": "Entry + Intel",
+      "defenseRoleLabel": "Shotcaller-Anchor",
+      "attackOps": [
+        "ash",
+        "ram",
+        "zofia",
+        "solid-snake",
+        "jackal",
+        "dokkaebi",
+        "lion",
+        "iana",
+        "zero",
+        "capitao"
+      ],
+      "defenseOps": [
+        "azami",
+        "mira",
+        "maestro",
+        "echo",
+        "solis",
+        "lesion",
+        "kapkan",
+        "thorn",
+        "aruni",
+        "alibi"
+      ],
+      "notes": "Experienced, current game knowledge; the caller. Aggressive on attack (frags but gathers info to call the round), anchors on defense to stay with the team and run the round."
+    },
+    {
+      "id": "fragger-roamer",
+      "name": "Fragger / Roamer",
+      "attackRoleLabel": "Primary Entry / Duelist",
+      "defenseRoleLabel": "Roamer",
+      "attackOps": [
+        "ash",
+        "sledge",
+        "zofia",
+        "buck",
+        "blackbeard",
+        "amaru",
+        "finka",
+        "ying",
+        "glaz",
+        "striker"
+      ],
+      "defenseOps": [
+        "vigil",
+        "caveira",
+        "pulse",
+        "ela",
+        "alibi",
+        "skopos",
+        "jager",
+        "bandit",
+        "mozzie"
+      ],
+      "notes": "Best mechanical aim; dedicated fragger. Returning player. Insulated from utility on attack (just wins the opening); solo-flanks and picks away from site on defense."
+    },
+    {
+      "id": "support",
+      "name": "Support",
+      "attackRoleLabel": "Utility Support + Frag",
+      "defenseRoleLabel": "Site Support / Breach-Denial",
+      "attackOps": [
+        "twitch",
+        "thatcher",
+        "flores",
+        "brava",
+        "kali",
+        "iq",
+        "gridlock",
+        "nomad",
+        "fuze",
+        "zero"
+      ],
+      "defenseOps": [
+        "bandit",
+        "kaid",
+        "mute",
+        "jager",
+        "wamai",
+        "mozzie",
+        "tubarao",
+        "aruni",
+        "fenrir"
+      ],
+      "notes": "FPS background, new to Siege; start on the most aim-forward picks (Twitch on attack, Jäger on defense) and grow into the utility ops. Clears defender utility / protects anchors and stops the hard breach."
+    },
+    {
+      "id": "site-anchor",
+      "name": "Site Anchor",
+      "attackRoleLabel": "Simple Frag / Soft-Destruction",
+      "defenseRoleLabel": "Pure Anchor",
+      "attackOps": [
+        "ash",
+        "sledge",
+        "buck",
+        "fuze",
+        "montagne",
+        "gridlock",
+        "striker"
+      ],
+      "defenseOps": [
+        "rook",
+        "doc",
+        "smoke",
+        "mute",
+        "tachanka",
+        "castle",
+        "sentry"
+      ],
+      "notes": "Newest player, lowest decision load; this pool is intentionally the simplest operators in the game — point-and-shoot with forgiving gadgets. Expand it as he improves."
+    },
+    {
+      "id": "flex-hardbreach",
+      "name": "Flex / Hard Breach",
+      "attackRoleLabel": "Hard Breach + Enabler",
+      "defenseRoleLabel": "Breach-Denial / Utility Support",
+      "attackOps": [
+        "thermite",
+        "hibana",
+        "ace",
+        "maverick",
+        "kali",
+        "thatcher",
+        "flores"
+      ],
+      "defenseOps": [
+        "bandit",
+        "kaid",
+        "mute",
+        "wamai",
+        "aruni",
+        "tubarao",
+        "maestro"
+      ],
+      "notes": "Not recruited yet — placeholder. Opens reinforced surfaces and clears denial on attack. When recruiting, prioritise a team player who'll play utility, not another fragger."
+    }
   ],
-
-  "roster":[
-    {"name":"João","roleId":"igl","notes":"Experienced, current game knowledge; the caller. Aggressive on attack, anchors on defense to stay with the team."},
-    {"name":"Leme","roleId":"fragger-roamer","notes":"Best mechanical aim; dedicated fragger. Returning player."},
-    {"name":"Max","roleId":"support","notes":"FPS background, new to Siege; start on Twitch (attack) / Jäger (defense) and grow into the utility ops."},
-    {"name":"Lora","roleId":"site-anchor","notes":"Newest player, lowest decision load; play the simplest operators and expand as he improves."},
-    {"name":"unknown","roleId":"flex-hardbreach","notes":"Placeholder — not recruited yet. Prioritise a team player who'll play utility, not another fragger."}
+  "roster": [
+    {
+      "name": "João",
+      "roleId": "igl",
+      "notes": "Experienced, current game knowledge; the caller. Aggressive on attack, anchors on defense to stay with the team."
+    },
+    {
+      "name": "Leme",
+      "roleId": "fragger-roamer",
+      "notes": "Best mechanical aim; dedicated fragger. Returning player."
+    },
+    {
+      "name": "Max",
+      "roleId": "support",
+      "notes": "FPS background, new to Siege; start on Twitch (attack) / Jäger (defense) and grow into the utility ops."
+    },
+    {
+      "name": "Lora",
+      "roleId": "site-anchor",
+      "notes": "Newest player, lowest decision load; play the simplest operators and expand as he improves."
+    },
+    {
+      "name": "unknown",
+      "roleId": "flex-hardbreach",
+      "notes": "Placeholder — not recruited yet. Prioritise a team player who'll play utility, not another fragger."
+    }
   ],
-
-  "playerStats":[],
-  "pools":[
-    {"id":"pro","name":"Pro Pool","note":"Locked all season — mirrors the competitive / esports pool.","mapIds":["bank","border","chalet","clubhouse","consulate","kafe","lair","nighthaven-labs","fortress"]},
-    {"id":"seasonal","name":"Seasonal Pool","note":"Rotates between updates — in at the season's start.","mapIds":["oregon","coastline","emerald-plains","outback"]},
-    {"id":"showcased","name":"Showcased","note":"A single spotlight map that changes every few weeks.","mapIds":["calypso-casino"]}
+  "playerStats": [],
+  "pools": [
+    {
+      "id": "pro",
+      "name": "Pro Pool",
+      "note": "Locked all season — mirrors the competitive / esports pool.",
+      "mapIds": [
+        "bank",
+        "border",
+        "chalet",
+        "clubhouse",
+        "consulate",
+        "kafe",
+        "lair",
+        "nighthaven-labs",
+        "fortress"
+      ]
+    },
+    {
+      "id": "seasonal",
+      "name": "Seasonal Pool",
+      "note": "Rotates between updates — in at the season's start.",
+      "mapIds": [
+        "oregon",
+        "coastline",
+        "emerald-plains",
+        "outback"
+      ]
+    },
+    {
+      "id": "showcased",
+      "name": "Showcased",
+      "note": "A single spotlight map that changes every few weeks.",
+      "mapIds": [
+        "calypso-casino"
+      ]
+    }
   ]
 }
 /* ====== END EMBEDDED DATA ====== */
