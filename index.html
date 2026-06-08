@@ -184,6 +184,10 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .viewport.show-edit .mk .mkb:active{cursor:grabbing}
 .viewport:not(.show-names) .mk.room{display:none}
 .viewport:not(.show-sites) .mk.obj{display:none}
+.viewport:not(.show-sites) .mk.site{display:none}
+.mk.site .mlb{background:#10243a;border-color:#2f6aa8;color:#cfe6ff;font-weight:700}
+.mk.site .mdot{background:#3da9fc;box-shadow:0 0 0 2px #ffffffcc,0 0 7px rgba(61,169,252,.7);width:12px;height:12px;border-radius:3px;transform:rotate(45deg)}
+.vt-sel{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#e3eaf2;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(4px);max-width:155px}
 .viewport:not(.show-peeks) .mk.peek{display:none}
 /* fixed overlay controls (don't move when panning/zooming) */
 .vp-ctrl{position:absolute;top:10px;left:10px;z-index:6;display:flex;gap:6px;flex-wrap:wrap}
@@ -289,7 +293,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 11,
+  "version": 13,
   "publishedAt": "2026-06-08",
   "maps": [
     {
@@ -407,6 +411,13 @@ const SEED_DATA =
               "x": 42.6,
               "y": 11.2,
               "type": "peek"
+            },
+            {
+              "name": "Armory / Church Hallway",
+              "x": 56.4,
+              "y": 40.1,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -610,6 +621,13 @@ const SEED_DATA =
               "x": 47.1,
               "y": 6.3,
               "type": "peek"
+            },
+            {
+              "name": "Stage / Bar",
+              "x": 53.5,
+              "y": 48.6,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -769,6 +787,20 @@ const SEED_DATA =
               "x": 45.8,
               "y": 13.2,
               "type": "peek"
+            },
+            {
+              "name": "Bedroom / Gym",
+              "x": 49.7,
+              "y": 51.5,
+              "type": "site",
+              "site": "1"
+            },
+            {
+              "name": "Cash / Catwalk",
+              "x": 72.3,
+              "y": 56.3,
+              "type": "site",
+              "site": "2"
             }
           ]
         },
@@ -956,6 +988,13 @@ const SEED_DATA =
               "x": 66.7,
               "y": 30.8,
               "type": "peek"
+            },
+            {
+              "name": "Supply / Laundry",
+              "x": 67.4,
+              "y": 49.6,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -1139,6 +1178,20 @@ const SEED_DATA =
               "x": 55.6,
               "y": 77.8,
               "type": "peek"
+            },
+            {
+              "name": "Kitchen / Dining",
+              "x": 49.6,
+              "y": 43,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Kitchen / Kitchen Corridor",
+              "x": 61.4,
+              "y": 40.2,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -1327,6 +1380,13 @@ const SEED_DATA =
               "x": 81.5,
               "y": 62,
               "type": "peek"
+            },
+            {
+              "name": "White Stairs / Kids",
+              "x": 57.3,
+              "y": 53.6,
+              "type": "site",
+              "site": "1"
             }
           ]
         },
@@ -1601,6 +1661,20 @@ const SEED_DATA =
               "x": 24.8,
               "y": 53.9,
               "type": "peek"
+            },
+            {
+              "name": "Server Hallway",
+              "x": 77.7,
+              "y": 58,
+              "type": "site",
+              "site": "3"
+            },
+            {
+              "name": "Garage / Kitchen",
+              "x": 44.7,
+              "y": 55.1,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -1812,6 +1886,20 @@ const SEED_DATA =
               "x": 79.5,
               "y": 65.7,
               "type": "peek"
+            },
+            {
+              "name": "Expo / Closet",
+              "x": 38.5,
+              "y": 59.6,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Tellers",
+              "x": 60.6,
+              "y": 52.7,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -2050,6 +2138,13 @@ const SEED_DATA =
               "x": 62.5,
               "y": 34.9,
               "type": "peek"
+            },
+            {
+              "name": "Break Hallway / West Front Yard",
+              "x": 46.2,
+              "y": 62,
+              "type": "site",
+              "site": "1"
             }
           ]
         },
@@ -2354,6 +2449,27 @@ const SEED_DATA =
               "x": 29.3,
               "y": 36.9,
               "type": "peek"
+            },
+            {
+              "name": "Customs / Supply",
+              "x": 45,
+              "y": 49.5,
+              "type": "site",
+              "site": "1"
+            },
+            {
+              "name": "Ventilation / Workshop",
+              "x": 50.5,
+              "y": 27.3,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Tellers / Bathroom",
+              "x": 67.5,
+              "y": 36.2,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -2578,6 +2694,13 @@ const SEED_DATA =
               "x": 68.3,
               "y": 27.3,
               "type": "peek"
+            },
+            {
+              "name": "Armory Desk / Archives",
+              "x": 56,
+              "y": 29.7,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -2733,6 +2856,13 @@ const SEED_DATA =
               "x": 21.3,
               "y": 28.3,
               "type": "peek"
+            },
+            {
+              "name": "Garage / Wine",
+              "x": 54.6,
+              "y": 75.8,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -2930,6 +3060,20 @@ const SEED_DATA =
               "x": 25.3,
               "y": 24.7,
               "type": "peek"
+            },
+            {
+              "name": "Bar / Gaming",
+              "x": 45.6,
+              "y": 78.4,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Kitchen / Dining",
+              "x": 62.6,
+              "y": 53,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -3116,6 +3260,13 @@ const SEED_DATA =
               "x": 34.3,
               "y": 53.7,
               "type": "peek"
+            },
+            {
+              "name": "Piano / Master",
+              "x": 63.4,
+              "y": 51.8,
+              "type": "site",
+              "site": "1"
             }
           ]
         },
@@ -3305,6 +3456,20 @@ const SEED_DATA =
               "x": 59.8,
               "y": 8.3,
               "type": "peek"
+            },
+            {
+              "name": "Supply / Kitchen",
+              "x": 59.9,
+              "y": 43.1,
+              "type": "site",
+              "site": "3"
+            },
+            {
+              "name": "Sunrise / Blue Bar",
+              "x": 31.4,
+              "y": 54.7,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -3481,6 +3646,20 @@ const SEED_DATA =
               "x": 75.1,
               "y": 33.6,
               "type": "peek"
+            },
+            {
+              "name": "Hookah / Pool Table",
+              "x": 36.3,
+              "y": 57.8,
+              "type": "site",
+              "site": "1"
+            },
+            {
+              "name": "Penthouse / TV",
+              "x": 73.8,
+              "y": 54.9,
+              "type": "site",
+              "site": "2"
             }
           ]
         },
@@ -3877,6 +4056,13 @@ const SEED_DATA =
               "x": 31.1,
               "y": 80.8,
               "type": "peek"
+            },
+            {
+              "name": "Assembly / Tank",
+              "x": 56.2,
+              "y": 58.6,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -4100,6 +4286,20 @@ const SEED_DATA =
               "x": 7.2,
               "y": 83.9,
               "type": "peek"
+            },
+            {
+              "name": "Cafeteria / Pantry",
+              "x": 86.8,
+              "y": 41.7,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Storage / Warehouse",
+              "x": 52.1,
+              "y": 60.3,
+              "type": "site",
+              "site": "3"
             }
           ]
         },
@@ -4326,6 +4526,13 @@ const SEED_DATA =
               "x": 62.2,
               "y": 76.8,
               "type": "peek"
+            },
+            {
+              "name": "Command / Server",
+              "x": 59.1,
+              "y": 51.3,
+              "type": "site",
+              "site": "1"
             }
           ]
         },
@@ -4617,6 +4824,20 @@ const SEED_DATA =
               "x": 22.7,
               "y": 71.2,
               "type": "peek"
+            },
+            {
+              "name": "Kitchen / BBQ Hallway",
+              "x": 39.8,
+              "y": 62.6,
+              "type": "site",
+              "site": "3"
+            },
+            {
+              "name": "Bathroom / Bedroom",
+              "x": 72.1,
+              "y": 69.7,
+              "type": "site",
+              "site": "4"
             }
           ]
         },
@@ -4822,6 +5043,20 @@ const SEED_DATA =
               "x": 60.3,
               "y": 12.6,
               "type": "peek"
+            },
+            {
+              "name": "Karaoke / Tea",
+              "x": 42.7,
+              "y": 55.9,
+              "type": "site",
+              "site": "1"
+            },
+            {
+              "name": "Museum / Office",
+              "x": 72.6,
+              "y": 68.5,
+              "type": "site",
+              "site": "2"
             }
           ]
         },
@@ -5015,32 +5250,712 @@ const SEED_DATA =
       "floors": [
         {
           "name": "Sub-Basement",
-          "layoutImage": "assets/floors/calypso-casino/0.webp",
+          "layoutImage": "assets/floors/calypso-casino/0.webp?bf",
           "callouts": []
         },
         {
           "name": "Basement",
-          "layoutImage": "assets/floors/calypso-casino/1.webp",
-          "callouts": []
+          "layoutImage": "assets/floors/calypso-casino/1.webp?pk1",
+          "callouts": [
+            {
+              "name": "Façade",
+              "x": 50.9,
+              "y": 5.9
+            },
+            {
+              "name": "Pool side",
+              "x": 7.2,
+              "y": 43.2
+            },
+            {
+              "name": "Pool Ruins Walkway",
+              "x": 36.8,
+              "y": 64.4
+            },
+            {
+              "name": "Crane",
+              "x": 63.1,
+              "y": 65.5
+            },
+            {
+              "name": "Ruins",
+              "x": 93.3,
+              "y": 45.3
+            },
+            {
+              "name": "Double",
+              "x": 45.1,
+              "y": 10.1
+            },
+            {
+              "name": "Office",
+              "x": 43.7,
+              "y": 15.3
+            },
+            {
+              "name": "Green Stairs",
+              "x": 36.4,
+              "y": 17
+            },
+            {
+              "name": "Break",
+              "x": 41.7,
+              "y": 22.4
+            },
+            {
+              "name": "Soda",
+              "x": 36.5,
+              "y": 24.1
+            },
+            {
+              "name": "Weapons",
+              "x": 41.2,
+              "y": 36.5
+            },
+            {
+              "name": "Solo",
+              "x": 54.3,
+              "y": 8
+            },
+            {
+              "name": "Lockers Stairs",
+              "x": 59,
+              "y": 10.4
+            },
+            {
+              "name": "Lockers",
+              "x": 58,
+              "y": 14.9
+            },
+            {
+              "name": "Server",
+              "x": 58.2,
+              "y": 20.6
+            },
+            {
+              "name": "Cash",
+              "x": 48.5,
+              "y": 17.5
+            },
+            {
+              "name": "Screens",
+              "x": 50.7,
+              "y": 41.8
+            },
+            {
+              "name": "Keys",
+              "x": 54.4,
+              "y": 35.7
+            },
+            {
+              "name": "Vault",
+              "x": 63.8,
+              "y": 29
+            },
+            {
+              "name": "Checkpoint",
+              "x": 57,
+              "y": 33.5
+            },
+            {
+              "name": "Inner Vault",
+              "x": 71.9,
+              "y": 30.2
+            },
+            {
+              "name": "Default",
+              "x": 56.2,
+              "y": 40.6
+            },
+            {
+              "name": "Dropper",
+              "x": 49.5,
+              "y": 45.1
+            },
+            {
+              "name": "Tarp",
+              "x": 45.8,
+              "y": 49.4
+            },
+            {
+              "name": "Exit",
+              "x": 56.9,
+              "y": 49.8
+            },
+            {
+              "name": "30",
+              "x": 56.5,
+              "y": 45.2
+            },
+            {
+              "name": "Construction",
+              "x": 65.7,
+              "y": 41
+            },
+            {
+              "name": "Yellow Stairs",
+              "x": 63.6,
+              "y": 51.5
+            },
+            {
+              "name": "Pillar",
+              "x": 66.4,
+              "y": 44.8
+            },
+            {
+              "name": "Office double wall",
+              "x": 66.4,
+              "y": 80.3,
+              "type": "peek"
+            },
+            {
+              "name": "Checkpoint / Weapons",
+              "x": 52.2,
+              "y": 34.4,
+              "type": "site",
+              "site": "4"
+            }
+          ]
         },
         {
           "name": "1st Floor",
-          "layoutImage": "assets/floors/calypso-casino/2.webp",
-          "callouts": []
+          "layoutImage": "assets/floors/calypso-casino/2.webp?pk1",
+          "callouts": [
+            {
+              "name": "Façade",
+              "x": 50.9,
+              "y": 5.9
+            },
+            {
+              "name": "Pool side",
+              "x": 7.2,
+              "y": 43.2
+            },
+            {
+              "name": "Pool Ruins Walkway",
+              "x": 36.8,
+              "y": 64.4
+            },
+            {
+              "name": "Crane",
+              "x": 63.1,
+              "y": 65.5
+            },
+            {
+              "name": "Ruins",
+              "x": 93.3,
+              "y": 45.3
+            },
+            {
+              "name": "Shark",
+              "x": 67.9,
+              "y": 22.9
+            },
+            {
+              "name": "Black Jack",
+              "x": 45.6,
+              "y": 58.6
+            },
+            {
+              "name": "Green Wall",
+              "x": 52.2,
+              "y": 58.2
+            },
+            {
+              "name": "Pink",
+              "x": 53.4,
+              "y": 48.3
+            },
+            {
+              "name": "Poker",
+              "x": 54.2,
+              "y": 53.4
+            },
+            {
+              "name": "DJ",
+              "x": 47.4,
+              "y": 47.1
+            },
+            {
+              "name": "Bathroom",
+              "x": 43,
+              "y": 36.8
+            },
+            {
+              "name": "Sink",
+              "x": 40.3,
+              "y": 33.2
+            },
+            {
+              "name": "Secret Window",
+              "x": 40.1,
+              "y": 62.2
+            },
+            {
+              "name": "Secret",
+              "x": 39,
+              "y": 55.6
+            },
+            {
+              "name": "Aqua Stairs",
+              "x": 32.6,
+              "y": 51.2
+            },
+            {
+              "name": "Vending",
+              "x": 37.4,
+              "y": 45.4
+            },
+            {
+              "name": "Wine",
+              "x": 53.6,
+              "y": 14.3
+            },
+            {
+              "name": "Hockey",
+              "x": 52.6,
+              "y": 17.4
+            },
+            {
+              "name": "Bar",
+              "x": 48.2,
+              "y": 23.7
+            },
+            {
+              "name": "Bar Hallway",
+              "x": 44.8,
+              "y": 11.3
+            },
+            {
+              "name": "Betting",
+              "x": 38.6,
+              "y": 24.5
+            },
+            {
+              "name": "Horse",
+              "x": 40.8,
+              "y": 28.7
+            },
+            {
+              "name": "Darts",
+              "x": 55.3,
+              "y": 21.7
+            },
+            {
+              "name": "Jersey",
+              "x": 53.8,
+              "y": 25.6
+            },
+            {
+              "name": "Boxes",
+              "x": 39.5,
+              "y": 10.2
+            },
+            {
+              "name": "Chairs",
+              "x": 47.9,
+              "y": 32.1
+            },
+            {
+              "name": "Roulette",
+              "x": 48.1,
+              "y": 40.9
+            },
+            {
+              "name": "Blue",
+              "x": 53.7,
+              "y": 40.2
+            },
+            {
+              "name": "Lockers Stairs",
+              "x": 60.1,
+              "y": 10.6
+            },
+            {
+              "name": "Janitor Door",
+              "x": 62.7,
+              "y": 16.8
+            },
+            {
+              "name": "Employee",
+              "x": 68,
+              "y": 14.9
+            },
+            {
+              "name": "Janitor",
+              "x": 61,
+              "y": 21.5
+            },
+            {
+              "name": "Jackpot",
+              "x": 66.7,
+              "y": 29.8
+            },
+            {
+              "name": "Main Lobby",
+              "x": 60.5,
+              "y": 38.8
+            },
+            {
+              "name": "Main Stairs",
+              "x": 65.7,
+              "y": 38.4
+            },
+            {
+              "name": "Flowers",
+              "x": 67.5,
+              "y": 47.2
+            },
+            {
+              "name": "Main Door",
+              "x": 70.1,
+              "y": 36.9
+            },
+            {
+              "name": "Yellow Stairs",
+              "x": 66.1,
+              "y": 51
+            },
+            {
+              "name": "Yellow Window",
+              "x": 66.9,
+              "y": 56.7
+            },
+            {
+              "name": "Desk",
+              "x": 33.9,
+              "y": 41.3
+            },
+            {
+              "name": "Flyers",
+              "x": 29,
+              "y": 36.5
+            },
+            {
+              "name": "Reception",
+              "x": 31.6,
+              "y": 38.4
+            },
+            {
+              "name": "Elbow",
+              "x": 36.7,
+              "y": 32.1
+            },
+            {
+              "name": "Green Stairs",
+              "x": 36.7,
+              "y": 17.2
+            },
+            {
+              "name": "Plants",
+              "x": 34,
+              "y": 26
+            },
+            {
+              "name": "Plants window",
+              "x": 29.6,
+              "y": 20.4
+            },
+            {
+              "name": "Wine window",
+              "x": 55.2,
+              "y": 7.3
+            },
+            {
+              "name": "52",
+              "x": 46.3,
+              "y": 7.2
+            },
+            {
+              "name": "51",
+              "x": 38.9,
+              "y": 7.3
+            },
+            {
+              "name": "Cashier door",
+              "x": 24.6,
+              "y": 40,
+              "type": "peek"
+            },
+            {
+              "name": "Top yellow stairs",
+              "x": 28.3,
+              "y": 25.1,
+              "type": "peek"
+            },
+            {
+              "name": "Janitor door",
+              "x": 31.9,
+              "y": 75,
+              "type": "peek"
+            },
+            {
+              "name": "Poker / Secret",
+              "x": 50.2,
+              "y": 53.3,
+              "type": "site",
+              "site": "2"
+            },
+            {
+              "name": "Jersey / Betting",
+              "x": 46.4,
+              "y": 23.9,
+              "type": "site",
+              "site": "3"
+            }
+          ]
         },
         {
           "name": "2nd Floor",
-          "layoutImage": "assets/floors/calypso-casino/3.webp",
-          "callouts": []
+          "layoutImage": "assets/floors/calypso-casino/3.webp?pk1",
+          "callouts": [
+            {
+              "name": "Barista",
+              "x": 54,
+              "y": 24.5
+            },
+            {
+              "name": "Aqua Stairs",
+              "x": 33.4,
+              "y": 53.9
+            },
+            {
+              "name": "Aqua",
+              "x": 38,
+              "y": 46.9
+            },
+            {
+              "name": "90",
+              "x": 40.3,
+              "y": 52.1
+            },
+            {
+              "name": "Aqua Balcony",
+              "x": 40.4,
+              "y": 58.7
+            },
+            {
+              "name": "Aqua Window",
+              "x": 48.5,
+              "y": 56.7
+            },
+            {
+              "name": "Smoking",
+              "x": 44.8,
+              "y": 47.2
+            },
+            {
+              "name": "Fish",
+              "x": 50.5,
+              "y": 53
+            },
+            {
+              "name": "Swamp",
+              "x": 44.6,
+              "y": 42.9
+            },
+            {
+              "name": "Cigar",
+              "x": 44.9,
+              "y": 37.6
+            },
+            {
+              "name": "Default",
+              "x": 47.5,
+              "y": 33.1
+            },
+            {
+              "name": "Apples",
+              "x": 48.6,
+              "y": 30.1
+            },
+            {
+              "name": "Kitchen",
+              "x": 45.8,
+              "y": 27.2
+            },
+            {
+              "name": "Tequila Door",
+              "x": 35,
+              "y": 24.7
+            },
+            {
+              "name": "Tequila",
+              "x": 38.7,
+              "y": 20.8
+            },
+            {
+              "name": "Tequila Stairs",
+              "x": 36.9,
+              "y": 13.9
+            },
+            {
+              "name": "Broom",
+              "x": 48,
+              "y": 21.2
+            },
+            {
+              "name": "Cafe",
+              "x": 52.2,
+              "y": 23
+            },
+            {
+              "name": "Cafe Balcony",
+              "x": 54.8,
+              "y": 17.2
+            },
+            {
+              "name": "Lemon",
+              "x": 56.1,
+              "y": 21.8
+            },
+            {
+              "name": "Soap",
+              "x": 56.6,
+              "y": 26.3
+            },
+            {
+              "name": "Minibar",
+              "x": 56,
+              "y": 30.1
+            },
+            {
+              "name": "Jukebox",
+              "x": 52.8,
+              "y": 33.6
+            },
+            {
+              "name": "Pool",
+              "x": 54,
+              "y": 39.5
+            },
+            {
+              "name": "Pool Walls",
+              "x": 57.1,
+              "y": 38.6
+            },
+            {
+              "name": "Stick",
+              "x": 53.9,
+              "y": 42.8
+            },
+            {
+              "name": "Credit",
+              "x": 55.7,
+              "y": 49
+            },
+            {
+              "name": "Bridge",
+              "x": 55.8,
+              "y": 56.4
+            },
+            {
+              "name": "Rope",
+              "x": 61.5,
+              "y": 21.8
+            },
+            {
+              "name": "Music",
+              "x": 66.4,
+              "y": 25.7
+            },
+            {
+              "name": "Heaven",
+              "x": 64.7,
+              "y": 29
+            },
+            {
+              "name": "Main Lobby",
+              "x": 61.5,
+              "y": 36
+            },
+            {
+              "name": "Main Stairs",
+              "x": 66.5,
+              "y": 38.6
+            },
+            {
+              "name": "Coat",
+              "x": 69.8,
+              "y": 38.8
+            },
+            {
+              "name": "Mezza",
+              "x": 64.5,
+              "y": 48.2
+            },
+            {
+              "name": "Façade",
+              "x": 50.9,
+              "y": 5.9
+            },
+            {
+              "name": "Pool side",
+              "x": 7.2,
+              "y": 43.2
+            },
+            {
+              "name": "Pool Ruins Walkway",
+              "x": 36.8,
+              "y": 64.4
+            },
+            {
+              "name": "Crane",
+              "x": 63.1,
+              "y": 65.5
+            },
+            {
+              "name": "Ruins",
+              "x": 93.3,
+              "y": 45.3
+            },
+            {
+              "name": "Rope door",
+              "x": 20,
+              "y": 78.2,
+              "type": "peek"
+            },
+            {
+              "name": "Kitchen wall",
+              "x": 58.5,
+              "y": 61.5,
+              "type": "peek"
+            },
+            {
+              "name": "Coat door",
+              "x": 19.7,
+              "y": 39.6,
+              "type": "peek"
+            },
+            {
+              "name": "Heaven window",
+              "x": 13.4,
+              "y": 67,
+              "type": "peek"
+            },
+            {
+              "name": "Mezza window",
+              "x": 26.1,
+              "y": 23.7,
+              "type": "peek"
+            },
+            {
+              "name": "Stick / Default",
+              "x": 50,
+              "y": 39.1,
+              "type": "site",
+              "site": "1"
+            }
+          ]
         },
         {
           "name": "3rd Floor",
-          "layoutImage": "assets/floors/calypso-casino/4.webp",
+          "layoutImage": "assets/floors/calypso-casino/4.webp?bf",
           "callouts": []
         },
         {
           "name": "4th Floor",
-          "layoutImage": "assets/floors/calypso-casino/5.webp",
+          "layoutImage": "assets/floors/calypso-casino/5.webp?bf",
           "callouts": []
         },
         {
@@ -5951,7 +6866,7 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
  * =================================================================== */
 const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"]];
 const UI={ tab:"maps",
-  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true },
+  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all" },
   roster:{ edit:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 
@@ -6118,18 +7033,21 @@ function renderFloorView(){
   }
   const objSet=objectiveRooms(m);
   const markers=f.callouts.map((c,ci)=>{
-    const peek=c.type==="peek"; const isObj=!peek&&objSet.has(fold(c.name));
-    const cls="mk "+(peek?"peek":(isObj?"obj":"room"));
+    const site=c.type==="site", peek=c.type==="peek";
+    const cls="mk "+(site?"site":peek?"peek":"room");
     const lb=(peek&&c.rate!=null&&c.rate!=="")?`${esc(c.name)} · ${esc(c.rate)}%`:esc(c.name);
-    return `<div class="${cls}" data-pin="${ci}" style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
+    const ds=site?` data-site="${esc(c.site||"")}"`:"";
+    return `<div class="${cls}" data-pin="${ci}"${ds} style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
   }).join("");
   const hasPeek=f.callouts.some(c=>c.type==="peek");
-  const hasObj=f.callouts.some(c=>c.type!=="peek"&&objSet.has(fold(c.name)));
-  const hasRoom=f.callouts.some(c=>c.type!=="peek"&&!objSet.has(fold(c.name)));
+  const hasSite=f.callouts.some(c=>c.type==="site");
+  const hasRoom=f.callouts.some(c=>c.type!=="peek"&&c.type!=="site");
+  const siteList=[...new Map(f.callouts.filter(c=>c.type==="site").map(c=>[String(c.site),c.name])).entries()];
   const vpCls=["viewport",UI.maps.layerNames&&"show-names",UI.maps.layerSites&&"show-sites",UI.maps.layerPeeks&&"show-peeks",edit&&"show-edit"].filter(Boolean).join(" ");
   const toggles=[
     (hasRoom||edit)?`<button class="vt names ${UI.maps.layerNames?"on":""}" data-layer="names"><span class="vbox">✓</span>Room names</button>`:"",
-    (hasObj||edit)?`<button class="vt sites ${UI.maps.layerSites?"on":""}" data-layer="sites"><span class="vbox">✓</span>Bomb sites</button>`:"",
+    (hasSite||edit)?`<button class="vt sites ${UI.maps.layerSites?"on":""}" data-layer="sites"><span class="vbox">✓</span>Bomb sites</button>`:"",
+    (hasSite&&siteList.length>1)?`<select class="vt-sel" data-sitefilter title="Show a specific bomb site"><option value="all">All sites</option>${siteList.sort((a,b)=>a[0]-b[0]).map(([s,n])=>`<option value="${esc(s)}" ${UI.maps.siteFilter===s?"selected":""}>${esc(n)}</option>`).join("")}</select>`:"",
     (hasPeek||edit)?`<button class="vt peek ${UI.maps.layerPeeks?"on":""}" data-layer="peeks"><span class="vbox">✓</span>Spawn peeks</button>`:""
   ].filter(Boolean).join("");
   host.innerHTML=`<div class="floorwrap">${fbar}
@@ -6159,6 +7077,10 @@ function setupViewer(edit){
   vp.querySelectorAll("[data-zoom]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const r=vp.getBoundingClientRect(); b.dataset.zoom==="reset"?fit():zoomAt(r.width/2,r.height/2,b.dataset.zoom==="in"?1.35:1/1.35); });
   vp.querySelectorAll("[data-layer]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const L=b.dataset.layer,key={names:"layerNames",sites:"layerSites",peeks:"layerPeeks"}[L];
     UI.maps[key]=!UI.maps[key]; b.classList.toggle("on",UI.maps[key]); vp.classList.toggle("show-"+L,UI.maps[key]); });
+  const sMarks=[...vp.querySelectorAll(".mk.site")];
+  const applySiteFilter=()=>{ sMarks.forEach(el=>{ el.style.display=(UI.maps.siteFilter==="all"||el.dataset.site===UI.maps.siteFilter)?"":"none"; }); };
+  applySiteFilter();
+  const sFil=vp.querySelector("[data-sitefilter]"); if(sFil) sFil.onchange=e=>{ e.stopPropagation(); UI.maps.siteFilter=sFil.value; applySiteFilter(); };
   let sx,sy;
   const pm=e=>{ MV.tx=e.clientX-sx; MV.ty=e.clientY-sy; clamp(); apply(); };
   const pu=()=>{ vp.classList.remove("grabbing"); document.removeEventListener("mousemove",pm); document.removeEventListener("mouseup",pu); };
