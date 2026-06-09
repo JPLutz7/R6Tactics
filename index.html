@@ -191,6 +191,16 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .mk.site .mdot{background:#3da9fc;box-shadow:0 0 0 2px #ffffffcc,0 0 7px rgba(61,169,252,.7);width:12px;height:12px;border-radius:3px;transform:rotate(45deg)}
 .vt-sel{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(4px);max-width:155px}
 .viewport:not(.show-peeks) .mk.peek{display:none}
+/* clickable spawn-peek labels (open how-to video popup) */
+.mk.peek.vid .pk-play{font-size:8px;margin-right:4px;opacity:.85}
+.viewport:not(.show-edit) .mk.peek.vid .mlb{pointer-events:auto;cursor:pointer}
+.viewport:not(.show-edit) .mk.peek.vid .mlb:hover{background:#ff4d5e;border-color:#ff4d5e;color:#fff}
+.peek-card{max-width:680px}
+.peek-card video{width:100%;max-height:60vh;background:#000;border-radius:10px;display:block;margin:10px 0}
+.peek-card .pk-rate{font-size:13px;font-weight:700;color:#fff;background:#ff4d5e;border-radius:6px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.peek-card .pk-steps{margin:6px 0;padding-left:20px;font-size:13px;line-height:1.5}
+.peek-card .pk-steps li{margin:3px 0}
+.peek-card .pk-tip{margin:8px 0 0;font-size:13px;background:var(--card,#f3f6fa);border-radius:8px;padding:8px 10px}
 /* fixed overlay controls (don't move when panning/zooming) */
 .vp-ctrl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px}
 .vt{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;backdrop-filter:blur(4px);text-shadow:0 1px 2px rgba(0,0,0,.7)}
@@ -295,7 +305,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 22,
+  "version": 23,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -326,7 +336,18 @@ const SEED_DATA =
               "name": "Dirt wall",
               "x": 71,
               "y": 34.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/5516c775-5c2b-442d-90e1-04fe1a44f4b6-video-1778369801674.mov",
+              "steps": [
+                "Shoot or impact the single wall on the end",
+                "Listen for people coming to your right",
+                "Shoot anyone who runs by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Don't get greedy, its a easy spot to rush",
+              "difficulty": 4,
+              "risk": "high"
             }
           ]
         },
@@ -352,43 +373,120 @@ const SEED_DATA =
               "name": "Kitchen hallway",
               "x": 65.7,
               "y": 45.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/67824b39-d5a6-481d-8614-6a67a4dd2fbf-video-1778371143461.mov",
+              "steps": [
+                "Lay on the stairs right by the door",
+                "Shoot a slip in bottom left corner",
+                "Aim straight ahead right next to building",
+                "Leave after 10 seconds"
+              ],
+              "tip": "This is a good one but very common, never do this more than once a game",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Stock door",
               "x": 70.2,
               "y": 49.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/12f2d24a-d967-42f3-bd5e-94ffa157f103-video-1778371541150.mov",
+              "steps": [
+                "Break down full door",
+                "Listen for anyone rappelling up to main wall",
+                "full sprint run out than look to right and shoot",
+                "Leave after one try don't go back"
+              ],
+              "tip": "Break the hatch in that same room for a easy escape",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Storage window",
               "x": 95.6,
               "y": 59.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/ce5d7d7e-00bf-4d2e-a7c1-d21d019fc518-video-1778435313597.mov",
+              "steps": [
+                "Break a slip in bottom left corner",
+                "Aim right outside the gates where people come from",
+                "Shoot anyone running by.",
+                "Leave after 8-10 seconds"
+              ],
+              "tip": "This is a very common one, don't do it more than once a game",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Garage wall",
               "x": 67.7,
               "y": 83.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/6946a24f-4953-4708-bc1a-fda1fceaff60-video-1778435581637.mov",
+              "steps": [
+                "On the left wall impact the left side so you can run out if needed",
+                "Listen for people by the gate to the left",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Have a teammate on default cams, they may push by the 2 vans",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Boiler door",
               "x": 15.2,
               "y": 85.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/92ce2739-a943-4808-8d10-26837fe61ebe-video-1778436372754.mov",
+              "steps": [
+                "Break down whole door",
+                "listen for people to you right but aim left by gates",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Have a teammate on cams to see potential rushers",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Lounge door",
               "x": 8.9,
               "y": 62.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/1ca63d4b-4715-428b-9e4f-3c172df16593-video-1778436283950.mov",
+              "steps": [
+                "Break a hole on the right",
+                "Aim through the gates towards the spawn point straight ahead",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "This one is hard without a Acog",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Freezer Door",
               "x": 46.08,
               "y": 0.09,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/bc8283fb-9880-468c-a645-2ac7696f8dbc-video-1778370870680.mov",
+              "steps": [
+                "Break down the whole barricade",
+                "Listen for foot steps (most of the time look down by dirt entrance",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "You can get pretty risky with this, if the oppurnity is there go for more than 1 kill",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -428,19 +526,53 @@ const SEED_DATA =
               "name": "Gym window",
               "x": 42.6,
               "y": 65.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/76ac49d8-f0a9-4f4d-b019-7fc9e14e2c05-video-1778437056632.mov",
+              "steps": [
+                "Punch a hole in the window",
+                "Aim towards the gates past the vans",
+                "Shoot anyone running by",
+                "Leave after 12 seconds"
+              ],
+              "tip": "Have a teammate on default cams to listen for people possibly pushing to your right",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "CCTV Window",
               "x": 69.6,
               "y": 70.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/08398855-a978-4917-93eb-cf9ebda8ec70-video-1778437369348.mov",
+              "steps": [
+                "Break anywhere on the window",
+                "Aim across the to the other roof and wait",
+                "If you here repelling look that way",
+                "Shoot anyone you see",
+                "Leave after 25 seconds"
+              ],
+              "tip": "Best if you are Gym/Bedroom site",
+              "difficulty": 3,
+              "risk": "high"
             },
             {
               "name": "Main stair window",
               "x": 49.8,
               "y": 31.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/676aaa91-9982-4ffd-b868-f44ab5a44359-video-1778436744738.mov",
+              "steps": [
+                "Main stairs window",
+                "Aim slightly above the dirt entrance",
+                "Shoot anyone you see",
+                "leave after 10 seconds"
+              ],
+              "tip": "Barricade doors below you so people cant rush as easy",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -587,7 +719,18 @@ const SEED_DATA =
               "name": "Bunker run out",
               "x": 87.1,
               "y": 34.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 72,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/1cea0f16-f7f0-4897-9313-e6dfe90fc495-video-1778076319532.mov",
+              "steps": [
+                "Break barricade",
+                "Make sure there's no drones",
+                "Run out when you here people",
+                "Shoot or pre fire then run back inside"
+              ],
+              "tip": "You can use a c4 for less risk",
+              "difficulty": 4,
+              "risk": "high"
             }
           ]
         },
@@ -627,43 +770,123 @@ const SEED_DATA =
               "name": "Garage window",
               "x": 89.4,
               "y": 74.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/eea2af64-3575-475a-a4de-4de54b6aa5ef-video-1778076923134.mov",
+              "steps": [
+                "Break the left side of the barricade",
+                "Aim past the default cam toward the back van",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "One kill than leave, don't get greedy",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Main stairs door",
               "x": 69,
               "y": 89.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/56f46f05-3258-4477-8376-f12d5a677678-video-1778076754907.mov",
+              "steps": [
+                "Break down whole barricade",
+                "watch to the left toward the default cam",
+                "listen for people running closed behind van",
+                "look through the window",
+                "shoot anyone you see",
+                "run if nobody in 15 seconds"
+              ],
+              "tip": "Go a 3 speed operator, you will need to leave fast",
+              "difficulty": 5,
+              "risk": "high"
             },
             {
               "name": "Bathroom hallway",
               "x": 23.5,
               "y": 86.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/0f449a30-b506-4ec8-bedd-a45adb9e3bbe-video-1778038979520.mov",
+              "steps": [
+                "Break down hallway window",
+                "Find out what spawn they went",
+                "Jump out and shoot after 8 seconds",
+                "Run back to site"
+              ],
+              "tip": "Be decisive and pick one way to look (mostly to the left)",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Small tower",
               "x": 11.2,
               "y": 80.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/cc246505-7833-4862-92c3-d37ea5766f17-video-1778077174510.mov",
+              "steps": [
+                "Punch a small whole at the bottom of window",
+                "Look to right side of camper van",
+                "Wait for default cam to be shot to confirm",
+                "Shoot anyone coming your way",
+                "If you here people from the left of van run"
+              ],
+              "tip": "This is best for 1 kill, don't go for more",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Kitchen hallway",
               "x": 54.4,
               "y": 40.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/3c47f24e-7834-42a5-ab16-b995a4a96d9f-video-1778076470158.mov",
+              "steps": [
+                "Break anywhere on the left side of the barricade",
+                "Aim at the edge of the green water tower",
+                "Shoot anyone that comes around",
+                "If nobody comes after 15 seconds leave"
+              ],
+              "tip": "Break the attic window above you to apply pressure",
+              "difficulty": 2,
+              "risk": "medium"
             },
             {
               "name": "Tower 1",
               "x": 60.5,
               "y": 16.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/c0e923d5-387e-404e-8664-fdab3d4d9e16-video-1778077480161.mov",
+              "steps": [
+                "Break down the whole door",
+                "Aim at the left side under the big shed",
+                "Shoot anyone who runs by",
+                "if nobody shows within 15 seconds leave"
+              ],
+              "tip": "Break window in T2 above you to apply pressure",
+              "difficulty": 3,
+              "risk": "high"
             },
             {
               "name": "Classroom runout",
               "x": 59,
               "y": 84,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a92831e9-6965-457f-97bc-cf3d952df147-video-1778077949365.mov",
+              "steps": [
+                "Break the classroom window",
+                "Wait till you hear people near or jump on the van",
+                "Hop out and fry them",
+                "Don't stay outside for more than 4 seconds"
+              ],
+              "tip": "Have someone close to you in classroom incase of rushers",
+              "difficulty": 4,
+              "risk": "high"
             }
           ]
         },
@@ -689,43 +912,121 @@ const SEED_DATA =
               "name": "Bedroom",
               "x": 69.4,
               "y": 86.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 80,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/7a19abd4-8848-474e-9b19-2d384c3327da-video-1778075707415.mov",
+              "steps": [
+                "Prone on the floor and shoot a slip bottom right",
+                "Aim by the gates",
+                "Shoot anyone who runs by",
+                "Run after 10 seconds"
+              ],
+              "tip": "Use a Acog, you will need to be fast and accurate",
+              "difficulty": 3,
+              "risk": "high"
             },
             {
               "name": "Big window",
               "x": 39.5,
               "y": 65.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 71,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a2e29d45-b8b1-40b2-8da7-79df8c33f054-video-1778075347905.mov",
+              "steps": [
+                "Not really a spawn peak but free kills",
+                "Punch a slip into bottom left big window",
+                "Aim on the left side of small tower",
+                "Shoot anyone pushing",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Check junkyard camera to make sure people spawn there",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Attic",
               "x": 67.7,
               "y": 42.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/5fbe7480-10e0-495a-97c2-fb301fcc5502-video-1778075631712.mov",
+              "steps": [
+                "Break left side window",
+                "Aim at the edge of the green water tower",
+                "Shoot anyone coming by",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Its a safe area you only need to watch out for people on top of roof",
+              "difficulty": 2,
+              "risk": "medium"
             },
             {
               "name": "Games room window",
               "x": 58,
               "y": 80.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a8abd94a-4728-4771-8b37-132162aec58d-video-1778075231388.mov",
+              "steps": [
+                "Punch left side window (break the glass)",
+                "Listen for shots or footsteps",
+                "Shoot anyone you see running by",
+                "Leave after 20 seconds"
+              ],
+              "tip": "People mostly spawn street look that way",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Main hallway",
               "x": 78.6,
               "y": 56.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/ddb66818-9c29-4801-b21f-53a7aed9a215-video-1778075948911.mov",
+              "steps": [
+                "Punch a slip on the left side",
+                "Aim down by bunker run uo",
+                "Shoot anyone running past",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Have someone on construction default cam to hear where there coming from",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Tower 2",
               "x": 64,
               "y": 15.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/677377f9-70f6-4bc9-8367-d66e7e8fc182-video-1778074889333.mov",
+              "steps": [
+                "Break right side of the barricade",
+                "Aim for the street spawn by the far back shed paste the white van",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Make a rotate into attic before, then reinforce when you leave",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Armory",
               "x": 91.2,
               "y": 72.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 64,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/f1c5abff-3569-4597-9aea-f88679c94d57-video-1778076135760.mov",
+              "steps": [
+                "Shoot a slip of left side of window",
+                "Aim at the left side of police van under the shed",
+                "Shoot anyone coming by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Break the hatch just incase someone pushes below you",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -1079,7 +1380,18 @@ const SEED_DATA =
               "name": "Garage wall",
               "x": 18.4,
               "y": 56.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 65,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/8c33f4fa-cc2f-4249-bb72-7ac6d3477ec3-video-1779469387037.mp4",
+              "steps": [
+                "Impact the right side",
+                "Aim the C4 over the boxes outside",
+                "throw when you here people",
+                "If you get kills reinforce if no run"
+              ],
+              "tip": "If you wanna really suppose them have a teammate throw another c4 after you.",
+              "difficulty": 2,
+              "risk": "high"
             }
           ]
         },
@@ -1112,31 +1424,87 @@ const SEED_DATA =
               "name": "Piano hallway window",
               "x": 14.4,
               "y": 43.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/aff7be7b-0f6e-4bc6-bc41-4f2d23a40758-video-1779472521014.mp4",
+              "steps": [
+                "Break down full window",
+                "Jump out after 10 seconds and aim right",
+                "Shoot anyone you see",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Goof for multiple kills, if your teammate is watching cam and people spawn to your right don't jump",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Closet window",
               "x": 14.9,
               "y": 70.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 71,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/c7fee25a-a034-478a-917a-32274a5fc7cb-video-1779469814178.mov",
+              "steps": [
+                "Break down the full window",
+                "Aim C4 top left of the window than move right",
+                "Throw the C4 when you here people on the stairs",
+                "Leave after thrown or 15 seconds"
+              ],
+              "tip": "After you throw c4 you can hop out if your feeling risky, they may try and shoot the c4 so its free kills",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Tellers hallway",
               "x": 65.9,
               "y": 31.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a64e6294-ed38-4358-b903-610434a62ebd-video-1779472153195.mp4",
+              "steps": [
+                "Punch right side of barricade",
+                "Aim at the edge of the spiral stairs building",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Use a Acog, they will almost always be pretty far back",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Main entrance door",
               "x": 51,
               "y": 89.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/c9f648f3-88c1-49af-b82e-e49479c58cf5-video-1779472840301.mov",
+              "steps": [
+                "Break down door fully",
+                "Aim to the right On the left side of close wall",
+                "If you hear people far aim more right in between pillar",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "People really can push from anywhere, if you hear people coming from the left id run",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Visual door",
               "x": 90.3,
               "y": 69,
-              "type": "peek"
+              "type": "peek",
+              "rate": 65,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/d81f7126-dceb-48cd-a340-7d44442832e4-video-1779472209003.mov",
+              "steps": [
+                "Break down the whole door",
+                "Aim to the right by the wall or through the pillar",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "after you spawn peek you can have a teammate above you on vert to get free kills when they push you",
+              "difficulty": 4,
+              "risk": "medium"
             }
           ]
         },
@@ -1162,43 +1530,121 @@ const SEED_DATA =
               "name": "balcony wall",
               "x": 51.8,
               "y": 80,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/91a2c415-155f-43db-ae0d-20de3753901b-video-1779470118130.mp4",
+              "steps": [
+                "Impact the wall",
+                "After 7 seconds run out and look to the right",
+                "Shoot anyone running out from behind the wall",
+                "Leave after 1 attempt, reinforce if its safe"
+              ],
+              "tip": "Break the Door below you on first floor to add pressure",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Consul office window",
               "x": 14.9,
               "y": 58.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/961c45f0-b3e1-4859-b930-a82162868799-video-1779470483778.mp4",
+              "steps": [
+                "Break window",
+                "Aim C4 top left window then move to the right slightly",
+                "Throw C4 after 10 seconds for you hear someone",
+                "Leave after 1 attempt"
+              ],
+              "tip": "You can jump out if your feeling risky or you knocked someone",
+              "difficulty": 4,
+              "risk": "low"
             },
             {
               "name": "Meeting window",
               "x": 40.1,
               "y": 77.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/43839da8-5e52-487f-b1f2-1ee94897ceba-video-1779471994355.mov",
+              "steps": [
+                "Punch left side of the window",
+                "Aim to the right by the edge of the wall and van",
+                "Shoot anyone running by",
+                "Leave after 8 seconds"
+              ],
+              "tip": "This happens fast so be ready, leave after 1 kill always",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Top yellow window",
               "x": 17.9,
               "y": 15.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/e7638d8f-30c9-48e8-9d8a-8151f2849887-video-1779470747422.mov",
+              "steps": [
+                "Punch right side of barricade",
+                "Make a pixel between the window and the wooden wall",
+                "when you see someone slightly swing and shoot",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Use a Acog, they will be far away",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Admin office windows",
               "x": 94.5,
               "y": 54.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/8300b882-d753-427b-bd90-a99bfbfc7fdc-video-1779471696067.mov",
+              "steps": [
+                "Punch left side of the left window",
+                "Aim on the right of the van to start",
+                "Be ready to flick to the left by the windows on the van",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "break the right side window for extra pressure",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Bathroom window",
               "x": 37.8,
               "y": 31.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/4ffa3f45-3271-4c69-b9c3-a026c41bc7ef-video-1779471145306.mov",
+              "steps": [
+                "Punch left side of window",
+                "Aim far along the edge of the building to the left",
+                "Shoot anyone far out running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Don't Expect someone to run by every round, but when they do they never expect it",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Copy room window",
               "x": 69.3,
               "y": 31.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/c97d6261-eef4-4d2d-ab9e-cb31793d20b3-video-1779471397122.mov",
+              "steps": [
+                "Punch left side of barricade",
+                "Aim to the left along spiral building",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Use Acog, they will be far out",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -1543,25 +1989,69 @@ const SEED_DATA =
               "name": "Passport door",
               "x": 52.2,
               "y": 89.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/253f3119-616c-48f8-a650-153d6ae0746a-video-1778881910156.mov",
+              "steps": [
+                "Shoot a slip into the top right if door",
+                "Aim at the balcony up above to the right of the box",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "You can use a impact and make rotate into customs before hand if you want a easy exit",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Vent Window",
               "x": 18.3,
               "y": 13.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/4cd9d9ab-2c86-43d5-95fd-8cd6eaa80d66-video-1778882360216.mov",
+              "steps": [
+                "Wait till you here or get a com someone is on the bus balcony",
+                "Jump out and took up there to the right",
+                "Shoot anyone you see",
+                "Leave after you try it once"
+              ],
+              "tip": "To make sure there are no claymores, you can shoot a slip in the top of the window to here better",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Tellers window",
               "x": 88.8,
               "y": 40.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/aa276783-297e-49cf-959a-60a073f71332-video-1778882254541.mov",
+              "steps": [
+                "Break a hole in the bottom left of window",
+                "Aim to the right side of the wall outside",
+                "Wait for people running by then shoot",
+                "leave after 15 seconds"
+              ],
+              "tip": "You can also hot a jump out if you want, It don't have a very high success rate. if you did look hard left when you here people",
+              "difficulty": 3,
+              "risk": "high"
             },
             {
               "name": "Main entrence door",
               "x": 10,
               "y": 38.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/0d15fc0b-cddd-4fb9-9a3f-657651892d9a-video-1778882794627.mov",
+              "steps": [
+                "Fully break door",
+                "Aim on the right side if gate entrance",
+                "Shoot anyone running by",
+                "Leave after 13 seconds"
+              ],
+              "tip": "If you here more than 1 person, Use a C4 than run into Vent room to your right",
+              "difficulty": 4,
+              "risk": "medium"
             }
           ]
         },
@@ -1587,49 +2077,137 @@ const SEED_DATA =
               "name": "Gen door runout",
               "x": 87.2,
               "y": 81.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 72,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a8b38f5f-dea4-4e24-96ce-bc0f31862bc6-video-1778872904279.mov",
+              "steps": [
+                "Break down door fully",
+                "Listen for people already on the balcony",
+                "Run out look right and shoot",
+                "Leave after 1 attempt or droned"
+              ],
+              "tip": "There will likely be more than one, be ready",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Break room door",
               "x": 49.8,
               "y": 88.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 71,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/7866ed4b-efc6-4ff0-a166-11d05c22e436-video-1778887762178.mov",
+              "steps": [
+                "Punch left side door",
+                "Aim to the right side of the generator box",
+                "Shoot anyone running by",
+                "Leave after 13 seconds"
+              ],
+              "tip": "Have a teammate in CCTV room so you don't get rushed",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Armory balcony",
               "x": 14.7,
               "y": 53.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/8ac6cd57-df53-4a3e-844a-f7f1227b314a-video-1778883832899.mov",
+              "steps": [
+                "Break down door fully",
+                "Wait till you here people repelling or walking",
+                "Run out and shoot anyone you see",
+                "Leave if you get droned"
+              ],
+              "tip": "Play someone like mozzie or mute so they can drone you easy",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Cement door",
               "x": 53.8,
               "y": 4.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/2588c06e-307d-498a-8d1c-e24c6f1835d1-video-1778884057307.mov",
+              "steps": [
+                "Break a hole on left side of door",
+                "Aim at the top of the stairs slightly to the left",
+                "Shoot anyone running up",
+                "Leave after 15-20 seconds"
+              ],
+              "tip": "Have someone on cams to make sure people are pushing there",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Top square window",
               "x": 79.2,
               "y": 88.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/6b47feae-bc20-423b-bc3f-1e9f4bef49b7-video-1778871672211.mov",
+              "steps": [
+                "Break bottom left of window",
+                "Aim left of the generator box",
+                "Shoot anyone running up",
+                "leave after 15 seconds"
+              ],
+              "tip": "This one is good but really common so don't do it more than once",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "CCTV window",
               "x": 10.9,
               "y": 68.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/5b20f6f2-f45c-475d-9460-b9f8669e5199-video-1778883087061.mov",
+              "steps": [
+                "Punch bottom left of window",
+                "Aim to where you hear people coming up to balcony",
+                "Shoot anyone who comes up",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Have a teammate watching your flank",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "East balcony door",
               "x": 88.1,
               "y": 41.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/688073e6-be3f-4d02-b018-a7495fcaae6b-video-1778873067046.mov",
+              "steps": [
+                "Prone then shoot a slip bottom left",
+                "Aim straight by the top of the stairs",
+                "Shoot anyone you see",
+                "Leave after 13 seconds"
+              ],
+              "tip": "Watch out for people repelling up straight ahead, they might have a drone on you",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Office window",
               "x": 84.7,
               "y": 23.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/cb96380f-6349-47d7-8b5f-e11be64078f4-video-1778884224874.mov",
+              "steps": [
+                "Punch the bottom of window 2 times",
+                "Listen for people droning or shooting",
+                "Jump out and shoot them",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Listen for claymores",
+              "difficulty": 3,
+              "risk": "high"
             }
           ]
         },
@@ -1673,7 +2251,18 @@ const SEED_DATA =
               "name": "Vent door",
               "x": 68.6,
               "y": 6.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/2403bdd1-aed7-4d7e-a290-eb9828cae03a-video-1778266854481.mov",
+              "steps": [
+                "Break down the door",
+                "Listen for anyone running left or right",
+                "Shoot anyone running around the rock",
+                "Leave after 10 seconds"
+              ],
+              "tip": "People 70% of the time are coming from your right",
+              "difficulty": 4,
+              "risk": "high"
             }
           ]
         },
@@ -1713,37 +2302,104 @@ const SEED_DATA =
               "name": "Fireplace window",
               "x": 51,
               "y": 91.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/64ee4da6-61b3-49ac-bc2c-63915c04d82f-video-1778267948645.mov",
+              "steps": [
+                "Break window at the top of main stairs",
+                "Jump out after 5 seconds",
+                "Aim to the right shoot",
+                "Go down the stairs after (no matter the sight)"
+              ],
+              "tip": "Break other windows to apply pressure",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Mud room",
               "x": 19.1,
               "y": 53.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/d65f097c-e581-4e48-a7be-6a6acf69473c-video-1778268098072.mov",
+              "steps": [
+                "Punch left side window",
+                "Aim slightly to the right if the trees",
+                "Be ready for people running by then shoot",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Best for one kill, Mud room is very easy to rush",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "West main window",
               "x": 43.3,
               "y": 23.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/3c5cf08f-a876-4893-801a-a1d76e8baedb-video-1778267154726.mp4",
+              "steps": [
+                "punch left side of barricade",
+                "Aim to the left or right of the pillar(be ready to flick)",
+                "Shoot anyone running by",
+                "leave after 15 seconds"
+              ],
+              "tip": "Have someone on default cams so you can see if anyone is rushing you",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Lounge window",
               "x": 17.5,
               "y": 68.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/41cd250c-07b9-4330-8647-4af8fd1dd5a2-video-1778268219536.mov",
+              "steps": [
+                "Punch right side window",
+                "Aim just to the left or right of the pillar",
+                "Make sure your ready to flick then shoot",
+                "leave after 15 seconds"
+              ],
+              "tip": "Do not stay here very long, very easy spot to get rushed",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Fireplace door",
               "x": 64,
               "y": 69.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 65,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/cf6b0e6d-14ad-43e1-8846-54b4dcd277b1-video-1778267487922.mov",
+              "steps": [
+                "Lay of floor and shoot a slip on the bottom left of the main door",
+                "Aim at the top of the rocks",
+                "shoot as soon as you see a head pop up",
+                "Run after 8 seconds"
+              ],
+              "tip": "Make sure you have a teammate the the default cam out just t make sure they spawn there so you don't get instantly rushed",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Trophy window",
               "x": 73,
               "y": 12.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 86,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/157171f3-139c-496b-8a1b-b7435c014614-video-1778267383463.mov",
+              "steps": [
+                "Jump up on the desk by window",
+                "Punch a whole on the right side",
+                "Aim at the edge of the rock",
+                "Shoot anyone running by",
+                "leave after 10 seconds"
+              ],
+              "tip": "Use a Acog, this spawn peek is free kills",
+              "difficulty": 2,
+              "risk": "medium"
             }
           ]
         },
@@ -1769,31 +2425,88 @@ const SEED_DATA =
               "name": "Library window",
               "x": 25.2,
               "y": 87.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 82,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/3fab763b-38e3-4329-97f0-921bbadc3a8e-video-1778268349178.mov",
+              "steps": [
+                "Make sure no drones than brake down window",
+                "Jump out at 5 seconds and aim to the right by heli",
+                "Shoot anyone running there",
+                "Leave fast"
+              ],
+              "tip": "Break the hatch in library for a easy escape",
+              "difficulty": 3,
+              "risk": "high"
             },
             {
               "name": "Astro window",
               "x": 64.5,
               "y": 4.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/f5c8d76e-b370-4f19-8564-3c7ec1f33dc5-video-1778269475616.mov",
+              "steps": [
+                "Fully break down the right side window",
+                "Aim to the left side next to the rock",
+                "If nobody's there after 10 seconds check to your right",
+                "Shoot anyone you see",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Have a teammate break down the Garage vent door to add pressure",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Bedroom window",
               "x": 78.7,
               "y": 38.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/94a550ff-7c03-4c36-b363-89cdc88debb0-video-1778269559697.mov",
+              "steps": [
+                "Break down the window",
+                "Don't peek it for 10 seconds",
+                "Wait to you here someone shoot or walking close",
+                "Peek than shoot anyone by",
+                "Leave whenever you want (don't get too greedy)"
+              ],
+              "tip": "This one is underrated, if you want use Eco and put a drone on the window sill and see exactly where they are",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Balcony window",
               "x": 43.7,
               "y": 54.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/9b2f1cc2-05f0-466a-b7c0-84c6e2a3831e-video-1778268697612.mov",
+              "steps": [
+                "Punch left side of the window",
+                "Aim slightly above the rock",
+                "Shoot as soon as you see there head",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Don't get greedy, leave after 1 kill on this one",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Bathroom window",
               "x": 43.3,
               "y": 29.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 72,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/e8d80856-fa27-4bac-81ea-a4d74a9936c5-video-1778269363952.mov",
+              "steps": [
+                "Punch the window anywhere",
+                "Aim far by the heli spawn next to the trees",
+                "Shoot anyone running by",
+                "Leave after 12 seconds"
+              ],
+              "tip": "Have a teammate on default cams and use a acog",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -1851,31 +2564,87 @@ const SEED_DATA =
               "name": "Sunrise bar window",
               "x": 15.9,
               "y": 61.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a8accf65-6fc8-45b9-a3b8-8f9479153ed4-video-1779778817319.mov",
+              "steps": [
+                "Punch right side window",
+                "Aim far towards the half wall ruins",
+                "Shoot anyone running out",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Use a Acog, and watch out for people rushing behind you",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Main door",
               "x": 90.3,
               "y": 65.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/b86d4240-c93d-4caa-bfb3-b1981ca86a5c-video-1779779819380.mov",
+              "steps": [
+                "Break door or punch right side",
+                "Aim to the right of police car",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "There's a lot off ways people can come from so be aware and listen",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Pool entrance door",
               "x": 4.1,
               "y": 17.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/fe14a5f5-a328-44e7-970b-a7a1ad00cabe-video-1779778453800.mov",
+              "steps": [
+                "Break down the door",
+                "Aim at the top of the stairs to the right",
+                "Shoot anyone running up",
+                "Leave after 13 seconds"
+              ],
+              "tip": "You can throw a c4 for a safer option, its a little harder to time.",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Service door",
               "x": 95.9,
               "y": 22.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/6f61c118-e80a-46c0-bdaa-6975b405dfd4-video-1779779647306.mov",
+              "steps": [
+                "Break full door",
+                "Run out after 5 seconds",
+                "Shoot anyone by the van",
+                "Leave after 1 attemp"
+              ],
+              "tip": "The reason this is low success rate is people going the other way by the police car, so be ready to flick",
+              "difficulty": 5,
+              "risk": "high"
             },
             {
               "name": "Office door",
               "x": 30.1,
               "y": 95.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 65,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/681fbe4f-1587-440f-b46c-bcf1878e81dd-video-1779780111351.mov",
+              "steps": [
+                "Go behind the wooden shelve and make a bunch hole",
+                "Aim through the whole and shoot a slip in door",
+                "Aim at the ruins half wall",
+                "Shoot anyone you see",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Use a Acog so its easy to see through the hole",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -1915,31 +2684,86 @@ const SEED_DATA =
               "name": "Top white window",
               "x": 89.8,
               "y": 83.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 72,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/98c641f2-0768-42d7-9152-b0490f8a82d5-video-1779739227727.mov",
+              "steps": [
+                "Punch left side window",
+                "Aim at the top of the police car",
+                "People sometimes run to the right",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Leave after 1 kill every time, don't get greedy",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Hookah door",
               "x": 16.1,
               "y": 37.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/665a361b-d895-4b83-bb45-128b5da27bda-video-1779777894847.mov",
+              "steps": [
+                "Break down the full door",
+                "Aim to the left through the wood by the ruins",
+                "Shoot anyone coming out",
+                "Leave after 8 seconds"
+              ],
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "VIP balcony",
               "x": 52.4,
               "y": 16.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/da193040-eaa8-4cd2-aac7-0637f2be986d-video-1779756132455.mov",
+              "steps": [
+                "Break down the whole door",
+                "Listen for rappel",
+                "Shoot anyone rappelling up",
+                "Leave when ever you want"
+              ],
+              "tip": "Barricade doors into master so you don't get flanked",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Hookah window",
               "x": 24,
               "y": 24.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/175c3f9e-873d-4e00-b39e-3b5c386eeda9-video-1779757497426.mov",
+              "steps": [
+                "Punch left side window",
+                "Aim below the wooden roof in front and the pool",
+                "Shoot anyone running by",
+                "Leave after 12 seconds"
+              ],
+              "tip": "Don't do this more than once a game, you will get pre fired",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Pool Table window",
               "x": 16.1,
               "y": 64.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/674e2808-3810-4563-bc2a-27733af67ea6-video-1779756443775.mov",
+              "steps": [
+                "Punch right side barricade",
+                "Aim down by the ruin exits",
+                "Shoot anyone running through",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Use Acog for this, and don't get greedy for more than 1 kill",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -2640,7 +3464,18 @@ const SEED_DATA =
               "name": "Animus single wall",
               "x": 34.6,
               "y": 65.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/51100c1d-f41e-4d69-8fae-f16966812886-video-1779228337696.mov",
+              "steps": [
+                "Impact open the wall",
+                "Aim to the left of the containers",
+                "Run out when you hear someone",
+                "Leave after 1 attempt or 15 seconds"
+              ],
+              "tip": "A C4 could work well if you hear multiple, also reinforce the wall if safe",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -2680,43 +3515,120 @@ const SEED_DATA =
               "name": "Control hallway window",
               "x": 17.2,
               "y": 38.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 70,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/de63b941-d9fa-49fa-b3a9-c5e9c8615e61-video-1779228521185.mov",
+              "steps": [
+                "Break a slip in the bottom left of the window",
+                "Aim towards the default cam pillar by the gate",
+                "Shoot anyone running by",
+                "Leave after 13 seconds"
+              ],
+              "tip": "People often push to your right, it would be smart to leave if you here them rushing",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Storage window",
               "x": 57.2,
               "y": 63.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 69,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/c2ab46c9-0f22-49ee-bd72-feef41abe7cc-video-1779229492978.mov",
+              "steps": [
+                "Punch bottom left of window",
+                "Aim back by the stairs to get to basement",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Games Hallway",
               "x": 50.8,
               "y": 33.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/d8ee37a3-678e-493c-9d78-cef188fe3464-video-1779228969789.mov",
+              "steps": [
+                "Break left side of window",
+                "Wait till people are running up by the boxes",
+                "Shoot anyone you see",
+                "Leave after 20 seconds"
+              ],
+              "tip": "This can work for upstairs too, if you break the whole window the balcony above is easy kills",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Lobby door",
               "x": 70.4,
               "y": 9.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a3fe22cd-7f90-4276-8243-5f51e6256cb5-video-1779229399286.mov",
+              "steps": [
+                "Break down door",
+                "Use audio but mostly aim left",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "People rush this area so have someone on cams",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Warehouse wall",
               "x": 34.2,
               "y": 63.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a6b7eeeb-6409-4720-ab7c-1faf57cf031b-video-1779230648744.mov",
+              "steps": [
+                "Impact open the left side of the wall",
+                "Use audio but aim at the edge of the container",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Have a teammate top warehouse for ReFrag or extra support",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Vending window",
               "x": 65.2,
               "y": 51.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/9057ec3b-03f0-41a4-ae40-1f9737a049cf-video-1779230374851.mov",
+              "steps": [
+                "Break bottom right side of window",
+                "Aim as far left as you can see",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Have a teammate on cams so you don't get rushed from behind",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Warehouse entrance door",
               "x": 17.1,
               "y": 65.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/27753c46-c346-4eb4-9b89-d7f87e49aa21-video-1779230544635.mp4",
+              "steps": [
+                "Break down the door fully",
+                "Use audio to find out where there pushing",
+                "To Start aim to the right by the default cam",
+                "Then as you listen look where they are coming from",
+                "Shoot anyone running by then leave"
+              ],
+              "tip": "If people push you your left behind the box, run out a little and pre fire",
+              "difficulty": 4,
+              "risk": "high"
             }
           ]
         },
@@ -2742,31 +3654,87 @@ const SEED_DATA =
               "name": "Warehouse window",
               "x": 43.8,
               "y": 63,
-              "type": "peek"
+              "type": "peek",
+              "rate": 68,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/7f1cee94-a205-4062-94cd-9910cc652009-video-1779228607263.mov",
+              "steps": [
+                "Break a hole on right side of window",
+                "Aim at the top of the stairs",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Have someone playing bottom warehouse, people like to rush this spot",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Top warehouse door",
               "x": 21.8,
               "y": 53.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/8f68e70e-654a-4b36-a5cd-f4a2ae14beb4-video-1779229655459.mov",
+              "steps": [
+                "Isn't really a spawn peek but free kills",
+                "Prone and punch a whole bottom left",
+                "Aim at the end of the balcony on the left side",
+                "leave after 25 seconds"
+              ],
+              "tip": "There is a chance people rappel straight ahead on the edge of the balcony",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "CC Stairs door",
               "x": 20.4,
               "y": 36.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/4bc61d1f-85f3-40c3-ac0c-96b9d49ae5d9-video-1779228431276.mov",
+              "steps": [
+                "Break a hole left side of the door",
+                "Aim at the top of the stairs",
+                "Shoot anyone coming up",
+                "Leave after 15 seconds"
+              ],
+              "tip": "There is often drones hiding in that room, check all the plants to make sure",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Electrical window",
               "x": 74.3,
               "y": 52,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/8d832da8-22ab-4ff2-b35b-d2a806419d86-video-1779228844140.mov",
+              "steps": [
+                "Break down whole window",
+                "Aim your c4 over the railing covering the stairs",
+                "Throw when you hear someone",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Have a teammate up there with you in case you mistime it and they rush you",
+              "difficulty": 3,
+              "risk": "low"
             },
             {
               "name": "Electrical wall",
               "x": 62.1,
               "y": 57.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 67,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/83dfd77b-3bba-436c-b415-58882b1af70d-video-1779228692760.mov",
+              "steps": [
+                "Impact right side of wall",
+                "Get on default cam and see where they shoot from",
+                "Listen for footsteps before they get to the stairs",
+                "Run out to edge of balcony then shoot anyone you see",
+                "leave after 1 attempt or 15 seconds"
+              ],
+              "tip": "Once you get back inside reinforce the wall, only if its safe",
+              "difficulty": 5,
+              "risk": "high"
             }
           ]
         },
@@ -2987,37 +3955,105 @@ const SEED_DATA =
               "name": "Closet window",
               "x": 69.3,
               "y": 94.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 74,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/65d9f2c0-e3f7-4e89-bcf3-b681f927e402-video-1780257630999.mov",
+              "steps": [
+                "Break bottom right window",
+                "Aim at the edge of the rail",
+                "Shoot anyone rappelling up",
+                "Leave after 1 kill"
+              ],
+              "tip": "This one is very common so only do it once a game",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Toilet window",
               "x": 19.7,
               "y": 34.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/9902fbf9-9ad8-4bd5-a4ca-cf47247f147a-video-1780262200050.mov",
+              "steps": [
+                "Prepare jump out",
+                "Jump and aim to the left when the default cam is shot",
+                "Shoot anyone running up",
+                "Leave after 1 attemp"
+              ],
+              "tip": "Sit on the default cam, if you hear multiple wait 5 more seconds after its shot",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Lobby window",
               "x": 67.4,
               "y": 50.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 61,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/4efe90a2-7568-4dd9-8aea-ac116ecc690e-video-1780260402671.mov",
+              "steps": [
+                "Punch right side of window",
+                "Aim at the gates exit",
+                "Shoot anyone running by",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Break the door in the lobby entrance so you apply more pressure",
+              "difficulty": 2,
+              "risk": "medium"
             },
             {
               "name": "Coat window runout",
               "x": 41.1,
               "y": 48,
-              "type": "peek"
+              "type": "peek",
+              "rate": 61,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/7bada688-5304-4e88-a437-ebaf1d4f6c9f-video-1780262469889.mov",
+              "steps": [
+                "Break the full window",
+                "jump out after 5 seconds and run to the end of the balcony",
+                "Aim right by the gate",
+                "Shoot anyone running by",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Use a 3 speed operator",
+              "difficulty": 5,
+              "risk": "high"
             },
             {
               "name": "Lobby entrence door",
               "x": 77.6,
               "y": 52.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 54,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/22a4aa24-e91c-434a-9bd8-42e6967b5e7a-video-1780262606306.mov",
+              "steps": [
+                "Break the door",
+                "Aim at the exit of the gate",
+                "Run out or stay when they come out",
+                "Shoot anyone you see",
+                "Leave after 10 seconds"
+              ],
+              "tip": "Barricade the door that connects to lobby if you have time (after you leave)",
+              "difficulty": 4,
+              "risk": "high"
             },
             {
               "name": "Kitchen window",
               "x": 15,
               "y": 86.4,
-              "type": "peek"
+              "type": "peek",
+              "rate": 51,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/f08704df-2f0d-4877-8a56-f4c66702cacb-video-1780259006545.mov",
+              "steps": [
+                "Have the jump out prepared",
+                "Jump after 12 seconds and look to the left",
+                "Shoot anyone running by the railings",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Only do this if your on any of the second floor bomb sites",
+              "difficulty": 4,
+              "risk": "medium"
             }
           ]
         },
@@ -3057,25 +4093,71 @@ const SEED_DATA =
               "name": "Top black door",
               "x": 26.8,
               "y": 43.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 77,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/9fd2384f-e854-43e5-be4d-8dcddb1f24dc-video-1780205187726.mov",
+              "steps": [
+                "Break the full door",
+                "Run out after 7 seconds",
+                "Throw C4 to the left of the lower roof",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Re barricade the door after you throw",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Vip single wall",
               "x": 66.6,
               "y": 52.5,
-              "type": "peek"
+              "type": "peek",
+              "rate": 77,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/6c38643f-8cc3-4d50-8afc-63523300316a-video-1780245535515.mov",
+              "steps": [
+                "Shoot a hole in the right side of wall",
+                "Aim at the exit of the gate",
+                "Shoot anyone running out",
+                "Leave after 1 kill"
+              ],
+              "tip": "Reinforce the wall if you can after a kill.",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Mini bar wall",
               "x": 55.9,
               "y": 90.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 63,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/fb3628ee-39c7-414a-8f62-18012c6b7180-video-1780249334372.mov",
+              "steps": [
+                "Impact the single wall so you can run out",
+                "Run out after you hear people",
+                "Aim at the far end of the balcony",
+                "Shoot anyone coming or on rappel",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Reinforce if you can",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Shrine window",
               "x": 53.2,
               "y": 40.9,
-              "type": "peek"
+              "type": "peek",
+              "rate": 62,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/97dbbbc9-9148-47a0-9e80-8e02c8acc8ba-video-1780245151199.mov",
+              "steps": [
+                "Break full window",
+                "Jump out after 6 seconds",
+                "Aim to the right by the gate",
+                "Shoot anyone running out",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Use a Acog, also expect more than one",
+              "difficulty": 4,
+              "risk": "medium"
             }
           ]
         },
@@ -3571,7 +4653,18 @@ const SEED_DATA =
               "name": "Office double wall",
               "x": 36.7,
               "y": 7.8,
-              "type": "peek"
+              "type": "peek",
+              "rate": 86,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/9946f3a8-a97e-474d-8d34-51bfc18a62c4-video-1780534110924.mov",
+              "steps": [
+                "Impact the left side of the wall",
+                "Wait till you see or hear rappeling",
+                "Run out or stay inside and shoot people you see",
+                "Leave after 1-2 kills"
+              ],
+              "tip": "Use a fast shooting gun, also break windows above to create pressure",
+              "difficulty": 4,
+              "risk": "medium"
             }
           ]
         },
@@ -3611,19 +4704,52 @@ const SEED_DATA =
               "name": "Cashier door",
               "x": 14.8,
               "y": 30,
-              "type": "peek"
+              "type": "peek",
+              "rate": 58,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/50880872-d8ef-40cf-9a23-b9e0c6571864-video-1780533196477.mov",
+              "steps": [
+                "Break down the whole door",
+                "Wait 8 seconds than run up",
+                "Throw the c4 to the right over the wall",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Sometimes they push to the right but it doesn't matter if your fast",
+              "difficulty": 3,
+              "risk": "low"
             },
             {
               "name": "Top yellow stairs",
               "x": 79.9,
               "y": 52.3,
-              "type": "peek"
+              "type": "peek",
+              "rate": 53,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a83f7a6f-5625-487c-af90-27bb0e9e7236-video-1780575652375.mov",
+              "steps": [
+                "punch left side window",
+                "Aim to the right of the wooden wall",
+                "Shoot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "There's a small window where you see them, sometimes people go around the Crain",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Janitor door",
               "x": 64.2,
               "y": 13.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 46,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/2bab877a-feaf-4e08-a114-fc4d782f4df5-video-1780574755774.mov",
+              "steps": [
+                "Shoot slip in bottom right",
+                "Aim along the wall till the end",
+                "Shoot anyone running by",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Sometimes the can come from left but its unlikely",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -3649,31 +4775,87 @@ const SEED_DATA =
               "name": "Rope door",
               "x": 69.7,
               "y": 15.6,
-              "type": "peek"
+              "type": "peek",
+              "rate": 66,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/a0db4917-0898-4e83-9be5-3c83d095db92-video-1780579279739.mov",
+              "steps": [
+                "Break down the door and look for rappelling",
+                "Aim at the railings or down the balcony",
+                "Shoot anyone you see",
+                "Leave after 1-2 kills"
+              ],
+              "tip": "Use a Acog so you can see exactly when there heads pop up",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Kitchen wall",
               "x": 35.1,
               "y": 24,
-              "type": "peek"
+              "type": "peek",
+              "rate": 64,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/119a5760-3364-499b-a529-eae4303770f8-video-1780577472063.mov",
+              "steps": [
+                "Impact or shoot hole on right side",
+                "Aim at the end of the stairs",
+                "Shoot anyone coming up",
+                "Leave after 20 seconds"
+              ],
+              "tip": "Stay far back from the door, people can push from the left but its rare",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Coat door",
               "x": 82.2,
               "y": 36.7,
-              "type": "peek"
+              "type": "peek",
+              "rate": 64,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/bc91a023-d49d-49a7-9646-4f7ef8d77a37-video-1780578471092.mp4",
+              "steps": [
+                "Break down door",
+                "Run out to the right after 7 seconds",
+                "Shoot anyone you see",
+                "Leave after 1 attempt"
+              ],
+              "tip": "You can throw a c4 for full safety, throw after 9 seconds or you hear them",
+              "difficulty": 3,
+              "risk": "medium"
             },
             {
               "name": "Heaven window",
               "x": 79.7,
               "y": 21.1,
-              "type": "peek"
+              "type": "peek",
+              "rate": 62,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/176265ad-9ed7-4ed4-b38d-cbeeead83496-video-1780578729130.mp4",
+              "steps": [
+                "Break full window",
+                "Jump out after 8 seconds",
+                "Aim at the right entrance",
+                "Leave after 1 attempt"
+              ],
+              "tip": "Don't try to get more than 1 kill just take value",
+              "difficulty": 4,
+              "risk": "medium"
             },
             {
               "name": "Mezza window",
               "x": 80,
               "y": 52.2,
-              "type": "peek"
+              "type": "peek",
+              "rate": 58,
+              "video": "https://pub-c11cdf7d63734d52945843745d8e60a8.r2.dev/peeks/dd6fd835-d346-4d59-972d-1b4f4a4ac85d-video-1780577685559.mp4",
+              "steps": [
+                "Break down full window",
+                "Aim at the bridge people will rappel down",
+                "If you miss them rappelling aim the right of Crain",
+                "Shot anyone running by",
+                "Leave after 15 seconds"
+              ],
+              "tip": "Break window below you for pressure",
+              "difficulty": 3,
+              "risk": "medium"
             }
           ]
         },
@@ -4587,6 +5769,24 @@ function opsBySide(side){ return DB.operators.filter(o=>o.side===side).slice().s
 function byId(id){ return document.getElementById(id); }
 function uid(p){ return p+"-"+Math.random().toString(36).slice(2,8); }
 function objectiveRooms(map){ const s=new Set(); map.bombsites.forEach(b=>b.rooms.forEach(r=>s.add(fold(r)))); return s; }
+function closePeekModal(){ const m=byId("peekModal"); if(m){ m.querySelectorAll("video").forEach(v=>{try{v.pause();}catch(e){}}); m.classList.remove("show"); } }
+function openPeekModal(c){
+  let m=byId("peekModal");
+  if(!m){ m=document.createElement("div"); m.className="modal"; m.id="peekModal"; document.body.appendChild(m); }
+  const steps=(c.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
+  const meta=[ (c.difficulty!=null&&c.difficulty!=="")?`Difficulty ${esc(c.difficulty)}/5`:"", c.risk?`Risk: ${esc(c.risk)}`:"" ].filter(Boolean).join(" · ");
+  m.innerHTML=`<div class="card peek-card">
+    <div class="spread" style="margin-bottom:6px"><h3 style="margin:0">${esc(c.name)}${(c.rate!=null&&c.rate!=="")?` <span class="pk-rate">${esc(c.rate)}%</span>`:""}</h3><button class="iconbtn" id="pkClose" title="Close">✕</button></div>
+    ${meta?`<div class="muted small" style="margin-bottom:4px">${meta}</div>`:""}
+    ${c.video?`<video controls autoplay loop muted playsinline preload="metadata" src="${esc(c.video)}"${c.poster?` poster="${esc(c.poster)}"`:""}></video>`:""}
+    ${steps?`<ol class="pk-steps">${steps}</ol>`:""}
+    ${c.tip?`<p class="pk-tip">💡 ${esc(c.tip)}</p>`:""}
+    <p class="muted small" style="margin:8px 0 0">Clip not playing? <a href="${esc(c.video)}" target="_blank" rel="noopener">Open video ↗</a> · success-rate & how-to from <a href="https://peekaboor6.com/" target="_blank" rel="noopener">PeekabooR6</a></p>
+  </div>`;
+  m.classList.add("show");
+  byId("pkClose").onclick=closePeekModal;
+  m.onclick=e=>{ if(e.target===m) closePeekModal(); };
+}
 let _toastT;
 function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.classList.add("show"); clearTimeout(_toastT); _toastT=setTimeout(()=>t.classList.remove("show"),1900); }
 
@@ -4763,8 +5963,10 @@ function renderFloorView(){
   const objSet=objectiveRooms(m);
   const markers=f.callouts.map((c,ci)=>{
     const site=c.type==="site", peek=c.type==="peek";
-    const cls="mk "+(site?"site":peek?"peek":"room");
-    const lb=(peek&&c.rate!=null&&c.rate!=="")?`${esc(c.name)} · ${esc(c.rate)}%`:esc(c.name);
+    const hasVid=peek&&!!c.video;
+    const cls="mk "+(site?"site":peek?"peek":"room")+(hasVid?" vid":"");
+    const lbTxt=(peek&&c.rate!=null&&c.rate!=="")?`${esc(c.name)} · ${esc(c.rate)}%`:esc(c.name);
+    const lb=hasVid?`<span class="pk-play">▶</span>${lbTxt}`:lbTxt;
     const ds=site?` data-site="${esc(c.site||"")}"`:"";
     return `<div class="${cls}" data-pin="${ci}"${ds} style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
   }).join("");
@@ -4818,6 +6020,11 @@ function setupViewer(edit){
   const applySiteFilter=()=>{ sMarks.forEach(el=>{ el.style.display=(UI.maps.siteFilter==="all"||el.dataset.site===UI.maps.siteFilter)?"":"none"; }); };
   applySiteFilter();
   const sFil=ctrlHost.querySelector("[data-sitefilter]"); if(sFil) sFil.onchange=e=>{ e.stopPropagation(); UI.maps.siteFilter=sFil.value; applySiteFilter(); };
+  // spawn-peek labels open a how-to video popup (view mode only)
+  if(!edit) vp.querySelectorAll(".mk.peek.vid .mlb").forEach(lb=>{
+    lb.addEventListener("mousedown",e=>e.stopPropagation()); // don't start a pan
+    lb.addEventListener("click",e=>{ e.stopPropagation(); const pin=lb.closest(".mk"); const m2=mapById(UI.maps.selectedId); const f2=m2&&m2.floors[UI.maps.floorIdx]; const c=f2&&f2.callouts[+pin.dataset.pin]; if(c&&c.video) openPeekModal(c); });
+  });
   let sx,sy;
   const pm=e=>{ MV.tx=e.clientX-sx; MV.ty=e.clientY-sy; clamp(); apply(); };
   const pu=()=>{ vp.classList.remove("grabbing"); document.removeEventListener("mousemove",pm); document.removeEventListener("mouseup",pu); };
