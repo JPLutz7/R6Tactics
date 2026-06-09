@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 24**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 25**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -58,8 +58,8 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
   maps: [ { id, name, coverImage, notes,
             floors: [ { name, layoutImage, callouts: [ CALLOUT ] } ],
             bombsites: [ {id,name,rooms} ], tactics:{attack:{},defense:{}} } ],
-  operators: [ {id,name,side,role,notes,howToCounter} ],   // 75, recommender field = howToCounter
-  roles:     [ {id,name,desc,attackOps:[],defenseOps:[],notes} ],   // 8 practical Siege roles; ops ordered best→situational
+  operators: [ {id,name,side,winRate,role,notes,howToCounter} ], // 75. winRate = real win-rate %, see §11
+  roles:     [ {id,name,desc,attackOps:[],defenseOps:[],notes} ],   // 8 practical Siege roles; pools render ordered by winRate desc (§11)
   roster:    [ {name,roles:[roleId]} ],                            // ordered = priority; assigned by dragging role cards onto players
   playerStats: [],                                          // optional, unused for now
   pools:     [ {id,name,note,mapIds:[]} ]                   // Pro / Seasonal / Showcased
@@ -161,10 +161,12 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
   list of roles assigned by **dragging a role card's ⠿ handle onto a player row**
   (drags a copy; chips reorder by drag / remove with ✕). Roster entries are now
   `{name, roles:[roleId]}` (order = priority); roles gained a `desc` field.
+- **Operator pools ordered by real win-rate** (highest→lowest) with a win-rate % on each
+  `.opchip` (`poolHTML()`/`wrOf()`); per-operator `winRate` baked into the seed — see §11.
 - Import/export, versioned publish model, README. **Data/ToS rule clarified (§1):**
   static or periodically-refreshed reference data (incl. tracker win-rates) is fine;
   only *live, in-match opponent intel* is banned.
-- Seed at **v24**.
+- Seed at **v25**.
 
 ## 8. Known limitations / good next steps
 - r6calls' per-floor source art is only **1024×1024** (whole-map background is
@@ -209,17 +211,29 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 > checks + a puppeteer screenshot before deploying; cache-bust changed images with a
 > `?query`; bump SEED `version` when the embedded data changes.
 >
-> **Do this task:** In the Roster tab, order the operators in each role's attack &
-> defense pools by **real win-rate** (instead of today's curated best→situational
-> ranking), and add a **win-rate %** to each operator chip (`.opchip`).
-> - Pull the win-rates **once** from a stats source and **bake them into the seed** —
->   this is explicitly allowed under the data/ToS rule in §1 (static / periodically-
->   refreshed reference data is fine; only *live, in-match opponent intel* is banned).
->   Plan to refresh occasionally, never live.
-> - Suggested approach: store `winRate` (0–100, maybe also `pickRate`) per operator in
->   `DB.operators` (ids are stable — see the array), sort each role's `attackOps`/
->   `defenseOps` by `winRate` desc, and render the % on the op chip in `poolHTML()`
->   (roster code is `renderRoleGrid`/`poolHTML`/`bindRoleGrid` in `index.html`).
-> - Caveats: R6 win-rates are volatile and basically **per-operator, not per-role**, so
->   the same op shows the same % wherever it appears; pick one reliable static source and
->   note it. Bump SEED `version`. Validate + screenshot, then ask me what's next.
+> Then ask me what I want to do next (likely candidates: **refresh the operator
+> win-rates with exact numbers** from a logged-in R6 Tracker — see §11; add `pickRate`;
+> fine-tune label positions; fill tactics per bombsite; or fold the recommender/operators
+> into the Maps tab).
+
+---
+
+## 11. Operator win-rates (`DB.operators[].winRate`) — source & refresh
+- **What:** a `winRate` (0–100, one decimal) on every operator. The Roster pools sort by
+  it (desc) and each `.opchip` shows the %. It's **per-operator**, so an op reads the same
+  % in every role/pool it appears in. Allowed under §1 (static reference data — *not* live
+  in-match intel).
+- **Source (current values):** Ubisoft's **official Ranked · PC · Platinum & above**
+  balance data — the "win-delta per operator vs. presence" release (Y10S3), republished by
+  EsportsTales: https://www.esportstales.com/rainbow-six-siege/most-picked-and-banned-operators
+  (`winRate ≈ 50 + win_delta`).
+- **⚠️ These are APPROXIMATE (±1%).** Every clean tabular source (R6 Tracker, EsportsTales'
+  raw numbers, r6data) is Cloudflare/JS-gated and **unreachable from a web session** — even
+  via headless Chromium, because the environment's TLS-intercepting egress proxy makes
+  Cloudflare wall every request (cert error → "Just a moment…" that never clears). The
+  official data is only published as a **scatter of portrait icons**, read by eye and
+  cross-checked against current meta. Refresh occasionally, never live.
+- **To refresh with exact numbers:** grab a clean per-operator win-rate table from a
+  **logged-in R6 Tracker on a normal machine** (this env can't), update the `winRate`
+  values in the seed (`DB.operators`), bump SEED `version`. Render code: `wrOf()` /
+  `poolHTML()` in `index.html`.
