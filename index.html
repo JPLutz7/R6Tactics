@@ -190,7 +190,7 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .vt-sel{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(4px);max-width:155px}
 .viewport:not(.show-peeks) .mk.peek{display:none}
 /* fixed overlay controls (don't move when panning/zooming) */
-.vp-ctrl{position:absolute;top:10px;left:10px;z-index:6;display:flex;gap:6px;flex-wrap:wrap}
+.vp-ctrl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px}
 .vt{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:700;padding:6px 11px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;backdrop-filter:blur(4px);text-shadow:0 1px 2px rgba(0,0,0,.7)}
 .vt .vbox{width:13px;height:13px;border-radius:4px;border:1px solid var(--line2);display:grid;place-items:center;font-size:10px;color:transparent;flex:none}
 .vt.on{color:#fff;border-color:#3a4a5c}
@@ -4452,21 +4452,26 @@ function renderFloorView(){
     const ds=site?` data-site="${esc(c.site||"")}"`:"";
     return `<div class="${cls}" data-pin="${ci}"${ds} style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
   }).join("");
-  const hasPeek=f.callouts.some(c=>c.type==="peek");
-  const hasSite=f.callouts.some(c=>c.type==="site");
-  const hasRoom=f.callouts.some(c=>c.type!=="peek"&&c.type!=="site");
-  const siteList=[...new Map(f.callouts.filter(c=>c.type==="site").map(c=>[String(c.site),c.name])).entries()];
+  // Layers/sites are evaluated at the MAP level so the toggles + site selection
+  // stay present and active on every floor (some sites span two floors).
+  const mapHasPeek=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="peek"));
+  const mapHasSite=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="site"));
+  const mapHasRoom=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type!=="peek"&&c.type!=="site"));
+  // group bomb sites by digit and label each by its room pair (the way the game names sites)
+  const siteRooms=new Map();
+  m.floors.forEach(fl=>(fl.callouts||[]).forEach(c=>{ if(c.type==="site"){ const room=String(c.name).replace(/\s+[AB]$/,"").trim(); if(!siteRooms.has(String(c.site))) siteRooms.set(String(c.site),[]); const arr=siteRooms.get(String(c.site)); if(room&&!arr.includes(room)) arr.push(room); } }));
+  const siteList=[...siteRooms.entries()].map(([s,rooms])=>[s,rooms.join(" / ")]).sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true}));
   const vpCls=["viewport",UI.maps.layerNames&&"show-names",UI.maps.layerSites&&"show-sites",UI.maps.layerPeeks&&"show-peeks",edit&&"show-edit"].filter(Boolean).join(" ");
   const toggles=[
-    (hasRoom||edit)?`<button class="vt names ${UI.maps.layerNames?"on":""}" data-layer="names"><span class="vbox">✓</span>Room names</button>`:"",
-    (hasSite||edit)?`<button class="vt sites ${UI.maps.layerSites?"on":""}" data-layer="sites"><span class="vbox">✓</span>Bomb sites</button>`:"",
-    (hasSite&&siteList.length>1)?`<select class="vt-sel" data-sitefilter title="Show a specific bomb site"><option value="all">All sites</option>${siteList.sort((a,b)=>a[0]-b[0]).map(([s,n])=>`<option value="${esc(s)}" ${UI.maps.siteFilter===s?"selected":""}>${esc(n)}</option>`).join("")}</select>`:"",
-    (hasPeek||edit)?`<button class="vt peek ${UI.maps.layerPeeks?"on":""}" data-layer="peeks"><span class="vbox">✓</span>Spawn peeks</button>`:""
+    (mapHasRoom||edit)?`<button class="vt names ${UI.maps.layerNames?"on":""}" data-layer="names"><span class="vbox">✓</span>Room names</button>`:"",
+    (mapHasSite||edit)?`<button class="vt sites ${UI.maps.layerSites?"on":""}" data-layer="sites"><span class="vbox">✓</span>Bomb sites</button>`:"",
+    (mapHasSite&&siteList.length>0)?`<select class="vt-sel" data-sitefilter title="Show a specific bomb site"><option value="all">All sites</option>${siteList.map(([s,n])=>`<option value="${esc(s)}" ${UI.maps.siteFilter===s?"selected":""}>${esc(n)}</option>`).join("")}</select>`:"",
+    (mapHasPeek||edit)?`<button class="vt peek ${UI.maps.layerPeeks?"on":""}" data-layer="peeks"><span class="vbox">✓</span>Spawn peeks</button>`:""
   ].filter(Boolean).join("");
   host.innerHTML=`<div class="floorwrap">${fbar}
+    ${toggles?`<div class="vp-ctrl">${toggles}</div>`:""}
     <div class="${vpCls}" id="vp">
       <div class="stage" id="stage"><img class="floorimg" id="floorimg" src="${esc(f.layoutImage)}" draggable="false" alt=""><div id="markers">${markers}</div></div>
-      ${toggles?`<div class="vp-ctrl">${toggles}</div>`:""}
       <div class="vp-zoom"><button data-zoom="in" title="Zoom in">+</button><button data-zoom="out" title="Zoom out">−</button><button data-zoom="reset" title="Reset view">⟲</button></div>
       <div class="vp-hint">drag to pan · scroll to zoom</div>
     </div>
@@ -4488,12 +4493,13 @@ function setupViewer(edit){
   const zoomAt=(px,py,fac)=>{ const ns=Math.min(8,Math.max(1,MV.s*fac)),k=ns/MV.s; MV.tx=px-(px-MV.tx)*k; MV.ty=py-(py-MV.ty)*k; MV.s=ns; clamp(); apply(); };
   vp.addEventListener("wheel",e=>{ e.preventDefault(); const r=vp.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.18:1/1.18); },{passive:false});
   vp.querySelectorAll("[data-zoom]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const r=vp.getBoundingClientRect(); b.dataset.zoom==="reset"?fit():zoomAt(r.width/2,r.height/2,b.dataset.zoom==="in"?1.35:1/1.35); });
-  vp.querySelectorAll("[data-layer]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const L=b.dataset.layer,key={names:"layerNames",sites:"layerSites",peeks:"layerPeeks"}[L];
+  const ctrlHost=byId("floorView");
+  ctrlHost.querySelectorAll("[data-layer]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); const L=b.dataset.layer,key={names:"layerNames",sites:"layerSites",peeks:"layerPeeks"}[L];
     UI.maps[key]=!UI.maps[key]; b.classList.toggle("on",UI.maps[key]); vp.classList.toggle("show-"+L,UI.maps[key]); });
   const sMarks=[...vp.querySelectorAll(".mk.site")];
   const applySiteFilter=()=>{ sMarks.forEach(el=>{ el.style.display=(UI.maps.siteFilter==="all"||el.dataset.site===UI.maps.siteFilter)?"":"none"; }); };
   applySiteFilter();
-  const sFil=vp.querySelector("[data-sitefilter]"); if(sFil) sFil.onchange=e=>{ e.stopPropagation(); UI.maps.siteFilter=sFil.value; applySiteFilter(); };
+  const sFil=ctrlHost.querySelector("[data-sitefilter]"); if(sFil) sFil.onchange=e=>{ e.stopPropagation(); UI.maps.siteFilter=sFil.value; applySiteFilter(); };
   let sx,sy;
   const pm=e=>{ MV.tx=e.clientX-sx; MV.ty=e.clientY-sy; clamp(); apply(); };
   const pu=()=>{ vp.classList.remove("grabbing"); document.removeEventListener("mousemove",pm); document.removeEventListener("mouseup",pu); };
