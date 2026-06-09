@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 34**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 35**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -62,7 +62,8 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
   roles:     [ {id,name,side,desc,ops:[]} ],   // 13 SIDE-SPECIFIC roles (6 attack, 7 defense); ops render ordered by winRate desc (§11)
   roster:    [ {name,attackRoles:[roleId],defenseRoles:[roleId]} ], // two priority lists/player (order=priority); drag role cards onto a player's ATK or DEF list
   playerStats: [],                                          // optional, unused for now
-  pools:     [ {id,name,note,mapIds:[]} ]                   // Pro / Seasonal / Showcased
+  pools:     [ {id,name,note,mapIds:[]} ],                  // Pro / Seasonal / Showcased
+  suggester: { archetypes, archetypeLabels, matchups, approachLabels, approachAdvice, defenders } // §12 — tunable attack-suggester config
 }
 CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor image
             type? , site? , rate? , video? , steps? , tip? , difficulty? , risk? }
@@ -71,7 +72,8 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
     tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
 TAC = { ...legacy flat fields, strats: [ STRAT ] }          // see §12
-STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], reinforce:[], rotations:[], breach:[] }
+STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], reinforce:[], rotations:[], breach:[], approach? }
+  (attack strats carry approach = hardbreach|vertical|flank|utility, used by the suggester §12)
   role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for that
   slot; pos = that player's gadget/job (rendered in the "Gadgets & jobs — by player" section).
   reinforce/rotations = defense bullet groups; breach = attack "Open up" walls. The Tactics
@@ -272,6 +274,18 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   gadget spots / attack entry arrows) but it was **reverted** (positions were approximate —
   no room-label coords exist to anchor them). If revisited, make them **drag-editable in ✎
   Edit** first so positions can be tuned, and consider bundling operator logos.
+- **Attack-strat suggester (v35, prep tool).** In the Tactics panel the **Attack** group has a
+  **🎯 Suggest** button → a prep view: pick the **site** + the **defenders you expect** (chips,
+  max 5) and it **ranks that site's attack strats** vs the comp, with a one-line reason; the
+  top pick opens on click. Scoring (`scoreAttackStrat`): each defender carries archetype
+  weights (`DB.suggester.defenders`), each attack strat has an `approach`, and
+  `DB.suggester.matchups[approach][archetype]` gives the score — all **tunable in the seed**
+  (no code change). Archetypes: anti-breach / traps / intel / roamers / anchors. Code:
+  `renderSuggester()` / `scoreAttackStrat()` / `compArchetypes()`. **ToS:** labelled **prep**
+  with a note — it's for *expected* defenders (scrims/VOD), **not** live in-match enemy input
+  (stays on the safe side of §1). Reason text uses the dominant archetype + the winning
+  approach's `approachAdvice` (per-approach, so the advice clause can read slightly generic
+  for non-anti-breach comps — easy to make archetype-aware later).
 - **Known nit — attack "Open up" vs by-player overlap:** on a single-breach attack strat
   (hard breacher only, no vertical/flank slot), the one wall in **Open up** is the same line
   shown under the hard breacher in **Gadgets & jobs — by player**. Minor duplication; could
