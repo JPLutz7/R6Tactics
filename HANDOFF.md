@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 20**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 23**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -143,6 +143,7 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 - Pan/zoom viewer, on-map toggles, anchored constant-size markers.
 - **All 25 maps** on r6calls building-focused plates with **room names baked in**;
   bomb-site (per-site dropdown) + spawn-peek overlays on top. Spawn peeks on the 9.
+- Spawn peeks carry PeekabooR6 success-rate %, how-to video, steps, tip, difficulty/risk; clicking a peek label opens a popup with the video (hotlinked from PeekabooR6's R2 CDN, attributed). Matched by map+name; videos are .mov (Firefox shows an "Open video" fallback).
 - Roster/roles, import/export, versioned publish model, README.
 - Seed at v15.
 
