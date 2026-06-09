@@ -8,8 +8,17 @@ Living context doc so a new chat / developer can pick up where we left off.
 ## 1. What this is
 A browser dashboard a Rainbow Six Siege 5-stack uses to prep ranked rounds:
 interactive map callouts (r6calls.com-style) + a roster. Pure client-side,
-hosted on GitHub Pages. **No game/Ubisoft/tracker integration — manual data only,
-ToS-safe by design.**
+hosted on GitHub Pages. **ToS-safe by design** — see the rule below.
+
+**Rule (data / ToS).** The line is *live, in-match opponent intel*, not data in
+general. **Not allowed:** anything that reads the running game / BattlEye /
+Overwolf, or auto-pulls real-time, opponent-specific information about the team
+you're currently facing (a live tracker overlay, instant opponent lookups, etc.).
+**Allowed:** static or periodically-refreshed **reference** data baked into the
+seed and updated manually / every few hours — callouts, map data, peek videos,
+**and tracker stats** such as operator & map win-rates. It's the same info anyone
+can look up between matches, so it gives no unfair in-match advantage. Tracker
+stats are fine under this rule **as long as they're static/delayed, never live**.
 
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`

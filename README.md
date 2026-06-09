@@ -61,9 +61,12 @@ stack), and Reset to the published seed.
 `1` / `2` switch tabs · `[` / `]` cycle maps.
 
 ### Hard guarantees
-100% client-side. **No integration of any kind** with the R6 client, Ubisoft,
-tracker.gg, Overwolf, or BattlEye — manual data only. ToS-safe by design.
-(GitHub Pages is just static hosting.)
+100% client-side, ToS-safe by design. **No *live* integration** with the running
+R6 client, BattlEye, Overwolf, or any real-time, opponent-specific intel during a
+match. Static / periodically-refreshed **reference** data is fine — callouts, map
+data, peek videos, and tracker stats (operator & map win-rates) — it's the same
+info anyone can look up between matches, baked into the app and updated manually,
+with no in-match advantage. (GitHub Pages is just static hosting.)
 
 ---
 
