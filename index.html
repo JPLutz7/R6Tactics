@@ -370,7 +370,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 27,
+  "version": 28,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -649,23 +649,23 @@ const SEED_DATA =
       ],
       "bombsites": [
         {
-          "id": "club-2f-bed-cctv",
-          "name": "2F · Bedroom / CCTV",
+          "id": "clubhouse-2f-master-bedroom-gym",
+          "name": "2F · Master Bedroom / Gym",
           "rooms": [
             "Master Bedroom",
+            "Gym"
+          ]
+        },
+        {
+          "id": "clubhouse-2f-cash-room-cctv-room",
+          "name": "2F · Cash Room / CCTV Room",
+          "rooms": [
+            "Cash Room",
             "CCTV Room"
           ]
         },
         {
-          "id": "club-2f-gym-cash",
-          "name": "2F · Gym / Cash",
-          "rooms": [
-            "Gym",
-            "Cash Room"
-          ]
-        },
-        {
-          "id": "club-1f-bar-stock",
+          "id": "clubhouse-1f-bar-stock-room",
           "name": "1F · Bar / Stock Room",
           "rooms": [
             "Bar",
@@ -673,8 +673,8 @@ const SEED_DATA =
           ]
         },
         {
-          "id": "club-b-church-arsenal",
-          "name": "B · Church / Arsenal",
+          "id": "clubhouse-b-church-arsenal-room",
+          "name": "B · Church / Arsenal Room",
           "rooms": [
             "Church",
             "Arsenal Room"
@@ -683,19 +683,12 @@ const SEED_DATA =
       ],
       "tactics": {
         "attack": {
-          "club-2f-bed-cctv": {
-            "breachPoints": "Cash↔Bedroom reinforced wall (open for crossfire), hatch above Bedroom from roof/Gym, CCTV↔Bathroom wall.",
-            "entryPoints": "Top stairs, Gym, Bathroom window, roof hatches into Master.",
-            "utilityToBring": "Hard breach (Thermite/Ace) for the Cash–Bedroom wall · Thatcher/Kali/IQ for Bandit · drones for CCTV/Gym.",
-            "commonPushes": "Take roof + Master, open the Cash wall for crossfire, contest Gym, then collapse on CCTV.",
-            "plantSpots": "Bedroom safe corner by the bunk (out of Cash LOS); CCTV behind the desk.",
-            "postPlant": "Hold Gym, Master and top stairs; deny Bathroom retake; watch the Bandit run-out from Cash.",
-            "notes": "Roof control is the tempo lever — if you own Master hatch, the site folds.",
+          "clubhouse-2f-master-bedroom-gym": {
             "strats": [
               {
-                "id": "atk-club-2f-bed-cctv-0",
-                "name": "Main 2F hard-breach hit",
-                "summary": "Open CCTV, flood from Cash/Roof",
+                "id": "atk-clubhouse-2f-master-bedroom-gym-0",
+                "name": "Cash-side hard-breach",
+                "summary": "Open the Cash-side wall, flood from Cash/Construction",
                 "slots": [
                   {
                     "role": "hardbreach-atk",
@@ -704,7 +697,7 @@ const SEED_DATA =
                       "hibana",
                       "ace"
                     ],
-                    "pos": "Open the CCTV/Bedroom reinforced wall from the Cash side."
+                    "pos": "Open the Bedroom-Cash or Gym-Cash wall from the Cash side."
                   },
                   {
                     "role": "support-atk",
@@ -713,7 +706,7 @@ const SEED_DATA =
                       "twitch",
                       "kali"
                     ],
-                    "pos": "Clear Bandit/Kaid (EMP / shock drone) for the breach."
+                    "pos": "Clear Bandit/Kaid on the walls; EMP the trick."
                   },
                   {
                     "role": "entry-atk",
@@ -722,7 +715,7 @@ const SEED_DATA =
                       "zofia",
                       "iana"
                     ],
-                    "pos": "Entry through the breach/Cash; take the first duel."
+                    "pos": "Entry through the breach into Bedroom/Gym."
                   },
                   {
                     "role": "intel-atk",
@@ -731,195 +724,7 @@ const SEED_DATA =
                       "zero",
                       "dokkaebi"
                     ],
-                    "pos": "Track roamers (Jackal), Zero-cam the site before commit."
-                  },
-                  {
-                    "role": "igl-atk",
-                    "ops": [
-                      "lion",
-                      "dokkaebi",
-                      "iana"
-                    ],
-                    "pos": "Lion/Dokkaebi scan on commit; call the flood."
-                  }
-                ],
-                "steps": [
-                  "Drone CCTV/Bedroom + clear roamers on the way up.",
-                  "Thatcher/Twitch kill the Bandit batteries on the breach wall.",
-                  "Thermite/Hibana open the wall; Lion scan on the flood.",
-                  "Entry trades through the breach while Cash/Roof apply pressure.",
-                  "Plant the CCTV/Bedroom default; hold the post-plant crossfire."
-                ]
-              },
-              {
-                "id": "atk-club-2f-bed-cctv-1",
-                "name": "Roof vertical (Buck/Sledge)",
-                "summary": "Open from Roof, collapse onto site",
-                "slots": [
-                  {
-                    "role": "flex-atk",
-                    "ops": [
-                      "buck",
-                      "sledge",
-                      "zofia"
-                    ],
-                    "pos": "Buck/Sledge the Roof hatch + floor onto CCTV/Bedroom."
-                  },
-                  {
-                    "role": "hardbreach-atk",
-                    "ops": [
-                      "ace",
-                      "hibana",
-                      "thermite"
-                    ],
-                    "pos": "Secondary-breach the wall if they Bandit the vertical."
-                  },
-                  {
-                    "role": "support-atk",
-                    "ops": [
-                      "thatcher",
-                      "twitch",
-                      "kali"
-                    ],
-                    "pos": "EMP/drone the hatch denial (Kaid/Bandit) on the roof."
-                  },
-                  {
-                    "role": "entry-atk",
-                    "ops": [
-                      "ash",
-                      "iana",
-                      "zofia"
-                    ],
-                    "pos": "Entry off the vertical pressure into the open site."
-                  },
-                  {
-                    "role": "intel-atk",
-                    "ops": [
-                      "jackal",
-                      "zero",
-                      "brava"
-                    ],
-                    "pos": "Jackal the roamers; Brava hijack a cam for info."
-                  }
-                ],
-                "steps": [
-                  "Take Roof control; clear hatch denial with Thatcher/Twitch.",
-                  "Buck/Sledge open the hatch + floor onto the site.",
-                  "Vertical pressure forces anchors off the bomb.",
-                  "Entry floods the opened site and trades.",
-                  "Plant under your vertical control; hold the holes."
-                ]
-              },
-              {
-                "id": "atk-club-2f-bed-cctv-2",
-                "name": "Cash split + Master flank",
-                "summary": "Pressure Cash and the Master flank together",
-                "slots": [
-                  {
-                    "role": "entry-atk",
-                    "ops": [
-                      "ash",
-                      "zofia",
-                      "blackbeard"
-                    ],
-                    "pos": "Entry the Cash side; win the opening into CCTV."
-                  },
-                  {
-                    "role": "flex-atk",
-                    "ops": [
-                      "buck",
-                      "sledge",
-                      "twitch"
-                    ],
-                    "pos": "Open the Master soft-wall flank; split the anchors."
-                  },
-                  {
-                    "role": "hardbreach-atk",
-                    "ops": [
-                      "thermite",
-                      "hibana",
-                      "ace"
-                    ],
-                    "pos": "Open the CCTV wall once denial is cleared."
-                  },
-                  {
-                    "role": "support-atk",
-                    "ops": [
-                      "thatcher",
-                      "kali",
-                      "osa"
-                    ],
-                    "pos": "EMP the breach; Osa shield the Cash entry."
-                  },
-                  {
-                    "role": "igl-atk",
-                    "ops": [
-                      "dokkaebi",
-                      "lion",
-                      "zero"
-                    ],
-                    "pos": "Dokkaebi/Lion scan; call the two-way split."
-                  }
-                ],
-                "steps": [
-                  "Drone both Cash and the Master flank; clear roamers.",
-                  "Open the Master soft wall to threaten the anchor flank.",
-                  "Thatcher/Thermite open CCTV from Cash on the call.",
-                  "Hit both angles together; isolate and trade the anchors.",
-                  "Plant default; hold the Cash + Master crossfire."
-                ]
-              }
-            ]
-          },
-          "club-2f-gym-cash": {
-            "breachPoints": "",
-            "entryPoints": "",
-            "utilityToBring": "",
-            "commonPushes": "",
-            "plantSpots": "",
-            "postPlant": "",
-            "notes": "",
-            "strats": [
-              {
-                "id": "atk-club-2f-gym-cash-0",
-                "name": "Gym hard-breach hit",
-                "summary": "Open Gym, flood from Construction/Bar",
-                "slots": [
-                  {
-                    "role": "hardbreach-atk",
-                    "ops": [
-                      "thermite",
-                      "hibana",
-                      "ace"
-                    ],
-                    "pos": "Open the Gym/Cash reinforced wall from the balcony side."
-                  },
-                  {
-                    "role": "support-atk",
-                    "ops": [
-                      "thatcher",
-                      "twitch",
-                      "kali"
-                    ],
-                    "pos": "Clear Bandit on the Gym wall; drone the staircase."
-                  },
-                  {
-                    "role": "entry-atk",
-                    "ops": [
-                      "ash",
-                      "zofia",
-                      "iana"
-                    ],
-                    "pos": "Entry up the Bar staircase into Gym."
-                  },
-                  {
-                    "role": "intel-atk",
-                    "ops": [
-                      "jackal",
-                      "zero",
-                      "dokkaebi"
-                    ],
-                    "pos": "Jackal roamers in Construction; Zero-cam the site."
+                    "pos": "Jackal roamers; Zero-cam the site."
                   },
                   {
                     "role": "igl-atk",
@@ -932,85 +737,35 @@ const SEED_DATA =
                   }
                 ],
                 "steps": [
-                  "Drone Gym/Cash + clear the Construction roamers.",
-                  "Thatcher/Twitch kill the Bandit batteries.",
-                  "Thermite/Hibana open Gym; Lion scan the flood.",
-                  "Entry trades up the staircase into the opening.",
-                  "Plant the Gym/Cash default; hold post-plant."
+                  "Take Cash + Construction control; drone the site.",
+                  "Thatcher/Twitch kill Bandit on the breach wall.",
+                  "Thermite/Hibana open Bedroom/Gym; Lion scan the flood.",
+                  "Entry trades through the breach from Cash.",
+                  "Plant the Bedroom/Gym default; hold post-plant."
                 ]
               },
               {
-                "id": "atk-club-2f-gym-cash-1",
-                "name": "Balcony / window play",
-                "summary": "Pressure the Gym balcony window + vertical",
+                "id": "atk-clubhouse-2f-master-bedroom-gym-1",
+                "name": "Master-hatch vertical",
+                "summary": "Buck/Sledge open the Master hatch onto Bedroom",
                 "slots": [
                   {
                     "role": "flex-atk",
                     "ops": [
                       "buck",
                       "sledge",
-                      "amaru"
+                      "zofia"
                     ],
-                    "pos": "Buck the balcony soft-wall / Amaru zip the window."
+                    "pos": "Buck/Sledge the Master hatch + floor onto Bedroom."
                   },
                   {
                     "role": "hardbreach-atk",
                     "ops": [
-                      "hibana",
                       "ace",
+                      "hibana",
                       "thermite"
                     ],
-                    "pos": "Open the Gym wall if they trick the balcony."
-                  },
-                  {
-                    "role": "support-atk",
-                    "ops": [
-                      "thatcher",
-                      "twitch",
-                      "osa"
-                    ],
-                    "pos": "EMP the denial; Osa shield the balcony peek."
-                  },
-                  {
-                    "role": "entry-atk",
-                    "ops": [
-                      "ash",
-                      "zofia",
-                      "iana"
-                    ],
-                    "pos": "Entry through the window/breach on the call."
-                  },
-                  {
-                    "role": "intel-atk",
-                    "ops": [
-                      "jackal",
-                      "zero",
-                      "brava"
-                    ],
-                    "pos": "Jackal Construction; Brava steal a cam."
-                  }
-                ],
-                "steps": [
-                  "Take Construction + balcony control.",
-                  "Open the balcony soft wall / window for a new angle.",
-                  "Thatcher/Thermite clear and open Gym on the call.",
-                  "Flood window + breach together; trade the anchors.",
-                  "Plant the Gym default; hold the window + holes."
-                ]
-              },
-              {
-                "id": "atk-club-2f-gym-cash-2",
-                "name": "Bar vertical (Stock below)",
-                "summary": "Use 1F Stock to pressure Cash from below",
-                "slots": [
-                  {
-                    "role": "flex-atk",
-                    "ops": [
-                      "sledge",
-                      "buck",
-                      "gridlock"
-                    ],
-                    "pos": "Sledge/Buck open the Stock ceiling under Cash."
+                    "pos": "Secondary-breach the wall if the vertical is denied."
                   },
                   {
                     "role": "support-atk",
@@ -1019,7 +774,57 @@ const SEED_DATA =
                       "twitch",
                       "kali"
                     ],
-                    "pos": "Clear Kaid on the Cash hatch; EMP the denial."
+                    "pos": "EMP/drone the Kaid/Bandit hatch denial on Roof."
+                  },
+                  {
+                    "role": "entry-atk",
+                    "ops": [
+                      "ash",
+                      "iana",
+                      "zofia"
+                    ],
+                    "pos": "Entry off the vertical pressure."
+                  },
+                  {
+                    "role": "intel-atk",
+                    "ops": [
+                      "jackal",
+                      "zero",
+                      "brava"
+                    ],
+                    "pos": "Jackal roamers; Brava a cam."
+                  }
+                ],
+                "steps": [
+                  "Take Roof control; clear the hatch denial.",
+                  "Buck/Sledge open the Master hatch + floor onto Bedroom.",
+                  "Vertical pressure forces anchors off the bomb.",
+                  "Entry floods the opened site and trades.",
+                  "Plant under your holes; hold vertical."
+                ]
+              },
+              {
+                "id": "atk-clubhouse-2f-master-bedroom-gym-2",
+                "name": "Construction split",
+                "summary": "Pressure Construction + Cash together",
+                "slots": [
+                  {
+                    "role": "entry-atk",
+                    "ops": [
+                      "ash",
+                      "zofia",
+                      "blackbeard"
+                    ],
+                    "pos": "Entry from Construction into Gym."
+                  },
+                  {
+                    "role": "flex-atk",
+                    "ops": [
+                      "buck",
+                      "sledge",
+                      "twitch"
+                    ],
+                    "pos": "Open a soft-wall flank to split the anchors."
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1028,7 +833,129 @@ const SEED_DATA =
                       "hibana",
                       "ace"
                     ],
-                    "pos": "Open the Cash wall topside once vertical splits them."
+                    "pos": "Open the Cash-side wall on the call."
+                  },
+                  {
+                    "role": "support-atk",
+                    "ops": [
+                      "thatcher",
+                      "kali",
+                      "osa"
+                    ],
+                    "pos": "EMP the breach; Osa shield the entry."
+                  },
+                  {
+                    "role": "igl-atk",
+                    "ops": [
+                      "dokkaebi",
+                      "lion",
+                      "zero"
+                    ],
+                    "pos": "Scan; call the two-way split."
+                  }
+                ],
+                "steps": [
+                  "Drone Construction + Cash; clear roamers.",
+                  "Open a flank to split Bedroom from Gym.",
+                  "Thatcher/Thermite open the main wall on the call.",
+                  "Hit both angles; isolate and trade the anchors.",
+                  "Plant default; hold the crossfire post-plant."
+                ]
+              }
+            ]
+          },
+          "clubhouse-2f-cash-room-cctv-room": {
+            "strats": [
+              {
+                "id": "atk-clubhouse-2f-cash-room-cctv-room-0",
+                "name": "Roof/Cash hard-breach",
+                "summary": "Open Cash/CCTV, flood from the staircase",
+                "slots": [
+                  {
+                    "role": "hardbreach-atk",
+                    "ops": [
+                      "thermite",
+                      "hibana",
+                      "ace"
+                    ],
+                    "pos": "Open the Cash/CCTV reinforced wall."
+                  },
+                  {
+                    "role": "support-atk",
+                    "ops": [
+                      "thatcher",
+                      "twitch",
+                      "kali"
+                    ],
+                    "pos": "Clear Bandit/Kaid; drone the staircase."
+                  },
+                  {
+                    "role": "entry-atk",
+                    "ops": [
+                      "ash",
+                      "zofia",
+                      "iana"
+                    ],
+                    "pos": "Entry up the Bar staircase into Cash/CCTV."
+                  },
+                  {
+                    "role": "intel-atk",
+                    "ops": [
+                      "jackal",
+                      "zero",
+                      "dokkaebi"
+                    ],
+                    "pos": "Jackal roamers; Zero-cam the site."
+                  },
+                  {
+                    "role": "igl-atk",
+                    "ops": [
+                      "lion",
+                      "dokkaebi",
+                      "iana"
+                    ],
+                    "pos": "Lion scan; call the flood."
+                  }
+                ],
+                "steps": [
+                  "Drone Cash/CCTV + clear roamers.",
+                  "Thatcher/Twitch kill the Bandit batteries.",
+                  "Thermite/Hibana open the wall; Lion scan the flood.",
+                  "Entry trades up the staircase into the opening.",
+                  "Plant the Cash/CCTV default; hold post-plant."
+                ]
+              },
+              {
+                "id": "atk-clubhouse-2f-cash-room-cctv-room-1",
+                "name": "Bar vertical (Stock below)",
+                "summary": "Open the Cash/CCTV floor from 1F",
+                "slots": [
+                  {
+                    "role": "flex-atk",
+                    "ops": [
+                      "sledge",
+                      "buck",
+                      "gridlock"
+                    ],
+                    "pos": "Sledge/Buck open the Cash/CCTV floor from Bar/Stock below."
+                  },
+                  {
+                    "role": "support-atk",
+                    "ops": [
+                      "thatcher",
+                      "twitch",
+                      "kali"
+                    ],
+                    "pos": "Clear the Kaid hatch denial; EMP."
+                  },
+                  {
+                    "role": "hardbreach-atk",
+                    "ops": [
+                      "thermite",
+                      "hibana",
+                      "ace"
+                    ],
+                    "pos": "Open the wall topside once vertical splits them."
                   },
                   {
                     "role": "entry-atk",
@@ -1046,30 +973,82 @@ const SEED_DATA =
                       "dokkaebi",
                       "zero"
                     ],
-                    "pos": "Scan on the vertical; call the two-level hit."
+                    "pos": "Scan; call the two-level hit."
                   }
                 ],
                 "steps": [
-                  "Take 1F Stock; clear the Cash hatch denial.",
-                  "Open the Stock ceiling to threaten Cash from below.",
-                  "Vertical pressure forces anchors off the bomb.",
-                  "Topside entry + breach hits the split site.",
-                  "Plant Cash/Gym; hold vertical + holes."
+                  "Take 1F Bar/Stock; clear the hatch denial.",
+                  "Open the Cash/CCTV floor for vertical pressure.",
+                  "Vertical forces anchors off the bomb.",
+                  "Topside entry floods the split site.",
+                  "Plant Cash/CCTV; hold vertical + holes."
+                ]
+              },
+              {
+                "id": "atk-clubhouse-2f-cash-room-cctv-room-2",
+                "name": "Roof + Construction split",
+                "summary": "Two-way pressure onto the site",
+                "slots": [
+                  {
+                    "role": "entry-atk",
+                    "ops": [
+                      "ash",
+                      "zofia",
+                      "blackbeard"
+                    ],
+                    "pos": "Entry the Bar staircase; win the opening."
+                  },
+                  {
+                    "role": "flex-atk",
+                    "ops": [
+                      "buck",
+                      "sledge",
+                      "twitch"
+                    ],
+                    "pos": "Open the Roof hatch / a soft-wall flank to split."
+                  },
+                  {
+                    "role": "hardbreach-atk",
+                    "ops": [
+                      "thermite",
+                      "hibana",
+                      "ace"
+                    ],
+                    "pos": "Open the main wall once denial is gone."
+                  },
+                  {
+                    "role": "support-atk",
+                    "ops": [
+                      "thatcher",
+                      "kali",
+                      "osa"
+                    ],
+                    "pos": "EMP the breach; Osa shield the entry."
+                  },
+                  {
+                    "role": "igl-atk",
+                    "ops": [
+                      "dokkaebi",
+                      "lion",
+                      "zero"
+                    ],
+                    "pos": "Scan; call the two-way."
+                  }
+                ],
+                "steps": [
+                  "Pressure Roof + Construction together; clear roamers.",
+                  "Open a flank to split Cash from CCTV.",
+                  "Thatcher/Thermite open the wall on the call.",
+                  "Hit both angles; isolate and trade.",
+                  "Plant default; hold the crossfire."
                 ]
               }
             ]
           },
-          "club-1f-bar-stock": {
-            "breachPoints": "",
-            "entryPoints": "",
-            "utilityToBring": "",
-            "commonPushes": "",
-            "plantSpots": "",
-            "postPlant": "",
-            "notes": "",
+          "clubhouse-1f-bar-stock-room": {
             "strats": [
               {
-                "id": "atk-club-1f-bar-stock-0",
+                "id": "atk-clubhouse-1f-bar-stock-room-0",
                 "name": "Construction hard-breach hit",
                 "summary": "Open Bar/Stock, flood from Construction",
                 "slots": [
@@ -1128,9 +1107,9 @@ const SEED_DATA =
                 ]
               },
               {
-                "id": "atk-club-1f-bar-stock-1",
-                "name": "Vertical from 2F (Gym above)",
-                "summary": "Open the ceiling from Gym/Cash onto Bar",
+                "id": "atk-clubhouse-1f-bar-stock-room-1",
+                "name": "Vertical from 2F",
+                "summary": "Open the ceiling from Cash/CCTV onto Bar",
                 "slots": [
                   {
                     "role": "flex-atk",
@@ -1139,7 +1118,7 @@ const SEED_DATA =
                       "sledge",
                       "zofia"
                     ],
-                    "pos": "Buck/Sledge the Bar ceiling from Gym/Cash above."
+                    "pos": "Buck/Sledge the Bar ceiling from Cash/CCTV above."
                   },
                   {
                     "role": "support-atk",
@@ -1175,11 +1154,11 @@ const SEED_DATA =
                       "zero",
                       "brava"
                     ],
-                    "pos": "Jackal the roam; Brava a cam for info."
+                    "pos": "Jackal the roam; Brava a cam."
                   }
                 ],
                 "steps": [
-                  "Take 2F Gym/Cash; clear the ceiling-hatch denial.",
+                  "Take 2F Cash/CCTV; clear the ceiling-hatch denial.",
                   "Buck/Sledge open the Bar ceiling for vertical.",
                   "Vertical forces anchors off the bomb.",
                   "1F entry floods the split site.",
@@ -1187,7 +1166,7 @@ const SEED_DATA =
                 ]
               },
               {
-                "id": "atk-club-1f-bar-stock-2",
+                "id": "atk-clubhouse-1f-bar-stock-room-2",
                 "name": "Garage flank split",
                 "summary": "Pressure Garage + Construction together",
                 "slots": [
@@ -1247,17 +1226,10 @@ const SEED_DATA =
               }
             ]
           },
-          "club-b-church-arsenal": {
-            "breachPoints": "",
-            "entryPoints": "",
-            "utilityToBring": "",
-            "commonPushes": "",
-            "plantSpots": "",
-            "postPlant": "",
-            "notes": "",
+          "clubhouse-b-church-arsenal-room": {
             "strats": [
               {
-                "id": "atk-club-b-church-arsenal-0",
+                "id": "atk-clubhouse-b-church-arsenal-room-0",
                 "name": "Stairs hard-breach hit",
                 "summary": "Open Church/Arsenal, push the stairs",
                 "slots": [
@@ -1316,8 +1288,8 @@ const SEED_DATA =
                 ]
               },
               {
-                "id": "atk-club-b-church-arsenal-1",
-                "name": "Vertical from 1F (Bar above)",
+                "id": "atk-clubhouse-b-church-arsenal-room-1",
+                "name": "Vertical from 1F",
                 "summary": "Open the basement ceiling from Bar",
                 "slots": [
                   {
@@ -1375,7 +1347,7 @@ const SEED_DATA =
                 ]
               },
               {
-                "id": "atk-club-b-church-arsenal-2",
+                "id": "atk-clubhouse-b-church-arsenal-room-2",
                 "name": "Double-stairs flood",
                 "summary": "Pressure Blue + Red stairs together",
                 "slots": [
@@ -1437,24 +1409,17 @@ const SEED_DATA =
           }
         },
         "defense": {
-          "club-2f-bed-cctv": {
-            "reinforcements": "Bedroom–Cash wall, CCTV–Bathroom wall, Bedroom floor hatch, Cash floor hatch.",
-            "anchorPositions": "One anchor on bomb in CCTV/Bedroom, one in Cash holding the open-wall crossfire.",
-            "roamPaths": "Gym ↔ Master ↔ top stairs early; drop to Bar/Cash trailer for 2F flanks.",
-            "defaultSetup": "Optional Mira on the Cash–Bedroom wall, Bandit/Kaid the breach walls, cams on stairs + Gym.",
-            "runOuts": "Bathroom window onto roof, Gym door — time them with the attacker plant.",
-            "notes": "Deny roof control; the Master hatch above Bedroom is the most-breached surface.",
+          "clubhouse-2f-master-bedroom-gym": {
             "strats": [
               {
-                "id": "def-club-2f-bed-cctv-0",
-                "name": "Standard 2F hold",
-                "summary": "Bandit-trick the breach walls, anchor CCTV",
+                "id": "def-clubhouse-2f-master-bedroom-gym-0",
+                "name": "Bedroom/Gym anchor hold",
+                "summary": "Anchor the Cash-side walls, hold the crossfire",
                 "reinforce": [
-                  "CCTV-Cash wall",
-                  "Bedroom-Gym wall",
-                  "Bedroom hatch",
-                  "CCTV hatch",
-                  "Bedroom->Roof hatch"
+                  "Bedroom-Cash wall",
+                  "Gym-Cash wall",
+                  "Bedroom hatch (Master/Roof)",
+                  "Gym hatch (to 1F)"
                 ],
                 "slots": [
                   {
@@ -1464,7 +1429,7 @@ const SEED_DATA =
                       "mira",
                       "maestro"
                     ],
-                    "pos": "Anchor CCTV; Kiba/cam the Cash door and call the round."
+                    "pos": "Anchor Bedroom behind a Kiba; hold the Bedroom-Gym crossfire."
                   },
                   {
                     "role": "anchor-def",
@@ -1473,7 +1438,7 @@ const SEED_DATA =
                       "goyo",
                       "melusi"
                     ],
-                    "pos": "Hold Bedroom; deny plant, watch the Master soft-wall flank."
+                    "pos": "Hold Gym; deny plant, watch the 1F vertical."
                   },
                   {
                     "role": "antibreach-def",
@@ -1482,7 +1447,7 @@ const SEED_DATA =
                       "kaid",
                       "mute"
                     ],
-                    "pos": "Bandit-trick the CCTV & Bedroom walls; jam drones."
+                    "pos": "Bandit-trick the Cash-side walls; deny the hard breach."
                   },
                   {
                     "role": "intel-def",
@@ -1491,7 +1456,7 @@ const SEED_DATA =
                       "valkyrie",
                       "echo"
                     ],
-                    "pos": "Eyes/cams on the roof hatch & Cash; call rotates."
+                    "pos": "Cams on the Master/Roof hatch + the Cash approach."
                   },
                   {
                     "role": "roamer-def",
@@ -1500,26 +1465,26 @@ const SEED_DATA =
                       "caveira",
                       "mozzie"
                     ],
-                    "pos": "Roam Gym/1F, pinch the Master flankers."
+                    "pos": "Roam Construction/Cash; pinch the push."
                   }
                 ],
                 "steps": [
-                  "Reinforce the two breach walls + the three hatches above site.",
+                  "Reinforce the two Cash-side walls + the Bedroom & Gym hatches.",
                   "Bandit-trick the walls as drones get cleared.",
-                  "Anchors hold the CCTV<->Bedroom crossfire; deny the default plant.",
-                  "Roamer pinches the Master flank or a Gym push.",
-                  "Collapse on the plant; Smoke/Goyo to deny the defuse."
+                  "Anchors hold the Bedroom-Gym crossfire; deny the default plant.",
+                  "Watch the Master (Roof) hatch and the Gym vertical from 1F.",
+                  "Collapse on the plant; Smoke/Goyo deny the defuse."
                 ]
               },
               {
-                "id": "def-club-2f-bed-cctv-1",
-                "name": "Anti-vertical / proactive",
-                "summary": "Kill the roof + Gym vertical before it starts",
+                "id": "def-clubhouse-2f-master-bedroom-gym-1",
+                "name": "Anti-vertical (Roof + 1F)",
+                "summary": "Kill the Master hatch and the Gym floor first",
                 "reinforce": [
-                  "Bedroom->Roof hatch",
-                  "CCTV->Roof hatch",
-                  "Bedroom-Gym wall",
-                  "CCTV-Cash wall"
+                  "Bedroom hatch (Master/Roof)",
+                  "Gym hatch (to 1F)",
+                  "Bedroom-Cash wall",
+                  "Gym-Cash wall"
                 ],
                 "slots": [
                   {
@@ -1528,7 +1493,7 @@ const SEED_DATA =
                       "kaid",
                       "bandit"
                     ],
-                    "pos": "Kaid the hatches above + roof-access; electrify high."
+                    "pos": "Kaid the Master/Roof hatch + the Gym floor; electrify."
                   },
                   {
                     "role": "igl-def",
@@ -1536,7 +1501,7 @@ const SEED_DATA =
                       "maestro",
                       "azami"
                     ],
-                    "pos": "Evil-Eye the roof opens; Kiba the Cash entry, call vertical."
+                    "pos": "Evil-Eye the Roof opens; call the vertical."
                   },
                   {
                     "role": "anchor-def",
@@ -1545,7 +1510,7 @@ const SEED_DATA =
                       "smoke",
                       "melusi"
                     ],
-                    "pos": "Volcan/Smoke the plant spots; hold under the hatches."
+                    "pos": "Deny plant under the reinforced hatches."
                   },
                   {
                     "role": "trapper-def",
@@ -1554,7 +1519,7 @@ const SEED_DATA =
                       "kapkan",
                       "lesion"
                     ],
-                    "pos": "Trap the Gym door & Master flank to punish pushes."
+                    "pos": "Trap the Bedroom-Construction door & the Gym entry."
                   },
                   {
                     "role": "roamer-def",
@@ -1563,36 +1528,30 @@ const SEED_DATA =
                       "vigil",
                       "mozzie"
                     ],
-                    "pos": "Solis/Mozzie to spot & kill drones on the roof breach."
+                    "pos": "Solis/Mozzie kill drones on the Roof + Construction."
                   }
                 ],
                 "steps": [
-                  "Reinforce + electrify the roof hatches and breach walls.",
-                  "Solis/Mozzie hunt drones so attackers commit blind.",
-                  "Trap the Gym door and Master flank; punish the first push.",
-                  "Hold the bomb under the open hatches; deny the obvious plant.",
-                  "Trade off the anchors' crossfire; collapse on the plant."
+                  "Reinforce + electrify the Roof and 1F hatches.",
+                  "Kill drones so attackers commit blind.",
+                  "Trap the Bedroom and Gym entries.",
+                  "Hold the bomb under the hatches; deny the obvious plant.",
+                  "Trade off the crossfire; collapse on the plant."
                 ]
               }
             ]
           },
-          "club-2f-gym-cash": {
-            "reinforcements": "",
-            "anchorPositions": "",
-            "roamPaths": "",
-            "defaultSetup": "",
-            "runOuts": "",
-            "notes": "",
+          "clubhouse-2f-cash-room-cctv-room": {
             "strats": [
               {
-                "id": "def-club-2f-gym-cash-0",
-                "name": "Gym/Cash crossfire",
-                "summary": "Anchor Cash, deny the Bar staircase push",
+                "id": "def-clubhouse-2f-cash-room-cctv-room-0",
+                "name": "Cash/CCTV crossfire",
+                "summary": "Anchor Cash, deny the Bar staircase",
                 "reinforce": [
-                  "Cash-CCTV wall",
-                  "Gym-Bedroom wall",
+                  "Cash-Bedroom wall",
+                  "CCTV-Gym wall",
                   "Cash hatch",
-                  "Gym hatch"
+                  "CCTV hatch"
                 ],
                 "slots": [
                   {
@@ -1602,7 +1561,7 @@ const SEED_DATA =
                       "mira",
                       "maestro"
                     ],
-                    "pos": "Anchor Cash behind a Kiba; hold the CCTV/Cash line."
+                    "pos": "Anchor Cash behind a Kiba; hold the Cash-CCTV line."
                   },
                   {
                     "role": "anchor-def",
@@ -1611,7 +1570,7 @@ const SEED_DATA =
                       "goyo",
                       "melusi"
                     ],
-                    "pos": "Hold Gym; deny plant, watch the balcony window."
+                    "pos": "Hold CCTV; deny plant, watch the Bar staircase."
                   },
                   {
                     "role": "antibreach-def",
@@ -1620,16 +1579,7 @@ const SEED_DATA =
                       "kaid",
                       "mute"
                     ],
-                    "pos": "Bandit-trick Cash & Gym walls; jam staircase drones."
-                  },
-                  {
-                    "role": "roamer-def",
-                    "ops": [
-                      "vigil",
-                      "caveira",
-                      "mozzie"
-                    ],
-                    "pos": "Roam Bar/Stock & Construction; pinch the staircase."
+                    "pos": "Bandit-trick the Cash & CCTV walls; jam drones."
                   },
                   {
                     "role": "intel-def",
@@ -1638,45 +1588,44 @@ const SEED_DATA =
                       "echo",
                       "maestro"
                     ],
-                    "pos": "Cams on the staircase + balcony; call the split."
+                    "pos": "Cams on the Roof hatch + the Bar staircase."
+                  },
+                  {
+                    "role": "roamer-def",
+                    "ops": [
+                      "vigil",
+                      "caveira",
+                      "mozzie"
+                    ],
+                    "pos": "Roam Bar/Construction; pinch the push."
                   }
                 ],
                 "steps": [
-                  "Reinforce the Cash/Gym breach walls + both hatches.",
-                  "Bandit-trick walls; jam the staircase drone line.",
-                  "Anchors crossfire Gym<->Cash; deny the default plant.",
-                  "Roamer holds the Bar staircase, pinches the main push.",
+                  "Reinforce the Cash & CCTV walls + both hatches.",
+                  "Bandit-trick the walls; jam the staircase drones.",
+                  "Anchors crossfire Cash-CCTV; deny the default plant.",
+                  "Roamer pinches the Bar staircase push.",
                   "Collapse on the plant with Smoke/Goyo."
                 ]
               },
               {
-                "id": "def-club-2f-gym-cash-1",
-                "name": "Aggressive Bar denial",
-                "summary": "Push out to Bar/Construction and steal time",
+                "id": "def-clubhouse-2f-cash-room-cctv-room-1",
+                "name": "Anti-vertical (Roof + Bar)",
+                "summary": "Kill the Cash/CCTV hatches before they open",
                 "reinforce": [
-                  "Cash-CCTV wall",
-                  "Gym-Bedroom wall",
                   "Cash hatch",
-                  "Gym balcony hatch"
+                  "CCTV hatch",
+                  "Cash-Bedroom wall",
+                  "CCTV-Gym wall"
                 ],
                 "slots": [
                   {
-                    "role": "roamer-def",
-                    "ops": [
-                      "caveira",
-                      "vigil",
-                      "ela"
-                    ],
-                    "pos": "Roam Construction/Bar for early picks, then fall back."
-                  },
-                  {
                     "role": "antibreach-def",
                     "ops": [
-                      "bandit",
-                      "mute",
-                      "kaid"
+                      "kaid",
+                      "bandit"
                     ],
-                    "pos": "Mute the Bar staircase drones; Bandit the Cash wall late."
+                    "pos": "Kaid the Cash/CCTV hatches (Roof above, Bar below)."
                   },
                   {
                     "role": "igl-def",
@@ -1684,7 +1633,7 @@ const SEED_DATA =
                       "maestro",
                       "azami"
                     ],
-                    "pos": "Evil-Eye Bar + balcony; call the rotate timing."
+                    "pos": "Evil-Eye Roof + Bar; call the vertical."
                   },
                   {
                     "role": "anchor-def",
@@ -1693,7 +1642,7 @@ const SEED_DATA =
                       "smoke",
                       "melusi"
                     ],
-                    "pos": "Backline Gym/Cash; deny plant once roamers collapse."
+                    "pos": "Deny plant under the reinforced hatches."
                   },
                   {
                     "role": "trapper-def",
@@ -1702,31 +1651,34 @@ const SEED_DATA =
                       "ela",
                       "lesion"
                     ],
-                    "pos": "Trap the staircase & balcony window."
+                    "pos": "Trap the Bar staircase & Construction door."
+                  },
+                  {
+                    "role": "roamer-def",
+                    "ops": [
+                      "solis",
+                      "vigil",
+                      "mozzie"
+                    ],
+                    "pos": "Solis/Mozzie kill drones on the breach."
                   }
                 ],
                 "steps": [
-                  "Reinforce + trap the Bar staircase and balcony.",
-                  "Roamers take early Bar/Construction picks, steal time.",
-                  "Mute/Bandit deny the hard breach late.",
-                  "Fall back to the Gym/Cash crossfire on the timer.",
-                  "Deny the plant and trade; use traps on the retake."
+                  "Reinforce + electrify the Cash/CCTV hatches.",
+                  "Kill drones; attackers push blind.",
+                  "Trap the staircase and Construction entries.",
+                  "Hold the bomb under the hatches; deny plant.",
+                  "Trade off the crossfire; collapse."
                 ]
               }
             ]
           },
-          "club-1f-bar-stock": {
-            "reinforcements": "",
-            "anchorPositions": "",
-            "roamPaths": "",
-            "defaultSetup": "",
-            "runOuts": "",
-            "notes": "",
+          "clubhouse-1f-bar-stock-room": {
             "strats": [
               {
-                "id": "def-club-1f-bar-stock-0",
+                "id": "def-clubhouse-1f-bar-stock-room-0",
                 "name": "Bar/Stock anchor hold",
-                "summary": "Hold Bar, watch the 2F vertical (Gym above)",
+                "summary": "Hold Bar, watch the 2F vertical",
                 "reinforce": [
                   "Bar-Stock wall",
                   "Stock-Register wall",
@@ -1741,7 +1693,7 @@ const SEED_DATA =
                       "mira",
                       "maestro"
                     ],
-                    "pos": "Anchor Stock behind a Kiba; hold the Bar<->Stock line."
+                    "pos": "Anchor Stock behind a Kiba; hold the Bar-Stock line."
                   },
                   {
                     "role": "anchor-def",
@@ -1783,15 +1735,15 @@ const SEED_DATA =
                 "steps": [
                   "Reinforce Bar/Stock walls + ceiling hatches (Gym above is a vertical threat).",
                   "Bandit/Kaid deny the hatch + wall breach.",
-                  "Anchors crossfire Bar<->Stock; deny the default plant.",
+                  "Anchors crossfire Bar-Stock; deny the default plant.",
                   "Roamer pinches the Construction/Garage push.",
                   "Collapse and trade on the plant."
                 ]
               },
               {
-                "id": "def-club-1f-bar-stock-1",
+                "id": "def-clubhouse-1f-bar-stock-room-1",
                 "name": "Vertical-aware hold",
-                "summary": "Pre-empt the 2F Gym/Cash vertical play",
+                "summary": "Pre-empt the 2F Cash/CCTV vertical",
                 "reinforce": [
                   "Bar ceiling hatch",
                   "Stock ceiling hatch",
@@ -1805,7 +1757,7 @@ const SEED_DATA =
                       "kaid",
                       "bandit"
                     ],
-                    "pos": "Kaid the ceiling hatches from Gym/Cash above."
+                    "pos": "Kaid the ceiling hatches from Cash/CCTV above."
                   },
                   {
                     "role": "igl-def",
@@ -1844,7 +1796,7 @@ const SEED_DATA =
                   }
                 ],
                 "steps": [
-                  "Reinforce + Kaid the ceiling hatches (Gym/Cash vertical).",
+                  "Reinforce + Kaid the ceiling hatches (Cash/CCTV vertical).",
                   "Trap the Construction & Garage entries.",
                   "Mozzie steals drones; attackers push blind.",
                   "Hold the bomb under the reinforced ceiling; deny plant.",
@@ -1853,16 +1805,10 @@ const SEED_DATA =
               }
             ]
           },
-          "club-b-church-arsenal": {
-            "reinforcements": "",
-            "anchorPositions": "",
-            "roamPaths": "",
-            "defaultSetup": "",
-            "runOuts": "",
-            "notes": "",
+          "clubhouse-b-church-arsenal-room": {
             "strats": [
               {
-                "id": "def-club-b-church-arsenal-0",
+                "id": "def-clubhouse-b-church-arsenal-room-0",
                 "name": "Basement lockdown",
                 "summary": "Smoke/Goyo deny, hold the two staircases",
                 "reinforce": [
@@ -1921,13 +1867,13 @@ const SEED_DATA =
                 "steps": [
                   "Reinforce Church/Arsenal walls + the hatches from Bar above.",
                   "Trap Blue & Red stairs; Bandit-trick the walls.",
-                  "Anchors hold the Church<->Arsenal crossfire; deny plant.",
+                  "Anchors hold the Church-Arsenal crossfire; deny plant.",
                   "Roamer picks the staircase entry, steals time.",
                   "Collapse on the plant; basement favors the retake."
                 ]
               },
               {
-                "id": "def-club-b-church-arsenal-1",
+                "id": "def-clubhouse-b-church-arsenal-room-1",
                 "name": "Stairs pinch",
                 "summary": "Caveira/Pulse hunt the stairs, deny info",
                 "reinforce": [
@@ -1986,7 +1932,7 @@ const SEED_DATA =
                   "Mute + trap both staircases; deny drone intel.",
                   "Caveira/Pulse hunt for an early pick on the stairs.",
                   "Bandit the breach wall late once utility is spent.",
-                  "Fall back to the Church/Arsenal crossfire on timer.",
+                  "Fall back to the Church-Arsenal crossfire on timer.",
                   "Deny plant, trade, retake with traps."
                 ]
               }
@@ -2347,15 +2293,15 @@ const SEED_DATA =
       ],
       "bombsites": [
         {
-          "id": "ore-2f-master-aviator",
-          "name": "2F · Master / Aviator",
+          "id": "oregon-2f-master-bedroom-aviator-room",
+          "name": "2F · Master Bedroom / Aviator Room",
           "rooms": [
             "Master Bedroom",
             "Aviator Room"
           ]
         },
         {
-          "id": "ore-1f-kitchen-dining",
+          "id": "oregon-1f-kitchen-dining-hall",
           "name": "1F · Kitchen / Dining Hall",
           "rooms": [
             "Kitchen",
@@ -2363,16 +2309,16 @@ const SEED_DATA =
           ]
         },
         {
-          "id": "ore-1f-meeting-dorms",
-          "name": "1F · Meeting Hall / Kids Dorms",
+          "id": "oregon-1f-meeting-hall-kids-dorm",
+          "name": "1F · Meeting Hall / Kids Dorm",
           "rooms": [
             "Meeting Hall",
-            "Kids Dorms"
+            "Kids Dorm"
           ]
         },
         {
-          "id": "ore-b-laundry-supply",
-          "name": "B · Laundry / Supply",
+          "id": "oregon-b-laundry-room-supply-room",
+          "name": "B · Laundry Room / Supply Room",
           "rooms": [
             "Laundry Room",
             "Supply Room"
@@ -2542,15 +2488,15 @@ const SEED_DATA =
       ],
       "bombsites": [
         {
-          "id": "bank-2f-exec-ceo",
-          "name": "2F · Executive / CEO Office",
+          "id": "bank-2f-ceo-office-executive-lounge",
+          "name": "2F · CEO Office / Executive Lounge",
           "rooms": [
-            "Executive Lounge",
-            "CEO Office"
+            "CEO Office",
+            "Executive Lounge"
           ]
         },
         {
-          "id": "bank-1f-open-staff",
+          "id": "bank-1f-open-area-staff-room",
           "name": "1F · Open Area / Staff Room",
           "rooms": [
             "Open Area",
@@ -2558,16 +2504,16 @@ const SEED_DATA =
           ]
         },
         {
-          "id": "bank-1f-tellers-archives",
-          "name": "1F · Tellers / Archives",
+          "id": "bank-1f-tellers-office-archives",
+          "name": "1F · Tellers' Office / Archives",
           "rooms": [
             "Tellers' Office",
             "Archives"
           ]
         },
         {
-          "id": "bank-b-cctv-lockers",
-          "name": "B · CCTV / Lockers",
+          "id": "bank-b-cctv-room-lockers",
+          "name": "B · CCTV Room / Lockers",
           "rooms": [
             "CCTV Room",
             "Lockers"
@@ -2960,27 +2906,35 @@ const SEED_DATA =
       ],
       "bombsites": [
         {
-          "id": "cons-2f-admin-meeting",
-          "name": "2F · Admin / Meeting",
+          "id": "consulate-2f-consul-office-meeting-room",
+          "name": "2F · Consul Office / Meeting Room",
           "rooms": [
-            "Admin Office",
+            "Consul Office",
             "Meeting Room"
           ]
         },
         {
-          "id": "cons-1f-lobby-press",
-          "name": "1F · Lobby / Press Room",
+          "id": "consulate-1f-piano-expo",
+          "name": "1F · Piano / Expo",
           "rooms": [
-            "Lobby",
-            "Press Room"
+            "Piano",
+            "Expo"
           ]
         },
         {
-          "id": "cons-b-garage-cafeteria",
-          "name": "B · Garage / Cafeteria",
+          "id": "consulate-1f-tellers-servers",
+          "name": "1F · Tellers / Servers",
           "rooms": [
-            "Garage",
-            "Cafeteria"
+            "Tellers",
+            "Servers"
+          ]
+        },
+        {
+          "id": "consulate-b-kitchen-garage",
+          "name": "B · Kitchen / Garage",
+          "rooms": [
+            "Kitchen",
+            "Garage"
           ]
         }
       ],
@@ -3130,15 +3084,23 @@ const SEED_DATA =
       ],
       "bombsites": [
         {
-          "id": "kafe-3f-cocktail-bar",
-          "name": "3F · Cocktail / Bar",
+          "id": "kafe-3f-cocktail-entrance-wood-stairs",
+          "name": "3F · Cocktail Entrance / Wood Stairs",
           "rooms": [
-            "Cocktail Lounge",
-            "Bar"
+            "Cocktail Entrance",
+            "Wood Stairs"
           ]
         },
         {
-          "id": "kafe-2f-reading-fireplace",
+          "id": "kafe-2f-mining-dining",
+          "name": "2F · Mining / Dining",
+          "rooms": [
+            "Mining",
+            "Dining"
+          ]
+        },
+        {
+          "id": "kafe-2f-reading-room-fireplace-hall",
           "name": "2F · Reading Room / Fireplace Hall",
           "rooms": [
             "Reading Room",
@@ -3146,19 +3108,11 @@ const SEED_DATA =
           ]
         },
         {
-          "id": "kafe-2f-mining-train",
-          "name": "2F · Mining Room / Train Museum",
-          "rooms": [
-            "Mining Room",
-            "Train Museum"
-          ]
-        },
-        {
-          "id": "kafe-1f-kitchen-service",
-          "name": "1F · Kitchen / Service",
+          "id": "kafe-1f-cooking-service",
+          "name": "1F · Cooking / Service",
           "rooms": [
             "Cooking",
-            "Service Entrance"
+            "Service"
           ]
         }
       ],
@@ -3521,7 +3475,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "border-1f-supply-customs",
+          "name": "1F · Supply / Customs",
+          "rooms": [
+            "Supply",
+            "Customs"
+          ]
+        },
+        {
+          "id": "border-1f-workshop-ventilation",
+          "name": "1F · Workshop / Ventilation",
+          "rooms": [
+            "Workshop",
+            "Ventilation"
+          ]
+        },
+        {
+          "id": "border-1f-bathroom-tellers",
+          "name": "1F · Bathroom / Tellers",
+          "rooms": [
+            "Bathroom",
+            "Tellers"
+          ]
+        },
+        {
+          "id": "border-2f-armory-archives",
+          "name": "2F · Armory / Archives",
+          "rooms": [
+            "Armory",
+            "Archives"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -3820,7 +3807,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "chalet-2f-office-master",
+          "name": "2F · Office / Master",
+          "rooms": [
+            "Office",
+            "Master"
+          ]
+        },
+        {
+          "id": "chalet-1f-gaming-bar",
+          "name": "1F · Gaming / Bar",
+          "rooms": [
+            "Gaming",
+            "Bar"
+          ]
+        },
+        {
+          "id": "chalet-1f-dining-kitchen",
+          "name": "1F · Dining / Kitchen",
+          "rooms": [
+            "Dining",
+            "Kitchen"
+          ]
+        },
+        {
+          "id": "chalet-b-wine-garage",
+          "name": "B · Wine / Garage",
+          "rooms": [
+            "Wine",
+            "Garage"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4077,7 +4097,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "coastline-2f-pool-table-hookah",
+          "name": "2F · Pool Table / Hookah",
+          "rooms": [
+            "Pool Table",
+            "Hookah"
+          ]
+        },
+        {
+          "id": "coastline-2f-tv-penthouse",
+          "name": "2F · TV / Penthouse",
+          "rooms": [
+            "TV",
+            "Penthouse"
+          ]
+        },
+        {
+          "id": "coastline-1f-kitchen-supply",
+          "name": "1F · Kitchen / Supply",
+          "rooms": [
+            "Kitchen",
+            "Supply"
+          ]
+        },
+        {
+          "id": "coastline-1f-blue-bar-sunrise",
+          "name": "1F · Blue Bar / Sunrise",
+          "rooms": [
+            "Blue Bar",
+            "Sunrise"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4163,7 +4216,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "emerald-plains-2f-ceo-admin",
+          "name": "2F · CEO / Admin",
+          "rooms": [
+            "CEO",
+            "Admin"
+          ]
+        },
+        {
+          "id": "emerald-plains-2f-meeting-statue",
+          "name": "2F · Meeting / Statue",
+          "rooms": [
+            "Meeting",
+            "Statue"
+          ]
+        },
+        {
+          "id": "emerald-plains-1f-lounge-bar",
+          "name": "1F · Lounge / Bar",
+          "rooms": [
+            "Lounge",
+            "Bar"
+          ]
+        },
+        {
+          "id": "emerald-plains-1f-dining-pantry",
+          "name": "1F · Dining / Pantry",
+          "rooms": [
+            "Dining",
+            "Pantry"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4259,7 +4345,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "favela-2f-storage-servers",
+          "name": "2F · Storage / Servers",
+          "rooms": [
+            "Storage",
+            "Servers"
+          ]
+        },
+        {
+          "id": "favela-2f-bunks-servers",
+          "name": "2F · Bunks / Servers",
+          "rooms": [
+            "Bunks",
+            "Servers"
+          ]
+        },
+        {
+          "id": "favela-1f-pink-pink-kitchen",
+          "name": "1F · Pink / Pink Kitchen",
+          "rooms": [
+            "Pink",
+            "Pink Kitchen"
+          ]
+        },
+        {
+          "id": "favela-1f-blue-bedroom-green",
+          "name": "1F · Blue Bedroom / Green",
+          "rooms": [
+            "Blue Bedroom",
+            "Green"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4355,7 +4474,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "fortress-2f-commander-bathroom",
+          "name": "2F · Commander / Bathroom",
+          "rooms": [
+            "Commander",
+            "Bathroom"
+          ]
+        },
+        {
+          "id": "fortress-2f-dormitory-gaming",
+          "name": "2F · Dormitory / Gaming",
+          "rooms": [
+            "Dormitory",
+            "Gaming"
+          ]
+        },
+        {
+          "id": "fortress-1f-waiting-cafeteria",
+          "name": "1F · Waiting / Cafeteria",
+          "rooms": [
+            "Waiting",
+            "Cafeteria"
+          ]
+        },
+        {
+          "id": "fortress-1f-hammam-sitting",
+          "name": "1F · Hammam / Sitting",
+          "rooms": [
+            "Hammam",
+            "Sitting"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4453,7 +4605,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "hereford-base-3f-armory-tractor",
+          "name": "3F · Armory / Tractor",
+          "rooms": [
+            "Armory",
+            "Tractor"
+          ]
+        },
+        {
+          "id": "hereford-base-2f-kids-master",
+          "name": "2F · Kids / Master",
+          "rooms": [
+            "Kids",
+            "Master"
+          ]
+        },
+        {
+          "id": "hereford-base-1f-kitchen-dining",
+          "name": "1F · Kitchen / Dining",
+          "rooms": [
+            "Kitchen",
+            "Dining"
+          ]
+        },
+        {
+          "id": "hereford-base-b-brewery-fermentation",
+          "name": "B · Brewery / Fermentation",
+          "rooms": [
+            "Brewery",
+            "Fermentation"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4545,7 +4730,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "house-2f-car-pink",
+          "name": "2F · Car / Pink",
+          "rooms": [
+            "Car",
+            "Pink"
+          ]
+        },
+        {
+          "id": "house-2f-master-car",
+          "name": "2F · Master / Car",
+          "rooms": [
+            "Master",
+            "Car"
+          ]
+        },
+        {
+          "id": "house-1f-tv-music",
+          "name": "1F · TV / Music",
+          "rooms": [
+            "TV",
+            "Music"
+          ]
+        },
+        {
+          "id": "house-b-garage-gym",
+          "name": "B · Garage / Gym",
+          "rooms": [
+            "Garage",
+            "Gym"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4642,7 +4860,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "kanal-2f-radar-server",
+          "name": "2F · Radar / Server",
+          "rooms": [
+            "Radar",
+            "Server"
+          ]
+        },
+        {
+          "id": "kanal-1f-map-security",
+          "name": "1F · Map / Security",
+          "rooms": [
+            "Map",
+            "Security"
+          ]
+        },
+        {
+          "id": "kanal-1f-meeting-lounge",
+          "name": "1F · Meeting / Lounge",
+          "rooms": [
+            "Meeting",
+            "Lounge"
+          ]
+        },
+        {
+          "id": "kanal-b-supply-kayaks",
+          "name": "B · Supply / Kayaks",
+          "rooms": [
+            "Supply",
+            "Kayaks"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -4734,7 +4985,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "lair-2f-mask-six",
+          "name": "2F · Mask / Six",
+          "rooms": [
+            "Mask",
+            "Six"
+          ]
+        },
+        {
+          "id": "lair-1f-bunks-briefing",
+          "name": "1F · Bunks / Briefing",
+          "rooms": [
+            "Bunks",
+            "Briefing"
+          ]
+        },
+        {
+          "id": "lair-1f-armory-maintenance",
+          "name": "1F · Armory / Maintenance",
+          "rooms": [
+            "Armory",
+            "Maintenance"
+          ]
+        },
+        {
+          "id": "lair-b-lab-support",
+          "name": "B · Lab / Support",
+          "rooms": [
+            "Lab",
+            "Support"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5048,7 +5332,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "nighthaven-labs-2f-command-server",
+          "name": "2F · Command / Server",
+          "rooms": [
+            "Command",
+            "Server"
+          ]
+        },
+        {
+          "id": "nighthaven-labs-1f-kitchen-cafeteria",
+          "name": "1F · Kitchen / Cafeteria",
+          "rooms": [
+            "Kitchen",
+            "Cafeteria"
+          ]
+        },
+        {
+          "id": "nighthaven-labs-1f-control-storage",
+          "name": "1F · Control / Storage",
+          "rooms": [
+            "Control",
+            "Storage"
+          ]
+        },
+        {
+          "id": "nighthaven-labs-b-tank-assembly",
+          "name": "B · Tank / Assembly",
+          "rooms": [
+            "Tank",
+            "Assembly"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5134,7 +5451,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "outback-2f-laundry-piano",
+          "name": "2F · Laundry / Piano",
+          "rooms": [
+            "Laundry",
+            "Piano"
+          ]
+        },
+        {
+          "id": "outback-2f-party-office",
+          "name": "2F · Party / Office",
+          "rooms": [
+            "Party",
+            "Office"
+          ]
+        },
+        {
+          "id": "outback-1f-red-green",
+          "name": "1F · Red / Green",
+          "rooms": [
+            "Red",
+            "Green"
+          ]
+        },
+        {
+          "id": "outback-1f-kitchen-shop",
+          "name": "1F · Kitchen / Shop",
+          "rooms": [
+            "Kitchen",
+            "Shop"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5211,7 +5561,32 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "presidential-plane-2f-office-pantry",
+          "name": "2F · Office / Pantry",
+          "rooms": [
+            "Office",
+            "Pantry"
+          ]
+        },
+        {
+          "id": "presidential-plane-2f-bedroom-staff",
+          "name": "2F · Bedroom / Staff",
+          "rooms": [
+            "Bedroom",
+            "Staff"
+          ]
+        },
+        {
+          "id": "presidential-plane-1f-cargo-luggage",
+          "name": "1F · Cargo / Luggage",
+          "rooms": [
+            "Cargo",
+            "Luggage"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5471,7 +5846,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "skyscraper-2f-tea-karaoke",
+          "name": "2F · Tea / Karaoke",
+          "rooms": [
+            "Tea",
+            "Karaoke"
+          ]
+        },
+        {
+          "id": "skyscraper-2f-office-museum",
+          "name": "2F · Office / Museum",
+          "rooms": [
+            "Office",
+            "Museum"
+          ]
+        },
+        {
+          "id": "skyscraper-1f-bbq-kitchen",
+          "name": "1F · BBQ / Kitchen",
+          "rooms": [
+            "BBQ",
+            "Kitchen"
+          ]
+        },
+        {
+          "id": "skyscraper-1f-bedroom-bathroom",
+          "name": "1F · Bedroom / Bathroom",
+          "rooms": [
+            "Bedroom",
+            "Bathroom"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5548,7 +5956,32 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "stadium-2f-armory-archives",
+          "name": "2F · Armory / Archives",
+          "rooms": [
+            "Armory",
+            "Archives"
+          ]
+        },
+        {
+          "id": "stadium-2f-penthouse-vip",
+          "name": "2F · Penthouse / VIP",
+          "rooms": [
+            "Penthouse",
+            "VIP"
+          ]
+        },
+        {
+          "id": "stadium-1f-kitchen-supply",
+          "name": "1F · Kitchen / Supply",
+          "rooms": [
+            "Kitchen",
+            "Supply"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5634,7 +6067,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "theme-park-2f-bar-initiation",
+          "name": "2F · Bar / Initiation",
+          "rooms": [
+            "Bar",
+            "Initiation"
+          ]
+        },
+        {
+          "id": "theme-park-2f-day-care-bunk",
+          "name": "2F · Day Care / Bunk",
+          "rooms": [
+            "Day Care",
+            "Bunk"
+          ]
+        },
+        {
+          "id": "theme-park-1f-throne-armory",
+          "name": "1F · Throne / Armory",
+          "rooms": [
+            "Throne",
+            "Armory"
+          ]
+        },
+        {
+          "id": "theme-park-1f-lab-drug",
+          "name": "1F · Lab / Drug",
+          "rooms": [
+            "Lab",
+            "Drug"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5730,7 +6196,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "tower-2f-lantern-gift-shop",
+          "name": "2F · Lantern / Gift Shop",
+          "rooms": [
+            "Lantern",
+            "Gift Shop"
+          ]
+        },
+        {
+          "id": "tower-2f-media-exhibit",
+          "name": "2F · Media / Exhibit",
+          "rooms": [
+            "Media",
+            "Exhibit"
+          ]
+        },
+        {
+          "id": "tower-1f-tea-bar",
+          "name": "1F · Tea / Bar",
+          "rooms": [
+            "Tea",
+            "Bar"
+          ]
+        },
+        {
+          "id": "tower-1f-restaurant-bird",
+          "name": "1F · Restaurant / Bird",
+          "rooms": [
+            "Restaurant",
+            "Bird"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5821,7 +6320,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "villa-2f-bar-aviator",
+          "name": "2F · Bar / Aviator",
+          "rooms": [
+            "Bar",
+            "Aviator"
+          ]
+        },
+        {
+          "id": "villa-2f-statue-trophy",
+          "name": "2F · Statue / Trophy",
+          "rooms": [
+            "Statue",
+            "Trophy"
+          ]
+        },
+        {
+          "id": "villa-1f-living-library",
+          "name": "1F · Living / Library",
+          "rooms": [
+            "Living",
+            "Library"
+          ]
+        },
+        {
+          "id": "villa-1f-kitchen-dining",
+          "name": "1F · Kitchen / Dining",
+          "rooms": [
+            "Kitchen",
+            "Dining"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -5918,7 +6450,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "yacht-4f-cockpit-maps",
+          "name": "4F · Cockpit / Maps",
+          "rooms": [
+            "Cockpit",
+            "Maps"
+          ]
+        },
+        {
+          "id": "yacht-2f-control-kitchen",
+          "name": "2F · Control / Kitchen",
+          "rooms": [
+            "Control",
+            "Kitchen"
+          ]
+        },
+        {
+          "id": "yacht-2f-cafeteria-dorms",
+          "name": "2F · Cafeteria / Dorms",
+          "rooms": [
+            "Cafeteria",
+            "Dorms"
+          ]
+        },
+        {
+          "id": "yacht-1f-ladder-storage",
+          "name": "1F · ladder / Storage",
+          "rooms": [
+            "ladder",
+            "Storage"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}
@@ -6179,7 +6744,40 @@ const SEED_DATA =
           "callouts": []
         }
       ],
-      "bombsites": [],
+      "bombsites": [
+        {
+          "id": "calypso-casino-2f-stick-cigar",
+          "name": "2F · Stick / Cigar",
+          "rooms": [
+            "Stick",
+            "Cigar"
+          ]
+        },
+        {
+          "id": "calypso-casino-1f-black-jack-poker",
+          "name": "1F · Black Jack / Poker",
+          "rooms": [
+            "Black Jack",
+            "Poker"
+          ]
+        },
+        {
+          "id": "calypso-casino-1f-betting-jersey",
+          "name": "1F · Betting / Jersey",
+          "rooms": [
+            "Betting",
+            "Jersey"
+          ]
+        },
+        {
+          "id": "calypso-casino-b-cctv-checkpoint",
+          "name": "B · CCTV / Checkpoint",
+          "rooms": [
+            "CCTV",
+            "Checkpoint"
+          ]
+        }
+      ],
       "tactics": {
         "attack": {},
         "defense": {}

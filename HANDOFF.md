@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 27**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 28**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -269,9 +269,19 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **Data shape:** `map.tactics[side][siteId].strats = [ STRAT ]` (see §4). Slots reference
   side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
   (unused by this UI).
-- **Coverage:** only **Clubhouse** is seeded (20 strats). Bomb sites currently exist on 5
-  maps (clubhouse, bank, oregon, consulate, kafe); the other 20 need a `bombsites` array
-  before they can hold tactics (derivable from the existing `type:"site"` markers).
+- **Coverage:** **all 25 maps now have a `bombsites` array** (4 sites each, 3 for
+  Presidential Plane & Stadium) — so any map can hold tactics. Only **Clubhouse** has
+  strats so far (20). Adding tactics to another map is now just authoring its strats.
+- **Bomb sites (v28) — how they were built:** derived from the in-map r6calls objective
+  markers (`type:"site"` callouts). Each site = one digit group; its two rooms = the A/B
+  spots' room labels; floor = the highest floor its spots sit on (name prefixed, e.g.
+  "2F · Bedroom / Gym"). **The digit grouping is the authoritative pairing** — it matches
+  the game (verified) and the map images. The 5 previously hand-curated maps were
+  **rebuilt** from markers because their manual pairings were wrong (e.g. Clubhouse was
+  Bedroom/CCTV+Gym/Cash; correct is Bedroom/**Gym**+CCTV/**Cash**) — and the Clubhouse
+  tactics were **re-keyed** to the corrected site ids. Room **names** were overridden with
+  confident fixes on the curated maps + obvious typos; the other 20 use the marker names
+  (match the map labels; a few may read slightly off — all editable in ✎ Edit).
 - **Sourcing:** content was **composed from current meta** (cross-checked with map guides),
   *not* scraped. R6Strat (r6strat.com) is a **login-gated private strategy builder**, not a
   public library; r6guides.com is a parked domain — so there is no machine-readable strat
