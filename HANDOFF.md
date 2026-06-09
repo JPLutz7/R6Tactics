@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 25**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 26**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -59,8 +59,8 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
             floors: [ { name, layoutImage, callouts: [ CALLOUT ] } ],
             bombsites: [ {id,name,rooms} ], tactics:{attack:{},defense:{}} } ],
   operators: [ {id,name,side,winRate,role,notes,howToCounter} ], // 75. winRate = real win-rate %, see §11
-  roles:     [ {id,name,desc,attackOps:[],defenseOps:[],notes} ],   // 8 practical Siege roles; pools render ordered by winRate desc (§11)
-  roster:    [ {name,roles:[roleId]} ],                            // ordered = priority; assigned by dragging role cards onto players
+  roles:     [ {id,name,side,desc,ops:[]} ],   // 13 SIDE-SPECIFIC roles (6 attack, 7 defense); ops render ordered by winRate desc (§11)
+  roster:    [ {name,attackRoles:[roleId],defenseRoles:[roleId]} ], // two priority lists/player (order=priority); drag role cards onto a player's ATK or DEF list
   playerStats: [],                                          // optional, unused for now
   pools:     [ {id,name,note,mapIds:[]} ]                   // Pro / Seasonal / Showcased
 }
@@ -155,18 +155,23 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 - **All 25 maps** on r6calls building-focused plates with **room names baked in**;
   bomb-site (per-site dropdown) + spawn-peek overlays on top. Spawn peeks on the 9.
 - Spawn peeks carry PeekabooR6 success-rate %, how-to video, steps, tip, difficulty/risk; clicking a peek label opens a popup with the video (hotlinked from PeekabooR6's R2 CDN, attributed). Matched by map+name; videos are .mov (Firefox shows an "Open video" fallback).
-- **Roster tab (v24):** lists the practical Siege roles (IGL, Entry Fragger, Support,
-  Hard Breach, Flex, Anchor, Roamer, Intel) — each with a short description + attack/
-  defense operator pools (ordered best→situational). Players get a priority-ordered
-  list of roles assigned by **dragging a role card's ⠿ handle onto a player row**
-  (drags a copy; chips reorder by drag / remove with ✕). Roster entries are now
-  `{name, roles:[roleId]}` (order = priority); roles gained a `desc` field.
+- **Roster tab (v26): side-specific roles.** Roles are now split by side — **6 attack
+  roles** (IGL, Entry Fragger, Hard Breacher, Support, Intel/Recon, Flex) and **7 defense
+  roles** (IGL, Anchor, Roamer, Trapper, Anti-Breach/Support, Intel, Flex). Each role has a
+  `side`, a `desc`, and a single `ops` pool (rendered ordered by win-rate). The Roles area
+  shows two grouped sections (Attack roles / Defense roles). Each **player has two priority
+  lists** (`attackRoles` + `defenseRoles`), shown as separate ATK/DEF rows; assign by
+  **dragging a role card's ⠿ handle onto the matching-side list** (drops only accept the
+  matching side), reorder by dragging chips, remove with ✕.
 - **Operator pools ordered by real win-rate** (highest→lowest) with a win-rate % on each
-  `.opchip` (`poolHTML()`/`wrOf()`); per-operator `winRate` baked into the seed — see §11.
+  `.opchip` (`rolePoolHTML()`/`wrOf()`); per-operator `winRate` baked into the seed — §11.
+- **Click any operator chip → detail popup** (`openOpModal()`): round win-rate, side,
+  role, "what they do" (`notes`) and "how to counter" (`howToCounter`). Reuses the `.modal`
+  pattern; close via ✕ / backdrop / Esc.
 - Import/export, versioned publish model, README. **Data/ToS rule clarified (§1):**
   static or periodically-refreshed reference data (incl. tracker win-rates) is fine;
   only *live, in-match opponent intel* is banned.
-- Seed at **v25**.
+- Seed at **v26**.
 
 ## 8. Known limitations / good next steps
 - r6calls' per-floor source art is only **1024×1024** (whole-map background is
