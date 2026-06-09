@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 15**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 16**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -109,6 +109,14 @@ NOT committed). Network access is available in the web session. Key facts to reb
     SEED map's last floor / r6 maxFloor): crop the whole map (~2600px wide).
   - SEED floor i ↔ r6 floor `(minFloor + i)`; floor name (Basement/1st…/Roof) lines
     up positionally. Map-id→prefix+minFloor table lived in `/tmp/mapcfg.js`.
+  - **Consistent per-map frame + floor stacking (v16):** the crop rect is the
+    **union** of every floor's building-content alpha bbox (so all floors of a map
+    share one full-building frame and nothing jumps/looks cut off). Partial upper
+    floors are rendered by **stacking** floors `minFloor..N` (lower ones at 0.72
+    opacity, the active floor on top at full opacity with its room labels) so the
+    whole building shows. Page bg is dark (`#0c0c0c`) so any concave-edge bleed reads
+    as r6calls' void. Cap the svg raster at ~8000px — two stacked 1024px floor PNGs
+    upscaled past ~9k blank the frame; add a paint wait before screenshotting.
   - **Room names: baked into the image** (not callouts) as of v15. The capture still
     measures `N-txt` centers, but only to anchor the spawn-peek affine fit (below) —
     no room-name overlay callouts are emitted.
@@ -120,7 +128,7 @@ NOT committed). Network access is available in the web session. Key facts to reb
     new r6calls crop space by a per-floor **RANSAC affine fit** anchored on room
     labels common to both the old and new sets (`/tmp/affine.js` + `/tmp/merge.js`;
     all floors fit at RMSE ≤0.1%).
-- Image paths carry the cache-bust query **`?r4`** (was `?pk1`/`?bf`); bump it
+- Image paths carry the cache-bust query **`?r5`** (was `?pk1`/`?bf`); bump it
   whenever the floor images are re-rendered.
 
 ⚠️ **Gotcha:** JS `Set.add()` returns the Set (truthy) — a `filter(t=>!(seen.has||seen.add))`
