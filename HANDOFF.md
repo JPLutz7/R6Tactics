@@ -65,9 +65,11 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
   pools:     [ {id,name,note,mapIds:[]} ]                   // Pro / Seasonal / Showcased
 }
 CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor image
-            type? , site? , rate? }
+            type? , site? , rate? , video? , steps? , tip? , difficulty? , risk? }
   type: undefined/absent = room label | "peek" = spawn peek | "site" = bomb site
   site: digit "1".."4" (bomb-site group)   rate: peek success-rate %
+  peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
+    tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
 ```
 Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **99 bomb-site
 markers, 105 spawn peeks** as overlays. As of v15 **every map** uses r6calls
@@ -140,7 +142,7 @@ NOT committed). Network access is available in the web session. Key facts to reb
     correct model (RMSE ≤0.12%, consistent x/y scales across each map's floors).
     PeekabooR6's source images are busy 3D screenshots, so auto wall/building
     detection on them is unreliable — room-label correspondences are the anchor.
-- Image paths carry the cache-bust query **`?r5`** (was `?pk1`/`?bf`); bump it
+- Image paths carry the cache-bust query **`?r6`** (was `?pk1`/`?bf`); bump it
   whenever the floor images are re-rendered.
 
 ⚠️ **Gotcha:** JS `Set.add()` returns the Set (truthy) — a `filter(t=>!(seen.has||seen.add))`
@@ -153,8 +155,16 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 - **All 25 maps** on r6calls building-focused plates with **room names baked in**;
   bomb-site (per-site dropdown) + spawn-peek overlays on top. Spawn peeks on the 9.
 - Spawn peeks carry PeekabooR6 success-rate %, how-to video, steps, tip, difficulty/risk; clicking a peek label opens a popup with the video (hotlinked from PeekabooR6's R2 CDN, attributed). Matched by map+name; videos are .mov (Firefox shows an "Open video" fallback).
-- Roster/roles, import/export, versioned publish model, README.
-- Seed at v15.
+- **Roster tab (v24):** lists the practical Siege roles (IGL, Entry Fragger, Support,
+  Hard Breach, Flex, Anchor, Roamer, Intel) — each with a short description + attack/
+  defense operator pools (ordered best→situational). Players get a priority-ordered
+  list of roles assigned by **dragging a role card's ⠿ handle onto a player row**
+  (drags a copy; chips reorder by drag / remove with ✕). Roster entries are now
+  `{name, roles:[roleId]}` (order = priority); roles gained a `desc` field.
+- Import/export, versioned publish model, README. **Data/ToS rule clarified (§1):**
+  static or periodically-refreshed reference data (incl. tracker win-rates) is fine;
+  only *live, in-match opponent intel* is banned.
+- Seed at **v24**.
 
 ## 8. Known limitations / good next steps
 - r6calls' per-floor source art is only **1024×1024** (whole-map background is
@@ -174,8 +184,12 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
   owner fills these from VOD review.
 
 ## 9. Conventions
-- Develop on `claude/wizardly-tesla-6j23tl`; open a PR to `main`; merge to deploy.
-  (The owner is new to GitHub — handle git/PRs for them; don't push to `main` directly.)
+- Develop on the session's assigned `claude/*` branch; open a PR to `main`; merge to
+  deploy. (The owner is new to GitHub — handle git/PRs for them; don't push to `main`
+  directly. The owner is fine with you opening + squash-merging PRs per change.)
+- Bump SEED `version` whenever the embedded data changes (the app adopts a higher
+  version on load). The owner publishes their own in-app edits via Data → *Copy publish
+  JSON* and pastes the JSON back to you to commit.
 - Don't create a PR unless asked, but here the established flow is PR-per-change then merge.
 - Verify changes: `node --check`-style syntax via `vm.Script` on the inlined script,
   a jsdom smoke test, and a puppeteer screenshot before deploying.
@@ -187,12 +201,25 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
 > Continue work on the R6 Stack Command Center (Rainbow Six Siege prep dashboard).
-> **First read `HANDOFF.md` in the repo root** — it has the full state, data model,
-> file layout, image/label extraction pipelines, conventions, and known limitations.
-> It's a single-file app (`index.html`) + `assets/`, deployed to GitHub Pages from
-> `main`; develop on branch `claude/wizardly-tesla-6j23tl` and merge via PR. Live at
+> **First read `HANDOFF.md` in the repo root** — full state, data model, file layout,
+> image/label extraction pipelines, conventions, the data/ToS rule (§1), and known
+> limitations. Single-file app (`index.html`) + `assets/`, deployed to GitHub Pages from
+> `main`; develop on the session's assigned `claude/*` branch and merge via PR. Live at
 > https://jplutz7.github.io/R6Tactics/ (case-sensitive). Validate with vm.Script syntax
-> checks + a puppeteer screenshot before deploying, and cache-bust changed images with a
-> `?query`. Then ask me what I want to do next (likely candidates: fine-tune label
-> positions, fill in tactics per bombsite, fold the recommender/operators into the Maps
-> tab, or polish the unified r6calls overlays).
+> checks + a puppeteer screenshot before deploying; cache-bust changed images with a
+> `?query`; bump SEED `version` when the embedded data changes.
+>
+> **Do this task:** In the Roster tab, order the operators in each role's attack &
+> defense pools by **real win-rate** (instead of today's curated best→situational
+> ranking), and add a **win-rate %** to each operator chip (`.opchip`).
+> - Pull the win-rates **once** from a stats source and **bake them into the seed** —
+>   this is explicitly allowed under the data/ToS rule in §1 (static / periodically-
+>   refreshed reference data is fine; only *live, in-match opponent intel* is banned).
+>   Plan to refresh occasionally, never live.
+> - Suggested approach: store `winRate` (0–100, maybe also `pickRate`) per operator in
+>   `DB.operators` (ids are stable — see the array), sort each role's `attackOps`/
+>   `defenseOps` by `winRate` desc, and render the % on the op chip in `poolHTML()`
+>   (roster code is `renderRoleGrid`/`poolHTML`/`bindRoleGrid` in `index.html`).
+> - Caveats: R6 win-rates are volatile and basically **per-operator, not per-role**, so
+>   the same op shows the same % wherever it appears; pick one reliable static source and
+>   note it. Bump SEED `version`. Validate + screenshot, then ask me what's next.
