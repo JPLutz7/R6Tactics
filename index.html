@@ -173,9 +173,11 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .stage .floorimg{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
 /* markers: a 0-size anchor point; inner body is counter-scaled so labels stay put & constant-size */
 .mk{position:absolute;width:0;height:0;z-index:2}
-.mk .mkb{position:absolute;left:0;top:0;transform:translate(-50%,-50%) scale(var(--inv,1));transform-origin:center;display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:none}
-.mk .mdot{width:9px;height:9px;border-radius:50%;background:var(--muted2);box-shadow:0 0 0 2px #ffffffcc;flex:none}
-.mk .mlb{font-size:11.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.93);border:1px solid var(--line2);padding:2px 7px;border-radius:6px;box-shadow:0 1px 3px rgba(20,30,45,.2)}
+/* .mkb box == the dot, centered exactly on the anchor and counter-scaled around
+   the dot's center so the dot stays put at any zoom; the label floats off it. */
+.mk .mkb{position:absolute;left:0;top:0;transform:translate(-50%,-50%) scale(var(--inv,1));transform-origin:center;pointer-events:none}
+.mk .mdot{width:9px;height:9px;border-radius:50%;background:var(--muted2);box-shadow:0 0 0 2px #ffffffcc}
+.mk .mlb{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:6px;font-size:11.5px;font-weight:600;color:var(--text);background:rgba(255,255,255,.93);border:1px solid var(--line2);padding:2px 7px;border-radius:6px;box-shadow:0 1px 3px rgba(20,30,45,.2);white-space:nowrap}
 .mk.obj .mlb{background:var(--obj-bg);border-color:var(--obj-line);color:#7a6200;font-weight:700}
 .mk.obj .mdot{background:var(--obj);box-shadow:0 0 0 2px #ffffffcc,0 0 6px rgba(202,160,7,.5);border-radius:2px;width:11px;height:11px;transform:rotate(45deg)}
 .mk.peek .mlb{background:#3a1014;border-color:#c2434f;color:#ffd9de;font-weight:700}
