@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 29**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 30**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -71,13 +71,9 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
     tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
 TAC = { ...legacy flat fields, strats: [ STRAT ] }          // see §12
-STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], steps:[], reinforce:[], marks:[ MARK ] }
+STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], steps:[], reinforce:[] }
   role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for
   that slot. The Tactics panel assigns each rostered player a slot by their role priority.
-MARK = { kind, floor, x, y, ... }    // on-map overlay drawn while the strat is open (§12)
-  kind "reinforce" = wall/hatch to reinforce (+ op = battery to apply, hatch?:bool)
-  kind "gadget"    = gadget spot (op = operator)
-  kind "entry"     = attack entry arrow (dir = degrees, slot = which slot → player name)
 bombsite also carries `site` (the "1".."4" digit) so a tactic can focus the site filter.
 ```
 Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **99 bomb-site
@@ -268,17 +264,10 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   `renderMapDetail()`. Panel only renders when the map has `bombsites`. Opening a strat also
   **focuses the site filter** on that bomb site (`UI.maps.siteFilter = bombsite.site`); back
   resets it to "all".
-- **On-map markers (v29):** while a strat is open, `tacticMarksHTML(floorIdx)` overlays the
-  strat's `marks` on the floor (appended to `#markers`, counter-scaled like callouts; they
-  **clear when you leave** the strat). **Defense** → blue `reinforce` markers (wall/hatch +
-  the battery op to apply) and green `gadget` markers (op at a key spot). **Attack** → orange
-  `entry` arrows tagged with the assigned player's name (`assignSlots()` maps slot→player).
-  Marks can sit on **any floor** the strat needs (e.g. a vertical entry one floor below the
-  site); floor tabs holding marks get a dot (`.hasmarks`). Marks were generated from a
-  per-map **anchor table + the site-marker positions** (no room-label coords exist) — so
-  positions are **approximate and meant to be tuned**; they're baked into each strat's
-  `marks` (not yet drag-editable in ✎ Edit — a good next step). Operator **logos** aren't
-  bundled, so gadget/battery spots show the op **name** (logos = a future enhancement).
+- **On-map markers:** an earlier pass added per-strat overlay markers (reinforce walls /
+  gadget spots / attack entry arrows) but it was **reverted** (positions were approximate —
+  no room-label coords exist to anchor them). If revisited, make them **drag-editable in ✎
+  Edit** first so positions can be tuned, and consider bundling operator logos.
 - **Op assignment:** `assignTactic(strat, side)` greedily matches each rostered player to a
   strat slot by the player's prioritised roles for that side (`attackRoles`/`defenseRoles`,
   by rank), then fills leftovers. Each player sees their slot's 2–4 op options + position;
