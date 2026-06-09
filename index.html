@@ -4459,9 +4459,11 @@ function renderFloorView(){
   const mapHasPeek=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="peek"));
   const mapHasSite=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="site"));
   const mapHasRoom=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type!=="peek"&&c.type!=="site"));
-  // group bomb sites by digit and label each by its room pair (the way the game names sites)
+  // group bomb sites by digit and label each by its room pair, prefixed with the
+  // floor each room is on (e.g. "2F Dorm / 2F Kids"), the way the game names sites
+  const floorAbbr=n=>{ const s=String(n||""); if(/sub-?basement/i.test(s))return"SB"; if(/basement/i.test(s))return"B"; const d=s.match(/(\d+)\s*(?:st|nd|rd|th)/i); if(d)return d[1]+"F"; if(/roof/i.test(s))return"Roof"; return s; };
   const siteRooms=new Map();
-  m.floors.forEach(fl=>(fl.callouts||[]).forEach(c=>{ if(c.type==="site"){ const room=String(c.name).replace(/\s+[AB]$/,"").trim(); if(!siteRooms.has(String(c.site))) siteRooms.set(String(c.site),[]); const arr=siteRooms.get(String(c.site)); if(room&&!arr.includes(room)) arr.push(room); } }));
+  m.floors.forEach(fl=>{ const fa=floorAbbr(fl.name); (fl.callouts||[]).forEach(c=>{ if(c.type==="site"){ const room=String(c.name).replace(/\s+[AB]$/,"").trim(); const label=(fa?fa+" ":"")+room; if(!siteRooms.has(String(c.site))) siteRooms.set(String(c.site),[]); const arr=siteRooms.get(String(c.site)); if(room&&!arr.includes(label)) arr.push(label); } }); });
   const siteList=[...siteRooms.entries()].map(([s,rooms])=>[s,rooms.join(" / ")]).sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true}));
   const vpCls=["viewport",UI.maps.layerNames&&"show-names",UI.maps.layerSites&&"show-sites",UI.maps.layerPeeks&&"show-peeks",edit&&"show-edit"].filter(Boolean).join(" ");
   const toggles=[
