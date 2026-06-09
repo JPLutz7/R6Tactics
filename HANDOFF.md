@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 35**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 36**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -283,9 +283,10 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   (no code change). Archetypes: anti-breach / traps / intel / roamers / anchors. Code:
   `renderSuggester()` / `scoreAttackStrat()` / `compArchetypes()`. **ToS:** labelled **prep**
   with a note — it's for *expected* defenders (scrims/VOD), **not** live in-match enemy input
-  (stays on the safe side of §1). Reason text uses the dominant archetype + the winning
-  approach's `approachAdvice` (per-approach, so the advice clause can read slightly generic
-  for non-anti-breach comps — easy to make archetype-aware later).
+  (stays on the safe side of §1). **Reason is archetype-aware (v36):** "{dominant archetype}
+  heavy ({examples}) → {`archetypeAdvice[archetype]`}; lead with {winning approach}" — the
+  advice clause now describes how to counter that archetype (tunable via
+  `DB.suggester.archetypeAdvice`), and it names the matchup-winning approach.
 - **Known nit — attack "Open up" vs by-player overlap:** on a single-breach attack strat
   (hard breacher only, no vertical/flank slot), the one wall in **Open up** is the same line
   shown under the hard breacher in **Gadgets & jobs — by player**. Minor duplication; could

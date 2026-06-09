@@ -399,7 +399,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 35,
+  "version": 36,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -36621,6 +36621,13 @@ const SEED_DATA =
       "sentry": {
         "anchor": 1
       }
+    },
+    "archetypeAdvice": {
+      "antibreach": "go vertical or soft-wall to bypass their wall denial",
+      "trapper": "drone heavy and clear their traps before you commit",
+      "intel": "kill cams and clear sightlines before you push",
+      "roamer": "clear the flanks and lurk lines first, then commit together",
+      "anchor": "split their crossfire and hit from two angles"
     }
   }
 }
@@ -36862,7 +36869,7 @@ function renderSuggester(host,m){
   const ranked=strats.map((st,si)=>({st,si,score:scoreAttackStrat(st,S.defenders)})).sort((a,b)=>b.score-a.score);
   const max=Math.max(1,...ranked.map(r=>Math.abs(r.score)));
   const examples=()=>{ if(!topArch)return""; const list=S.defenders.filter(id=>((cfg.defenders||{})[id]||{})[topArch]).map(id=>{const o=opById(id);return o?o.name:id;}); return list.slice(0,2).join(", "); };
-  const reason=(S.defenders.length&&topArch&&ranked.length)?`${(cfg.archetypeLabels||{})[topArch]||topArch} heavy${examples()?` (${esc(examples())})`:""} → ${(cfg.approachAdvice||{})[ranked[0].st.approach]||"play to your strengths"}.`:"";
+  const reason=(S.defenders.length&&topArch&&ranked.length)?`${(cfg.archetypeLabels||{})[topArch]||topArch} heavy${examples()?` (${esc(examples())})`:""} → ${(cfg.archetypeAdvice||{})[topArch]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[ranked[0].st.approach]||ranked[0].st.approach}.`:"";
   const siteBtns=m.bombsites.map(b=>`<button class="sg-site ${b.id===S.siteId?"on":""}" data-sgsite="${esc(b.id)}">${esc(b.name)}</button>`).join("");
   const chips=defs.map(o=>{ const on=S.defenders.includes(o.id); return `<button class="sg-def ${on?"on":""}" data-sgdef="${esc(o.id)}">${esc(o.name)}</button>`; }).join("");
   const results=S.defenders.length?ranked.map((r,i)=>{ const st=r.st; const pct=Math.round(Math.abs(r.score)/max*100); const pos=r.score>=0;
