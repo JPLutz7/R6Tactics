@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 32**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 33**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -284,10 +284,10 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **Data shape:** `map.tactics[side][siteId].strats = [ STRAT ]` (see §4). Slots reference
   side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
   (unused by this UI).
-- **Coverage:** **all 25 maps have a `bombsites` array**; the **Pro Pool is seeded** —
-  Clubhouse (bespoke, 20 strats) + Bank, Border, Chalet, Consulate, Kafe, Lair, Nighthaven
-  Labs, Fortress (180 strats total). **Next pools:** Showcased (Calypso) → Seasonal (Oregon,
-  Coastline, Emerald Plains, Outback) → unranked. Each map = 2 defense + 3 attack per site.
+- **Coverage:** **all 25 maps have a `bombsites` array**; **Pro + Showcased + Seasonal are
+  seeded** — Clubhouse (bespoke) + the 8 Pro maps + Calypso + the 4 Seasonal maps (Oregon,
+  Coastline, Emerald Plains, Outback) = **14 maps / 280 strats**. **Remaining:** the ~11
+  unranked maps. Each map = 2 defense + 3 attack per site.
 - **Sourcing:** **r6guides.com is dead** (now a parked "FIFA World Cup" page — verified; no
   Wayback guide snapshots, and archive.org is egress-blocked here). r6strat = login-gated
   private builder; Fandom = 403. So there is **no reachable structured strat DB** — strats are
