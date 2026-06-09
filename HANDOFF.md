@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 13**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 14**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -60,8 +60,10 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   type: undefined/absent = room label | "peek" = spawn peek | "site" = bomb site
   site: digit "1".."4" (bomb-site group)   rate: peek success-rate %
 ```
-Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **748 room
-labels, 105 spawn peeks, 37 bomb-site markers**.
+Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **2059 room
+labels, 105 spawn peeks, 99 bomb-site markers**. As of v14 **every map** uses
+r6calls building-focused floor plates with **toggleable** room-name + bomb-site
+overlays (the layout is unified — PeekabooR6 is no longer used anywhere).
 
 The app normalizes any partial/old data at load (`normalizeDB`) so the editor
 always sees the full structure.
@@ -83,25 +85,36 @@ NOT committed). Network access is available in the web session. Key facts to reb
 - **Covers** (`assets/covers/`): official Ubisoft art from each map page
   `ubisoft.com/.../maps/<slug>` → `staticctf.ubisoft.com/...` (prefer `_EXT`; for
   modernized maps the exterior is the `_meta` image).
-- **Floor images** (`assets/floors/`):
-  - **9 PeekabooR6 maps** (clubhouse, oregon, border, chalet, coastline, consulate,
-    nighthaven-labs, skyscraper, calypso-casino): use **peekaboor6.com** building-
-    focused images (R2 CDN `pub-…r2.dev/floors/<floor_id>-…webp`). Paths carry `?pk1`.
-  - **16 other maps:** captured from **r6calls.com** (renders maps as SVG). Method:
-    open map, select floor, set `svg viewBox="0 0 1447.271 814.09"` + `preserveAspectRatio
-    xMidYMid meet`, then **screenshot clipped to the building group's on-screen rect**
-    (`svg g[id^="Floor"]` getBoundingClientRect, +6% margin) at deviceScaleFactor 3.
-    Paths carry `?bf`.
-- **Room names** (`type` room): r6calls SVG `<text>` elements (use
-  `getBoundingClientRect` — screen coords, NOT getBBox which is per-element local).
-  Map onto the PeekabooR6 image via the same building-clip (building bbox + 6% margin →
-  percent). Filter out objective letters (`/^\d?[A-Z]$/`) and ALL-CAPS exterior callouts.
-- **Spawn peeks** (`type` peek): peekaboor6 floor pages. Data is in escaped JSON:
-  regex `\\"name\\":\\"([^\\"]+?)\\",\\"x_pct\\":([\d.]+),\\"y_pct\\":([\d.]+)` — these
-  are native % on the PeekabooR6 image (exact).
-- **Bomb sites** (`type` site): r6calls objective markers matching `/^\d[A-Z]$/`
-  (e.g. 1A/1B…4A/4B). Group A/B spots by leading digit = the 4 sites; name each by the
-  nearest room label; one marker per site at the spots' centroid.
+- **Floor images + overlays — ALL 25 maps now come from r6calls (v14 rewrite).**
+  PeekabooR6 is retired. r6calls is a SPA: map metadata at
+  `https://r6calls.com/data/mainData.json` (`mapData[key] = {imgUrlPrefix, minFloor,
+  maxFloor, scaleFactor}`), and each map is **one self-contained SVG** at
+  `https://r6calls.com/img/maps/<imgUrlPrefix>.svg` (viewBox `0 0 1447.271 814.09`).
+  - Per-floor structure inside the SVG: top-level group `g#"Floor N"` (N = r6 floor
+    index, can be negative). It contains `image#N-pic` (the floor plan raster —
+    **1024×1024**, this is the resolution ceiling; the whole-map `g#Background` is a
+    single 3840×2160 PNG) plus vector sub-layers: `N-txt` (room labels), `N-bmb`
+    (bomb markers `bomb-1A`…`bomb-4B`), `N-bw/cam/ld/fh/ch/...` (walls, cameras,
+    ladders, hatches — kept baked in). **Gotcha:** `N-pic` ships with inline
+    `display="none"`; force `.style.display='inline'` or the plate renders blank.
+  - **Capture** (`/tmp/capmap.js`): load the SVG via `setContent`, show only the
+    target `Floor N` (+ `N-pic`), hide `N-txt/N-bmb/cmp/lg`, size the `<svg>` so the
+    building (`N-pic` getBoundingClientRect) is ~2400px long edge, screenshot that
+    rect +5% margin → webp q88. **Roof** (= the SEED map's last floor / r6 maxFloor):
+    show `Background` and crop the whole map (~2600px wide), no overlays.
+  - SEED floor i ↔ r6 floor `(minFloor + i)`; floor name (Basement/1st…/Roof) lines
+    up positionally. Map-id→prefix+minFloor table lived in `/tmp/mapcfg.js`.
+  - **Room names** (`type` room): centers of `N-txt <text>` getBoundingClientRect →
+    percent within the crop. Extracted fresh per map → exact on the new plate.
+  - **Bomb sites** (`type` site): `bomb-<digit><A/B>` markers in `N-bmb`; group by
+    leading digit = the sites; one marker per site at the spots' centroid; name = the
+    nearest room label.
+  - **Spawn peeks** (`type` peek): peeks are PeekabooR6-only data and were NOT
+    re-extracted — their old (peekaboo-space) %coords were **transformed** into the
+    new r6calls crop space by a per-floor **RANSAC affine fit** anchored on room
+    labels common to both the old and new sets (`/tmp/affine.js` + `/tmp/merge.js`;
+    all floors fit at RMSE ≤0.1%).
+- Image paths carry the cache-bust query **`?r2`** (was `?pk1`/`?bf`).
 
 ⚠️ **Gotcha:** JS `Set.add()` returns the Set (truthy) — a `filter(t=>!(seen.has||seen.add))`
 dedup silently removes everything (Python's `set.add` returns None, so a ported snippet
@@ -110,18 +123,20 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 ## 7. Done ✓
 - 25 maps with covers + readable floor plans; pools (Pro/Seasonal/Showcased).
 - Pan/zoom viewer, on-map toggles, anchored constant-size markers.
-- 9 maps layered with room names + bomb sites (per-site dropdown) + spawn peeks.
+- **All 25 maps** unified on r6calls building-focused plates with toggleable
+  room-name + bomb-site (per-site dropdown) overlays; spawn peeks on the original 9.
 - Roster/roles, import/export, versioned publish model, README.
-- 14 PRs merged (see `git log`). Seed at v13.
+- Seed at v14.
 
 ## 8. Known limitations / good next steps
-- On the 9 PeekabooR6 maps, **room-name & bomb-site positions are APPROXIMATE**
-  (PeekabooR6 vs r6calls crop differently) and **draggable** in Edit. Spawn peeks are
-  exact. Site names come from the nearest room, so 1–2 may read slightly off.
-- The **16 other maps** have room names **baked into the image** (no overlay/toggle).
-  Could be unified by overlaying r6calls room data on them too.
-- **Bank** isn't on PeekabooR6 (no peeks/overlays).
-- **Roofs** were intentionally left as the older wide r6calls images (not building-focused).
+- r6calls' per-floor source art is only **1024×1024** (whole-map background is
+  3840×2160). Plates are rendered/upscaled to ~2400px — sharper than the old images
+  but not true 4K; that's the ceiling for this source.
+- **Room-name & bomb-site positions are now exact** (extracted directly from the
+  r6calls SVG of the same plate). **Spawn peeks** were affine-transformed from the old
+  PeekabooR6 coords (RMSE ≤0.1%) — essentially exact, still draggable in Edit. Site
+  names come from the nearest room, so 1–2 may read slightly off.
+- **Roofs** are intentionally the whole-map (not building-focused) view, no overlays.
 - The recommender + operators table from the original Phase-1 build are **set aside**
   (data still embedded) — the owner wanted to "eventually integrate the recommender and
   the ops into the maps."
@@ -150,4 +165,4 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 > checks + a puppeteer screenshot before deploying, and cache-bust changed images with a
 > `?query`. Then ask me what I want to do next (likely candidates: fine-tune label
 > positions, fill in tactics per bombsite, fold the recommender/operators into the Maps
-> tab, add room-name overlays to the 16 baked-in maps, or add Bank).
+> tab, or polish the unified r6calls overlays).
