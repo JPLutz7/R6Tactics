@@ -337,6 +337,28 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .tp-steps li{margin-bottom:5px}
 .tp-bul{margin:0;padding-left:17px;line-height:1.5;font-size:13px}
 .tp-bul li{margin-bottom:5px}
+/* attack suggester (prep) */
+.sg-prep{font-size:9.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#a8742a;background:var(--obj-bg);border:1px solid var(--obj-line);border-radius:5px;padding:2px 6px}
+.sg-note{margin:6px 0 4px;line-height:1.45}
+.sg-sites{display:flex;flex-wrap:wrap;gap:6px}
+.sg-site{font-size:11px;font-weight:700;border:1px solid var(--line2);background:var(--panel2);border-radius:7px;padding:5px 9px;cursor:pointer;color:var(--muted)}
+.sg-site.on{border-color:var(--atk-line);background:var(--atk-bg);color:#a83d12}
+.sg-defs{display:flex;flex-wrap:wrap;gap:5px}
+.sg-def{font-size:11.5px;font-weight:600;border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:3px 9px;cursor:pointer;color:var(--text)}
+.sg-def.on{border-color:var(--def-line);background:var(--def-bg);color:#1c5fa6;font-weight:800}
+.sg-reason{margin:11px 0 2px;font-size:12.5px;line-height:1.5;background:var(--atk-bg);border:1px solid var(--atk-line);border-radius:8px;padding:8px 10px;color:#8a3a14;font-weight:600}
+.sg-results{display:flex;flex-direction:column;gap:6px}
+.sg-res{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;padding:8px 10px;cursor:pointer}
+.sg-res.best{border-color:var(--atk-line);background:var(--atk-bg)}
+.sg-res:hover{border-color:var(--atk-line)}
+.sg-res-h{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:13px}
+.sg-rank{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:800;background:#5a6b7e;color:#fff}
+.sg-res.best .sg-rank{background:#e8632a}
+.sg-res-nm{font-weight:700;color:var(--text)}
+.sg-ap{margin-left:auto}
+.sg-bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden}
+.sg-bar i{display:block;height:100%;border-radius:4px}
+.sg-bar i.pos{background:#3fa66a}.sg-bar i.neg{background:#c2434f}
 .tp-jobs{display:flex;flex-direction:column;gap:7px}
 .tp-job{border:1px solid var(--line2);border-radius:9px;padding:7px 10px;background:var(--panel2)}
 .tp-job-who{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:12.5px}
@@ -377,7 +399,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 34,
+  "version": 35,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -749,7 +771,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bedroom-Cash or Gym-Cash wall from the Cash side."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "atk-clubhouse-2f-master-bedroom-gym-1",
@@ -805,7 +828,8 @@ const SEED_DATA =
                 "breach": [
                   "Buck/Sledge the Master hatch + floor onto Bedroom.",
                   "Secondary-breach the wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "atk-clubhouse-2f-master-bedroom-gym-2",
@@ -861,7 +885,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a soft-wall flank to split the anchors.",
                   "Open the Cash-side wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -920,7 +945,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cash/CCTV reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "atk-clubhouse-2f-cash-room-cctv-room-1",
@@ -976,7 +1002,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the Cash/CCTV floor from Bar/Stock below.",
                   "Open the wall topside once vertical splits them."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "atk-clubhouse-2f-cash-room-cctv-room-2",
@@ -1032,7 +1059,8 @@ const SEED_DATA =
                 "breach": [
                   "Open the Roof hatch / a soft-wall flank to split.",
                   "Open the main wall once denial is gone."
-                ]
+                ],
+                "approach": "vertical"
               }
             ]
           },
@@ -1091,7 +1119,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bar/Stock reinforced wall from Construction."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "atk-clubhouse-1f-bar-stock-room-1",
@@ -1147,7 +1176,8 @@ const SEED_DATA =
                 "breach": [
                   "Buck/Sledge the Bar ceiling from Cash/CCTV above.",
                   "Secondary-breach the Bar wall if vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "atk-clubhouse-1f-bar-stock-room-2",
@@ -1203,7 +1233,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Garage soft-wall flank; split the hold.",
                   "Open the Bar/Stock wall once denial is gone."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -1262,7 +1293,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Church/Arsenal wall from the stairs."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "atk-clubhouse-b-church-arsenal-room-1",
@@ -1318,7 +1350,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the Church/Arsenal ceiling from Bar.",
                   "Secondary-breach if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "atk-clubhouse-b-church-arsenal-room-2",
@@ -1374,7 +1407,8 @@ const SEED_DATA =
                 "breach": [
                   "Montagne push the other stair; Gridlock area-deny.",
                   "Open the wall once utility is spent."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -2377,7 +2411,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Master Bedroom/Aviator Room reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-oregon-2f-master-bedroom-aviator-room-1",
@@ -2433,7 +2468,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Master Bedroom/Aviator Room wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-oregon-2f-master-bedroom-aviator-room-2",
@@ -2489,7 +2525,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Aviator Room soft-wall flank / Osa shield the second angle.",
                   "Open the Master Bedroom/Aviator Room wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -2548,7 +2585,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Dining Hall reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-oregon-1f-kitchen-dining-hall-1",
@@ -2604,7 +2642,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Dining Hall wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-oregon-1f-kitchen-dining-hall-2",
@@ -2660,7 +2699,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Dining Hall soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Dining Hall wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -2719,7 +2759,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Meeting Hall/Kids Dorm reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-oregon-1f-meeting-hall-kids-dorm-1",
@@ -2775,7 +2816,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Meeting Hall/Kids Dorm wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-oregon-1f-meeting-hall-kids-dorm-2",
@@ -2831,7 +2873,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Kids Dorm soft-wall flank / Osa shield the second angle.",
                   "Open the Meeting Hall/Kids Dorm wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -2890,7 +2933,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Laundry Room/Supply Room reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-oregon-b-laundry-room-supply-room-1",
@@ -2946,7 +2990,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Laundry Room/Supply Room wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-oregon-b-laundry-room-supply-room-2",
@@ -3002,7 +3047,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Supply Room soft-wall flank / Osa shield the second angle.",
                   "Open the Laundry Room/Supply Room wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -3780,7 +3826,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the CEO Office/Executive Lounge reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-bank-2f-ceo-office-executive-lounge-1",
@@ -3836,7 +3883,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the CEO Office/Executive Lounge wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-bank-2f-ceo-office-executive-lounge-2",
@@ -3892,7 +3940,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Executive Lounge soft-wall flank / Osa shield the second angle.",
                   "Open the CEO Office/Executive Lounge wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -3951,7 +4000,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Open Area/Staff Room reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-bank-1f-open-area-staff-room-1",
@@ -4007,7 +4057,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Open Area/Staff Room wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-bank-1f-open-area-staff-room-2",
@@ -4063,7 +4114,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Staff Room soft-wall flank / Osa shield the second angle.",
                   "Open the Open Area/Staff Room wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -4122,7 +4174,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Tellers' Office/Archives reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-bank-1f-tellers-office-archives-1",
@@ -4178,7 +4231,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Tellers' Office/Archives wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-bank-1f-tellers-office-archives-2",
@@ -4234,7 +4288,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Archives soft-wall flank / Osa shield the second angle.",
                   "Open the Tellers' Office/Archives wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -4293,7 +4348,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the CCTV Room/Lockers reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-bank-b-cctv-room-lockers-1",
@@ -4349,7 +4405,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the CCTV Room/Lockers wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-bank-b-cctv-room-lockers-2",
@@ -4405,7 +4462,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Lockers soft-wall flank / Osa shield the second angle.",
                   "Open the CCTV Room/Lockers wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -5397,7 +5455,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Consul Office/Meeting Room reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-consulate-2f-consul-office-meeting-room-1",
@@ -5453,7 +5512,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Consul Office/Meeting Room wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-consulate-2f-consul-office-meeting-room-2",
@@ -5509,7 +5569,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Meeting Room soft-wall flank / Osa shield the second angle.",
                   "Open the Consul Office/Meeting Room wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -5568,7 +5629,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Piano/Expo reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-consulate-1f-piano-expo-1",
@@ -5624,7 +5686,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Piano/Expo wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-consulate-1f-piano-expo-2",
@@ -5680,7 +5743,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Expo soft-wall flank / Osa shield the second angle.",
                   "Open the Piano/Expo wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -5739,7 +5803,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Tellers/Servers reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-consulate-1f-tellers-servers-1",
@@ -5795,7 +5860,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Tellers/Servers wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-consulate-1f-tellers-servers-2",
@@ -5851,7 +5917,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Servers soft-wall flank / Osa shield the second angle.",
                   "Open the Tellers/Servers wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -5910,7 +5977,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Garage reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-consulate-b-kitchen-garage-1",
@@ -5966,7 +6034,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Garage wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-consulate-b-kitchen-garage-2",
@@ -6022,7 +6091,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Garage soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Garage wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -6792,7 +6862,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cocktail Entrance/Wood Stairs reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kafe-3f-cocktail-entrance-wood-stairs-1",
@@ -6848,7 +6919,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Cocktail Entrance/Wood Stairs wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kafe-3f-cocktail-entrance-wood-stairs-2",
@@ -6904,7 +6976,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Wood Stairs soft-wall flank / Osa shield the second angle.",
                   "Open the Cocktail Entrance/Wood Stairs wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -6963,7 +7036,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Mining/Dining reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kafe-2f-mining-dining-1",
@@ -7019,7 +7093,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Mining/Dining wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kafe-2f-mining-dining-2",
@@ -7075,7 +7150,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Dining soft-wall flank / Osa shield the second angle.",
                   "Open the Mining/Dining wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -7134,7 +7210,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Reading Room/Fireplace Hall reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kafe-2f-reading-room-fireplace-hall-1",
@@ -7190,7 +7267,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Reading Room/Fireplace Hall wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kafe-2f-reading-room-fireplace-hall-2",
@@ -7246,7 +7324,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Fireplace Hall soft-wall flank / Osa shield the second angle.",
                   "Open the Reading Room/Fireplace Hall wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -7305,7 +7384,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cooking/Service reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kafe-1f-cooking-service-1",
@@ -7361,7 +7441,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Cooking/Service wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kafe-1f-cooking-service-2",
@@ -7417,7 +7498,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Service soft-wall flank / Osa shield the second angle.",
                   "Open the Cooking/Service wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -8357,7 +8439,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Supply/Customs reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-border-1f-supply-customs-1",
@@ -8413,7 +8496,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Supply/Customs wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-border-1f-supply-customs-2",
@@ -8469,7 +8553,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Customs soft-wall flank / Osa shield the second angle.",
                   "Open the Supply/Customs wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -8528,7 +8613,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Workshop/Ventilation reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-border-1f-workshop-ventilation-1",
@@ -8584,7 +8670,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Workshop/Ventilation wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-border-1f-workshop-ventilation-2",
@@ -8640,7 +8727,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Ventilation soft-wall flank / Osa shield the second angle.",
                   "Open the Workshop/Ventilation wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -8699,7 +8787,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bathroom/Tellers reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-border-1f-bathroom-tellers-1",
@@ -8755,7 +8844,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Bathroom/Tellers wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-border-1f-bathroom-tellers-2",
@@ -8811,7 +8901,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Tellers soft-wall flank / Osa shield the second angle.",
                   "Open the Bathroom/Tellers wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -8870,7 +8961,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Armory/Archives reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-border-2f-armory-archives-1",
@@ -8926,7 +9018,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Armory/Archives wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-border-2f-armory-archives-2",
@@ -8982,7 +9075,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Archives soft-wall flank / Osa shield the second angle.",
                   "Open the Armory/Archives wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -9899,7 +9993,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Office/Master reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-chalet-2f-office-master-1",
@@ -9955,7 +10050,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Office/Master wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-chalet-2f-office-master-2",
@@ -10011,7 +10107,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Master soft-wall flank / Osa shield the second angle.",
                   "Open the Office/Master wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -10070,7 +10167,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Gaming/Bar reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-chalet-1f-gaming-bar-1",
@@ -10126,7 +10224,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Gaming/Bar wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-chalet-1f-gaming-bar-2",
@@ -10182,7 +10281,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bar soft-wall flank / Osa shield the second angle.",
                   "Open the Gaming/Bar wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -10241,7 +10341,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Dining/Kitchen reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-chalet-1f-dining-kitchen-1",
@@ -10297,7 +10398,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Dining/Kitchen wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-chalet-1f-dining-kitchen-2",
@@ -10353,7 +10455,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Kitchen soft-wall flank / Osa shield the second angle.",
                   "Open the Dining/Kitchen wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -10412,7 +10515,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Wine/Garage reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-chalet-b-wine-garage-1",
@@ -10468,7 +10572,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Wine/Garage wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-chalet-b-wine-garage-2",
@@ -10524,7 +10629,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Garage soft-wall flank / Osa shield the second angle.",
                   "Open the Wine/Garage wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -11399,7 +11505,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Pool Table/Hookah reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-coastline-2f-pool-table-hookah-1",
@@ -11455,7 +11562,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Pool Table/Hookah wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-coastline-2f-pool-table-hookah-2",
@@ -11511,7 +11619,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Hookah soft-wall flank / Osa shield the second angle.",
                   "Open the Pool Table/Hookah wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -11570,7 +11679,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the TV/Penthouse reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-coastline-2f-tv-penthouse-1",
@@ -11626,7 +11736,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the TV/Penthouse wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-coastline-2f-tv-penthouse-2",
@@ -11682,7 +11793,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Penthouse soft-wall flank / Osa shield the second angle.",
                   "Open the TV/Penthouse wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -11741,7 +11853,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Supply reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-coastline-1f-kitchen-supply-1",
@@ -11797,7 +11910,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Supply wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-coastline-1f-kitchen-supply-2",
@@ -11853,7 +11967,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Supply soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Supply wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -11912,7 +12027,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Blue Bar/Sunrise reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-coastline-1f-blue-bar-sunrise-1",
@@ -11968,7 +12084,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Blue Bar/Sunrise wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-coastline-1f-blue-bar-sunrise-2",
@@ -12024,7 +12141,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Sunrise soft-wall flank / Osa shield the second angle.",
                   "Open the Blue Bar/Sunrise wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -12728,7 +12846,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the CEO/Admin reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-emerald-plains-2f-ceo-admin-1",
@@ -12784,7 +12903,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the CEO/Admin wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-emerald-plains-2f-ceo-admin-2",
@@ -12840,7 +12960,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Admin soft-wall flank / Osa shield the second angle.",
                   "Open the CEO/Admin wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -12899,7 +13020,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Meeting/Statue reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-emerald-plains-2f-meeting-statue-1",
@@ -12955,7 +13077,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Meeting/Statue wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-emerald-plains-2f-meeting-statue-2",
@@ -13011,7 +13134,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Statue soft-wall flank / Osa shield the second angle.",
                   "Open the Meeting/Statue wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -13070,7 +13194,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Lounge/Bar reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-emerald-plains-1f-lounge-bar-1",
@@ -13126,7 +13251,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Lounge/Bar wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-emerald-plains-1f-lounge-bar-2",
@@ -13182,7 +13308,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bar soft-wall flank / Osa shield the second angle.",
                   "Open the Lounge/Bar wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -13241,7 +13368,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Dining/Pantry reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-emerald-plains-1f-dining-pantry-1",
@@ -13297,7 +13425,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Dining/Pantry wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-emerald-plains-1f-dining-pantry-2",
@@ -13353,7 +13482,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Pantry soft-wall flank / Osa shield the second angle.",
                   "Open the Dining/Pantry wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -14067,7 +14197,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Storage/Servers reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-favela-2f-storage-servers-1",
@@ -14123,7 +14254,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Storage/Servers wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-favela-2f-storage-servers-2",
@@ -14179,7 +14311,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Servers soft-wall flank / Osa shield the second angle.",
                   "Open the Storage/Servers wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -14238,7 +14371,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bunks/Servers reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-favela-2f-bunks-servers-1",
@@ -14294,7 +14428,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Bunks/Servers wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-favela-2f-bunks-servers-2",
@@ -14350,7 +14485,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Servers soft-wall flank / Osa shield the second angle.",
                   "Open the Bunks/Servers wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -14409,7 +14545,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Pink/Pink Kitchen reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-favela-1f-pink-pink-kitchen-1",
@@ -14465,7 +14602,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Pink/Pink Kitchen wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-favela-1f-pink-pink-kitchen-2",
@@ -14521,7 +14659,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Pink Kitchen soft-wall flank / Osa shield the second angle.",
                   "Open the Pink/Pink Kitchen wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -14580,7 +14719,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Blue Bedroom/Green reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-favela-1f-blue-bedroom-green-1",
@@ -14636,7 +14776,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Blue Bedroom/Green wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-favela-1f-blue-bedroom-green-2",
@@ -14692,7 +14833,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Green soft-wall flank / Osa shield the second angle.",
                   "Open the Blue Bedroom/Green wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -15406,7 +15548,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Commander/Bathroom reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-fortress-2f-commander-bathroom-1",
@@ -15462,7 +15605,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Commander/Bathroom wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-fortress-2f-commander-bathroom-2",
@@ -15518,7 +15662,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bathroom soft-wall flank / Osa shield the second angle.",
                   "Open the Commander/Bathroom wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -15577,7 +15722,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Dormitory/Gaming reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-fortress-2f-dormitory-gaming-1",
@@ -15633,7 +15779,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Dormitory/Gaming wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-fortress-2f-dormitory-gaming-2",
@@ -15689,7 +15836,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Gaming soft-wall flank / Osa shield the second angle.",
                   "Open the Dormitory/Gaming wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -15748,7 +15896,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Waiting/Cafeteria reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-fortress-1f-waiting-cafeteria-1",
@@ -15804,7 +15953,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Waiting/Cafeteria wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-fortress-1f-waiting-cafeteria-2",
@@ -15860,7 +16010,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Cafeteria soft-wall flank / Osa shield the second angle.",
                   "Open the Waiting/Cafeteria wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -15919,7 +16070,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Hammam/Sitting reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-fortress-1f-hammam-sitting-1",
@@ -15975,7 +16127,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Hammam/Sitting wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-fortress-1f-hammam-sitting-2",
@@ -16031,7 +16184,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Sitting soft-wall flank / Osa shield the second angle.",
                   "Open the Hammam/Sitting wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -16747,7 +16901,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Armory/Tractor reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-hereford-base-3f-armory-tractor-1",
@@ -16803,7 +16958,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Armory/Tractor wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-hereford-base-3f-armory-tractor-2",
@@ -16859,7 +17015,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Tractor soft-wall flank / Osa shield the second angle.",
                   "Open the Armory/Tractor wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -16918,7 +17075,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kids/Master reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-hereford-base-2f-kids-master-1",
@@ -16974,7 +17132,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Kids/Master wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-hereford-base-2f-kids-master-2",
@@ -17030,7 +17189,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Master soft-wall flank / Osa shield the second angle.",
                   "Open the Kids/Master wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -17089,7 +17249,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Dining reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-hereford-base-1f-kitchen-dining-1",
@@ -17145,7 +17306,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Dining wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-hereford-base-1f-kitchen-dining-2",
@@ -17201,7 +17363,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Dining soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Dining wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -17260,7 +17423,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Brewery/Fermentation reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-hereford-base-b-brewery-fermentation-1",
@@ -17316,7 +17480,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Brewery/Fermentation wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-hereford-base-b-brewery-fermentation-2",
@@ -17372,7 +17537,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Fermentation soft-wall flank / Osa shield the second angle.",
                   "Open the Brewery/Fermentation wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -18082,7 +18248,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Car/Pink reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-house-2f-car-pink-1",
@@ -18138,7 +18305,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Car/Pink wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-house-2f-car-pink-2",
@@ -18194,7 +18362,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Pink soft-wall flank / Osa shield the second angle.",
                   "Open the Car/Pink wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -18253,7 +18422,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Master/Car reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-house-2f-master-car-1",
@@ -18309,7 +18479,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Master/Car wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-house-2f-master-car-2",
@@ -18365,7 +18536,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Car soft-wall flank / Osa shield the second angle.",
                   "Open the Master/Car wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -18424,7 +18596,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the TV/Music reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-house-1f-tv-music-1",
@@ -18480,7 +18653,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the TV/Music wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-house-1f-tv-music-2",
@@ -18536,7 +18710,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Music soft-wall flank / Osa shield the second angle.",
                   "Open the TV/Music wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -18595,7 +18770,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Garage/Gym reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-house-b-garage-gym-1",
@@ -18651,7 +18827,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Garage/Gym wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-house-b-garage-gym-2",
@@ -18707,7 +18884,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Gym soft-wall flank / Osa shield the second angle.",
                   "Open the Garage/Gym wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -19422,7 +19600,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Radar/Server reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kanal-2f-radar-server-1",
@@ -19478,7 +19657,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Radar/Server wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kanal-2f-radar-server-2",
@@ -19534,7 +19714,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Server soft-wall flank / Osa shield the second angle.",
                   "Open the Radar/Server wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -19593,7 +19774,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Map/Security reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kanal-1f-map-security-1",
@@ -19649,7 +19831,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Map/Security wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kanal-1f-map-security-2",
@@ -19705,7 +19888,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Security soft-wall flank / Osa shield the second angle.",
                   "Open the Map/Security wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -19764,7 +19948,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Meeting/Lounge reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kanal-1f-meeting-lounge-1",
@@ -19820,7 +20005,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Meeting/Lounge wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kanal-1f-meeting-lounge-2",
@@ -19876,7 +20062,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Lounge soft-wall flank / Osa shield the second angle.",
                   "Open the Meeting/Lounge wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -19935,7 +20122,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Supply/Kayaks reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-kanal-b-supply-kayaks-1",
@@ -19991,7 +20179,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Supply/Kayaks wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-kanal-b-supply-kayaks-2",
@@ -20047,7 +20236,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Kayaks soft-wall flank / Osa shield the second angle.",
                   "Open the Supply/Kayaks wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -20757,7 +20947,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Mask/Six reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-lair-2f-mask-six-1",
@@ -20813,7 +21004,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Mask/Six wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-lair-2f-mask-six-2",
@@ -20869,7 +21061,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Six soft-wall flank / Osa shield the second angle.",
                   "Open the Mask/Six wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -20928,7 +21121,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bunks/Briefing reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-lair-1f-bunks-briefing-1",
@@ -20984,7 +21178,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Bunks/Briefing wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-lair-1f-bunks-briefing-2",
@@ -21040,7 +21235,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Briefing soft-wall flank / Osa shield the second angle.",
                   "Open the Bunks/Briefing wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -21099,7 +21295,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Armory/Maintenance reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-lair-1f-armory-maintenance-1",
@@ -21155,7 +21352,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Armory/Maintenance wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-lair-1f-armory-maintenance-2",
@@ -21211,7 +21409,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Maintenance soft-wall flank / Osa shield the second angle.",
                   "Open the Armory/Maintenance wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -21270,7 +21469,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Lab/Support reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-lair-b-lab-support-1",
@@ -21326,7 +21526,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Lab/Support wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-lair-b-lab-support-2",
@@ -21382,7 +21583,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Support soft-wall flank / Osa shield the second angle.",
                   "Open the Lab/Support wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -22314,7 +22516,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Command/Server reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-nighthaven-labs-2f-command-server-1",
@@ -22370,7 +22573,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Command/Server wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-nighthaven-labs-2f-command-server-2",
@@ -22426,7 +22630,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Server soft-wall flank / Osa shield the second angle.",
                   "Open the Command/Server wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -22485,7 +22690,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Cafeteria reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-nighthaven-labs-1f-kitchen-cafeteria-1",
@@ -22541,7 +22747,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Cafeteria wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-nighthaven-labs-1f-kitchen-cafeteria-2",
@@ -22597,7 +22804,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Cafeteria soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Cafeteria wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -22656,7 +22864,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Control/Storage reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-nighthaven-labs-1f-control-storage-1",
@@ -22712,7 +22921,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Control/Storage wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-nighthaven-labs-1f-control-storage-2",
@@ -22768,7 +22978,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Storage soft-wall flank / Osa shield the second angle.",
                   "Open the Control/Storage wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -22827,7 +23038,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Tank/Assembly reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-nighthaven-labs-b-tank-assembly-1",
@@ -22883,7 +23095,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the Tank/Assembly wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-nighthaven-labs-b-tank-assembly-2",
@@ -22939,7 +23152,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Assembly soft-wall flank / Osa shield the second angle.",
                   "Open the Tank/Assembly wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -23643,7 +23857,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Laundry/Piano reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-outback-2f-laundry-piano-1",
@@ -23699,7 +23914,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Laundry/Piano wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-outback-2f-laundry-piano-2",
@@ -23755,7 +23971,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Piano soft-wall flank / Osa shield the second angle.",
                   "Open the Laundry/Piano wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -23814,7 +24031,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Party/Office reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-outback-2f-party-office-1",
@@ -23870,7 +24088,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Party/Office wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-outback-2f-party-office-2",
@@ -23926,7 +24145,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Office soft-wall flank / Osa shield the second angle.",
                   "Open the Party/Office wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -23985,7 +24205,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Red/Green reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-outback-1f-red-green-1",
@@ -24041,7 +24262,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Red/Green wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-outback-1f-red-green-2",
@@ -24097,7 +24319,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Green soft-wall flank / Osa shield the second angle.",
                   "Open the Red/Green wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -24156,7 +24379,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Shop reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-outback-1f-kitchen-shop-1",
@@ -24212,7 +24436,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Shop wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-outback-1f-kitchen-shop-2",
@@ -24268,7 +24493,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Shop soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Shop wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -24954,7 +25180,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Office/Pantry reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-presidential-plane-2f-office-pantry-1",
@@ -25010,7 +25237,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Office/Pantry wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-presidential-plane-2f-office-pantry-2",
@@ -25066,7 +25294,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Pantry soft-wall flank / Osa shield the second angle.",
                   "Open the Office/Pantry wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -25125,7 +25354,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bedroom/Staff reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-presidential-plane-2f-bedroom-staff-1",
@@ -25181,7 +25411,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Bedroom/Staff wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-presidential-plane-2f-bedroom-staff-2",
@@ -25237,7 +25468,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Staff soft-wall flank / Osa shield the second angle.",
                   "Open the Bedroom/Staff wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -25296,7 +25528,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cargo/Luggage reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-presidential-plane-1f-cargo-luggage-1",
@@ -25352,7 +25585,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Cargo/Luggage wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-presidential-plane-1f-cargo-luggage-2",
@@ -25408,7 +25642,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Luggage soft-wall flank / Osa shield the second angle.",
                   "Open the Cargo/Luggage wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -26156,7 +26391,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Tea/Karaoke reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-skyscraper-2f-tea-karaoke-1",
@@ -26212,7 +26448,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Tea/Karaoke wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-skyscraper-2f-tea-karaoke-2",
@@ -26268,7 +26505,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Karaoke soft-wall flank / Osa shield the second angle.",
                   "Open the Tea/Karaoke wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -26327,7 +26565,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Office/Museum reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-skyscraper-2f-office-museum-1",
@@ -26383,7 +26622,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Office/Museum wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-skyscraper-2f-office-museum-2",
@@ -26439,7 +26679,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Museum soft-wall flank / Osa shield the second angle.",
                   "Open the Office/Museum wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -26498,7 +26739,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the BBQ/Kitchen reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-skyscraper-1f-bbq-kitchen-1",
@@ -26554,7 +26796,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the BBQ/Kitchen wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-skyscraper-1f-bbq-kitchen-2",
@@ -26610,7 +26853,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Kitchen soft-wall flank / Osa shield the second angle.",
                   "Open the BBQ/Kitchen wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -26669,7 +26913,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bedroom/Bathroom reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-skyscraper-1f-bedroom-bathroom-1",
@@ -26725,7 +26970,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Bedroom/Bathroom wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-skyscraper-1f-bedroom-bathroom-2",
@@ -26781,7 +27027,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bathroom soft-wall flank / Osa shield the second angle.",
                   "Open the Bedroom/Bathroom wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -27467,7 +27714,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Armory/Archives reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-stadium-2f-armory-archives-1",
@@ -27523,7 +27771,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Armory/Archives wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-stadium-2f-armory-archives-2",
@@ -27579,7 +27828,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Archives soft-wall flank / Osa shield the second angle.",
                   "Open the Armory/Archives wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -27638,7 +27888,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Penthouse/VIP reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-stadium-2f-penthouse-vip-1",
@@ -27694,7 +27945,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Penthouse/VIP wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-stadium-2f-penthouse-vip-2",
@@ -27750,7 +28002,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a VIP soft-wall flank / Osa shield the second angle.",
                   "Open the Penthouse/VIP wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -27809,7 +28062,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Supply reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-stadium-1f-kitchen-supply-1",
@@ -27865,7 +28119,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Supply wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-stadium-1f-kitchen-supply-2",
@@ -27921,7 +28176,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Supply soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Supply wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -28495,7 +28751,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bar/Initiation reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-theme-park-2f-bar-initiation-1",
@@ -28551,7 +28808,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Bar/Initiation wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-theme-park-2f-bar-initiation-2",
@@ -28607,7 +28865,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Initiation soft-wall flank / Osa shield the second angle.",
                   "Open the Bar/Initiation wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -28666,7 +28925,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Day Care/Bunk reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-theme-park-2f-day-care-bunk-1",
@@ -28722,7 +28982,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Day Care/Bunk wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-theme-park-2f-day-care-bunk-2",
@@ -28778,7 +29039,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bunk soft-wall flank / Osa shield the second angle.",
                   "Open the Day Care/Bunk wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -28837,7 +29099,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Throne/Armory reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-theme-park-1f-throne-armory-1",
@@ -28893,7 +29156,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Throne/Armory wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-theme-park-1f-throne-armory-2",
@@ -28949,7 +29213,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Armory soft-wall flank / Osa shield the second angle.",
                   "Open the Throne/Armory wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -29008,7 +29273,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Lab/Drug reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-theme-park-1f-lab-drug-1",
@@ -29064,7 +29330,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Lab/Drug wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-theme-park-1f-lab-drug-2",
@@ -29120,7 +29387,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Drug soft-wall flank / Osa shield the second angle.",
                   "Open the Lab/Drug wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -29834,7 +30102,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Lantern/Gift Shop reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-tower-2f-lantern-gift-shop-1",
@@ -29890,7 +30159,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Lantern/Gift Shop wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-tower-2f-lantern-gift-shop-2",
@@ -29946,7 +30216,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Gift Shop soft-wall flank / Osa shield the second angle.",
                   "Open the Lantern/Gift Shop wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -30005,7 +30276,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Media/Exhibit reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-tower-2f-media-exhibit-1",
@@ -30061,7 +30333,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Media/Exhibit wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-tower-2f-media-exhibit-2",
@@ -30117,7 +30390,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Exhibit soft-wall flank / Osa shield the second angle.",
                   "Open the Media/Exhibit wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -30176,7 +30450,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Tea/Bar reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-tower-1f-tea-bar-1",
@@ -30232,7 +30507,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Tea/Bar wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-tower-1f-tea-bar-2",
@@ -30288,7 +30564,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bar soft-wall flank / Osa shield the second angle.",
                   "Open the Tea/Bar wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -30347,7 +30624,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Restaurant/Bird reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-tower-1f-restaurant-bird-1",
@@ -30403,7 +30681,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Restaurant/Bird wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-tower-1f-restaurant-bird-2",
@@ -30459,7 +30738,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Bird soft-wall flank / Osa shield the second angle.",
                   "Open the Restaurant/Bird wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -31168,7 +31448,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Bar/Aviator reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-villa-2f-bar-aviator-1",
@@ -31224,7 +31505,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Bar/Aviator wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-villa-2f-bar-aviator-2",
@@ -31280,7 +31562,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Aviator soft-wall flank / Osa shield the second angle.",
                   "Open the Bar/Aviator wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -31339,7 +31622,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Statue/Trophy reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-villa-2f-statue-trophy-1",
@@ -31395,7 +31679,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Statue/Trophy wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-villa-2f-statue-trophy-2",
@@ -31451,7 +31736,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Trophy soft-wall flank / Osa shield the second angle.",
                   "Open the Statue/Trophy wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -31510,7 +31796,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Living/Library reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-villa-1f-living-library-1",
@@ -31566,7 +31853,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Living/Library wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-villa-1f-living-library-2",
@@ -31622,7 +31910,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Library soft-wall flank / Osa shield the second angle.",
                   "Open the Living/Library wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -31681,7 +31970,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Kitchen/Dining reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-villa-1f-kitchen-dining-1",
@@ -31737,7 +32027,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Kitchen/Dining wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-villa-1f-kitchen-dining-2",
@@ -31793,7 +32084,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Dining soft-wall flank / Osa shield the second angle.",
                   "Open the Kitchen/Dining wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -32508,7 +32800,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cockpit/Maps reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-yacht-4f-cockpit-maps-1",
@@ -32564,7 +32857,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from Roof above; drop pressure onto the site.",
                   "Secondary-breach the Cockpit/Maps wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-yacht-4f-cockpit-maps-2",
@@ -32620,7 +32914,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Maps soft-wall flank / Osa shield the second angle.",
                   "Open the Cockpit/Maps wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -32679,7 +32974,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Control/Kitchen reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-yacht-2f-control-kitchen-1",
@@ -32735,7 +33031,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Control/Kitchen wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-yacht-2f-control-kitchen-2",
@@ -32791,7 +33088,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Kitchen soft-wall flank / Osa shield the second angle.",
                   "Open the Control/Kitchen wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -32850,7 +33148,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Cafeteria/Dorms reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-yacht-2f-cafeteria-dorms-1",
@@ -32906,7 +33205,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Cafeteria/Dorms wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-yacht-2f-cafeteria-dorms-2",
@@ -32962,7 +33262,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Dorms soft-wall flank / Osa shield the second angle.",
                   "Open the Cafeteria/Dorms wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -33021,7 +33322,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the ladder/Storage reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-yacht-1f-ladder-storage-1",
@@ -33077,7 +33379,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the ladder/Storage wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-yacht-1f-ladder-storage-2",
@@ -33133,7 +33436,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Storage soft-wall flank / Osa shield the second angle.",
                   "Open the ladder/Storage wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -34012,7 +34316,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Stick/Cigar reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-calypso-casino-2f-stick-cigar-1",
@@ -34068,7 +34373,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 3F above; drop pressure onto the site.",
                   "Secondary-breach the Stick/Cigar wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-calypso-casino-2f-stick-cigar-2",
@@ -34124,7 +34430,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Cigar soft-wall flank / Osa shield the second angle.",
                   "Open the Stick/Cigar wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -34183,7 +34490,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Black Jack/Poker reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-calypso-casino-1f-black-jack-poker-1",
@@ -34239,7 +34547,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Black Jack/Poker wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-calypso-casino-1f-black-jack-poker-2",
@@ -34295,7 +34604,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Poker soft-wall flank / Osa shield the second angle.",
                   "Open the Black Jack/Poker wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -34354,7 +34664,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the Betting/Jersey reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-calypso-casino-1f-betting-jersey-1",
@@ -34410,7 +34721,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 2F above; drop pressure onto the site.",
                   "Secondary-breach the Betting/Jersey wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-calypso-casino-1f-betting-jersey-2",
@@ -34466,7 +34778,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Jersey soft-wall flank / Osa shield the second angle.",
                   "Open the Betting/Jersey wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           },
@@ -34525,7 +34838,8 @@ const SEED_DATA =
                 ],
                 "breach": [
                   "Open the CCTV/Checkpoint reinforced wall."
-                ]
+                ],
+                "approach": "hardbreach"
               },
               {
                 "id": "att-calypso-casino-b-cctv-checkpoint-1",
@@ -34581,7 +34895,8 @@ const SEED_DATA =
                 "breach": [
                   "Sledge/Buck open the vertical from 1F above; drop pressure onto the site.",
                   "Secondary-breach the CCTV/Checkpoint wall if the vertical is denied."
-                ]
+                ],
+                "approach": "vertical"
               },
               {
                 "id": "att-calypso-casino-b-cctv-checkpoint-2",
@@ -34637,7 +34952,8 @@ const SEED_DATA =
                 "breach": [
                   "Open a Checkpoint soft-wall flank / Osa shield the second angle.",
                   "Open the CCTV/Checkpoint wall on the call."
-                ]
+                ],
+                "approach": "flank"
               }
             ]
           }
@@ -36122,7 +36438,191 @@ const SEED_DATA =
         "calypso-casino"
       ]
     }
-  ]
+  ],
+  "suggester": {
+    "note": "Prep/scouting aid — plan vs the defenders you EXPECT (scrims/VOD). Not for live in-match enemy input (see data rule).",
+    "archetypes": [
+      "antibreach",
+      "trapper",
+      "intel",
+      "roamer",
+      "anchor"
+    ],
+    "archetypeLabels": {
+      "antibreach": "Anti-breach",
+      "trapper": "Traps",
+      "intel": "Intel / cams",
+      "roamer": "Roamers",
+      "anchor": "Anchors"
+    },
+    "matchups": {
+      "hardbreach": {
+        "antibreach": -3,
+        "trapper": 0,
+        "intel": -1,
+        "roamer": 0,
+        "anchor": 1
+      },
+      "vertical": {
+        "antibreach": 3,
+        "trapper": 1,
+        "intel": -1,
+        "roamer": 1,
+        "anchor": 1
+      },
+      "flank": {
+        "antibreach": 1,
+        "trapper": -1,
+        "intel": -1,
+        "roamer": -2,
+        "anchor": 2
+      },
+      "utility": {
+        "antibreach": 1,
+        "trapper": 2,
+        "intel": 2,
+        "roamer": 1,
+        "anchor": 0
+      }
+    },
+    "approachLabels": {
+      "hardbreach": "Hard breach",
+      "vertical": "Vertical",
+      "flank": "Flank / split",
+      "utility": "Utility clear"
+    },
+    "approachAdvice": {
+      "hardbreach": "hard-breach the wall and flood",
+      "vertical": "go vertical to bypass their wall denial",
+      "flank": "split their crossfire from two angles",
+      "utility": "bring utility to clear traps & cams"
+    },
+    "defenders": {
+      "smoke": {
+        "anchor": 1
+      },
+      "mute": {
+        "antibreach": 1
+      },
+      "castle": {
+        "anchor": 1
+      },
+      "pulse": {
+        "intel": 1
+      },
+      "doc": {
+        "anchor": 1
+      },
+      "rook": {
+        "anchor": 1
+      },
+      "kapkan": {
+        "trapper": 1
+      },
+      "tachanka": {
+        "anchor": 1
+      },
+      "jager": {
+        "antibreach": 0.5,
+        "roamer": 0.5
+      },
+      "bandit": {
+        "antibreach": 1
+      },
+      "frost": {
+        "trapper": 1
+      },
+      "valkyrie": {
+        "intel": 1
+      },
+      "caveira": {
+        "roamer": 1
+      },
+      "echo": {
+        "intel": 1
+      },
+      "mira": {
+        "anchor": 1
+      },
+      "lesion": {
+        "trapper": 0.7,
+        "intel": 0.3
+      },
+      "ela": {
+        "trapper": 0.6,
+        "roamer": 0.4
+      },
+      "vigil": {
+        "roamer": 1
+      },
+      "maestro": {
+        "intel": 1
+      },
+      "alibi": {
+        "intel": 0.5,
+        "anchor": 0.5
+      },
+      "clash": {
+        "anchor": 1
+      },
+      "kaid": {
+        "antibreach": 1
+      },
+      "mozzie": {
+        "intel": 0.6,
+        "roamer": 0.4
+      },
+      "warden": {
+        "anchor": 1
+      },
+      "goyo": {
+        "anchor": 1
+      },
+      "wamai": {
+        "antibreach": 0.6,
+        "anchor": 0.4
+      },
+      "oryx": {
+        "roamer": 0.7,
+        "anchor": 0.3
+      },
+      "melusi": {
+        "anchor": 0.6,
+        "intel": 0.4
+      },
+      "aruni": {
+        "antibreach": 0.6,
+        "anchor": 0.4
+      },
+      "thunderbird": {
+        "anchor": 1
+      },
+      "thorn": {
+        "trapper": 1
+      },
+      "azami": {
+        "anchor": 1
+      },
+      "solis": {
+        "intel": 1
+      },
+      "fenrir": {
+        "trapper": 0.5,
+        "anchor": 0.5
+      },
+      "tubarao": {
+        "antibreach": 0.6,
+        "trapper": 0.4
+      },
+      "skopos": {
+        "roamer": 0.6,
+        "intel": 0.4
+      },
+      "sentry": {
+        "anchor": 1
+      }
+    }
+  }
 }
 /* ====== END EMBEDDED DATA ====== */
 ;
@@ -36243,7 +36743,7 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
  * =================================================================== */
 const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"]];
 const UI={ tab:"maps",
-  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null },
+  maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null },
   roster:{ edit:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
@@ -36328,16 +36828,59 @@ function renderTacticsPanel(){
   const m=mapById(UI.maps.selectedId); if(!m||!m.bombsites||!m.bombsites.length){ host.innerHTML=""; return; }
   const T=UI.maps.tactic;
   if(T&&T.open){ renderTacticDetail(host,m,T); return; }
+  if(UI.maps.suggest&&UI.maps.suggest.open){ renderSuggester(host,m); return; }
   const sideBlock=(side,label)=>{
     const items=m.bombsites.map(b=>{
       const strats=(((m.tactics||{})[side]||{})[b.id]||{}).strats||[];
       if(!strats.length) return "";
       return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${strats.map((st,si)=>`<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`).join("")}</div>`;
     }).join("");
-    return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span></div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
+    return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span>${side==="attack"?`<div class="grow"></div><button class="btn sm" id="tpSuggest" title="Suggest the best attack vs the defenders you expect (prep)">🎯 Suggest</button>`:""}</div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
   };
   host.innerHTML=`<div class="tp-head"><h3>Tactics</h3><span class="muted small">tap one → jumps to its floor</span></div>${sideBlock("attack","Attack")}${sideBlock("defense","Defense")}`;
   host.querySelectorAll(".tp-strat").forEach(b=>b.onclick=()=>openTactic(b.dataset.side,b.dataset.site,+b.dataset.si));
+  const sg=byId("tpSuggest"); if(sg) sg.onclick=()=>{ UI.maps.suggest={open:true,siteId:(m.bombsites[0]||{}).id||null,defenders:[]}; renderTacticsPanel(); };
+}
+/* ---- attack-strat suggester (prep tool: rank a site's attack strats vs an expected defense) ---- */
+function scoreAttackStrat(st,defenderIds){
+  const cfg=DB.suggester||{}; const mu=(cfg.matchups||{})[st.approach||"utility"]||{};
+  let score=0; (defenderIds||[]).forEach(id=>{ const w=(cfg.defenders||{})[id]; if(!w)return; for(const a in w) score+=w[a]*(mu[a]||0); });
+  return score;
+}
+function compArchetypes(defenderIds){
+  const cfg=DB.suggester||{}; const tot={};
+  (defenderIds||[]).forEach(id=>{ const w=(cfg.defenders||{})[id]; if(!w)return; for(const a in w) tot[a]=(tot[a]||0)+w[a]; });
+  return tot;
+}
+function renderSuggester(host,m){
+  const S=UI.maps.suggest; const cfg=DB.suggester||{};
+  const site=m.bombsites.find(b=>b.id===S.siteId)||m.bombsites[0]; if(site)S.siteId=site.id;
+  const defs=DB.operators.filter(o=>o.side==="defense").slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const strats=(((m.tactics||{}).attack||{})[S.siteId]||{}).strats||[];
+  const arch=compArchetypes(S.defenders);
+  const topArch=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0];
+  const ranked=strats.map((st,si)=>({st,si,score:scoreAttackStrat(st,S.defenders)})).sort((a,b)=>b.score-a.score);
+  const max=Math.max(1,...ranked.map(r=>Math.abs(r.score)));
+  const examples=()=>{ if(!topArch)return""; const list=S.defenders.filter(id=>((cfg.defenders||{})[id]||{})[topArch]).map(id=>{const o=opById(id);return o?o.name:id;}); return list.slice(0,2).join(", "); };
+  const reason=(S.defenders.length&&topArch&&ranked.length)?`${(cfg.archetypeLabels||{})[topArch]||topArch} heavy${examples()?` (${esc(examples())})`:""} → ${(cfg.approachAdvice||{})[ranked[0].st.approach]||"play to your strengths"}.`:"";
+  const siteBtns=m.bombsites.map(b=>`<button class="sg-site ${b.id===S.siteId?"on":""}" data-sgsite="${esc(b.id)}">${esc(b.name)}</button>`).join("");
+  const chips=defs.map(o=>{ const on=S.defenders.includes(o.id); return `<button class="sg-def ${on?"on":""}" data-sgdef="${esc(o.id)}">${esc(o.name)}</button>`; }).join("");
+  const results=S.defenders.length?ranked.map((r,i)=>{ const st=r.st; const pct=Math.round(Math.abs(r.score)/max*100); const pos=r.score>=0;
+    return `<button class="sg-res ${i===0?"best":""}" data-sgopen="${r.si}"><div class="sg-res-h"><span class="sg-rank">${i===0?"★":i+1}</span><span class="sg-res-nm">${esc(st.name)}</span><span class="tag role sg-ap">${esc((cfg.approachLabels||{})[st.approach]||st.approach||"")}</span></div><div class="sg-bar"><i class="${pos?"pos":"neg"}" style="width:${pct}%"></i></div></button>`; }).join(""):`<div class="tp-empty muted small">Pick the defenders you expect on this site →</div>`;
+  host.innerHTML=`<div class="tp-detail">
+    <div class="tp-detail-h"><button class="btn sm" id="sgBack">← Tactics</button><span class="tag atk">Attack suggester</span><span class="sg-prep">prep</span></div>
+    <div class="muted small sg-note">${esc(cfg.note||"Plan vs the defenders you expect (scrims/VOD) — not for live in-match input.")}</div>
+    <div class="tp-sec-h">Site</div>
+    <div class="sg-sites">${siteBtns}</div>
+    <div class="tp-sec-h">Expected defenders <span class="muted">(${S.defenders.length}/5)</span></div>
+    <div class="sg-defs">${chips}</div>
+    ${reason?`<div class="sg-reason">${reason}</div>`:""}
+    <div class="tp-sec-h">Best attack for this setup</div>
+    <div class="sg-results">${results}</div></div>`;
+  byId("sgBack").onclick=()=>{ UI.maps.suggest=null; renderTacticsPanel(); };
+  host.querySelectorAll("[data-sgsite]").forEach(b=>b.onclick=()=>{ S.siteId=b.dataset.sgsite; renderSuggester(host,m); });
+  host.querySelectorAll("[data-sgdef]").forEach(b=>b.onclick=()=>{ const id=b.dataset.sgdef; const i=S.defenders.indexOf(id); if(i>=0)S.defenders.splice(i,1); else if(S.defenders.length<5)S.defenders.push(id); renderSuggester(host,m); });
+  host.querySelectorAll("[data-sgopen]").forEach(b=>b.onclick=()=>{ UI.maps.suggest=null; openTactic("attack",S.siteId,+b.dataset.sgopen); });
 }
 function openTactic(side,siteId,si){
   const m=mapById(UI.maps.selectedId); if(!m)return; const b=m.bombsites.find(x=>x.id===siteId); if(!b)return;
@@ -36442,7 +36985,7 @@ function renderTocSections(){
     host.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ const p=DB.pools.find(x=>x.id===b.dataset.pdel); if(p&&confirm(`Delete pool "${p.name}"? Its maps move to Other Maps.`)){ DB.pools=DB.pools.filter(x=>x.id!==p.id); markDirty(); renderTocSections(); } });
   }
 }
-function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.tactic=null; UI.maps.siteFilter="all"; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
+function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.tactic=null; UI.maps.suggest=null; UI.maps.siteFilter="all"; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
 
 /* ----- map detail: ONE floor at a time, with floor tabs above ----- */
 function renderMapDetail(root){
@@ -36466,7 +37009,7 @@ function renderMapDetail(root){
       </div>
       ${m.bombsites.length?`<aside class="tactics-panel" id="tacticsPanel"></aside>`:""}
     </div>`;
-  byId("backToc").onclick=()=>{ UI.maps.tactic=null; UI.maps.view="toc"; renderMaps(root); };
+  byId("backToc").onclick=()=>{ UI.maps.tactic=null; UI.maps.suggest=null; UI.maps.view="toc"; renderMaps(root); };
   const poolSel=root.querySelector("[data-pool]"); if(poolSel) poolSel.onchange=()=>{ setMapPool(m.id, poolSel.value); renderMapDetail(root); };
   byId("mapEdit").onclick=()=>{ UI.maps.edit=!UI.maps.edit; renderMapDetail(root); };
   if(edit){
