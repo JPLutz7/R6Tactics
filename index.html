@@ -335,6 +335,13 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .tp-reinf .lab{font-weight:800;color:var(--def);text-transform:uppercase;font-size:10px;letter-spacing:1px;margin-right:4px}
 .tp-steps{margin:0;padding-left:18px;line-height:1.55;font-size:13px}
 .tp-steps li{margin-bottom:5px}
+.tp-bul{margin:0;padding-left:17px;line-height:1.5;font-size:13px}
+.tp-bul li{margin-bottom:5px}
+.tp-jobs{display:flex;flex-direction:column;gap:7px}
+.tp-job{border:1px solid var(--line2);border-radius:9px;padding:7px 10px;background:var(--panel2)}
+.tp-job-who{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:12.5px}
+.tp-job-role{margin-left:auto;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+.tp-job-txt{font-size:12.5px;line-height:1.5;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -370,7 +377,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 30,
+  "version": 31,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -740,12 +747,8 @@ const SEED_DATA =
                     "pos": "Lion scan on commit; call the flood."
                   }
                 ],
-                "steps": [
-                  "Take Cash + Construction control; drone the site.",
-                  "Thatcher/Twitch kill Bandit on the breach wall.",
-                  "Thermite/Hibana open Bedroom/Gym; Lion scan the flood.",
-                  "Entry trades through the breach from Cash.",
-                  "Plant the Bedroom/Gym default; hold post-plant."
+                "breach": [
+                  "Open the Bedroom-Cash or Gym-Cash wall from the Cash side."
                 ]
               },
               {
@@ -799,12 +802,9 @@ const SEED_DATA =
                     "pos": "Jackal roamers; Brava a cam."
                   }
                 ],
-                "steps": [
-                  "Take Roof control; clear the hatch denial.",
-                  "Buck/Sledge open the Master hatch + floor onto Bedroom.",
-                  "Vertical pressure forces anchors off the bomb.",
-                  "Entry floods the opened site and trades.",
-                  "Plant under your holes; hold vertical."
+                "breach": [
+                  "Buck/Sledge the Master hatch + floor onto Bedroom.",
+                  "Secondary-breach the wall if the vertical is denied."
                 ]
               },
               {
@@ -858,12 +858,9 @@ const SEED_DATA =
                     "pos": "Scan; call the two-way split."
                   }
                 ],
-                "steps": [
-                  "Drone Construction + Cash; clear roamers.",
-                  "Open a flank to split Bedroom from Gym.",
-                  "Thatcher/Thermite open the main wall on the call.",
-                  "Hit both angles; isolate and trade the anchors.",
-                  "Plant default; hold the crossfire post-plant."
+                "breach": [
+                  "Open a soft-wall flank to split the anchors.",
+                  "Open the Cash-side wall on the call."
                 ]
               }
             ]
@@ -921,12 +918,8 @@ const SEED_DATA =
                     "pos": "Lion scan; call the flood."
                   }
                 ],
-                "steps": [
-                  "Drone Cash/CCTV + clear roamers.",
-                  "Thatcher/Twitch kill the Bandit batteries.",
-                  "Thermite/Hibana open the wall; Lion scan the flood.",
-                  "Entry trades up the staircase into the opening.",
-                  "Plant the Cash/CCTV default; hold post-plant."
+                "breach": [
+                  "Open the Cash/CCTV reinforced wall."
                 ]
               },
               {
@@ -980,12 +973,9 @@ const SEED_DATA =
                     "pos": "Scan; call the two-level hit."
                   }
                 ],
-                "steps": [
-                  "Take 1F Bar/Stock; clear the hatch denial.",
-                  "Open the Cash/CCTV floor for vertical pressure.",
-                  "Vertical forces anchors off the bomb.",
-                  "Topside entry floods the split site.",
-                  "Plant Cash/CCTV; hold vertical + holes."
+                "breach": [
+                  "Sledge/Buck open the Cash/CCTV floor from Bar/Stock below.",
+                  "Open the wall topside once vertical splits them."
                 ]
               },
               {
@@ -1039,12 +1029,9 @@ const SEED_DATA =
                     "pos": "Scan; call the two-way."
                   }
                 ],
-                "steps": [
-                  "Pressure Roof + Construction together; clear roamers.",
-                  "Open a flank to split Cash from CCTV.",
-                  "Thatcher/Thermite open the wall on the call.",
-                  "Hit both angles; isolate and trade.",
-                  "Plant default; hold the crossfire."
+                "breach": [
+                  "Open the Roof hatch / a soft-wall flank to split.",
+                  "Open the main wall once denial is gone."
                 ]
               }
             ]
@@ -1102,12 +1089,8 @@ const SEED_DATA =
                     "pos": "Lion scan; call the flood."
                   }
                 ],
-                "steps": [
-                  "Drone Bar/Stock + clear Garage/Construction roamers.",
-                  "Thatcher/Twitch kill Bandit on the breach wall.",
-                  "Thermite/Hibana open Bar; Lion scan the flood.",
-                  "Entry trades from Construction into the opening.",
-                  "Plant the Bar/Stock default; hold post-plant."
+                "breach": [
+                  "Open the Bar/Stock reinforced wall from Construction."
                 ]
               },
               {
@@ -1161,12 +1144,9 @@ const SEED_DATA =
                     "pos": "Jackal the roam; Brava a cam."
                   }
                 ],
-                "steps": [
-                  "Take 2F Cash/CCTV; clear the ceiling-hatch denial.",
-                  "Buck/Sledge open the Bar ceiling for vertical.",
-                  "Vertical forces anchors off the bomb.",
-                  "1F entry floods the split site.",
-                  "Plant under your holes; hold vertical."
+                "breach": [
+                  "Buck/Sledge the Bar ceiling from Cash/CCTV above.",
+                  "Secondary-breach the Bar wall if vertical is denied."
                 ]
               },
               {
@@ -1220,12 +1200,9 @@ const SEED_DATA =
                     "pos": "Scan; call the two-way."
                   }
                 ],
-                "steps": [
-                  "Drone Garage + Construction; clear roamers.",
-                  "Open the Garage flank to split the anchors.",
-                  "Thatcher/Thermite open the main wall on the call.",
-                  "Hit both angles; isolate and trade.",
-                  "Plant default; hold Garage + Construction."
+                "breach": [
+                  "Open a Garage soft-wall flank; split the hold.",
+                  "Open the Bar/Stock wall once denial is gone."
                 ]
               }
             ]
@@ -1283,12 +1260,8 @@ const SEED_DATA =
                     "pos": "Lion scan on commit; call the stair push."
                   }
                 ],
-                "steps": [
-                  "Clear Caveira/roamers on the stairs; drone the site.",
-                  "Thatcher/Twitch kill Bandit on the breach wall.",
-                  "Thermite/Hibana open; Lion scan the basement.",
-                  "Entry trades down the stairs into the opening.",
-                  "Plant Church/Arsenal default; hold the stairs."
+                "breach": [
+                  "Open the Church/Arsenal wall from the stairs."
                 ]
               },
               {
@@ -1342,12 +1315,9 @@ const SEED_DATA =
                     "pos": "Jackal roam; Brava a cam."
                   }
                 ],
-                "steps": [
-                  "Take 1F Bar; clear the ceiling-hatch denial.",
-                  "Open the basement ceiling for vertical pressure.",
-                  "Vertical forces anchors off the bomb.",
-                  "Stair entry floods the split site.",
-                  "Plant under your holes; hold vertical."
+                "breach": [
+                  "Sledge/Buck open the Church/Arsenal ceiling from Bar.",
+                  "Secondary-breach if the vertical is denied."
                 ]
               },
               {
@@ -1401,12 +1371,9 @@ const SEED_DATA =
                     "pos": "Scan; coordinate the two-stair timing."
                   }
                 ],
-                "steps": [
-                  "Pressure Blue + Red stairs at once; clear roamers.",
-                  "Montagne anchors one stair; entry takes the other.",
-                  "Fuze/EMP the site to force anchors off bomb.",
-                  "Open the wall + flood both stairs together.",
-                  "Plant default; hold both staircases post-plant."
+                "breach": [
+                  "Montagne push the other stair; Gridlock area-deny.",
+                  "Open the wall once utility is spent."
                 ]
               }
             ]
@@ -1472,12 +1439,10 @@ const SEED_DATA =
                     "pos": "Roam Construction/Cash; pinch the push."
                   }
                 ],
-                "steps": [
-                  "Reinforce the two Cash-side walls + the Bedroom & Gym hatches.",
-                  "Bandit-trick the walls as drones get cleared.",
-                  "Anchors hold the Bedroom-Gym crossfire; deny the default plant.",
-                  "Watch the Master (Roof) hatch and the Gym vertical from 1F.",
-                  "Collapse on the plant; Smoke/Goyo deny the defuse."
+                "rotations": [
+                  "Open the Bedroom <-> Gym soft wall (rotate between the two bomb rooms)",
+                  "Bedroom -> Bedroom Hallway rotate (re-peek / escape the plant)",
+                  "Gym -> Gym Hallway rotate (off-angle + roam exit)"
                 ]
               },
               {
@@ -1535,12 +1500,10 @@ const SEED_DATA =
                     "pos": "Solis/Mozzie kill drones on the Roof + Construction."
                   }
                 ],
-                "steps": [
-                  "Reinforce + electrify the Roof and 1F hatches.",
-                  "Kill drones so attackers commit blind.",
-                  "Trap the Bedroom and Gym entries.",
-                  "Hold the bomb under the hatches; deny the obvious plant.",
-                  "Trade off the crossfire; collapse on the plant."
+                "rotations": [
+                  "Open the Bedroom <-> Gym soft wall (rotate between the two bomb rooms)",
+                  "Bedroom -> Bedroom Hallway rotate (re-peek / escape the plant)",
+                  "Gym -> Gym Hallway rotate (off-angle + roam exit)"
                 ]
               }
             ]
@@ -1604,12 +1567,10 @@ const SEED_DATA =
                     "pos": "Roam Bar/Construction; pinch the push."
                   }
                 ],
-                "steps": [
-                  "Reinforce the Cash & CCTV walls + both hatches.",
-                  "Bandit-trick the walls; jam the staircase drones.",
-                  "Anchors crossfire Cash-CCTV; deny the default plant.",
-                  "Roamer pinches the Bar staircase push.",
-                  "Collapse on the plant with Smoke/Goyo."
+                "rotations": [
+                  "Open the Cash <-> CCTV soft wall (rotate between the two bomb rooms)",
+                  "CCTV -> Catwalk rotate (re-peek / escape)",
+                  "Cash -> Construction rotate (off-angle onto pushers)"
                 ]
               },
               {
@@ -1667,12 +1628,10 @@ const SEED_DATA =
                     "pos": "Solis/Mozzie kill drones on the breach."
                   }
                 ],
-                "steps": [
-                  "Reinforce + electrify the Cash/CCTV hatches.",
-                  "Kill drones; attackers push blind.",
-                  "Trap the staircase and Construction entries.",
-                  "Hold the bomb under the hatches; deny plant.",
-                  "Trade off the crossfire; collapse."
+                "rotations": [
+                  "Open the Cash <-> CCTV soft wall (rotate between the two bomb rooms)",
+                  "CCTV -> Catwalk rotate (re-peek / escape)",
+                  "Cash -> Construction rotate (off-angle onto pushers)"
                 ]
               }
             ]
@@ -1736,12 +1695,10 @@ const SEED_DATA =
                     "pos": "Cams on Construction + Garage; call the push."
                   }
                 ],
-                "steps": [
-                  "Reinforce Bar/Stock walls + ceiling hatches (Gym above is a vertical threat).",
-                  "Bandit/Kaid deny the hatch + wall breach.",
-                  "Anchors crossfire Bar-Stock; deny the default plant.",
-                  "Roamer pinches the Construction/Garage push.",
-                  "Collapse and trade on the plant."
+                "rotations": [
+                  "Open the Bar <-> Stock soft wall (rotate between the two bomb rooms)",
+                  "Bar -> Pool / Strip Club rotate (flank + roam exit)",
+                  "Stock -> Lounge rotate (re-peek the east push)"
                 ]
               },
               {
@@ -1799,12 +1756,10 @@ const SEED_DATA =
                     "pos": "Mozzie the Construction drones; roam Garage."
                   }
                 ],
-                "steps": [
-                  "Reinforce + Kaid the ceiling hatches (Cash/CCTV vertical).",
-                  "Trap the Construction & Garage entries.",
-                  "Mozzie steals drones; attackers push blind.",
-                  "Hold the bomb under the reinforced ceiling; deny plant.",
-                  "Trade off traps + crossfire."
+                "rotations": [
+                  "Open the Bar <-> Stock soft wall (rotate between the two bomb rooms)",
+                  "Bar -> Pool / Strip Club rotate (flank + roam exit)",
+                  "Stock -> Lounge rotate (re-peek the east push)"
                 ]
               }
             ]
@@ -1868,12 +1823,10 @@ const SEED_DATA =
                     "pos": "Trap both staircases to punish the push."
                   }
                 ],
-                "steps": [
-                  "Reinforce Church/Arsenal walls + the hatches from Bar above.",
-                  "Trap Blue & Red stairs; Bandit-trick the walls.",
-                  "Anchors hold the Church-Arsenal crossfire; deny plant.",
-                  "Roamer picks the staircase entry, steals time.",
-                  "Collapse on the plant; basement favors the retake."
+                "rotations": [
+                  "Open the Church <-> Arsenal soft wall (rotate between the two bomb rooms)",
+                  "Arsenal -> Bike Hallway rotate (flank the stairs)",
+                  "Church -> Blue rotate (re-peek Blue Stairs)"
                 ]
               },
               {
@@ -1932,12 +1885,10 @@ const SEED_DATA =
                     "pos": "Trap the off-stair so flanks get punished."
                   }
                 ],
-                "steps": [
-                  "Mute + trap both staircases; deny drone intel.",
-                  "Caveira/Pulse hunt for an early pick on the stairs.",
-                  "Bandit the breach wall late once utility is spent.",
-                  "Fall back to the Church-Arsenal crossfire on timer.",
-                  "Deny plant, trade, retake with traps."
+                "rotations": [
+                  "Open the Church <-> Arsenal soft wall (rotate between the two bomb rooms)",
+                  "Arsenal -> Bike Hallway rotate (flank the stairs)",
+                  "Church -> Blue rotate (re-peek Blue Stairs)"
                 ]
               }
             ]
@@ -7888,7 +7839,7 @@ function normalizeDB(db){
       const D=m.tactics.defense[b.id]=Object.assign(blankTactic(DEF_FIELDS),m.tactics.defense[b.id]||{});
       [A,D].forEach(T=>{ if(!Array.isArray(T.strats))T.strats=[];
         T.strats.forEach(st=>{ st.id=st.id||uid("strat"); st.name=st.name||"Strat"; st.summary=st.summary||"";
-          if(!Array.isArray(st.steps))st.steps=[]; if(!Array.isArray(st.reinforce))st.reinforce=[];
+          if(!Array.isArray(st.reinforce))st.reinforce=[]; if(!Array.isArray(st.rotations))st.rotations=[]; if(!Array.isArray(st.breach))st.breach=[];
           if(!Array.isArray(st.slots))st.slots=[]; st.slots.forEach(sl=>{ sl.role=sl.role||""; sl.pos=sl.pos||""; if(!Array.isArray(sl.ops))sl.ops=[]; }); }); }); });
   });
   db.operators.forEach(o=>{ o.id=o.id||slug(o.name||"op"); o.name=o.name||o.id;
@@ -8066,20 +8017,26 @@ function renderTacticDetail(host,m,T){
   const st=((((m.tactics||{})[T.side]||{})[T.siteId]||{}).strats||[])[T.si];
   if(!st){ UI.maps.tactic=null; return renderTacticsPanel(); }
   const cls=T.side==="attack"?"atk":"def";
-  const picks=assignTactic(st,T.side).map(pk=>`<div class="tp-pick">
+  const assign=assignTactic(st,T.side);
+  // operators: who picks what (just the op options)
+  const picks=assign.map(pk=>`<div class="tp-pick">
       <div class="tp-pick-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tag ${cls}" style="margin-left:auto">${esc(pk.roleName)}</span>`:""}</div>
-      <div class="tp-pick-ops">${pk.ops.length?pk.ops.map(id=>{const o=opById(id);return `<span class="opchip ${cls}" data-op="${esc(id)}" title="Click for details" role="button" tabindex="0">${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`}</div>
-      ${pk.pos?`<div class="tp-pick-pos muted small">${esc(pk.pos)}</div>`:""}</div>`).join("");
-  const steps=(st.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
-  const reinf=(T.side==="defense"&&(st.reinforce||[]).length)?`<div class="tp-reinf"><span class="lab">Reinforce</span> ${st.reinforce.map(esc).join(" · ")}</div>`:"";
+      <div class="tp-pick-ops">${pk.ops.length?pk.ops.map(id=>{const o=opById(id);return `<span class="opchip ${cls}" data-op="${esc(id)}" title="Click for details" role="button" tabindex="0">${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`}</div></div>`).join("");
+  // gadgets / jobs organized by person
+  const jobs=assign.filter(pk=>pk.pos).map(pk=>`<div class="tp-job"><div class="tp-job-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tp-job-role">${esc(pk.roleName)}</span>`:""}</div><div class="tp-job-txt">${esc(pk.pos)}</div></div>`).join("");
+  const bullets=arr=>(arr||[]).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join("");
+  const setupHead=T.side==="attack"?"Open up":"Reinforce";
+  const setupItems=T.side==="attack"?st.breach:st.reinforce;
+  const sec=(head,items)=>(items&&items.length)?`<div class="tp-sec-h">${head}</div><ul class="tp-bul">${bullets(items)}</ul>`:"";
   host.innerHTML=`<div class="tp-detail">
     <div class="tp-detail-h"><button class="btn sm" id="tpBack">← Tactics</button><span class="tag ${cls}">${T.side==="attack"?"Attack":"Defense"}</span></div>
     <h3 class="tp-title">${esc(st.name)}</h3>
     <div class="muted small tp-site-lbl">${esc(b?b.name:"")}${st.summary?` — ${esc(st.summary)}`:""}</div>
-    <div class="tp-sec-h">Who picks what</div>
+    <div class="tp-sec-h">Operators — who picks what</div>
     <div class="tp-picks">${picks}</div>
-    ${reinf}
-    ${steps?`<div class="tp-sec-h">How it runs</div><ol class="tp-steps">${steps}</ol>`:""}</div>`;
+    ${sec(setupHead,setupItems)}
+    ${T.side==="defense"?sec("Rotations",st.rotations):""}
+    ${jobs?`<div class="tp-sec-h">Gadgets &amp; jobs — by player</div><div class="tp-jobs">${jobs}</div>`:""}</div>`;
   byId("tpBack").onclick=()=>{ UI.maps.tactic=null; UI.maps.siteFilter="all"; renderFloorView(); renderTacticsPanel(); };
   host.querySelectorAll(".opchip[data-op]").forEach(ch=>{ ch.onclick=()=>openOpModal(ch.dataset.op); ch.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(ch.dataset.op); } }; });
 }
