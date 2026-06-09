@@ -274,6 +274,27 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .rdrag:active{cursor:grabbing}
 .role-desc{line-height:1.5}
 .occ b{color:var(--text)}
+/* roster: separate ATK / DEF priority lists per player */
+.psides{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.pside{display:flex;align-items:flex-start;gap:8px}
+.sidetag{flex:none;width:34px;text-align:center;font-size:9.5px;font-weight:800;letter-spacing:1px;padding:3px 0;border-radius:6px;border:1px solid var(--line2);margin-top:2px}
+.sidetag.atk{color:var(--atk);border-color:var(--atk-line);background:var(--atk-bg)}
+.sidetag.def{color:var(--def);border-color:var(--def-line);background:var(--def-bg)}
+.prole.atk{border-color:var(--atk-line);background:var(--atk-bg);color:#a83d12}
+.prole.def{border-color:var(--def-line);background:var(--def-bg);color:#1c5fa6}
+.prole.atk .pri{background:#c2683e}.prole.def .pri{background:#3f78b0}
+.proles.drop-ok{outline:2px dashed var(--muted2);outline-offset:2px;border-radius:7px}
+/* role pools grouped by side */
+.rolegrid-sides{display:flex;flex-direction:column;gap:26px}
+.roleside-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.opchip[data-op]{cursor:pointer}
+.opchip[data-op]:hover{filter:brightness(.96);box-shadow:0 1px 5px rgba(20,30,45,.14)}
+.opchip[data-op]:focus-visible{outline:2px solid var(--def);outline-offset:1px}
+/* operator detail popup */
+.op-card .op-wr{font-size:14px;font-weight:800}
+.op-card .op-wr.atk{color:var(--atk)}.op-card .op-wr.def{color:var(--def)}
+.op-card .op-line{line-height:1.55;margin:0 0 10px;font-size:13.5px}
+.op-card .op-line b{color:var(--text)}
 
 .divider{height:1px;background:var(--line);margin:22px 0}
 .warnbox{background:var(--obj-bg);border:1px solid var(--obj-line);color:#6b5500;padding:11px 14px;border-radius:9px;font-size:12.5px}
@@ -320,7 +341,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 25,
+  "version": 26,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -5576,21 +5597,97 @@ const SEED_DATA =
   ],
   "roles": [
     {
-      "id": "igl",
+      "id": "igl-atk",
       "name": "IGL",
-      "desc": "Shotcaller — reads the round, sets the plan and makes the mid-round calls. Usually plays low-aim-load intel/utility so they can focus on leading.",
-      "notes": "Shotcaller — reads the round, sets the plan and makes the mid-round calls. Usually plays low-aim-load intel/utility so they can focus on leading.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
+      "side": "attack",
+      "desc": "Shotcaller — reads the round, sets the plan and frags with intent while gathering info to call.",
+      "ops": [
         "zero",
         "iana",
         "dokkaebi",
         "jackal",
         "thatcher",
         "lion"
-      ],
-      "defenseOps": [
+      ]
+    },
+    {
+      "id": "entry-atk",
+      "name": "Entry Fragger",
+      "side": "attack",
+      "desc": "First through the door — wins the opening duels and creates space for the team to follow.",
+      "ops": [
+        "ash",
+        "zofia",
+        "iana",
+        "sledge",
+        "blackbeard",
+        "buck",
+        "finka"
+      ]
+    },
+    {
+      "id": "hardbreach-atk",
+      "name": "Hard Breacher",
+      "side": "attack",
+      "desc": "Opens reinforced walls and hatches to crack the objective — the breach the whole attack is built on.",
+      "ops": [
+        "thermite",
+        "ace",
+        "hibana",
+        "maverick",
+        "kali"
+      ]
+    },
+    {
+      "id": "support-atk",
+      "name": "Support",
+      "side": "attack",
+      "desc": "Soft-breach and utility that clears defender gadgets and enables the entry and the hard breach.",
+      "ops": [
+        "thatcher",
+        "twitch",
+        "iq",
+        "flores",
+        "osa",
+        "fuze",
+        "zofia"
+      ]
+    },
+    {
+      "id": "intel-atk",
+      "name": "Intel / Recon",
+      "side": "attack",
+      "desc": "Drones and scans — finds defenders, denies their intel and feeds the team reads.",
+      "ops": [
+        "jackal",
+        "lion",
+        "dokkaebi",
+        "iana",
+        "zero",
+        "brava"
+      ]
+    },
+    {
+      "id": "flex-atk",
+      "name": "Flex",
+      "side": "attack",
+      "desc": "Fills whatever the comp is missing; a deep attack pool to slot into any gap.",
+      "ops": [
+        "ash",
+        "zofia",
+        "thermite",
+        "ace",
+        "iana",
+        "twitch",
+        "flores"
+      ]
+    },
+    {
+      "id": "igl-def",
+      "name": "IGL",
+      "side": "defense",
+      "desc": "Shotcaller — anchors with the team, runs the round and keeps everyone on the same page.",
+      "ops": [
         "maestro",
         "mira",
         "echo",
@@ -5600,115 +5697,11 @@ const SEED_DATA =
       ]
     },
     {
-      "id": "entry",
-      "name": "Entry Fragger",
-      "desc": "First through the door — takes the opening duels and creates space for the team to follow.",
-      "notes": "First through the door — takes the opening duels and creates space for the team to follow.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "ash",
-        "zofia",
-        "iana",
-        "sledge",
-        "blackbeard",
-        "buck",
-        "finka"
-      ],
-      "defenseOps": [
-        "ela",
-        "vigil",
-        "alibi",
-        "lesion"
-      ]
-    },
-    {
-      "id": "support",
-      "name": "Support",
-      "desc": "Brings the utility that clears the defense and enables the entry; plays second man in and trades.",
-      "notes": "Brings the utility that clears the defense and enables the entry; plays second man in and trades.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "thatcher",
-        "twitch",
-        "iq",
-        "flores",
-        "osa",
-        "fuze",
-        "zofia"
-      ],
-      "defenseOps": [
-        "jager",
-        "wamai",
-        "mute",
-        "mozzie",
-        "rook",
-        "doc"
-      ]
-    },
-    {
-      "id": "hard-breach",
-      "name": "Hard Breach",
-      "desc": "Opens reinforced walls and hatches to crack the objective — the breach is the round's backbone. Denies it on defense.",
-      "notes": "Opens reinforced walls and hatches to crack the objective — the breach is the round's backbone. Denies it on defense.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "thermite",
-        "ace",
-        "hibana",
-        "maverick",
-        "kali"
-      ],
-      "defenseOps": [
-        "bandit",
-        "kaid",
-        "mute",
-        "aruni",
-        "tubarao"
-      ]
-    },
-    {
-      "id": "flex",
-      "name": "Flex",
-      "desc": "Fills whatever the comp is missing — deep pool on both sides, adapts to the map and the ban phase.",
-      "notes": "Fills whatever the comp is missing — deep pool on both sides, adapts to the map and the ban phase.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "ash",
-        "zofia",
-        "thermite",
-        "ace",
-        "iana",
-        "twitch",
-        "flores"
-      ],
-      "defenseOps": [
-        "bandit",
-        "jager",
-        "mute",
-        "smoke",
-        "maestro",
-        "ela"
-      ]
-    },
-    {
-      "id": "anchor",
+      "id": "anchor-def",
       "name": "Anchor",
-      "desc": "Holds the bomb site and plays for time, denying the plant. On attack runs steady soft-destruction or a shield.",
-      "notes": "Holds the bomb site and plays for time, denying the plant. On attack runs steady soft-destruction or a shield.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "montagne",
-        "gridlock",
-        "fuze",
-        "blitz",
-        "ram"
-      ],
-      "defenseOps": [
+      "side": "defense",
+      "desc": "Holds the bomb site and plays for time, denying the plant and staying alive late.",
+      "ops": [
         "smoke",
         "rook",
         "doc",
@@ -5720,19 +5713,11 @@ const SEED_DATA =
       ]
     },
     {
-      "id": "roamer",
+      "id": "roamer-def",
       "name": "Roamer",
-      "desc": "Plays off-site to flank, slow and pick attackers, stealing time. On attack watches flanks and takes map control.",
-      "notes": "Plays off-site to flank, slow and pick attackers, stealing time. On attack watches flanks and takes map control.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "nomad",
-        "gridlock",
-        "amaru",
-        "nokk"
-      ],
-      "defenseOps": [
+      "side": "defense",
+      "desc": "Plays off-site to flank, slow and pick attackers, stealing time and breaking the push.",
+      "ops": [
         "vigil",
         "caveira",
         "ela",
@@ -5743,21 +5728,40 @@ const SEED_DATA =
       ]
     },
     {
-      "id": "intel",
-      "name": "Intel / Recon",
-      "desc": "Finds defenders and feeds the team reads; on defense denies the enemy's information.",
-      "notes": "Finds defenders and feeds the team reads; on defense denies the enemy's information.",
-      "attackRoleLabel": "",
-      "defenseRoleLabel": "",
-      "attackOps": [
-        "jackal",
-        "lion",
-        "dokkaebi",
-        "iana",
-        "zero",
-        "brava"
-      ],
-      "defenseOps": [
+      "id": "trapper-def",
+      "name": "Trapper",
+      "side": "defense",
+      "desc": "Traps and area denial that punish pushes and protect roam-clears and flanks.",
+      "ops": [
+        "kapkan",
+        "frost",
+        "ela",
+        "lesion",
+        "thorn",
+        "melusi"
+      ]
+    },
+    {
+      "id": "antibreach-def",
+      "name": "Anti-Breach / Support",
+      "side": "defense",
+      "desc": "Protects reinforcements and denies the hard breach — batteries, jammers and projectile catch.",
+      "ops": [
+        "bandit",
+        "kaid",
+        "mute",
+        "wamai",
+        "jager",
+        "aruni",
+        "tubarao"
+      ]
+    },
+    {
+      "id": "intel-def",
+      "name": "Intel",
+      "side": "defense",
+      "desc": "Cams and sound — tracks attackers, calls rotations and lights up flanks.",
+      "ops": [
         "valkyrie",
         "maestro",
         "echo",
@@ -5765,41 +5769,70 @@ const SEED_DATA =
         "solis",
         "alibi"
       ]
+    },
+    {
+      "id": "flex-def",
+      "name": "Flex",
+      "side": "defense",
+      "desc": "Fills whatever the comp is missing; a deep defense pool to slot into any gap.",
+      "ops": [
+        "bandit",
+        "jager",
+        "mute",
+        "smoke",
+        "maestro",
+        "ela"
+      ]
     }
   ],
   "roster": [
     {
       "name": "João",
-      "roles": [
-        "igl",
-        "anchor"
+      "attackRoles": [
+        "igl-atk"
+      ],
+      "defenseRoles": [
+        "igl-def",
+        "anchor-def"
       ]
     },
     {
       "name": "Leme",
-      "roles": [
-        "entry",
-        "roamer"
+      "attackRoles": [
+        "entry-atk"
+      ],
+      "defenseRoles": [
+        "roamer-def"
       ]
     },
     {
       "name": "Max",
-      "roles": [
-        "support",
-        "flex"
+      "attackRoles": [
+        "support-atk",
+        "intel-atk"
+      ],
+      "defenseRoles": [
+        "antibreach-def"
       ]
     },
     {
       "name": "Lora",
-      "roles": [
-        "anchor"
+      "attackRoles": [
+        "flex-atk"
+      ],
+      "defenseRoles": [
+        "anchor-def"
       ]
     },
     {
       "name": "unknown",
-      "roles": [
-        "flex",
-        "hard-breach"
+      "attackRoles": [
+        "hardbreach-atk",
+        "flex-atk"
+      ],
+      "defenseRoles": [
+        "antibreach-def",
+        "flex-def"
       ]
     }
   ],
@@ -5893,13 +5926,22 @@ function normalizeDB(db){
   db.operators.forEach(o=>{ o.id=o.id||slug(o.name||"op"); o.name=o.name||o.id;
     o.side=o.side==="defense"?"defense":"attack"; o.role=o.role||"flex"; o.notes=o.notes||""; o.howToCounter=o.howToCounter||""; });
   db.roles.forEach(r=>{ r.id=r.id||slug(r.name||"role"); r.name=r.name||r.id;
-    r.attackRoleLabel=r.attackRoleLabel||""; r.defenseRoleLabel=r.defenseRoleLabel||"";
-    if(!Array.isArray(r.attackOps))r.attackOps=[]; if(!Array.isArray(r.defenseOps))r.defenseOps=[];
-    r.notes=r.notes||""; r.desc=r.desc||r.notes||""; if(!r.notes&&r.desc)r.notes=r.desc; });
+    r.side = r.side==="defense"?"defense":"attack";
+    // migrate old unified roles ({attackOps,defenseOps}) -> single side-specific ops pool
+    if(!Array.isArray(r.ops)) r.ops = r.side==="attack" ? (Array.isArray(r.attackOps)?r.attackOps:[]) : (Array.isArray(r.defenseOps)?r.defenseOps:[]);
+    r.ops=r.ops.filter(id=>db.operators.some(o=>o.id===id&&o.side===r.side));
+    r.desc=r.desc||r.notes||"";
+    delete r.attackOps; delete r.defenseOps; delete r.attackRoleLabel; delete r.defenseRoleLabel; delete r.notes; });
+  const roleSide=id=>{ const r=db.roles.find(x=>x.id===id); return r?r.side:null; };
   db.roster.forEach(p=>{ p.name=p.name||"";
-    if(!Array.isArray(p.roles)) p.roles = p.roleId ? [p.roleId] : [];
-    p.roles=p.roles.filter(id=>db.roles.some(r=>r.id===id));
-    delete p.roleId; delete p.notes; });
+    if(!Array.isArray(p.attackRoles)||!Array.isArray(p.defenseRoles)){
+      const old = Array.isArray(p.roles) ? p.roles : (p.roleId ? [p.roleId] : []);
+      p.attackRoles=[]; p.defenseRoles=[];
+      old.forEach(id=>{ const sd=roleSide(id); if(sd==="attack")p.attackRoles.push(id); else if(sd==="defense")p.defenseRoles.push(id); });
+    }
+    p.attackRoles=p.attackRoles.filter(id=>roleSide(id)==="attack");
+    p.defenseRoles=p.defenseRoles.filter(id=>roleSide(id)==="defense");
+    delete p.roles; delete p.roleId; delete p.notes; });
   if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
     db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
   const claimed=new Set();
@@ -6251,37 +6293,43 @@ function renderRoster(root){
   const edit=UI.roster.edit;
   root.innerHTML=`<div class="${edit?"roster-edit":""}">
     <div class="toolbar">
-      <div class="section-title" style="margin:0">${edit?"Drag a role's ⠿ handle onto a player · drag chips to reorder · left→right = priority":"Players & the roles they prioritise (left → right)"}</div>
+      <div class="section-title" style="margin:0">${edit?"Drag a role's ⠿ handle onto a player's ATK or DEF list · drag chips to reorder · left→right = priority":"Players & the roles they prioritise — attack & defense (left → right)"}</div>
       <div class="grow"></div>
-      ${edit?`<button class="btn sm" id="addPlayer">＋ player</button><button class="btn sm" id="addRole">＋ role</button>`:""}
+      ${edit?`<button class="btn sm" id="addPlayer">＋ player</button>`:""}
       <button class="btn ${edit?"on":""}" id="rosterEdit">✎ ${edit?"Done":"Edit"}</button>
     </div>
     <div class="panel" style="margin-bottom:22px">
       <div class="panel-h"><h3>Roster</h3></div>
       <div class="panel-b"><div class="players" id="players"></div></div>
     </div>
-    <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— operators ordered by win-rate (highest first)</span></div>
-    <div class="rolegrid" id="roleGrid"></div>
+    <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— click any operator for details · ordered by win-rate</span></div>
+    <div class="rolegrid-sides" id="roleGrid"></div>
   </div>`;
-  if(!window._rosterDnd){ window._rosterDnd=true; document.addEventListener("dragend",()=>{ ROSTER_DRAG=null; document.querySelectorAll(".prow.drop-ok").forEach(r=>r.classList.remove("drop-ok")); }); }
+  if(!window._rosterDnd){ window._rosterDnd=true; document.addEventListener("dragend",()=>{ ROSTER_DRAG=null; document.querySelectorAll(".proles.drop-ok").forEach(r=>r.classList.remove("drop-ok")); }); }
   byId("rosterEdit").onclick=()=>{ UI.roster.edit=!UI.roster.edit; renderRoster(root); };
   if(edit){
-    byId("addPlayer").onclick=()=>{ DB.roster.push({name:"New Player",roles:[]}); markDirty(); renderPlayers(); };
-    byId("addRole").onclick=()=>{ const id=uid("role"); DB.roles.push({id,name:"New Role",desc:"",notes:"",attackRoleLabel:"",defenseRoleLabel:"",attackOps:[],defenseOps:[]}); markDirty(); renderRoleGrid(); renderPlayers(); };
+    byId("addPlayer").onclick=()=>{ DB.roster.push({name:"New Player",attackRoles:[],defenseRoles:[]}); markDirty(); renderPlayers(); };
   }
   renderPlayers(); renderRoleGrid();
 }
 function renderPlayers(){
   const wrap=byId("players"); const edit=UI.roster.edit;
+  const sideRow=(p,i,side)=>{
+    const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
+    const chips=(p[key]||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
+      return `<span class="prole ${cls}" ${edit?`draggable="true" data-chip="${i}|${side}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
+    }).join("");
+    return `<div class="pside">
+      <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
+      <div class="proles" data-drop="${i}|${side}">${chips||`<span class="empty muted">${edit?"drag "+(side==="attack"?"attack":"defense")+" roles here":"—"}</span>`}</div>
+    </div>`;
+  };
   wrap.innerHTML=DB.roster.map((p,i)=>{
     const initials=(p.name||"?").trim().slice(0,2).toUpperCase();
-    const chips=(p.roles||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
-      return `<span class="prole" ${edit?`draggable="true" data-chip="${i}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${k}" title="Remove">✕</span>`:""}</span>`;
-    }).join("");
-    return `<div class="prow${edit?" droptgt":""}" data-p="${i}">
+    return `<div class="prow" data-p="${i}">
       <div class="pavatar">${esc(initials)}</div>
-      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:140px;font-weight:700">`:`<div class="pname">${esc(p.name)}</div>`}
-      <div class="proles">${chips||`<span class="empty muted">${edit?"drag roles here →":"no roles set"}</span>`}</div>
+      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}</div>`}
+      <div class="psides">${sideRow(p,i,"attack")}${sideRow(p,i,"defense")}</div>
       <div class="grow"></div>
       ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
     </div>`;
@@ -6292,64 +6340,96 @@ function bindPlayers(){
   const wrap=byId("players"); if(!UI.roster.edit) return;
   wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
   wrap.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ DB.roster.splice(+b.closest("[data-p]").dataset.p,1); markDirty(); renderPlayers(); renderRoleGrid(); });
-  wrap.querySelectorAll("[data-chiprm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,k]=x.dataset.chiprm.split("|").map(Number); DB.roster[i].roles.splice(k,1); markDirty(); renderPlayers(); renderRoleGrid(); });
-  wrap.querySelectorAll("[data-chip]").forEach(c=>c.addEventListener("dragstart",e=>{ const [i,k]=c.dataset.chip.split("|").map(Number); ROSTER_DRAG={kind:"chip",player:i,idx:k}; e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain","chip");}catch(_){}}));
-  wrap.querySelectorAll(".prow.droptgt").forEach(row=>{
-    const i=+row.dataset.p;
-    row.addEventListener("dragover",e=>{ if(!ROSTER_DRAG)return; e.preventDefault(); e.dataTransfer.dropEffect=ROSTER_DRAG.kind==="pool"?"copy":"move"; row.classList.add("drop-ok"); });
-    row.addEventListener("dragleave",e=>{ if(!row.contains(e.relatedTarget)) row.classList.remove("drop-ok"); });
-    row.addEventListener("drop",e=>{ e.preventDefault(); row.classList.remove("drop-ok"); if(!ROSTER_DRAG)return;
-      const pos=rosterInsertIndex(row,e.clientX), P=DB.roster[i];
-      if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P.roles.includes(rid)){ P.roles.splice(pos,0,rid); markDirty(); } }
-      else { const src=DB.roster[ROSTER_DRAG.player], rid=src.roles[ROSTER_DRAG.idx];
-        if(ROSTER_DRAG.player===i){ src.roles.splice(ROSTER_DRAG.idx,1); let np=pos; if(ROSTER_DRAG.idx<np)np--; src.roles.splice(Math.max(0,np),0,rid); markDirty(); }
-        else if(rid&&!P.roles.includes(rid)){ src.roles.splice(ROSTER_DRAG.idx,1); P.roles.splice(pos,0,rid); markDirty(); } }
+  wrap.querySelectorAll("[data-chiprm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.chiprm.split("|"); const key=side==="attack"?"attackRoles":"defenseRoles"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); renderRoleGrid(); });
+  wrap.querySelectorAll("[data-chip]").forEach(c=>c.addEventListener("dragstart",e=>{ const [i,side,k]=c.dataset.chip.split("|"); ROSTER_DRAG={kind:"chip",player:+i,side,idx:+k}; e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain","chip");}catch(_){}}));
+  wrap.querySelectorAll(".proles[data-drop]").forEach(box=>{
+    const [pi,side]=box.dataset.drop.split("|"); const i=+pi; const key=side==="attack"?"attackRoles":"defenseRoles";
+    const compatible=()=>{ if(!ROSTER_DRAG)return false; if(ROSTER_DRAG.kind==="pool"){ const r=roleById(ROSTER_DRAG.roleId); return !!r&&r.side===side; } return ROSTER_DRAG.side===side; };
+    box.addEventListener("dragover",e=>{ if(!compatible())return; e.preventDefault(); e.dataTransfer.dropEffect=ROSTER_DRAG.kind==="pool"?"copy":"move"; box.classList.add("drop-ok"); });
+    box.addEventListener("dragleave",e=>{ if(!box.contains(e.relatedTarget)) box.classList.remove("drop-ok"); });
+    box.addEventListener("drop",e=>{ if(!compatible())return; e.preventDefault(); box.classList.remove("drop-ok");
+      const pos=rosterInsertIndex(box,e.clientX), P=DB.roster[i];
+      if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P[key].includes(rid)){ P[key].splice(pos,0,rid); markDirty(); } }
+      else { const src=DB.roster[ROSTER_DRAG.player], rid=src[key][ROSTER_DRAG.idx];
+        if(ROSTER_DRAG.player===i){ src[key].splice(ROSTER_DRAG.idx,1); let np=pos; if(ROSTER_DRAG.idx<np)np--; src[key].splice(Math.max(0,np),0,rid); markDirty(); }
+        else if(rid&&!P[key].includes(rid)){ src[key].splice(ROSTER_DRAG.idx,1); P[key].splice(pos,0,rid); markDirty(); } }
       ROSTER_DRAG=null; renderPlayers(); renderRoleGrid();
     });
   });
 }
-function rosterInsertIndex(row,clientX){ const chips=[...row.querySelectorAll(".prole")]; for(let j=0;j<chips.length;j++){ const r=chips[j].getBoundingClientRect(); if(clientX<r.left+r.width/2) return j; } return chips.length; }
+function rosterInsertIndex(box,clientX){ const chips=[...box.querySelectorAll(".prole")]; for(let j=0;j<chips.length;j++){ const r=chips[j].getBoundingClientRect(); if(clientX<r.left+r.width/2) return j; } return chips.length; }
 function renderRoleGrid(){
   const wrap=byId("roleGrid"); const edit=UI.roster.edit;
-  wrap.innerHTML=DB.roles.map(r=>{
-    const occ=DB.roster.filter(p=>(p.roles||[]).includes(r.id)).map(p=>p.name);
-    return `<div class="rolecard" data-role="${esc(r.id)}">
-      <div class="rh">
-        ${edit?`<span class="rdrag" draggable="true" data-rdrag="${esc(r.id)}" title="Drag onto a player">⠿</span>`:""}
-        ${edit?`<input type="text" data-rname value="${esc(r.name)}" style="max-width:170px;font-weight:800;font-size:15px">`:`<h3>${esc(r.name)}</h3>`}
-        <span class="occ">${occ.length?occ.map(n=>`<b>${esc(n)}</b>`).join(", "):'<span style="color:var(--muted2)">—</span>'}</span>
-        <div class="grow"></div>
-        ${edit?`<button class="btn sm danger" data-rdel>Delete</button>`:""}
-      </div>
-      <div class="rb">
-        ${edit?`<label class="field"><span class="lab">Short description</span><textarea data-rdesc>${esc(r.desc||r.notes||"")}</textarea></label>`:((r.desc||r.notes)?`<div class="muted small role-desc">${esc(r.desc||r.notes)}</div>`:"")}
-        ${poolHTML(r,"attack",edit)}
-        ${poolHTML(r,"defense",edit)}
-      </div></div>`;
-  }).join("")||`<div class="empty">No roles.</div>`;
+  const sec=(side,label,cls)=>{
+    const roles=DB.roles.filter(r=>r.side===side);
+    const cards=roles.map(r=>roleCardHTML(r,edit)).join("")||`<div class="empty">No ${side} roles.</div>`;
+    return `<div class="roleside">
+      <div class="roleside-h"><span class="tag ${cls}">${label}</span><span class="muted small">(${roles.length})</span><div class="grow"></div>${edit?`<button class="btn sm" data-addrole="${side}">＋ ${side} role</button>`:""}</div>
+      <div class="rolegrid">${cards}</div>
+    </div>`;
+  };
+  wrap.innerHTML=sec("attack","Attack roles","atk")+sec("defense","Defense roles","def");
   bindRoleGrid();
 }
+function roleCardHTML(r,edit){
+  const sideKey=r.side==="attack"?"attackRoles":"defenseRoles";
+  const occ=DB.roster.filter(p=>(p[sideKey]||[]).includes(r.id)).map(p=>p.name);
+  return `<div class="rolecard" data-role="${esc(r.id)}">
+    <div class="rh">
+      ${edit?`<span class="rdrag" draggable="true" data-rdrag="${esc(r.id)}" title="Drag onto a player's ${r.side==="attack"?"ATK":"DEF"} list">⠿</span>`:""}
+      ${edit?`<input type="text" data-rname value="${esc(r.name)}" style="max-width:170px;font-weight:800;font-size:15px">`:`<h3>${esc(r.name)}</h3>`}
+      <span class="occ">${occ.length?occ.map(n=>`<b>${esc(n)}</b>`).join(", "):'<span style="color:var(--muted2)">—</span>'}</span>
+      <div class="grow"></div>
+      ${edit?`<button class="btn sm danger" data-rdel>Delete</button>`:""}
+    </div>
+    <div class="rb">
+      ${edit?`<label class="field"><span class="lab">Short description</span><textarea data-rdesc>${esc(r.desc||"")}</textarea></label>`:(r.desc?`<div class="muted small role-desc">${esc(r.desc)}</div>`:"")}
+      ${rolePoolHTML(r,edit)}
+    </div></div>`;
+}
 function wrOf(id){ const o=opById(id); return o&&typeof o.winRate==="number"?o.winRate:-1; }
-function poolHTML(r,side,edit){
-  const key=side==="attack"?"attackOps":"defenseOps"; const cls=side==="attack"?"atk":"def";
+function rolePoolHTML(r,edit){
+  const cls=r.side==="attack"?"atk":"def";
   // Display order = real win-rate, highest first (the stored array order is left untouched).
-  const ids=r[key].slice().sort((a,b)=>wrOf(b)-wrOf(a));
-  const chips=ids.map(id=>{ const o=opById(id); const wr=o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""; return `<span class="opchip ${cls}">${esc(o?o.name:id)}${wr}${edit?` <span class="x" data-poolrm="${esc(side)}|${esc(id)}">✕</span>`:""}</span>`; }).join("");
-  return `<div class="poolblock"><div class="ph"><span class="lab ${cls==="atk"?"":""}" style="color:var(--${cls})">${side==="attack"?"Attack":"Defense"} pool</span><span class="muted small">(${ids.length})</span></div>
+  const ids=(r.ops||[]).slice().sort((a,b)=>wrOf(b)-wrOf(a));
+  const chips=ids.map(id=>{ const o=opById(id); const wr=o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""; return `<span class="opchip ${cls}" data-op="${esc(id)}" title="Click for details" role="button" tabindex="0">${esc(o?o.name:id)}${wr}${edit?` <span class="x" data-poolrm="${esc(id)}" title="Remove">✕</span>`:""}</span>`; }).join("");
+  return `<div class="poolblock"><div class="ph"><span class="muted small">${ids.length} ops · click an op for details</span></div>
     <div class="chips">${chips||'<span class="empty">empty</span>'}</div>
-    ${edit?`<select data-pooladd="${esc(side)}" style="max-width:240px;margin-top:8px"><option value="">＋ add ${side} op…</option>${opsBySide(side).filter(o=>!ids.includes(o.id)).map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}</select>`:""}</div>`;
+    ${edit?`<select data-pooladd style="max-width:240px;margin-top:8px"><option value="">＋ add op…</option>${opsBySide(r.side).filter(o=>!ids.includes(o.id)).map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}</select>`:""}</div>`;
 }
 function bindRoleGrid(){
-  byId("roleGrid").querySelectorAll("[data-role]").forEach(card=>{
+  const grid=byId("roleGrid");
+  if(UI.roster.edit) grid.querySelectorAll("[data-addrole]").forEach(b=>b.onclick=()=>{ const side=b.dataset.addrole; const id=uid("role"); DB.roles.push({id,name:"New Role",side,desc:"",ops:[]}); markDirty(); renderRoleGrid(); renderPlayers(); });
+  grid.querySelectorAll("[data-role]").forEach(card=>{
     const r=roleById(card.dataset.role); if(!r)return;
     const h=card.querySelector("[data-rdrag]"); if(h) h.addEventListener("dragstart",e=>{ ROSTER_DRAG={kind:"pool",roleId:r.id}; e.dataTransfer.effectAllowed="copy"; try{e.dataTransfer.setData("text/plain","role");}catch(_){}});
     const rn=card.querySelector("[data-rname]"); if(rn){ rn.oninput=e=>{ r.name=e.target.value; markDirty(); }; rn.onchange=()=>{ renderPlayers(); }; }
-    const rde=card.querySelector("[data-rdesc]"); if(rde) rde.oninput=e=>{ r.desc=e.target.value; r.notes=e.target.value; markDirty(); };
-    const del=card.querySelector("[data-rdel]"); if(del) del.onclick=()=>{ if(confirm(`Delete role "${r.name}"? It will be removed from any players.`)){ DB.roles=DB.roles.filter(x=>x.id!==r.id); DB.roster.forEach(p=>{ p.roles=(p.roles||[]).filter(id=>id!==r.id); }); markDirty(); renderRoleGrid(); renderPlayers(); } };
-    card.querySelectorAll("[data-poolrm]").forEach(x=>x.onclick=()=>{ const [side,id]=x.dataset.poolrm.split("|"); const key=side==="attack"?"attackOps":"defenseOps"; r[key]=r[key].filter(v=>v!==id); markDirty(); renderRoleGrid(); });
-    card.querySelectorAll("[data-pooladd]").forEach(sel=>sel.onchange=()=>{ const side=sel.dataset.pooladd; const key=side==="attack"?"attackOps":"defenseOps"; if(sel.value&&!r[key].includes(sel.value)){ r[key].push(sel.value); markDirty(); renderRoleGrid(); } });
+    const rde=card.querySelector("[data-rdesc]"); if(rde) rde.oninput=e=>{ r.desc=e.target.value; markDirty(); };
+    const del=card.querySelector("[data-rdel]"); if(del) del.onclick=()=>{ if(confirm(`Delete role "${r.name}"? It will be removed from any players.`)){ DB.roles=DB.roles.filter(x=>x.id!==r.id); DB.roster.forEach(p=>{ p.attackRoles=(p.attackRoles||[]).filter(id=>id!==r.id); p.defenseRoles=(p.defenseRoles||[]).filter(id=>id!==r.id); }); markDirty(); renderRoleGrid(); renderPlayers(); } };
+    card.querySelectorAll("[data-poolrm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const id=x.dataset.poolrm; r.ops=(r.ops||[]).filter(v=>v!==id); markDirty(); renderRoleGrid(); });
+    card.querySelectorAll("[data-pooladd]").forEach(sel=>sel.onchange=()=>{ if(sel.value&&!(r.ops||[]).includes(sel.value)){ (r.ops=r.ops||[]).push(sel.value); markDirty(); renderRoleGrid(); } });
+    card.querySelectorAll("[data-op]").forEach(ch=>{ ch.onclick=e=>{ if(e.target.closest("[data-poolrm]"))return; openOpModal(ch.dataset.op); }; ch.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(ch.dataset.op); } }; });
   });
 }
+function openOpModal(id){
+  const o=opById(id); if(!o)return;
+  let m=byId("opModal");
+  if(!m){ m=document.createElement("div"); m.className="modal"; m.id="opModal"; document.body.appendChild(m); }
+  const cls=o.side==="defense"?"def":"atk"; const sideLabel=o.side==="defense"?"Defense":"Attack";
+  const wr=(typeof o.winRate==="number")?`<span class="op-wr ${cls}">${o.winRate.toFixed(1)}%</span>`:"";
+  m.innerHTML=`<div class="card op-card">
+    <div class="spread" style="margin-bottom:8px"><h3 style="margin:0">${esc(o.name)} ${wr}</h3><button class="iconbtn" id="opClose" title="Close">✕</button></div>
+    <div class="muted small" style="margin-bottom:12px"><span class="tag ${cls}">${sideLabel}</span>${o.role?` <span class="tag role">${esc(o.role)}</span>`:""} · round win-rate (Ranked Plat+, approx)</div>
+    ${o.notes?`<p class="op-line"><b>What they do.</b> ${esc(o.notes)}</p>`:""}
+    ${o.howToCounter?`<p class="op-line"><b>How to counter.</b> ${esc(o.howToCounter)}</p>`:""}
+  </div>`;
+  m.classList.add("show");
+  byId("opClose").onclick=closeOpModal;
+  m.onclick=e=>{ if(e.target===m) closeOpModal(); };
+  document.addEventListener("keydown",opModalEsc);
+}
+function closeOpModal(){ const m=byId("opModal"); if(m)m.classList.remove("show"); document.removeEventListener("keydown",opModalEsc); }
+function opModalEsc(e){ if(e.key==="Escape") closeOpModal(); }
 
 /* =================================================================== *
  *  IMPORT / EXPORT / PUBLISH
