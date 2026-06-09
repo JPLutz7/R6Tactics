@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 30**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 31**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -71,9 +71,11 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
     tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
 TAC = { ...legacy flat fields, strats: [ STRAT ] }          // see §12
-STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], steps:[], reinforce:[] }
-  role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for
-  that slot. The Tactics panel assigns each rostered player a slot by their role priority.
+STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], reinforce:[], rotations:[], breach:[] }
+  role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for that
+  slot; pos = that player's gadget/job (rendered in the "Gadgets & jobs — by player" section).
+  reinforce/rotations = defense bullet groups; breach = attack "Open up" walls. The Tactics
+  panel assigns each rostered player a slot by their role priority.
 bombsite also carries `site` (the "1".."4" digit) so a tactic can focus the site filter.
 ```
 Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **99 bomb-site
@@ -257,9 +259,11 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **UX:** in a map's detail view, a right-hand **Tactics panel** lists strats grouped by
   **side → bomb site**. Tap a strat → the map jumps to that site's floor (`siteFloorIndex()`
   — uses the floor token in the site name, e.g. "2F · …", highest floor if it spans two) and
-  the panel swaps to the strat detail (back button top-left). Detail shows **Who picks what**
-  (per-player op options), Reinforce (defense), and ordered steps. Op chips reuse the
-  click-to-open operator popup (§7). Code: `renderTacticsPanel()` / `openTactic()` /
+  the panel swaps to the strat detail (back button top-left). Detail is **activity-grouped
+  bullets** (v31): **Operators — who picks what** (per-player op options), then **Reinforce**
+  + **Rotations** (defense) / **Open up** (attack), then **Gadgets & jobs — by player** (each
+  player's slot `pos`). Op chips reuse the click-to-open operator popup (§7). Code:
+  `renderTacticsPanel()` / `openTactic()` /
   `renderTacticDetail()` / `assignTactic()`; two-column layout `.detail-cols` in
   `renderMapDetail()`. Panel only renders when the map has `bombsites`. Opening a strat also
   **focuses the site filter** on that bomb site (`UI.maps.siteFilter = bombsite.site`); back
