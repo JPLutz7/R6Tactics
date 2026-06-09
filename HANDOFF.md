@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 23**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 24**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -50,8 +50,8 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
             floors: [ { name, layoutImage, callouts: [ CALLOUT ] } ],
             bombsites: [ {id,name,rooms} ], tactics:{attack:{},defense:{}} } ],
   operators: [ {id,name,side,role,notes,howToCounter} ],   // 75, recommender field = howToCounter
-  roles:     [ {id,name,attackRoleLabel,defenseRoleLabel,attackOps:[],defenseOps:[],notes} ],
-  roster:    [ {name,roleId,notes} ],
+  roles:     [ {id,name,desc,attackOps:[],defenseOps:[],notes} ],   // 8 practical Siege roles; ops ordered best→situational
+  roster:    [ {name,roles:[roleId]} ],                            // ordered = priority; assigned by dragging role cards onto players
   playerStats: [],                                          // optional, unused for now
   pools:     [ {id,name,note,mapIds:[]} ]                   // Pro / Seasonal / Showcased
 }

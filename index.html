@@ -258,6 +258,20 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .opchip .x{cursor:pointer;opacity:.6;font-weight:800}
 .opchip .x:hover{opacity:1}
 .occ{font-size:12px;color:var(--muted);font-weight:600}
+/* roster: player role chips (priority order) + drag-to-assign */
+.proles{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-height:30px}
+.proles>.empty{font-size:11.5px;border:1px dashed var(--line2);border-radius:7px;padding:4px 9px}
+.prole{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:7px;border:1px solid var(--line3);background:var(--panel3);color:var(--text);white-space:nowrap}
+.prole .pri{font-size:9px;font-weight:800;color:#fff;background:#5a6b7e;border-radius:4px;padding:0 4px}
+.prole .x{cursor:pointer;opacity:.5;font-weight:800}
+.prole .x:hover{opacity:1;color:#c2434f}
+.roster-edit .prole{cursor:grab}
+.roster-edit .prole:active{cursor:grabbing}
+.prow.drop-ok{outline:2px dashed var(--def);outline-offset:2px;background:var(--def-bg)}
+.rdrag{cursor:grab;font-size:15px;line-height:1;color:var(--muted2);padding:2px 5px;border-radius:6px;border:1px solid var(--line2);user-select:none}
+.rdrag:hover{color:var(--text);background:var(--panel3)}
+.rdrag:active{cursor:grabbing}
+.role-desc{line-height:1.5}
 .occ b{color:var(--text)}
 
 .divider{height:1px;background:var(--line);margin:22px 0}
@@ -305,7 +319,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 23,
+  "version": 24,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -5488,170 +5502,229 @@ const SEED_DATA =
     {
       "id": "igl",
       "name": "IGL",
-      "attackRoleLabel": "Entry + Intel",
-      "defenseRoleLabel": "Shotcaller-Anchor",
+      "desc": "Shotcaller — reads the round, sets the plan and makes the mid-round calls. Usually plays low-aim-load intel/utility so they can focus on leading.",
+      "notes": "Shotcaller — reads the round, sets the plan and makes the mid-round calls. Usually plays low-aim-load intel/utility so they can focus on leading.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
       "attackOps": [
-        "ash",
-        "ram",
-        "zofia",
-        "solid-snake",
-        "jackal",
-        "dokkaebi",
-        "lion",
-        "iana",
         "zero",
-        "capitao"
+        "iana",
+        "dokkaebi",
+        "jackal",
+        "thatcher",
+        "lion"
       ],
       "defenseOps": [
-        "azami",
-        "mira",
         "maestro",
+        "mira",
         "echo",
-        "solis",
-        "lesion",
-        "kapkan",
-        "thorn",
-        "aruni",
+        "azami",
+        "valkyrie",
         "alibi"
-      ],
-      "notes": "Experienced, current game knowledge; the caller. Aggressive on attack (frags but gathers info to call the round), anchors on defense to stay with the team and run the round."
+      ]
     },
     {
-      "id": "fragger-roamer",
-      "name": "Fragger / Roamer",
-      "attackRoleLabel": "Primary Entry / Duelist",
-      "defenseRoleLabel": "Roamer",
+      "id": "entry",
+      "name": "Entry Fragger",
+      "desc": "First through the door — takes the opening duels and creates space for the team to follow.",
+      "notes": "First through the door — takes the opening duels and creates space for the team to follow.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
       "attackOps": [
         "ash",
-        "sledge",
         "zofia",
-        "buck",
+        "iana",
+        "sledge",
         "blackbeard",
-        "amaru",
-        "finka",
-        "ying",
-        "glaz",
-        "striker"
+        "buck",
+        "finka"
       ],
       "defenseOps": [
-        "vigil",
-        "caveira",
-        "pulse",
         "ela",
+        "vigil",
         "alibi",
-        "skopos",
-        "jager",
-        "bandit",
-        "mozzie"
-      ],
-      "notes": "Best mechanical aim; dedicated fragger. Returning player. Insulated from utility on attack (just wins the opening); solo-flanks and picks away from site on defense."
+        "lesion"
+      ]
     },
     {
       "id": "support",
       "name": "Support",
-      "attackRoleLabel": "Utility Support + Frag",
-      "defenseRoleLabel": "Site Support / Breach-Denial",
+      "desc": "Brings the utility that clears the defense and enables the entry; plays second man in and trades.",
+      "notes": "Brings the utility that clears the defense and enables the entry; plays second man in and trades.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
       "attackOps": [
-        "twitch",
         "thatcher",
-        "flores",
-        "brava",
-        "kali",
+        "twitch",
         "iq",
-        "gridlock",
-        "nomad",
+        "flores",
+        "osa",
         "fuze",
-        "zero"
+        "zofia"
+      ],
+      "defenseOps": [
+        "jager",
+        "wamai",
+        "mute",
+        "mozzie",
+        "rook",
+        "doc"
+      ]
+    },
+    {
+      "id": "hard-breach",
+      "name": "Hard Breach",
+      "desc": "Opens reinforced walls and hatches to crack the objective — the breach is the round's backbone. Denies it on defense.",
+      "notes": "Opens reinforced walls and hatches to crack the objective — the breach is the round's backbone. Denies it on defense.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
+      "attackOps": [
+        "thermite",
+        "ace",
+        "hibana",
+        "maverick",
+        "kali"
       ],
       "defenseOps": [
         "bandit",
         "kaid",
         "mute",
-        "jager",
-        "wamai",
-        "mozzie",
-        "tubarao",
         "aruni",
-        "fenrir"
-      ],
-      "notes": "FPS background, new to Siege; start on the most aim-forward picks (Twitch on attack, Jäger on defense) and grow into the utility ops. Clears defender utility / protects anchors and stops the hard breach."
+        "tubarao"
+      ]
     },
     {
-      "id": "site-anchor",
-      "name": "Site Anchor",
-      "attackRoleLabel": "Simple Frag / Soft-Destruction",
-      "defenseRoleLabel": "Pure Anchor",
+      "id": "flex",
+      "name": "Flex",
+      "desc": "Fills whatever the comp is missing — deep pool on both sides, adapts to the map and the ban phase.",
+      "notes": "Fills whatever the comp is missing — deep pool on both sides, adapts to the map and the ban phase.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
       "attackOps": [
         "ash",
-        "sledge",
-        "buck",
-        "fuze",
-        "montagne",
-        "gridlock",
-        "striker"
-      ],
-      "defenseOps": [
-        "rook",
-        "doc",
-        "smoke",
-        "mute",
-        "tachanka",
-        "castle",
-        "sentry"
-      ],
-      "notes": "Newest player, lowest decision load; this pool is intentionally the simplest operators in the game — point-and-shoot with forgiving gadgets. Expand it as he improves."
-    },
-    {
-      "id": "flex-hardbreach",
-      "name": "Flex / Hard Breach",
-      "attackRoleLabel": "Hard Breach + Enabler",
-      "defenseRoleLabel": "Breach-Denial / Utility Support",
-      "attackOps": [
+        "zofia",
         "thermite",
-        "hibana",
         "ace",
-        "maverick",
-        "kali",
-        "thatcher",
+        "iana",
+        "twitch",
         "flores"
       ],
       "defenseOps": [
         "bandit",
-        "kaid",
+        "jager",
         "mute",
-        "wamai",
-        "aruni",
-        "tubarao",
-        "maestro"
+        "smoke",
+        "maestro",
+        "ela"
+      ]
+    },
+    {
+      "id": "anchor",
+      "name": "Anchor",
+      "desc": "Holds the bomb site and plays for time, denying the plant. On attack runs steady soft-destruction or a shield.",
+      "notes": "Holds the bomb site and plays for time, denying the plant. On attack runs steady soft-destruction or a shield.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
+      "attackOps": [
+        "montagne",
+        "gridlock",
+        "fuze",
+        "blitz",
+        "ram"
       ],
-      "notes": "Not recruited yet — placeholder. Opens reinforced surfaces and clears denial on attack. When recruiting, prioritise a team player who'll play utility, not another fragger."
+      "defenseOps": [
+        "smoke",
+        "rook",
+        "doc",
+        "mira",
+        "maestro",
+        "melusi",
+        "goyo",
+        "tachanka"
+      ]
+    },
+    {
+      "id": "roamer",
+      "name": "Roamer",
+      "desc": "Plays off-site to flank, slow and pick attackers, stealing time. On attack watches flanks and takes map control.",
+      "notes": "Plays off-site to flank, slow and pick attackers, stealing time. On attack watches flanks and takes map control.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
+      "attackOps": [
+        "nomad",
+        "gridlock",
+        "amaru",
+        "nokk"
+      ],
+      "defenseOps": [
+        "vigil",
+        "caveira",
+        "ela",
+        "pulse",
+        "lesion",
+        "oryx",
+        "mozzie"
+      ]
+    },
+    {
+      "id": "intel",
+      "name": "Intel / Recon",
+      "desc": "Finds defenders and feeds the team reads; on defense denies the enemy's information.",
+      "notes": "Finds defenders and feeds the team reads; on defense denies the enemy's information.",
+      "attackRoleLabel": "",
+      "defenseRoleLabel": "",
+      "attackOps": [
+        "jackal",
+        "lion",
+        "dokkaebi",
+        "iana",
+        "zero",
+        "brava"
+      ],
+      "defenseOps": [
+        "valkyrie",
+        "maestro",
+        "echo",
+        "pulse",
+        "solis",
+        "alibi"
+      ]
     }
   ],
   "roster": [
     {
       "name": "João",
-      "roleId": "igl",
-      "notes": "Experienced, current game knowledge; the caller. Aggressive on attack, anchors on defense to stay with the team."
+      "roles": [
+        "igl",
+        "anchor"
+      ]
     },
     {
       "name": "Leme",
-      "roleId": "fragger-roamer",
-      "notes": "Best mechanical aim; dedicated fragger. Returning player."
+      "roles": [
+        "entry",
+        "roamer"
+      ]
     },
     {
       "name": "Max",
-      "roleId": "support",
-      "notes": "FPS background, new to Siege; start on Twitch (attack) / Jäger (defense) and grow into the utility ops."
+      "roles": [
+        "support",
+        "flex"
+      ]
     },
     {
       "name": "Lora",
-      "roleId": "site-anchor",
-      "notes": "Newest player, lowest decision load; play the simplest operators and expand as he improves."
+      "roles": [
+        "anchor"
+      ]
     },
     {
       "name": "unknown",
-      "roleId": "flex-hardbreach",
-      "notes": "Placeholder — not recruited yet. Prioritise a team player who'll play utility, not another fragger."
+      "roles": [
+        "flex",
+        "hard-breach"
+      ]
     }
   ],
   "playerStats": [],
@@ -5745,8 +5818,12 @@ function normalizeDB(db){
     o.side=o.side==="defense"?"defense":"attack"; o.role=o.role||"flex"; o.notes=o.notes||""; o.howToCounter=o.howToCounter||""; });
   db.roles.forEach(r=>{ r.id=r.id||slug(r.name||"role"); r.name=r.name||r.id;
     r.attackRoleLabel=r.attackRoleLabel||""; r.defenseRoleLabel=r.defenseRoleLabel||"";
-    if(!Array.isArray(r.attackOps))r.attackOps=[]; if(!Array.isArray(r.defenseOps))r.defenseOps=[]; r.notes=r.notes||""; });
-  db.roster.forEach(p=>{ p.name=p.name||""; p.roleId=p.roleId||""; p.notes=p.notes||""; });
+    if(!Array.isArray(r.attackOps))r.attackOps=[]; if(!Array.isArray(r.defenseOps))r.defenseOps=[];
+    r.notes=r.notes||""; r.desc=r.desc||r.notes||""; if(!r.notes&&r.desc)r.notes=r.desc; });
+  db.roster.forEach(p=>{ p.name=p.name||"";
+    if(!Array.isArray(p.roles)) p.roles = p.roleId ? [p.roleId] : [];
+    p.roles=p.roles.filter(id=>db.roles.some(r=>r.id===id));
+    delete p.roleId; delete p.notes; });
   if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
     db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
   const claimed=new Set();
@@ -5798,6 +5875,7 @@ const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all" },
   roster:{ edit:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
+let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 
 /* =================================================================== *
  *  CHROME
@@ -6095,9 +6173,9 @@ function onImagePicked(e){
  * =================================================================== */
 function renderRoster(root){
   const edit=UI.roster.edit;
-  root.innerHTML=`
+  root.innerHTML=`<div class="${edit?"roster-edit":""}">
     <div class="toolbar">
-      <div class="section-title" style="margin:0">Players occupy roles · operator pools live on the role</div>
+      <div class="section-title" style="margin:0">${edit?"Drag a role's ⠿ handle onto a player · drag chips to reorder · left→right = priority":"Players & the roles they prioritise (left → right)"}</div>
       <div class="grow"></div>
       ${edit?`<button class="btn sm" id="addPlayer">＋ player</button><button class="btn sm" id="addRole">＋ role</button>`:""}
       <button class="btn ${edit?"on":""}" id="rosterEdit">✎ ${edit?"Done":"Edit"}</button>
@@ -6106,57 +6184,71 @@ function renderRoster(root){
       <div class="panel-h"><h3>Roster</h3></div>
       <div class="panel-b"><div class="players" id="players"></div></div>
     </div>
-    <div class="section-title">Roles &amp; operator pools</div>
-    <div class="rolegrid" id="roleGrid"></div>`;
+    <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— operators ordered best → situational</span></div>
+    <div class="rolegrid" id="roleGrid"></div>
+  </div>`;
+  if(!window._rosterDnd){ window._rosterDnd=true; document.addEventListener("dragend",()=>{ ROSTER_DRAG=null; document.querySelectorAll(".prow.drop-ok").forEach(r=>r.classList.remove("drop-ok")); }); }
   byId("rosterEdit").onclick=()=>{ UI.roster.edit=!UI.roster.edit; renderRoster(root); };
   if(edit){
-    byId("addPlayer").onclick=()=>{ DB.roster.push({name:"New Player",roleId:DB.roles[0]?DB.roles[0].id:"",notes:""}); markDirty(); renderPlayers(); };
-    byId("addRole").onclick=()=>{ const id=uid("role"); DB.roles.push({id,name:"New Role",attackRoleLabel:"",defenseRoleLabel:"",attackOps:[],defenseOps:[],notes:""}); markDirty(); renderRoleGrid(); renderPlayers(); };
+    byId("addPlayer").onclick=()=>{ DB.roster.push({name:"New Player",roles:[]}); markDirty(); renderPlayers(); };
+    byId("addRole").onclick=()=>{ const id=uid("role"); DB.roles.push({id,name:"New Role",desc:"",notes:"",attackRoleLabel:"",defenseRoleLabel:"",attackOps:[],defenseOps:[]}); markDirty(); renderRoleGrid(); renderPlayers(); };
   }
   renderPlayers(); renderRoleGrid();
 }
 function renderPlayers(){
   const wrap=byId("players"); const edit=UI.roster.edit;
   wrap.innerHTML=DB.roster.map((p,i)=>{
-    const role=roleById(p.roleId); const initials=(p.name||"?").trim().slice(0,2).toUpperCase();
-    if(edit) return `<div class="prow" data-p="${i}">
+    const initials=(p.name||"?").trim().slice(0,2).toUpperCase();
+    const chips=(p.roles||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
+      return `<span class="prole" ${edit?`draggable="true" data-chip="${i}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${k}" title="Remove">✕</span>`:""}</span>`;
+    }).join("");
+    return `<div class="prow${edit?" droptgt":""}" data-p="${i}">
       <div class="pavatar">${esc(initials)}</div>
-      <input type="text" data-pname value="${esc(p.name)}" style="max-width:150px;font-weight:700">
-      <select data-prole style="max-width:190px">${DB.roles.map(r=>`<option value="${esc(r.id)}" ${r.id===p.roleId?"selected":""}>${esc(r.name)}</option>`).join("")}</select>
-      <input type="text" data-pnotes value="${esc(p.notes)}" placeholder="notes" style="flex:1;min-width:140px">
-      <button class="iconbtn" data-pdel title="Remove">✕</button></div>`;
-    return `<div class="prow">
-      <div class="pavatar">${esc(initials)}</div>
-      <div class="pname">${esc(p.name)}</div>
-      ${role?`<span class="tag role">${esc(role.name)}</span><span class="row" style="gap:5px"><span class="tag atk">${esc(role.attackRoleLabel||"—")}</span><span class="tag def">${esc(role.defenseRoleLabel||"—")}</span></span>`:`<span class="tag">unassigned</span>`}
+      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:140px;font-weight:700">`:`<div class="pname">${esc(p.name)}</div>`}
+      <div class="proles">${chips||`<span class="empty muted">${edit?"drag roles here →":"no roles set"}</span>`}</div>
       <div class="grow"></div>
-      <div class="muted small" style="max-width:46%;text-align:right">${esc(p.notes)}</div></div>`;
+      ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
+    </div>`;
   }).join("")||`<div class="empty">No players.</div>`;
-  if(edit) wrap.querySelectorAll("[data-p]").forEach(row=>{ const i=+row.dataset.p; const p=DB.roster[i];
-    row.querySelector("[data-pname]").oninput=e=>{ p.name=e.target.value; markDirty(); };
-    row.querySelector("[data-prole]").onchange=e=>{ p.roleId=e.target.value; markDirty(); renderPlayers(); renderRoleGrid(); };
-    row.querySelector("[data-pnotes]").oninput=e=>{ p.notes=e.target.value; markDirty(); };
-    row.querySelector("[data-pdel]").onclick=()=>{ DB.roster.splice(i,1); markDirty(); renderPlayers(); renderRoleGrid(); }; });
+  bindPlayers();
 }
+function bindPlayers(){
+  const wrap=byId("players"); if(!UI.roster.edit) return;
+  wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
+  wrap.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ DB.roster.splice(+b.closest("[data-p]").dataset.p,1); markDirty(); renderPlayers(); renderRoleGrid(); });
+  wrap.querySelectorAll("[data-chiprm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,k]=x.dataset.chiprm.split("|").map(Number); DB.roster[i].roles.splice(k,1); markDirty(); renderPlayers(); renderRoleGrid(); });
+  wrap.querySelectorAll("[data-chip]").forEach(c=>c.addEventListener("dragstart",e=>{ const [i,k]=c.dataset.chip.split("|").map(Number); ROSTER_DRAG={kind:"chip",player:i,idx:k}; e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain","chip");}catch(_){}}));
+  wrap.querySelectorAll(".prow.droptgt").forEach(row=>{
+    const i=+row.dataset.p;
+    row.addEventListener("dragover",e=>{ if(!ROSTER_DRAG)return; e.preventDefault(); e.dataTransfer.dropEffect=ROSTER_DRAG.kind==="pool"?"copy":"move"; row.classList.add("drop-ok"); });
+    row.addEventListener("dragleave",e=>{ if(!row.contains(e.relatedTarget)) row.classList.remove("drop-ok"); });
+    row.addEventListener("drop",e=>{ e.preventDefault(); row.classList.remove("drop-ok"); if(!ROSTER_DRAG)return;
+      const pos=rosterInsertIndex(row,e.clientX), P=DB.roster[i];
+      if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P.roles.includes(rid)){ P.roles.splice(pos,0,rid); markDirty(); } }
+      else { const src=DB.roster[ROSTER_DRAG.player], rid=src.roles[ROSTER_DRAG.idx];
+        if(ROSTER_DRAG.player===i){ src.roles.splice(ROSTER_DRAG.idx,1); let np=pos; if(ROSTER_DRAG.idx<np)np--; src.roles.splice(Math.max(0,np),0,rid); markDirty(); }
+        else if(rid&&!P.roles.includes(rid)){ src.roles.splice(ROSTER_DRAG.idx,1); P.roles.splice(pos,0,rid); markDirty(); } }
+      ROSTER_DRAG=null; renderPlayers(); renderRoleGrid();
+    });
+  });
+}
+function rosterInsertIndex(row,clientX){ const chips=[...row.querySelectorAll(".prole")]; for(let j=0;j<chips.length;j++){ const r=chips[j].getBoundingClientRect(); if(clientX<r.left+r.width/2) return j; } return chips.length; }
 function renderRoleGrid(){
   const wrap=byId("roleGrid"); const edit=UI.roster.edit;
   wrap.innerHTML=DB.roles.map(r=>{
-    const occ=DB.roster.filter(p=>p.roleId===r.id).map(p=>p.name);
+    const occ=DB.roster.filter(p=>(p.roles||[]).includes(r.id)).map(p=>p.name);
     return `<div class="rolecard" data-role="${esc(r.id)}">
       <div class="rh">
-        ${edit?`<input type="text" data-rname value="${esc(r.name)}" style="max-width:200px;font-weight:800;font-size:15px">`:`<h3>${esc(r.name)}</h3>`}
-        <span class="occ">${occ.length?occ.map(n=>`<b>${esc(n)}</b>`).join(", "):'<span style="color:var(--muted2)">unassigned</span>'}</span>
+        ${edit?`<span class="rdrag" draggable="true" data-rdrag="${esc(r.id)}" title="Drag onto a player">⠿</span>`:""}
+        ${edit?`<input type="text" data-rname value="${esc(r.name)}" style="max-width:170px;font-weight:800;font-size:15px">`:`<h3>${esc(r.name)}</h3>`}
+        <span class="occ">${occ.length?occ.map(n=>`<b>${esc(n)}</b>`).join(", "):'<span style="color:var(--muted2)">—</span>'}</span>
         <div class="grow"></div>
         ${edit?`<button class="btn sm danger" data-rdel>Delete</button>`:""}
       </div>
       <div class="rb">
-        ${edit?`<div class="row" style="gap:10px">
-            <label class="field" style="flex:1"><span class="lab">Attack label</span><input type="text" data-ratk value="${esc(r.attackRoleLabel)}"></label>
-            <label class="field" style="flex:1"><span class="lab">Defense label</span><input type="text" data-rdef value="${esc(r.defenseRoleLabel)}"></label></div>`
-          :`<div class="row"><span class="tag atk">ATK · ${esc(r.attackRoleLabel||"—")}</span><span class="tag def">DEF · ${esc(r.defenseRoleLabel||"—")}</span></div>`}
+        ${edit?`<label class="field"><span class="lab">Short description</span><textarea data-rdesc>${esc(r.desc||r.notes||"")}</textarea></label>`:((r.desc||r.notes)?`<div class="muted small role-desc">${esc(r.desc||r.notes)}</div>`:"")}
         ${poolHTML(r,"attack",edit)}
         ${poolHTML(r,"defense",edit)}
-        ${edit?`<label class="field"><span class="lab">Notes</span><textarea data-rnotes>${esc(r.notes)}</textarea></label>`:(r.notes?`<div class="muted small">${esc(r.notes)}</div>`:"")}
       </div></div>`;
   }).join("")||`<div class="empty">No roles.</div>`;
   bindRoleGrid();
@@ -6171,11 +6263,10 @@ function poolHTML(r,side,edit){
 function bindRoleGrid(){
   byId("roleGrid").querySelectorAll("[data-role]").forEach(card=>{
     const r=roleById(card.dataset.role); if(!r)return;
+    const h=card.querySelector("[data-rdrag]"); if(h) h.addEventListener("dragstart",e=>{ ROSTER_DRAG={kind:"pool",roleId:r.id}; e.dataTransfer.effectAllowed="copy"; try{e.dataTransfer.setData("text/plain","role");}catch(_){}});
     const rn=card.querySelector("[data-rname]"); if(rn){ rn.oninput=e=>{ r.name=e.target.value; markDirty(); }; rn.onchange=()=>{ renderPlayers(); }; }
-    const ra=card.querySelector("[data-ratk]"); if(ra) ra.oninput=e=>{ r.attackRoleLabel=e.target.value; markDirty(); };
-    const rd=card.querySelector("[data-rdef]"); if(rd) rd.oninput=e=>{ r.defenseRoleLabel=e.target.value; markDirty(); };
-    const rno=card.querySelector("[data-rnotes]"); if(rno) rno.oninput=e=>{ r.notes=e.target.value; markDirty(); };
-    const del=card.querySelector("[data-rdel]"); if(del) del.onclick=()=>{ if(confirm(`Delete role "${r.name}"? Players in it become unassigned.`)){ DB.roles=DB.roles.filter(x=>x.id!==r.id); DB.roster.forEach(p=>{ if(p.roleId===r.id)p.roleId=""; }); markDirty(); renderRoleGrid(); renderPlayers(); } };
+    const rde=card.querySelector("[data-rdesc]"); if(rde) rde.oninput=e=>{ r.desc=e.target.value; r.notes=e.target.value; markDirty(); };
+    const del=card.querySelector("[data-rdel]"); if(del) del.onclick=()=>{ if(confirm(`Delete role "${r.name}"? It will be removed from any players.`)){ DB.roles=DB.roles.filter(x=>x.id!==r.id); DB.roster.forEach(p=>{ p.roles=(p.roles||[]).filter(id=>id!==r.id); }); markDirty(); renderRoleGrid(); renderPlayers(); } };
     card.querySelectorAll("[data-poolrm]").forEach(x=>x.onclick=()=>{ const [side,id]=x.dataset.poolrm.split("|"); const key=side==="attack"?"attackOps":"defenseOps"; r[key]=r[key].filter(v=>v!==id); markDirty(); renderRoleGrid(); });
     card.querySelectorAll("[data-pooladd]").forEach(sel=>sel.onchange=()=>{ const side=sel.dataset.pooladd; const key=side==="attack"?"attackOps":"defenseOps"; if(sel.value&&!r[key].includes(sel.value)){ r[key].push(sel.value); markDirty(); renderRoleGrid(); } });
   });
