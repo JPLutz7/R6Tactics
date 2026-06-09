@@ -274,19 +274,25 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   gadget spots / attack entry arrows) but it was **reverted** (positions were approximate —
   no room-label coords exist to anchor them). If revisited, make them **drag-editable in ✎
   Edit** first so positions can be tuned, and consider bundling operator logos.
-- **Attack-strat suggester (v35, prep tool).** In the Tactics panel the **Attack** group has a
-  **🎯 Suggest** button → a prep view: pick the **site** + the **defenders you expect** (chips,
-  max 5) and it **ranks that site's attack strats** vs the comp, with a one-line reason; the
-  top pick opens on click. Scoring (`scoreAttackStrat`): each defender carries archetype
-  weights (`DB.suggester.defenders`), each attack strat has an `approach`, and
-  `DB.suggester.matchups[approach][archetype]` gives the score — all **tunable in the seed**
-  (no code change). Archetypes: anti-breach / traps / intel / roamers / anchors. Code:
-  `renderSuggester()` / `scoreAttackStrat()` / `compArchetypes()`. **ToS:** labelled **prep**
-  with a note — it's for *expected* defenders (scrims/VOD), **not** live in-match enemy input
-  (stays on the safe side of §1). **Reason is archetype-aware (v36):** "{dominant archetype}
-  heavy ({examples}) → {`archetypeAdvice[archetype]`}; lead with {winning approach}" — the
-  advice clause now describes how to counter that archetype (tunable via
-  `DB.suggester.archetypeAdvice`), and it names the matchup-winning approach.
+- **Read-&-counter suggester (prep tool).** In the Tactics panel the **Attack** group has a
+  **🎯 Suggest** button → a prep view: pick the **site** + the **defenders you've seen** (chips,
+  partial is fine, 0–5). It **predicts which of the site's stored defense setups they're
+  running** and **counters each**:
+  - **Prediction** (`predictDefense`): scores each defense strat by how the picked ops fit its
+    op pools — `coverage + 0.6·distinctiveFraction + 0.4·archCosine(comp, strat-role-profile)`.
+    Distinctive ops (in one setup's pool but not the other) are the strong "tell". Shows the
+    **Most likely** setup + **Also possible** ones when the scores are close OR info is thin;
+    confidence (High/Med/Low) from #ops-known + the gap. Works with **0 known ops** (pure prep
+    — shows both setups) up to 5.
+  - **Counter:** for each predicted setup it fills the enemy team out to 5 from that setup's
+    pools (`predictedTeam`), then picks the best attack strat vs that team (`bestCounter` →
+    `scoreAttackStrat`) with an archetype-aware reason. Click a counter → opens that attack strat.
+  - Scoring config is **tunable in the seed** (`DB.suggester`: per-defender archetype weights +
+    approach×archetype `matchups` + `archetypeAdvice`). Each attack strat has an `approach`
+    (hardbreach/vertical/flank/utility). Archetypes: anti-breach / traps / intel / roamers /
+    anchors. Code: `renderSuggester` / `predictDefense` / `predictedTeam` / `bestCounter` /
+    `scoreAttackStrat` / `compArchetypes`. **ToS:** labelled **prep** — for defenders you've
+    *seen/expect* (scrims/VOD), **not** live in-match enemy input (safe side of §1).
 - **Known nit — attack "Open up" vs by-player overlap:** on a single-breach attack strat
   (hard breacher only, no vertical/flank slot), the one wall in **Open up** is the same line
   shown under the hard breacher in **Gadgets & jobs — by player**. Minor duplication; could
@@ -325,6 +331,6 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   *not* scraped. R6Strat (r6strat.com) is a **login-gated private strategy builder**, not a
   public library; r6guides.com is a parked domain — so there is no machine-readable strat
   database to pull. Treat strats as a solid editable baseline; refine from VOD/scrims.
-- **Next (owner's plan):** an **attack-strat suggester** — pick the attack strat based on the
-  defensive operators the user enters + the site being defended. Not built yet; the slot/role
-  structure is designed to support it.
+- **Read-&-counter suggester — DONE** (see the suggester bullet above): predicts the enemy's
+  likely defense setup(s) from the ops you've seen + the site, and counters each. Possible
+  next: an in-app editor for the `DB.suggester` weights, and tuning the per-archetype advice.

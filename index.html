@@ -346,19 +346,27 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .sg-defs{display:flex;flex-wrap:wrap;gap:5px}
 .sg-def{font-size:11.5px;font-weight:600;border:1px solid var(--line2);background:var(--panel2);border-radius:999px;padding:3px 9px;cursor:pointer;color:var(--text)}
 .sg-def.on{border-color:var(--def-line);background:var(--def-bg);color:#1c5fa6;font-weight:800}
-.sg-reason{margin:11px 0 2px;font-size:12.5px;line-height:1.5;background:var(--atk-bg);border:1px solid var(--atk-line);border-radius:8px;padding:8px 10px;color:#8a3a14;font-weight:600}
-.sg-results{display:flex;flex-direction:column;gap:6px}
-.sg-res{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;padding:8px 10px;cursor:pointer}
-.sg-res.best{border-color:var(--atk-line);background:var(--atk-bg)}
-.sg-res:hover{border-color:var(--atk-line)}
-.sg-res-h{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:13px}
-.sg-rank{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:800;background:#5a6b7e;color:#fff}
-.sg-res.best .sg-rank{background:#e8632a}
-.sg-res-nm{font-weight:700;color:var(--text)}
 .sg-ap{margin-left:auto}
-.sg-bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden}
-.sg-bar i{display:block;height:100%;border-radius:4px}
-.sg-bar i.pos{background:#3fa66a}.sg-bar i.neg{background:#c2434f}
+.sg-preds{display:flex;flex-direction:column;gap:9px}
+.sg-pred{border:1px solid var(--line2);background:var(--panel2);border-radius:10px;padding:9px 11px}
+.sg-pred.top{border-color:var(--def-line);background:var(--def-bg)}
+.sg-pred-h{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.sg-pred-tag{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:var(--panel3);border:1px solid var(--line2);border-radius:5px;padding:2px 5px}
+.sg-pred.top .sg-pred-tag{color:#1c5fa6;border-color:var(--def-line);background:#fff}
+.sg-pred-nm{font-weight:800;font-size:13.5px;color:var(--text)}
+.sg-conf{margin-left:auto;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:5px;border:1px solid var(--line2)}
+.sg-conf.high{color:#1f7a4d;background:#e4f6ec;border-color:#9ed8b6}
+.sg-conf.medium{color:#a8742a;background:var(--obj-bg);border-color:var(--obj-line)}
+.sg-conf.low{color:var(--muted);background:var(--panel3)}
+.sg-pred-sum{margin-bottom:5px}
+.sg-tells{font-size:12px;line-height:1.4;margin:4px 0 2px}
+.sg-tells b{color:var(--text)}
+.sg-fills{margin-bottom:6px}
+.sg-counter{display:block;width:100%;text-align:left;margin-top:6px;border:1px solid var(--atk-line);background:var(--atk-bg);border-radius:8px;padding:7px 9px;cursor:pointer;font-size:13px;color:#8a3a14}
+.sg-counter:hover{filter:brightness(.98)}
+.sg-counter b{color:#a83d12}
+.sg-counter-lab{font-weight:800;color:#a83d12;margin-right:3px}
+.sg-counter-why{margin-top:3px;font-size:11.5px;line-height:1.45;color:#9a5a36;font-weight:600}
 .tp-jobs{display:flex;flex-direction:column;gap:7px}
 .tp-job{border:1px solid var(--line2);border-radius:9px;padding:7px 10px;background:var(--panel2)}
 .tp-job-who{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:12.5px}
@@ -36859,31 +36867,64 @@ function compArchetypes(defenderIds){
   (defenderIds||[]).forEach(id=>{ const w=(cfg.defenders||{})[id]; if(!w)return; for(const a in w) tot[a]=(tot[a]||0)+w[a]; });
   return tot;
 }
+function defRoleArch(role){ return {"antibreach-def":"antibreach","trapper-def":"trapper","intel-def":"intel","roamer-def":"roamer","anchor-def":"anchor","igl-def":"anchor","flex-def":"anchor"}[role]||null; }
+function defStratArch(st){ const t={}; (st.slots||[]).forEach(s=>{ const a=defRoleArch(s.role); if(a)t[a]=(t[a]||0)+1; }); return t; }
+function archCosine(a,b){ const ks=new Set([...Object.keys(a),...Object.keys(b)]); let dot=0,na=0,nb=0; ks.forEach(k=>{ const x=a[k]||0,y=b[k]||0; dot+=x*y; na+=x*x; nb+=y*y; }); return (na&&nb)?dot/Math.sqrt(na*nb):0; }
+// predict which of the site's stored defense setups the picked ops point to (ranked)
+function predictDefense(m,siteId,picked){
+  const defStrats=(((m.tactics||{}).defense||{})[siteId]||{}).strats||[];
+  if(!defStrats.length) return [];
+  const pools=defStrats.map(st=>{ const set=new Set(); (st.slots||[]).forEach(s=>(s.ops||[]).forEach(o=>set.add(o))); return set; });
+  const compA=compArchetypes(picked);
+  return defStrats.map((st,i)=>{
+    const matched=picked.filter(op=>pools[i].has(op));
+    const coverage=picked.length?matched.length/picked.length:0;
+    const distinctive=picked.filter(op=>pools[i].has(op)&&pools.every((s,j)=>j===i||!s.has(op)));
+    const distFrac=picked.length?distinctive.length/picked.length:0;
+    const score=coverage + 0.6*distFrac + 0.4*archCosine(compA,defStratArch(st));
+    return {st,i,score,matched,distinctive};
+  }).sort((a,b)=>b.score-a.score);
+}
+// fill the enemy team out to 5 from a predicted setup's pools (keeps the known picks)
+function predictedTeam(st,picked){ const t=(picked||[]).slice(); (st.slots||[]).forEach(s=>{ if(t.length>=5)return; const p=(s.ops||[]).find(o=>!t.includes(o)); if(p)t.push(p); }); return t.slice(0,5); }
+function bestCounter(m,siteId,team){ const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null; return atk.map((st,si)=>({st,si,score:scoreAttackStrat(st,team)})).sort((a,b)=>b.score-a.score)[0]; }
+function counterReason(team,approach){ const cfg=DB.suggester||{}; const arch=compArchetypes(team); const top=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0]; if(!top)return""; return `${(cfg.archetypeAdvice||{})[top]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[approach]||approach}.`; }
+function confLabel(known,gap){ if(known>=4&&gap>0.3)return"High"; if(known>=3&&gap>0.12)return"Medium"; return"Low"; }
 function renderSuggester(host,m){
   const S=UI.maps.suggest; const cfg=DB.suggester||{};
   const site=m.bombsites.find(b=>b.id===S.siteId)||m.bombsites[0]; if(site)S.siteId=site.id;
   const defs=DB.operators.filter(o=>o.side==="defense").slice().sort((a,b)=>a.name.localeCompare(b.name));
-  const strats=(((m.tactics||{}).attack||{})[S.siteId]||{}).strats||[];
-  const arch=compArchetypes(S.defenders);
-  const topArch=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0];
-  const ranked=strats.map((st,si)=>({st,si,score:scoreAttackStrat(st,S.defenders)})).sort((a,b)=>b.score-a.score);
-  const max=Math.max(1,...ranked.map(r=>Math.abs(r.score)));
-  const examples=()=>{ if(!topArch)return""; const list=S.defenders.filter(id=>((cfg.defenders||{})[id]||{})[topArch]).map(id=>{const o=opById(id);return o?o.name:id;}); return list.slice(0,2).join(", "); };
-  const reason=(S.defenders.length&&topArch&&ranked.length)?`${(cfg.archetypeLabels||{})[topArch]||topArch} heavy${examples()?` (${esc(examples())})`:""} → ${(cfg.archetypeAdvice||{})[topArch]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[ranked[0].st.approach]||ranked[0].st.approach}.`:"";
+  const known=S.defenders.length; const opName=id=>{const o=opById(id);return o?o.name:id;};
+  // predict their defensive setup(s); show top + runner-up when close OR when info is thin
+  const preds=predictDefense(m,S.siteId,S.defenders);
+  const gap=preds.length>1?(preds[0].score-preds[1].score):(preds.length?1:0);
+  let show=[]; if(preds.length){ show=[preds[0]]; for(let i=1;i<preds.length;i++){ if(known<3 || preds[i].score>=preds[0].score-0.3) show.push(preds[i]); } }
+  show=show.slice(0,3);
+  const cards=show.map((p,idx)=>{
+    const conf=idx===0?confLabel(known,gap):"Low";
+    const team=predictedTeam(p.st,S.defenders);
+    const fills=team.filter(id=>!S.defenders.includes(id));
+    const counter=bestCounter(m,S.siteId,team);
+    const tells=(p.distinctive.length?p.distinctive:p.matched).map(opName);
+    return `<div class="sg-pred ${idx===0?"top":""}">
+      <div class="sg-pred-h"><span class="sg-pred-tag">${idx===0?"Most likely":"Also possible"}</span><span class="sg-pred-nm">${esc(p.st.name)}</span><span class="sg-conf ${conf.toLowerCase()}">${conf}</span></div>
+      ${p.st.summary?`<div class="muted small sg-pred-sum">${esc(p.st.summary)}</div>`:""}
+      ${tells.length?`<div class="sg-tells"><b>Tells:</b> ${tells.map(esc).join(", ")}</div>`:""}
+      ${fills.length?`<div class="sg-fills muted small">probably rounds out with ${fills.map(esc).join(", ")}</div>`:""}
+      ${counter?`<button class="sg-counter" data-sgopen="${counter.si}"><span class="sg-counter-lab">► Counter</span> <b>${esc(counter.st.name)}</b> <span class="tag role sg-ap">${esc((cfg.approachLabels||{})[counter.st.approach]||counter.st.approach||"")}</span><div class="sg-counter-why">${esc(counterReason(team,counter.st.approach))}</div></button>`:""}
+    </div>`;
+  }).join("");
   const siteBtns=m.bombsites.map(b=>`<button class="sg-site ${b.id===S.siteId?"on":""}" data-sgsite="${esc(b.id)}">${esc(b.name)}</button>`).join("");
   const chips=defs.map(o=>{ const on=S.defenders.includes(o.id); return `<button class="sg-def ${on?"on":""}" data-sgdef="${esc(o.id)}">${esc(o.name)}</button>`; }).join("");
-  const results=S.defenders.length?ranked.map((r,i)=>{ const st=r.st; const pct=Math.round(Math.abs(r.score)/max*100); const pos=r.score>=0;
-    return `<button class="sg-res ${i===0?"best":""}" data-sgopen="${r.si}"><div class="sg-res-h"><span class="sg-rank">${i===0?"★":i+1}</span><span class="sg-res-nm">${esc(st.name)}</span><span class="tag role sg-ap">${esc((cfg.approachLabels||{})[st.approach]||st.approach||"")}</span></div><div class="sg-bar"><i class="${pos?"pos":"neg"}" style="width:${pct}%"></i></div></button>`; }).join(""):`<div class="tp-empty muted small">Pick the defenders you expect on this site →</div>`;
   host.innerHTML=`<div class="tp-detail">
-    <div class="tp-detail-h"><button class="btn sm" id="sgBack">← Tactics</button><span class="tag atk">Attack suggester</span><span class="sg-prep">prep</span></div>
+    <div class="tp-detail-h"><button class="btn sm" id="sgBack">← Tactics</button><span class="tag atk">Read & counter</span><span class="sg-prep">prep</span></div>
     <div class="muted small sg-note">${esc(cfg.note||"Plan vs the defenders you expect (scrims/VOD) — not for live in-match input.")}</div>
     <div class="tp-sec-h">Site</div>
     <div class="sg-sites">${siteBtns}</div>
-    <div class="tp-sec-h">Expected defenders <span class="muted">(${S.defenders.length}/5)</span></div>
+    <div class="tp-sec-h">Defenders seen <span class="muted">(${known}/5 — partial is fine)</span></div>
     <div class="sg-defs">${chips}</div>
-    ${reason?`<div class="sg-reason">${reason}</div>`:""}
-    <div class="tp-sec-h">Best attack for this setup</div>
-    <div class="sg-results">${results}</div></div>`;
+    <div class="tp-sec-h">Likely setup → counter${known?` (read from ${known} op${known>1?"s":""})`:" — pure prep, pick some ops"}</div>
+    <div class="sg-preds">${cards||`<div class="tp-empty muted small">No defense tactics on this site to read against.</div>`}</div></div>`;
   byId("sgBack").onclick=()=>{ UI.maps.suggest=null; renderTacticsPanel(); };
   host.querySelectorAll("[data-sgsite]").forEach(b=>b.onclick=()=>{ S.siteId=b.dataset.sgsite; renderSuggester(host,m); });
   host.querySelectorAll("[data-sgdef]").forEach(b=>b.onclick=()=>{ const id=b.dataset.sgdef; const i=S.defenders.indexOf(id); if(i>=0)S.defenders.splice(i,1); else if(S.defenders.length<5)S.defenders.push(id); renderSuggester(host,m); });
