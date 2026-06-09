@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 26**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 27**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -57,7 +57,7 @@ Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
   version, publishedAt,
   maps: [ { id, name, coverImage, notes,
             floors: [ { name, layoutImage, callouts: [ CALLOUT ] } ],
-            bombsites: [ {id,name,rooms} ], tactics:{attack:{},defense:{}} } ],
+            bombsites: [ {id,name,rooms} ], tactics:{attack:{[siteId]:TAC},defense:{[siteId]:TAC}} } ],
   operators: [ {id,name,side,winRate,role,notes,howToCounter} ], // 75. winRate = real win-rate %, see §11
   roles:     [ {id,name,side,desc,ops:[]} ],   // 13 SIDE-SPECIFIC roles (6 attack, 7 defense); ops render ordered by winRate desc (§11)
   roster:    [ {name,attackRoles:[roleId],defenseRoles:[roleId]} ], // two priority lists/player (order=priority); drag role cards onto a player's ATK or DEF list
@@ -70,6 +70,10 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   site: digit "1".."4" (bomb-site group)   rate: peek success-rate %
   peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
     tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
+TAC = { ...legacy flat fields, strats: [ STRAT ] }          // see §12
+STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], steps:[], reinforce:[] }
+  role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for
+  that slot. The Tactics panel assigns each rostered player a slot by their role priority.
 ```
 Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **99 bomb-site
 markers, 105 spawn peeks** as overlays. As of v15 **every map** uses r6calls
@@ -168,6 +172,11 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 - **Click any operator chip → detail popup** (`openOpModal()`): round win-rate, side,
   role, "what they do" (`notes`) and "how to counter" (`howToCounter`). Reuses the `.modal`
   pattern; close via ✕ / backdrop / Esc.
+- **Tactics system (v27, §12):** map detail now has a right-hand **Tactics panel** —
+  strats grouped by side → site. Tap one → the map jumps to that site's floor and the
+  panel shows the strat: a per-player operator assignment (2–4 options each, picked from
+  the player's prioritised roster roles), reinforcements, and ordered steps. **Clubhouse
+  is fully seeded** (2 defense + 3 attack per site, all 4 sites = 20 strats).
 - Import/export, versioned publish model, README. **Data/ToS rule clarified (§1):**
   static or periodically-refreshed reference data (incl. tracker win-rates) is fine;
   only *live, in-match opponent intel* is banned.
@@ -241,4 +250,32 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **To refresh with exact numbers:** grab a clean per-operator win-rate table from a
   **logged-in R6 Tracker on a normal machine** (this env can't), update the `winRate`
   values in the seed (`DB.operators`), bump SEED `version`. Render code: `wrOf()` /
-  `poolHTML()` in `index.html`.
+  `rolePoolHTML()` in `index.html`.
+
+## 12. Tactics system — structure, sourcing & how to extend
+- **UX:** in a map's detail view, a right-hand **Tactics panel** lists strats grouped by
+  **side → bomb site**. Tap a strat → the map jumps to that site's floor (`siteFloorIndex()`
+  — uses the floor token in the site name, e.g. "2F · …", highest floor if it spans two) and
+  the panel swaps to the strat detail (back button top-left). Detail shows **Who picks what**
+  (per-player op options), Reinforce (defense), and ordered steps. Op chips reuse the
+  click-to-open operator popup (§7). Code: `renderTacticsPanel()` / `openTactic()` /
+  `renderTacticDetail()` / `assignTactic()`; two-column layout `.detail-cols` in
+  `renderMapDetail()`. Panel only renders when the map has `bombsites`.
+- **Op assignment:** `assignTactic(strat, side)` greedily matches each rostered player to a
+  strat slot by the player's prioritised roles for that side (`attackRoles`/`defenseRoles`,
+  by rank), then fills leftovers. Each player sees their slot's 2–4 op options + position;
+  players with no matching slot get a "flex — pick from your pool" note. So picks
+  auto-adapt to whatever the Roster says.
+- **Data shape:** `map.tactics[side][siteId].strats = [ STRAT ]` (see §4). Slots reference
+  side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
+  (unused by this UI).
+- **Coverage:** only **Clubhouse** is seeded (20 strats). Bomb sites currently exist on 5
+  maps (clubhouse, bank, oregon, consulate, kafe); the other 20 need a `bombsites` array
+  before they can hold tactics (derivable from the existing `type:"site"` markers).
+- **Sourcing:** content was **composed from current meta** (cross-checked with map guides),
+  *not* scraped. R6Strat (r6strat.com) is a **login-gated private strategy builder**, not a
+  public library; r6guides.com is a parked domain — so there is no machine-readable strat
+  database to pull. Treat strats as a solid editable baseline; refine from VOD/scrims.
+- **Next (owner's plan):** an **attack-strat suggester** — pick the attack strat based on the
+  defensive operators the user enters + the site being defended. Not built yet; the slot/role
+  structure is designed to support it.
