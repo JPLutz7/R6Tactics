@@ -191,6 +191,18 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .mk.site .mdot{background:#3da9fc;box-shadow:0 0 0 2px #ffffffcc,0 0 7px rgba(61,169,252,.7);width:12px;height:12px;border-radius:3px;transform:rotate(45deg)}
 .vt-sel{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(4px);max-width:155px}
 .viewport:not(.show-peeks) .mk.peek{display:none}
+/* tactic overlay markers (shown only while a strat is open; cleared on leave) */
+.mk.tac{z-index:4}
+.mk.tac .mlb.tac{font-size:11px;font-weight:700}
+.mk.tac.reinf .tdot{color:#2f6aa8;font-size:15px;line-height:1;text-shadow:0 0 3px #fff,0 0 3px #fff}
+.mk.tac.reinf .mlb.reinf{background:#10243a;border-color:#2f6aa8;color:#cfe6ff}
+.mk.tac.reinf .mlb .gop{color:#ffd479;font-weight:800;margin-left:3px}
+.mk.tac.gad .tdot.gad{color:#1f9d6b;font-size:13px;line-height:1;text-shadow:0 0 3px #fff,0 0 3px #fff}
+.mk.tac.gad .mlb.gad{background:#0e2a20;border-color:#2f9e72;color:#c8f3df;font-weight:800}
+.mk.tac.entry .tarrow{display:inline-block;color:#e8632a;font-size:20px;line-height:0;text-shadow:0 0 3px #fff,0 0 4px #fff,0 1px 2px rgba(0,0,0,.5)}
+.mk.tac.entry .mlb.entry{background:#3a1c0c;border-color:#e8632a;color:#ffd9c2;font-weight:800;left:auto;right:100%;margin-left:0;margin-right:7px}
+.floortab.hasmarks{position:relative}
+.floortab .fmk{display:inline-block;width:6px;height:6px;border-radius:50%;background:#e8632a;margin-left:6px;vertical-align:middle}
 /* clickable spawn-peek labels (open how-to video popup) */
 .mk.peek.vid .pk-play{font-size:8px;margin-right:4px;opacity:.85}
 .viewport:not(.show-edit) .mk.peek.vid .mlb{pointer-events:auto;cursor:pointer}
@@ -370,7 +382,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 28,
+  "version": 29,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -654,7 +666,8 @@ const SEED_DATA =
           "rooms": [
             "Master Bedroom",
             "Gym"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "clubhouse-2f-cash-room-cctv-room",
@@ -662,7 +675,8 @@ const SEED_DATA =
           "rooms": [
             "Cash Room",
             "CCTV Room"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "clubhouse-1f-bar-stock-room",
@@ -670,7 +684,8 @@ const SEED_DATA =
           "rooms": [
             "Bar",
             "Stock Room"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "clubhouse-b-church-arsenal-room",
@@ -678,7 +693,8 @@ const SEED_DATA =
           "rooms": [
             "Church",
             "Arsenal Room"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -742,6 +758,48 @@ const SEED_DATA =
                   "Thermite/Hibana open Bedroom/Gym; Lion scan the flood.",
                   "Entry trades through the breach from Cash.",
                   "Plant the Bedroom/Gym default; hold post-plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 46,
+                    "y": 33,
+                    "dir": 200,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 48,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 33,
+                    "y": 57,
+                    "dir": 90,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 46,
+                    "dir": 180,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 52,
+                    "dir": 160,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -801,6 +859,48 @@ const SEED_DATA =
                   "Vertical pressure forces anchors off the bomb.",
                   "Entry floods the opened site and trades.",
                   "Plant under your holes; hold vertical."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 46,
+                    "y": 33,
+                    "dir": 200,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 48,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 33,
+                    "y": 57,
+                    "dir": 90,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 46,
+                    "dir": 180,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 52,
+                    "dir": 160,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -860,6 +960,48 @@ const SEED_DATA =
                   "Thatcher/Thermite open the main wall on the call.",
                   "Hit both angles; isolate and trade the anchors.",
                   "Plant default; hold the crossfire post-plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 46,
+                    "y": 33,
+                    "dir": 200,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 48,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 33,
+                    "y": 57,
+                    "dir": 90,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 46,
+                    "dir": 180,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 56,
+                    "y": 52,
+                    "dir": 160,
+                    "slot": 4
+                  }
                 ]
               }
             ]
@@ -923,6 +1065,48 @@ const SEED_DATA =
                   "Thermite/Hibana open the wall; Lion scan the flood.",
                   "Entry trades up the staircase into the opening.",
                   "Plant the Cash/CCTV default; hold post-plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 84,
+                    "y": 49,
+                    "dir": 235,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 88,
+                    "y": 62,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 78,
+                    "y": 77,
+                    "dir": 0,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 50,
+                    "dir": 90,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 52,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -982,6 +1166,48 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "Topside entry floods the split site.",
                   "Plant Cash/CCTV; hold vertical + holes."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 84,
+                    "y": 49,
+                    "dir": 235,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 88,
+                    "y": 62,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 78,
+                    "y": 77,
+                    "dir": 0,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 50,
+                    "dir": 90,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 52,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -1041,6 +1267,48 @@ const SEED_DATA =
                   "Thatcher/Thermite open the wall on the call.",
                   "Hit both angles; isolate and trade.",
                   "Plant default; hold the crossfire."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 84,
+                    "y": 49,
+                    "dir": 235,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 88,
+                    "y": 62,
+                    "dir": 250,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 78,
+                    "y": 77,
+                    "dir": 0,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 2,
+                    "x": 66,
+                    "y": 50,
+                    "dir": 90,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 52,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               }
             ]
@@ -1104,6 +1372,48 @@ const SEED_DATA =
                   "Thermite/Hibana open Bar; Lion scan the flood.",
                   "Entry trades from Construction into the opening.",
                   "Plant the Bar/Stock default; hold post-plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 32,
+                    "y": 58,
+                    "dir": 90,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 50,
+                    "y": 37,
+                    "dir": 180,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 77,
+                    "y": 46,
+                    "dir": 250,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 78,
+                    "y": 70,
+                    "dir": 300,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 64,
+                    "y": 68,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -1163,6 +1473,48 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "1F entry floods the split site.",
                   "Plant under your holes; hold vertical."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 32,
+                    "y": 58,
+                    "dir": 90,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 50,
+                    "y": 37,
+                    "dir": 180,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 77,
+                    "y": 46,
+                    "dir": 250,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 78,
+                    "y": 70,
+                    "dir": 300,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 64,
+                    "y": 68,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -1222,6 +1574,48 @@ const SEED_DATA =
                   "Thatcher/Thermite open the main wall on the call.",
                   "Hit both angles; isolate and trade.",
                   "Plant default; hold Garage + Construction."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 32,
+                    "y": 58,
+                    "dir": 90,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 50,
+                    "y": 37,
+                    "dir": 180,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 77,
+                    "y": 46,
+                    "dir": 250,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 78,
+                    "y": 70,
+                    "dir": 300,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 1,
+                    "x": 64,
+                    "y": 68,
+                    "dir": 0,
+                    "slot": 4
+                  }
                 ]
               }
             ]
@@ -1285,6 +1679,48 @@ const SEED_DATA =
                   "Thermite/Hibana open; Lion scan the basement.",
                   "Entry trades down the stairs into the opening.",
                   "Plant Church/Arsenal default; hold the stairs."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 82,
+                    "y": 58,
+                    "dir": 250,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 44,
+                    "y": 36,
+                    "dir": 160,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 62,
+                    "y": 20,
+                    "dir": 180,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 70,
+                    "y": 80,
+                    "dir": 0,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 47,
+                    "y": 53,
+                    "dir": 90,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -1344,6 +1780,48 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "Stair entry floods the split site.",
                   "Plant under your holes; hold vertical."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 82,
+                    "y": 58,
+                    "dir": 250,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 44,
+                    "y": 36,
+                    "dir": 160,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 62,
+                    "y": 20,
+                    "dir": 180,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 70,
+                    "y": 80,
+                    "dir": 0,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 47,
+                    "y": 53,
+                    "dir": 90,
+                    "slot": 4
+                  }
                 ]
               },
               {
@@ -1403,6 +1881,48 @@ const SEED_DATA =
                   "Fuze/EMP the site to force anchors off bomb.",
                   "Open the wall + flood both stairs together.",
                   "Plant default; hold both staircases post-plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 82,
+                    "y": 58,
+                    "dir": 250,
+                    "slot": 0
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 44,
+                    "y": 36,
+                    "dir": 160,
+                    "slot": 1
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 62,
+                    "y": 20,
+                    "dir": 180,
+                    "slot": 2
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 70,
+                    "y": 80,
+                    "dir": 0,
+                    "slot": 3
+                  },
+                  {
+                    "kind": "entry",
+                    "floor": 0,
+                    "x": 47,
+                    "y": 53,
+                    "dir": 90,
+                    "slot": 4
+                  }
                 ]
               }
             ]
@@ -1474,6 +1994,60 @@ const SEED_DATA =
                   "Anchors hold the Bedroom-Gym crossfire; deny the default plant.",
                   "Watch the Master (Roof) hatch and the Gym vertical from 1F.",
                   "Collapse on the plant; Smoke/Goyo deny the defuse."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 65.2,
+                    "y": 57.3,
+                    "label": "Bedroom-Cash wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 58.8,
+                    "y": 58.6,
+                    "label": "Gym-Cash wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 55.7,
+                    "y": 56.5,
+                    "label": "Bedroom hatch (Master/Roof)",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 42.9,
+                    "y": 59.1,
+                    "label": "Gym hatch (to 1F)",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 55.7,
+                    "y": 60.5,
+                    "op": "smoke",
+                    "label": "Master Bedroom"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 42.9,
+                    "y": 63.1,
+                    "op": "maestro",
+                    "label": "Gym"
+                  }
                 ]
               },
               {
@@ -1537,6 +2111,60 @@ const SEED_DATA =
                   "Trap the Bedroom and Gym entries.",
                   "Hold the bomb under the hatches; deny the obvious plant.",
                   "Trade off the crossfire; collapse on the plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 55.7,
+                    "y": 56.5,
+                    "label": "Bedroom hatch (Master/Roof)",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 42.9,
+                    "y": 59.1,
+                    "label": "Gym hatch (to 1F)",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 65.2,
+                    "y": 57.3,
+                    "label": "Bedroom-Cash wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 58.8,
+                    "y": 58.6,
+                    "label": "Gym-Cash wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 55.7,
+                    "y": 60.5,
+                    "op": "goyo",
+                    "label": "Master Bedroom"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 42.9,
+                    "y": 63.1,
+                    "op": "ela",
+                    "label": "Gym"
+                  }
                 ]
               }
             ]
@@ -1606,6 +2234,60 @@ const SEED_DATA =
                   "Anchors crossfire Cash-CCTV; deny the default plant.",
                   "Roamer pinches the Bar staircase push.",
                   "Collapse on the plant with Smoke/Goyo."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 65.2,
+                    "y": 57.3,
+                    "label": "Cash-Bedroom wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 60.6,
+                    "y": 64.5,
+                    "label": "CCTV-Gym wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 74.6,
+                    "y": 58,
+                    "label": "Cash hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 78.2,
+                    "y": 69.9,
+                    "label": "CCTV hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 74.6,
+                    "y": 62,
+                    "op": "smoke",
+                    "label": "Cash Room"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 78.2,
+                    "y": 73.9,
+                    "op": "valkyrie",
+                    "label": "CCTV Room"
+                  }
                 ]
               },
               {
@@ -1669,6 +2351,60 @@ const SEED_DATA =
                   "Trap the staircase and Construction entries.",
                   "Hold the bomb under the hatches; deny plant.",
                   "Trade off the crossfire; collapse."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 74.6,
+                    "y": 58,
+                    "label": "Cash hatch",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 78.2,
+                    "y": 69.9,
+                    "label": "CCTV hatch",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 65.2,
+                    "y": 57.3,
+                    "label": "Cash-Bedroom wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 2,
+                    "x": 60.6,
+                    "y": 64.5,
+                    "label": "CCTV-Gym wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 74.6,
+                    "y": 62,
+                    "op": "goyo",
+                    "label": "Cash Room"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 2,
+                    "x": 78.2,
+                    "y": 73.9,
+                    "op": "kapkan",
+                    "label": "CCTV Room"
+                  }
                 ]
               }
             ]
@@ -1738,6 +2474,60 @@ const SEED_DATA =
                   "Anchors crossfire Bar-Stock; deny the default plant.",
                   "Roamer pinches the Construction/Garage push.",
                   "Collapse and trade on the plant."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 54.5,
+                    "y": 54.5,
+                    "label": "Bar-Stock wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 66.5,
+                    "y": 52,
+                    "label": "Stock-Register wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 46,
+                    "y": 57,
+                    "label": "Bar ceiling hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 52,
+                    "label": "Stock ceiling hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 1,
+                    "x": 46,
+                    "y": 61,
+                    "op": "smoke",
+                    "label": "Bar"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 56,
+                    "op": "valkyrie",
+                    "label": "Stock Room"
+                  }
                 ]
               },
               {
@@ -1801,6 +2591,60 @@ const SEED_DATA =
                   "Mozzie steals drones; attackers push blind.",
                   "Hold the bomb under the reinforced ceiling; deny plant.",
                   "Trade off traps + crossfire."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 46,
+                    "y": 57,
+                    "label": "Bar ceiling hatch",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 52,
+                    "label": "Stock ceiling hatch",
+                    "op": "kaid",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 54.5,
+                    "y": 54.5,
+                    "label": "Bar-Stock wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 1,
+                    "x": 66.5,
+                    "y": 52,
+                    "label": "Stock-Register wall",
+                    "op": "kaid",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 1,
+                    "x": 46,
+                    "y": 61,
+                    "op": "goyo",
+                    "label": "Bar"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 1,
+                    "x": 63,
+                    "y": 56,
+                    "op": "ela",
+                    "label": "Stock Room"
+                  }
                 ]
               }
             ]
@@ -1870,6 +2714,60 @@ const SEED_DATA =
                   "Anchors hold the Church-Arsenal crossfire; deny plant.",
                   "Roamer picks the staircase entry, steals time.",
                   "Collapse on the plant; basement favors the retake."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 58.6,
+                    "y": 43.5,
+                    "label": "Church-Arsenal wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 71.5,
+                    "y": 47,
+                    "label": "Arsenal-Blue Stairs wall",
+                    "op": "bandit",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 57.7,
+                    "y": 51,
+                    "label": "Church hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 59.4,
+                    "y": 36,
+                    "label": "Arsenal hatch",
+                    "op": "bandit",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 0,
+                    "x": 57.7,
+                    "y": 55,
+                    "op": "smoke",
+                    "label": "Church"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 0,
+                    "x": 59.4,
+                    "y": 40,
+                    "op": "kapkan",
+                    "label": "Arsenal Room"
+                  }
                 ]
               },
               {
@@ -1934,6 +2832,60 @@ const SEED_DATA =
                   "Bandit the breach wall late once utility is spent.",
                   "Fall back to the Church-Arsenal crossfire on timer.",
                   "Deny plant, trade, retake with traps."
+                ],
+                "marks": [
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 58.6,
+                    "y": 43.5,
+                    "label": "Church-Arsenal wall",
+                    "op": "mute",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 71.5,
+                    "y": 47,
+                    "label": "Arsenal-Blue Stairs wall",
+                    "op": "mute",
+                    "hatch": false
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 57.7,
+                    "y": 51,
+                    "label": "Church hatch",
+                    "op": "mute",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "reinforce",
+                    "floor": 0,
+                    "x": 59.4,
+                    "y": 36,
+                    "label": "Arsenal hatch",
+                    "op": "mute",
+                    "hatch": true
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 0,
+                    "x": 57.7,
+                    "y": 55,
+                    "op": "goyo",
+                    "label": "Church"
+                  },
+                  {
+                    "kind": "gadget",
+                    "floor": 0,
+                    "x": 59.4,
+                    "y": 40,
+                    "op": "kapkan",
+                    "label": "Arsenal Room"
+                  }
                 ]
               }
             ]
@@ -2298,7 +3250,8 @@ const SEED_DATA =
           "rooms": [
             "Master Bedroom",
             "Aviator Room"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "oregon-1f-kitchen-dining-hall",
@@ -2306,7 +3259,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Dining Hall"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "oregon-1f-meeting-hall-kids-dorm",
@@ -2314,7 +3268,8 @@ const SEED_DATA =
           "rooms": [
             "Meeting Hall",
             "Kids Dorm"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "oregon-b-laundry-room-supply-room",
@@ -2322,7 +3277,8 @@ const SEED_DATA =
           "rooms": [
             "Laundry Room",
             "Supply Room"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -2493,7 +3449,8 @@ const SEED_DATA =
           "rooms": [
             "CEO Office",
             "Executive Lounge"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "bank-1f-open-area-staff-room",
@@ -2501,7 +3458,8 @@ const SEED_DATA =
           "rooms": [
             "Open Area",
             "Staff Room"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "bank-1f-tellers-office-archives",
@@ -2509,7 +3467,8 @@ const SEED_DATA =
           "rooms": [
             "Tellers' Office",
             "Archives"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "bank-b-cctv-room-lockers",
@@ -2517,7 +3476,8 @@ const SEED_DATA =
           "rooms": [
             "CCTV Room",
             "Lockers"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -2911,7 +3871,8 @@ const SEED_DATA =
           "rooms": [
             "Consul Office",
             "Meeting Room"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "consulate-1f-piano-expo",
@@ -2919,7 +3880,8 @@ const SEED_DATA =
           "rooms": [
             "Piano",
             "Expo"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "consulate-1f-tellers-servers",
@@ -2927,7 +3889,8 @@ const SEED_DATA =
           "rooms": [
             "Tellers",
             "Servers"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "consulate-b-kitchen-garage",
@@ -2935,7 +3898,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Garage"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -3089,7 +4053,8 @@ const SEED_DATA =
           "rooms": [
             "Cocktail Entrance",
             "Wood Stairs"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "kafe-2f-mining-dining",
@@ -3097,7 +4062,8 @@ const SEED_DATA =
           "rooms": [
             "Mining",
             "Dining"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "kafe-2f-reading-room-fireplace-hall",
@@ -3105,7 +4071,8 @@ const SEED_DATA =
           "rooms": [
             "Reading Room",
             "Fireplace Hall"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "kafe-1f-cooking-service",
@@ -3113,7 +4080,8 @@ const SEED_DATA =
           "rooms": [
             "Cooking",
             "Service"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -3482,7 +4450,8 @@ const SEED_DATA =
           "rooms": [
             "Supply",
             "Customs"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "border-1f-workshop-ventilation",
@@ -3490,7 +4459,8 @@ const SEED_DATA =
           "rooms": [
             "Workshop",
             "Ventilation"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "border-1f-bathroom-tellers",
@@ -3498,7 +4468,8 @@ const SEED_DATA =
           "rooms": [
             "Bathroom",
             "Tellers"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "border-2f-armory-archives",
@@ -3506,7 +4477,8 @@ const SEED_DATA =
           "rooms": [
             "Armory",
             "Archives"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -3814,7 +4786,8 @@ const SEED_DATA =
           "rooms": [
             "Office",
             "Master"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "chalet-1f-gaming-bar",
@@ -3822,7 +4795,8 @@ const SEED_DATA =
           "rooms": [
             "Gaming",
             "Bar"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "chalet-1f-dining-kitchen",
@@ -3830,7 +4804,8 @@ const SEED_DATA =
           "rooms": [
             "Dining",
             "Kitchen"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "chalet-b-wine-garage",
@@ -3838,7 +4813,8 @@ const SEED_DATA =
           "rooms": [
             "Wine",
             "Garage"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4104,7 +5080,8 @@ const SEED_DATA =
           "rooms": [
             "Pool Table",
             "Hookah"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "coastline-2f-tv-penthouse",
@@ -4112,7 +5089,8 @@ const SEED_DATA =
           "rooms": [
             "TV",
             "Penthouse"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "coastline-1f-kitchen-supply",
@@ -4120,7 +5098,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Supply"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "coastline-1f-blue-bar-sunrise",
@@ -4128,7 +5107,8 @@ const SEED_DATA =
           "rooms": [
             "Blue Bar",
             "Sunrise"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4223,7 +5203,8 @@ const SEED_DATA =
           "rooms": [
             "CEO",
             "Admin"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "emerald-plains-2f-meeting-statue",
@@ -4231,7 +5212,8 @@ const SEED_DATA =
           "rooms": [
             "Meeting",
             "Statue"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "emerald-plains-1f-lounge-bar",
@@ -4239,7 +5221,8 @@ const SEED_DATA =
           "rooms": [
             "Lounge",
             "Bar"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "emerald-plains-1f-dining-pantry",
@@ -4247,7 +5230,8 @@ const SEED_DATA =
           "rooms": [
             "Dining",
             "Pantry"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4352,7 +5336,8 @@ const SEED_DATA =
           "rooms": [
             "Storage",
             "Servers"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "favela-2f-bunks-servers",
@@ -4360,7 +5345,8 @@ const SEED_DATA =
           "rooms": [
             "Bunks",
             "Servers"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "favela-1f-pink-pink-kitchen",
@@ -4368,7 +5354,8 @@ const SEED_DATA =
           "rooms": [
             "Pink",
             "Pink Kitchen"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "favela-1f-blue-bedroom-green",
@@ -4376,7 +5363,8 @@ const SEED_DATA =
           "rooms": [
             "Blue Bedroom",
             "Green"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4481,7 +5469,8 @@ const SEED_DATA =
           "rooms": [
             "Commander",
             "Bathroom"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "fortress-2f-dormitory-gaming",
@@ -4489,7 +5478,8 @@ const SEED_DATA =
           "rooms": [
             "Dormitory",
             "Gaming"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "fortress-1f-waiting-cafeteria",
@@ -4497,7 +5487,8 @@ const SEED_DATA =
           "rooms": [
             "Waiting",
             "Cafeteria"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "fortress-1f-hammam-sitting",
@@ -4505,7 +5496,8 @@ const SEED_DATA =
           "rooms": [
             "Hammam",
             "Sitting"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4612,7 +5604,8 @@ const SEED_DATA =
           "rooms": [
             "Armory",
             "Tractor"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "hereford-base-2f-kids-master",
@@ -4620,7 +5613,8 @@ const SEED_DATA =
           "rooms": [
             "Kids",
             "Master"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "hereford-base-1f-kitchen-dining",
@@ -4628,7 +5622,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Dining"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "hereford-base-b-brewery-fermentation",
@@ -4636,7 +5631,8 @@ const SEED_DATA =
           "rooms": [
             "Brewery",
             "Fermentation"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4737,7 +5733,8 @@ const SEED_DATA =
           "rooms": [
             "Car",
             "Pink"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "house-2f-master-car",
@@ -4745,7 +5742,8 @@ const SEED_DATA =
           "rooms": [
             "Master",
             "Car"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "house-1f-tv-music",
@@ -4753,7 +5751,8 @@ const SEED_DATA =
           "rooms": [
             "TV",
             "Music"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "house-b-garage-gym",
@@ -4761,7 +5760,8 @@ const SEED_DATA =
           "rooms": [
             "Garage",
             "Gym"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4867,7 +5867,8 @@ const SEED_DATA =
           "rooms": [
             "Radar",
             "Server"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "kanal-1f-map-security",
@@ -4875,7 +5876,8 @@ const SEED_DATA =
           "rooms": [
             "Map",
             "Security"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "kanal-1f-meeting-lounge",
@@ -4883,7 +5885,8 @@ const SEED_DATA =
           "rooms": [
             "Meeting",
             "Lounge"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "kanal-b-supply-kayaks",
@@ -4891,7 +5894,8 @@ const SEED_DATA =
           "rooms": [
             "Supply",
             "Kayaks"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -4992,7 +5996,8 @@ const SEED_DATA =
           "rooms": [
             "Mask",
             "Six"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "lair-1f-bunks-briefing",
@@ -5000,7 +6005,8 @@ const SEED_DATA =
           "rooms": [
             "Bunks",
             "Briefing"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "lair-1f-armory-maintenance",
@@ -5008,7 +6014,8 @@ const SEED_DATA =
           "rooms": [
             "Armory",
             "Maintenance"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "lair-b-lab-support",
@@ -5016,7 +6023,8 @@ const SEED_DATA =
           "rooms": [
             "Lab",
             "Support"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -5339,7 +6347,8 @@ const SEED_DATA =
           "rooms": [
             "Command",
             "Server"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "nighthaven-labs-1f-kitchen-cafeteria",
@@ -5347,7 +6356,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Cafeteria"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "nighthaven-labs-1f-control-storage",
@@ -5355,7 +6365,8 @@ const SEED_DATA =
           "rooms": [
             "Control",
             "Storage"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "nighthaven-labs-b-tank-assembly",
@@ -5363,7 +6374,8 @@ const SEED_DATA =
           "rooms": [
             "Tank",
             "Assembly"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -5458,7 +6470,8 @@ const SEED_DATA =
           "rooms": [
             "Laundry",
             "Piano"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "outback-2f-party-office",
@@ -5466,7 +6479,8 @@ const SEED_DATA =
           "rooms": [
             "Party",
             "Office"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "outback-1f-red-green",
@@ -5474,7 +6488,8 @@ const SEED_DATA =
           "rooms": [
             "Red",
             "Green"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "outback-1f-kitchen-shop",
@@ -5482,7 +6497,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Shop"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -5568,7 +6584,8 @@ const SEED_DATA =
           "rooms": [
             "Office",
             "Pantry"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "presidential-plane-2f-bedroom-staff",
@@ -5576,7 +6593,8 @@ const SEED_DATA =
           "rooms": [
             "Bedroom",
             "Staff"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "presidential-plane-1f-cargo-luggage",
@@ -5584,7 +6602,8 @@ const SEED_DATA =
           "rooms": [
             "Cargo",
             "Luggage"
-          ]
+          ],
+          "site": "3"
         }
       ],
       "tactics": {
@@ -5853,7 +6872,8 @@ const SEED_DATA =
           "rooms": [
             "Tea",
             "Karaoke"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "skyscraper-2f-office-museum",
@@ -5861,7 +6881,8 @@ const SEED_DATA =
           "rooms": [
             "Office",
             "Museum"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "skyscraper-1f-bbq-kitchen",
@@ -5869,7 +6890,8 @@ const SEED_DATA =
           "rooms": [
             "BBQ",
             "Kitchen"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "skyscraper-1f-bedroom-bathroom",
@@ -5877,7 +6899,8 @@ const SEED_DATA =
           "rooms": [
             "Bedroom",
             "Bathroom"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -5963,7 +6986,8 @@ const SEED_DATA =
           "rooms": [
             "Armory",
             "Archives"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "stadium-2f-penthouse-vip",
@@ -5971,7 +6995,8 @@ const SEED_DATA =
           "rooms": [
             "Penthouse",
             "VIP"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "stadium-1f-kitchen-supply",
@@ -5979,7 +7004,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Supply"
-          ]
+          ],
+          "site": "3"
         }
       ],
       "tactics": {
@@ -6074,7 +7100,8 @@ const SEED_DATA =
           "rooms": [
             "Bar",
             "Initiation"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "theme-park-2f-day-care-bunk",
@@ -6082,7 +7109,8 @@ const SEED_DATA =
           "rooms": [
             "Day Care",
             "Bunk"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "theme-park-1f-throne-armory",
@@ -6090,7 +7118,8 @@ const SEED_DATA =
           "rooms": [
             "Throne",
             "Armory"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "theme-park-1f-lab-drug",
@@ -6098,7 +7127,8 @@ const SEED_DATA =
           "rooms": [
             "Lab",
             "Drug"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -6203,7 +7233,8 @@ const SEED_DATA =
           "rooms": [
             "Lantern",
             "Gift Shop"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "tower-2f-media-exhibit",
@@ -6211,7 +7242,8 @@ const SEED_DATA =
           "rooms": [
             "Media",
             "Exhibit"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "tower-1f-tea-bar",
@@ -6219,7 +7251,8 @@ const SEED_DATA =
           "rooms": [
             "Tea",
             "Bar"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "tower-1f-restaurant-bird",
@@ -6227,7 +7260,8 @@ const SEED_DATA =
           "rooms": [
             "Restaurant",
             "Bird"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -6327,7 +7361,8 @@ const SEED_DATA =
           "rooms": [
             "Bar",
             "Aviator"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "villa-2f-statue-trophy",
@@ -6335,7 +7370,8 @@ const SEED_DATA =
           "rooms": [
             "Statue",
             "Trophy"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "villa-1f-living-library",
@@ -6343,7 +7379,8 @@ const SEED_DATA =
           "rooms": [
             "Living",
             "Library"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "villa-1f-kitchen-dining",
@@ -6351,7 +7388,8 @@ const SEED_DATA =
           "rooms": [
             "Kitchen",
             "Dining"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -6457,7 +7495,8 @@ const SEED_DATA =
           "rooms": [
             "Cockpit",
             "Maps"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "yacht-2f-control-kitchen",
@@ -6465,7 +7504,8 @@ const SEED_DATA =
           "rooms": [
             "Control",
             "Kitchen"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "yacht-2f-cafeteria-dorms",
@@ -6473,7 +7513,8 @@ const SEED_DATA =
           "rooms": [
             "Cafeteria",
             "Dorms"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "yacht-1f-ladder-storage",
@@ -6481,7 +7522,8 @@ const SEED_DATA =
           "rooms": [
             "ladder",
             "Storage"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -6751,7 +7793,8 @@ const SEED_DATA =
           "rooms": [
             "Stick",
             "Cigar"
-          ]
+          ],
+          "site": "1"
         },
         {
           "id": "calypso-casino-1f-black-jack-poker",
@@ -6759,7 +7802,8 @@ const SEED_DATA =
           "rooms": [
             "Black Jack",
             "Poker"
-          ]
+          ],
+          "site": "2"
         },
         {
           "id": "calypso-casino-1f-betting-jersey",
@@ -6767,7 +7811,8 @@ const SEED_DATA =
           "rooms": [
             "Betting",
             "Jersey"
-          ]
+          ],
+          "site": "3"
         },
         {
           "id": "calypso-casino-b-cctv-checkpoint",
@@ -6775,7 +7820,8 @@ const SEED_DATA =
           "rooms": [
             "CCTV",
             "Checkpoint"
-          ]
+          ],
+          "site": "4"
         }
       ],
       "tactics": {
@@ -7940,6 +8986,33 @@ function assignTactic(st,side){
   return players.map(pl=>{ const slot=assigned.get(pl.pi); const role=slot?roleById(slot.role):null;
     return { player:pl.name, roleName:role?role.name:"", ops:slot?(slot.ops||[]):[], pos:slot?slot.pos:"" }; });
 }
+// which player ends up in each slot index (for entry-arrow labels)
+function assignSlots(st,side){
+  const prefKey=side==="attack"?"attackRoles":"defenseRoles";
+  const slots=(st.slots||[]).map(s=>({role:s.role,_taken:null}));
+  const players=DB.roster.map((p,pi)=>({pi,prefs:(p[prefKey]||[]).slice()}));
+  const taken=new Set();
+  const maxr=Math.max(0,...players.map(p=>p.prefs.length));
+  for(let r=0;r<maxr;r++) players.forEach(pl=>{ if(taken.has(pl.pi))return; const role=pl.prefs[r]; if(!role)return; const slot=slots.find(s=>s.role===role&&s._taken===null); if(slot){ slot._taken=pl.pi; taken.add(pl.pi); } });
+  players.forEach(pl=>{ if(taken.has(pl.pi))return; const slot=slots.find(s=>s._taken===null); if(slot){ slot._taken=pl.pi; taken.add(pl.pi); } });
+  return slots.map(s=> s._taken!=null ? (DB.roster[s._taken].name||"") : "");
+}
+function activeStrat(){ const T=UI.maps.tactic; if(!T||!T.open) return null; const m=mapById(UI.maps.selectedId); if(!m)return null;
+  return { T, st:((((m.tactics||{})[T.side]||{})[T.siteId]||{}).strats||[])[T.si] }; }
+// markers for the open strat on a given floor (reinforce walls + gadget spots + entry arrows)
+function tacticMarksHTML(floorIdx){
+  const a=activeStrat(); if(!a||!a.st||!Array.isArray(a.st.marks)) return "";
+  const players=a.T.side==="attack"?assignSlots(a.st,"attack"):null;
+  return a.st.marks.filter(mk=>mk.floor===floorIdx).map(mk=>{
+    if(mk.kind==="reinforce"){ const o=opById(mk.op); const opn=o?o.name:(mk.op||"");
+      return `<div class="mk tac reinf${mk.hatch?" hatch":""}" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tdot reinf">${mk.hatch?"▤":"▦"}</span><span class="mlb tac reinf">${esc(mk.label||"Reinforce")}${opn?` <b class="gop">${esc(opn)}</b>`:""}</span></div></div>`; }
+    if(mk.kind==="gadget"){ const o=opById(mk.op); const opn=o?o.name:(mk.op||"");
+      return `<div class="mk tac gad" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tdot gad">◈</span><span class="mlb tac gad">${esc(opn)}</span></div></div>`; }
+    if(mk.kind==="entry"){ const who=players?(players[mk.slot]||""):"";
+      return `<div class="mk tac entry" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tarrow" style="transform:rotate(${(mk.dir||0)-90}deg)">➤</span>${who?`<span class="mlb tac entry">${esc(who)}</span>`:""}</div></div>`; }
+    return "";
+  }).join("");
+}
 function renderTacticsPanel(){
   const host=byId("tacticsPanel"); if(!host) return;
   const m=mapById(UI.maps.selectedId); if(!m||!m.bombsites||!m.bombsites.length){ host.innerHTML=""; return; }
@@ -7958,8 +9031,10 @@ function renderTacticsPanel(){
 }
 function openTactic(side,siteId,si){
   const m=mapById(UI.maps.selectedId); if(!m)return; const b=m.bombsites.find(x=>x.id===siteId); if(!b)return;
-  const fi=siteFloorIndex(m,b); if(fi!==UI.maps.floorIdx){ UI.maps.floorIdx=fi; renderFloorTabs(); renderFloorView(); }
-  UI.maps.tactic={open:true,side,siteId,si}; renderTacticsPanel();
+  UI.maps.tactic={open:true,side,siteId,si};
+  UI.maps.floorIdx=siteFloorIndex(m,b);
+  UI.maps.siteFilter=(b.site!=null?String(b.site):"all");   // focus the map on this site
+  renderFloorTabs(); renderFloorView(); renderTacticsPanel();
 }
 function renderTacticDetail(host,m,T){
   const b=m.bombsites.find(x=>x.id===T.siteId);
@@ -7980,7 +9055,7 @@ function renderTacticDetail(host,m,T){
     <div class="tp-picks">${picks}</div>
     ${reinf}
     ${steps?`<div class="tp-sec-h">How it runs</div><ol class="tp-steps">${steps}</ol>`:""}</div>`;
-  byId("tpBack").onclick=()=>{ UI.maps.tactic=null; renderTacticsPanel(); };
+  byId("tpBack").onclick=()=>{ UI.maps.tactic=null; UI.maps.siteFilter="all"; renderFloorView(); renderTacticsPanel(); };
   host.querySelectorAll(".opchip[data-op]").forEach(ch=>{ ch.onclick=()=>openOpModal(ch.dataset.op); ch.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(ch.dataset.op); } }; });
 }
 
@@ -8051,7 +9126,7 @@ function renderTocSections(){
     host.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ const p=DB.pools.find(x=>x.id===b.dataset.pdel); if(p&&confirm(`Delete pool "${p.name}"? Its maps move to Other Maps.`)){ DB.pools=DB.pools.filter(x=>x.id!==p.id); markDirty(); renderTocSections(); } });
   }
 }
-function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.tactic=null; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
+function openMap(id){ UI.maps.selectedId=id; UI.maps.floorIdx=0; UI.maps.tactic=null; UI.maps.siteFilter="all"; UI.maps.view="detail"; renderMaps(byId("view")); window.scrollTo({top:0}); }
 
 /* ----- map detail: ONE floor at a time, with floor tabs above ----- */
 function renderMapDetail(root){
@@ -8087,7 +9162,8 @@ function renderMapDetail(root){
 }
 function renderFloorTabs(){
   const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit; const t=byId("floorTabs");
-  t.innerHTML=m.floors.map((f,i)=>`<button class="floortab ${i===UI.maps.floorIdx?"active":""}" data-fi="${i}">${esc(f.name)}</button>`).join("")
+  const a=activeStrat(); const markFloors=new Set((a&&a.st&&a.st.marks||[]).map(x=>x.floor));
+  t.innerHTML=m.floors.map((f,i)=>`<button class="floortab ${i===UI.maps.floorIdx?"active":""}${markFloors.has(i)?" hasmarks":""}" data-fi="${i}">${esc(f.name)}${markFloors.has(i)?'<span class="fmk"></span>':""}</button>`).join("")
     + (edit?`<button class="floortab add" id="addFloor">＋ floor</button>`:"");
   t.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{ UI.maps.floorIdx=+b.dataset.fi; renderFloorTabs(); renderFloorView(); });
   const af=byId("addFloor"); if(af) af.onclick=()=>{ m.floors.push({name:"New Floor",layoutImage:null,callouts:[]}); UI.maps.floorIdx=m.floors.length-1; markDirty(); renderFloorTabs(); renderFloorView(); };
@@ -8113,7 +9189,7 @@ function renderFloorView(){
     const lb=hasVid?`<span class="pk-play">▶</span>${lbTxt}`:lbTxt;
     const ds=site?` data-site="${esc(c.site||"")}"`:"";
     return `<div class="${cls}" data-pin="${ci}"${ds} style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
-  }).join("");
+  }).join("")+tacticMarksHTML(UI.maps.floorIdx);
   // Layers/sites are evaluated at the MAP level so the toggles + site selection
   // stay present and active on every floor (some sites span two floors).
   const mapHasPeek=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="peek"));
