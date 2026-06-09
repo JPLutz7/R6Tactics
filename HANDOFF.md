@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 16**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 17**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -62,11 +62,10 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
 ```
 Current counts: 25 maps, 75 operators, 5 roles, 5 roster, 3 pools, **99 bomb-site
 markers, 105 spawn peeks** as overlays. As of v15 **every map** uses r6calls
-building-focused floor plates (PeekabooR6 retired). **Room names are baked into
-the image** (the r6calls `txt` layer is kept visible when capturing) — they are
-NOT overlay callouts, because the overlaid positions read worse than r6calls'
-native label placement. Only **bomb sites** (per-site dropdown) and **spawn
-peeks** remain as toggleable overlay markers.
+building-focused floor plates (PeekabooR6 retired). **Room names AND bomb sites are baked into the image** (the r6calls `txt` and
+`N-bmb` layers are kept visible when capturing). Bomb-site + spawn-peek overlay
+markers (with the per-site dropdown) are still emitted and toggle ON ON TOP of the
+baked-in sites; room names are baked-only (no overlay).
 
 The app normalizes any partial/old data at load (`normalizeDB`) so the editor
 always sees the full structure.
