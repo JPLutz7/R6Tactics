@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 31**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 32**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -272,6 +272,10 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   gadget spots / attack entry arrows) but it was **reverted** (positions were approximate —
   no room-label coords exist to anchor them). If revisited, make them **drag-editable in ✎
   Edit** first so positions can be tuned, and consider bundling operator logos.
+- **Known nit — attack "Open up" vs by-player overlap:** on a single-breach attack strat
+  (hard breacher only, no vertical/flank slot), the one wall in **Open up** is the same line
+  shown under the hard breacher in **Gadgets & jobs — by player**. Minor duplication; could
+  suppress the by-player line when it's already in Open up, or just leave it.
 - **Op assignment:** `assignTactic(strat, side)` greedily matches each rostered player to a
   strat slot by the player's prioritised roles for that side (`attackRoles`/`defenseRoles`,
   by rank), then fills leftovers. Each player sees their slot's 2–4 op options + position;
@@ -280,9 +284,17 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **Data shape:** `map.tactics[side][siteId].strats = [ STRAT ]` (see §4). Slots reference
   side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
   (unused by this UI).
-- **Coverage:** **all 25 maps now have a `bombsites` array** (4 sites each, 3 for
-  Presidential Plane & Stadium) — so any map can hold tactics. Only **Clubhouse** has
-  strats so far (20). Adding tactics to another map is now just authoring its strats.
+- **Coverage:** **all 25 maps have a `bombsites` array**; the **Pro Pool is seeded** —
+  Clubhouse (bespoke, 20 strats) + Bank, Border, Chalet, Consulate, Kafe, Lair, Nighthaven
+  Labs, Fortress (180 strats total). **Next pools:** Showcased (Calypso) → Seasonal (Oregon,
+  Coastline, Emerald Plains, Outback) → unranked. Each map = 2 defense + 3 attack per site.
+- **Sourcing:** **r6guides.com is dead** (now a parked "FIFA World Cup" page — verified; no
+  Wayback guide snapshots, and archive.org is egress-blocked here). r6strat = login-gated
+  private builder; Fandom = 403. So there is **no reachable structured strat DB** — strats are
+  **composed from current meta** + reputable map guides. Clubhouse is hand-written; the other
+  Pro maps use a consistent template that fills each site's **real room names + floor context**
+  (reinforce the site walls, rotate between the bomb rooms, deny the actual adjacent-floor
+  vertical) with standard meta op pools. A solid editable baseline — refine specifics in ✎ Edit.
 - **Bomb sites (v28) — how they were built:** derived from the in-map r6calls objective
   markers (`type:"site"` callouts). Each site = one digit group; its two rooms = the A/B
   spots' room labels; floor = the highest floor its spots sit on (name prefixed, e.g.
