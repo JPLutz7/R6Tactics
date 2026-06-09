@@ -191,18 +191,6 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 .mk.site .mdot{background:#3da9fc;box-shadow:0 0 0 2px #ffffffcc,0 0 7px rgba(61,169,252,.7);width:12px;height:12px;border-radius:3px;transform:rotate(45deg)}
 .vt-sel{background:rgba(11,16,23,.92);border:1px solid #3a4a5c;color:#fff;font-size:12px;font-weight:600;padding:6px 8px;border-radius:8px;cursor:pointer;backdrop-filter:blur(4px);max-width:155px}
 .viewport:not(.show-peeks) .mk.peek{display:none}
-/* tactic overlay markers (shown only while a strat is open; cleared on leave) */
-.mk.tac{z-index:4}
-.mk.tac .mlb.tac{font-size:11px;font-weight:700}
-.mk.tac.reinf .tdot{color:#2f6aa8;font-size:15px;line-height:1;text-shadow:0 0 3px #fff,0 0 3px #fff}
-.mk.tac.reinf .mlb.reinf{background:#10243a;border-color:#2f6aa8;color:#cfe6ff}
-.mk.tac.reinf .mlb .gop{color:#ffd479;font-weight:800;margin-left:3px}
-.mk.tac.gad .tdot.gad{color:#1f9d6b;font-size:13px;line-height:1;text-shadow:0 0 3px #fff,0 0 3px #fff}
-.mk.tac.gad .mlb.gad{background:#0e2a20;border-color:#2f9e72;color:#c8f3df;font-weight:800}
-.mk.tac.entry .tarrow{display:inline-block;color:#e8632a;font-size:20px;line-height:0;text-shadow:0 0 3px #fff,0 0 4px #fff,0 1px 2px rgba(0,0,0,.5)}
-.mk.tac.entry .mlb.entry{background:#3a1c0c;border-color:#e8632a;color:#ffd9c2;font-weight:800;left:auto;right:100%;margin-left:0;margin-right:7px}
-.floortab.hasmarks{position:relative}
-.floortab .fmk{display:inline-block;width:6px;height:6px;border-radius:50%;background:#e8632a;margin-left:6px;vertical-align:middle}
 /* clickable spawn-peek labels (open how-to video popup) */
 .mk.peek.vid .pk-play{font-size:8px;margin-right:4px;opacity:.85}
 .viewport:not(.show-edit) .mk.peek.vid .mlb{pointer-events:auto;cursor:pointer}
@@ -382,7 +370,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 29,
+  "version": 30,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -758,48 +746,6 @@ const SEED_DATA =
                   "Thermite/Hibana open Bedroom/Gym; Lion scan the flood.",
                   "Entry trades through the breach from Cash.",
                   "Plant the Bedroom/Gym default; hold post-plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 46,
-                    "y": 33,
-                    "dir": 200,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 48,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 33,
-                    "y": 57,
-                    "dir": 90,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 46,
-                    "dir": 180,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 52,
-                    "dir": 160,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -859,48 +805,6 @@ const SEED_DATA =
                   "Vertical pressure forces anchors off the bomb.",
                   "Entry floods the opened site and trades.",
                   "Plant under your holes; hold vertical."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 46,
-                    "y": 33,
-                    "dir": 200,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 48,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 33,
-                    "y": 57,
-                    "dir": 90,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 46,
-                    "dir": 180,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 52,
-                    "dir": 160,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -960,48 +864,6 @@ const SEED_DATA =
                   "Thatcher/Thermite open the main wall on the call.",
                   "Hit both angles; isolate and trade the anchors.",
                   "Plant default; hold the crossfire post-plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 46,
-                    "y": 33,
-                    "dir": 200,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 48,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 33,
-                    "y": 57,
-                    "dir": 90,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 46,
-                    "dir": 180,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 56,
-                    "y": 52,
-                    "dir": 160,
-                    "slot": 4
-                  }
                 ]
               }
             ]
@@ -1065,48 +927,6 @@ const SEED_DATA =
                   "Thermite/Hibana open the wall; Lion scan the flood.",
                   "Entry trades up the staircase into the opening.",
                   "Plant the Cash/CCTV default; hold post-plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 84,
-                    "y": 49,
-                    "dir": 235,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 88,
-                    "y": 62,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 78,
-                    "y": 77,
-                    "dir": 0,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 50,
-                    "dir": 90,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 52,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1166,48 +986,6 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "Topside entry floods the split site.",
                   "Plant Cash/CCTV; hold vertical + holes."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 84,
-                    "y": 49,
-                    "dir": 235,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 88,
-                    "y": 62,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 78,
-                    "y": 77,
-                    "dir": 0,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 50,
-                    "dir": 90,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 52,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1267,48 +1045,6 @@ const SEED_DATA =
                   "Thatcher/Thermite open the wall on the call.",
                   "Hit both angles; isolate and trade.",
                   "Plant default; hold the crossfire."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 84,
-                    "y": 49,
-                    "dir": 235,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 88,
-                    "y": 62,
-                    "dir": 250,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 78,
-                    "y": 77,
-                    "dir": 0,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 2,
-                    "x": 66,
-                    "y": 50,
-                    "dir": 90,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 52,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               }
             ]
@@ -1372,48 +1108,6 @@ const SEED_DATA =
                   "Thermite/Hibana open Bar; Lion scan the flood.",
                   "Entry trades from Construction into the opening.",
                   "Plant the Bar/Stock default; hold post-plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 32,
-                    "y": 58,
-                    "dir": 90,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 50,
-                    "y": 37,
-                    "dir": 180,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 77,
-                    "y": 46,
-                    "dir": 250,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 78,
-                    "y": 70,
-                    "dir": 300,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 64,
-                    "y": 68,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1473,48 +1167,6 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "1F entry floods the split site.",
                   "Plant under your holes; hold vertical."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 32,
-                    "y": 58,
-                    "dir": 90,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 50,
-                    "y": 37,
-                    "dir": 180,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 77,
-                    "y": 46,
-                    "dir": 250,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 78,
-                    "y": 70,
-                    "dir": 300,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 64,
-                    "y": 68,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1574,48 +1226,6 @@ const SEED_DATA =
                   "Thatcher/Thermite open the main wall on the call.",
                   "Hit both angles; isolate and trade.",
                   "Plant default; hold Garage + Construction."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 32,
-                    "y": 58,
-                    "dir": 90,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 50,
-                    "y": 37,
-                    "dir": 180,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 77,
-                    "y": 46,
-                    "dir": 250,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 78,
-                    "y": 70,
-                    "dir": 300,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 1,
-                    "x": 64,
-                    "y": 68,
-                    "dir": 0,
-                    "slot": 4
-                  }
                 ]
               }
             ]
@@ -1679,48 +1289,6 @@ const SEED_DATA =
                   "Thermite/Hibana open; Lion scan the basement.",
                   "Entry trades down the stairs into the opening.",
                   "Plant Church/Arsenal default; hold the stairs."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 82,
-                    "y": 58,
-                    "dir": 250,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 44,
-                    "y": 36,
-                    "dir": 160,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 62,
-                    "y": 20,
-                    "dir": 180,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 70,
-                    "y": 80,
-                    "dir": 0,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 47,
-                    "y": 53,
-                    "dir": 90,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1780,48 +1348,6 @@ const SEED_DATA =
                   "Vertical forces anchors off the bomb.",
                   "Stair entry floods the split site.",
                   "Plant under your holes; hold vertical."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 82,
-                    "y": 58,
-                    "dir": 250,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 44,
-                    "y": 36,
-                    "dir": 160,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 62,
-                    "y": 20,
-                    "dir": 180,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 70,
-                    "y": 80,
-                    "dir": 0,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 47,
-                    "y": 53,
-                    "dir": 90,
-                    "slot": 4
-                  }
                 ]
               },
               {
@@ -1881,48 +1407,6 @@ const SEED_DATA =
                   "Fuze/EMP the site to force anchors off bomb.",
                   "Open the wall + flood both stairs together.",
                   "Plant default; hold both staircases post-plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 82,
-                    "y": 58,
-                    "dir": 250,
-                    "slot": 0
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 44,
-                    "y": 36,
-                    "dir": 160,
-                    "slot": 1
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 62,
-                    "y": 20,
-                    "dir": 180,
-                    "slot": 2
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 70,
-                    "y": 80,
-                    "dir": 0,
-                    "slot": 3
-                  },
-                  {
-                    "kind": "entry",
-                    "floor": 0,
-                    "x": 47,
-                    "y": 53,
-                    "dir": 90,
-                    "slot": 4
-                  }
                 ]
               }
             ]
@@ -1994,60 +1478,6 @@ const SEED_DATA =
                   "Anchors hold the Bedroom-Gym crossfire; deny the default plant.",
                   "Watch the Master (Roof) hatch and the Gym vertical from 1F.",
                   "Collapse on the plant; Smoke/Goyo deny the defuse."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 65.2,
-                    "y": 57.3,
-                    "label": "Bedroom-Cash wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 58.8,
-                    "y": 58.6,
-                    "label": "Gym-Cash wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 55.7,
-                    "y": 56.5,
-                    "label": "Bedroom hatch (Master/Roof)",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 42.9,
-                    "y": 59.1,
-                    "label": "Gym hatch (to 1F)",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 55.7,
-                    "y": 60.5,
-                    "op": "smoke",
-                    "label": "Master Bedroom"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 42.9,
-                    "y": 63.1,
-                    "op": "maestro",
-                    "label": "Gym"
-                  }
                 ]
               },
               {
@@ -2111,60 +1541,6 @@ const SEED_DATA =
                   "Trap the Bedroom and Gym entries.",
                   "Hold the bomb under the hatches; deny the obvious plant.",
                   "Trade off the crossfire; collapse on the plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 55.7,
-                    "y": 56.5,
-                    "label": "Bedroom hatch (Master/Roof)",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 42.9,
-                    "y": 59.1,
-                    "label": "Gym hatch (to 1F)",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 65.2,
-                    "y": 57.3,
-                    "label": "Bedroom-Cash wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 58.8,
-                    "y": 58.6,
-                    "label": "Gym-Cash wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 55.7,
-                    "y": 60.5,
-                    "op": "goyo",
-                    "label": "Master Bedroom"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 42.9,
-                    "y": 63.1,
-                    "op": "ela",
-                    "label": "Gym"
-                  }
                 ]
               }
             ]
@@ -2234,60 +1610,6 @@ const SEED_DATA =
                   "Anchors crossfire Cash-CCTV; deny the default plant.",
                   "Roamer pinches the Bar staircase push.",
                   "Collapse on the plant with Smoke/Goyo."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 65.2,
-                    "y": 57.3,
-                    "label": "Cash-Bedroom wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 60.6,
-                    "y": 64.5,
-                    "label": "CCTV-Gym wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 74.6,
-                    "y": 58,
-                    "label": "Cash hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 78.2,
-                    "y": 69.9,
-                    "label": "CCTV hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 74.6,
-                    "y": 62,
-                    "op": "smoke",
-                    "label": "Cash Room"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 78.2,
-                    "y": 73.9,
-                    "op": "valkyrie",
-                    "label": "CCTV Room"
-                  }
                 ]
               },
               {
@@ -2351,60 +1673,6 @@ const SEED_DATA =
                   "Trap the staircase and Construction entries.",
                   "Hold the bomb under the hatches; deny plant.",
                   "Trade off the crossfire; collapse."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 74.6,
-                    "y": 58,
-                    "label": "Cash hatch",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 78.2,
-                    "y": 69.9,
-                    "label": "CCTV hatch",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 65.2,
-                    "y": 57.3,
-                    "label": "Cash-Bedroom wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 2,
-                    "x": 60.6,
-                    "y": 64.5,
-                    "label": "CCTV-Gym wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 74.6,
-                    "y": 62,
-                    "op": "goyo",
-                    "label": "Cash Room"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 2,
-                    "x": 78.2,
-                    "y": 73.9,
-                    "op": "kapkan",
-                    "label": "CCTV Room"
-                  }
                 ]
               }
             ]
@@ -2474,60 +1742,6 @@ const SEED_DATA =
                   "Anchors crossfire Bar-Stock; deny the default plant.",
                   "Roamer pinches the Construction/Garage push.",
                   "Collapse and trade on the plant."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 54.5,
-                    "y": 54.5,
-                    "label": "Bar-Stock wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 66.5,
-                    "y": 52,
-                    "label": "Stock-Register wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 46,
-                    "y": 57,
-                    "label": "Bar ceiling hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 52,
-                    "label": "Stock ceiling hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 1,
-                    "x": 46,
-                    "y": 61,
-                    "op": "smoke",
-                    "label": "Bar"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 56,
-                    "op": "valkyrie",
-                    "label": "Stock Room"
-                  }
                 ]
               },
               {
@@ -2591,60 +1805,6 @@ const SEED_DATA =
                   "Mozzie steals drones; attackers push blind.",
                   "Hold the bomb under the reinforced ceiling; deny plant.",
                   "Trade off traps + crossfire."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 46,
-                    "y": 57,
-                    "label": "Bar ceiling hatch",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 52,
-                    "label": "Stock ceiling hatch",
-                    "op": "kaid",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 54.5,
-                    "y": 54.5,
-                    "label": "Bar-Stock wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 1,
-                    "x": 66.5,
-                    "y": 52,
-                    "label": "Stock-Register wall",
-                    "op": "kaid",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 1,
-                    "x": 46,
-                    "y": 61,
-                    "op": "goyo",
-                    "label": "Bar"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 1,
-                    "x": 63,
-                    "y": 56,
-                    "op": "ela",
-                    "label": "Stock Room"
-                  }
                 ]
               }
             ]
@@ -2714,60 +1874,6 @@ const SEED_DATA =
                   "Anchors hold the Church-Arsenal crossfire; deny plant.",
                   "Roamer picks the staircase entry, steals time.",
                   "Collapse on the plant; basement favors the retake."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 58.6,
-                    "y": 43.5,
-                    "label": "Church-Arsenal wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 71.5,
-                    "y": 47,
-                    "label": "Arsenal-Blue Stairs wall",
-                    "op": "bandit",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 57.7,
-                    "y": 51,
-                    "label": "Church hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 59.4,
-                    "y": 36,
-                    "label": "Arsenal hatch",
-                    "op": "bandit",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 0,
-                    "x": 57.7,
-                    "y": 55,
-                    "op": "smoke",
-                    "label": "Church"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 0,
-                    "x": 59.4,
-                    "y": 40,
-                    "op": "kapkan",
-                    "label": "Arsenal Room"
-                  }
                 ]
               },
               {
@@ -2832,60 +1938,6 @@ const SEED_DATA =
                   "Bandit the breach wall late once utility is spent.",
                   "Fall back to the Church-Arsenal crossfire on timer.",
                   "Deny plant, trade, retake with traps."
-                ],
-                "marks": [
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 58.6,
-                    "y": 43.5,
-                    "label": "Church-Arsenal wall",
-                    "op": "mute",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 71.5,
-                    "y": 47,
-                    "label": "Arsenal-Blue Stairs wall",
-                    "op": "mute",
-                    "hatch": false
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 57.7,
-                    "y": 51,
-                    "label": "Church hatch",
-                    "op": "mute",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "reinforce",
-                    "floor": 0,
-                    "x": 59.4,
-                    "y": 36,
-                    "label": "Arsenal hatch",
-                    "op": "mute",
-                    "hatch": true
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 0,
-                    "x": 57.7,
-                    "y": 55,
-                    "op": "goyo",
-                    "label": "Church"
-                  },
-                  {
-                    "kind": "gadget",
-                    "floor": 0,
-                    "x": 59.4,
-                    "y": 40,
-                    "op": "kapkan",
-                    "label": "Arsenal Room"
-                  }
                 ]
               }
             ]
@@ -8986,33 +8038,6 @@ function assignTactic(st,side){
   return players.map(pl=>{ const slot=assigned.get(pl.pi); const role=slot?roleById(slot.role):null;
     return { player:pl.name, roleName:role?role.name:"", ops:slot?(slot.ops||[]):[], pos:slot?slot.pos:"" }; });
 }
-// which player ends up in each slot index (for entry-arrow labels)
-function assignSlots(st,side){
-  const prefKey=side==="attack"?"attackRoles":"defenseRoles";
-  const slots=(st.slots||[]).map(s=>({role:s.role,_taken:null}));
-  const players=DB.roster.map((p,pi)=>({pi,prefs:(p[prefKey]||[]).slice()}));
-  const taken=new Set();
-  const maxr=Math.max(0,...players.map(p=>p.prefs.length));
-  for(let r=0;r<maxr;r++) players.forEach(pl=>{ if(taken.has(pl.pi))return; const role=pl.prefs[r]; if(!role)return; const slot=slots.find(s=>s.role===role&&s._taken===null); if(slot){ slot._taken=pl.pi; taken.add(pl.pi); } });
-  players.forEach(pl=>{ if(taken.has(pl.pi))return; const slot=slots.find(s=>s._taken===null); if(slot){ slot._taken=pl.pi; taken.add(pl.pi); } });
-  return slots.map(s=> s._taken!=null ? (DB.roster[s._taken].name||"") : "");
-}
-function activeStrat(){ const T=UI.maps.tactic; if(!T||!T.open) return null; const m=mapById(UI.maps.selectedId); if(!m)return null;
-  return { T, st:((((m.tactics||{})[T.side]||{})[T.siteId]||{}).strats||[])[T.si] }; }
-// markers for the open strat on a given floor (reinforce walls + gadget spots + entry arrows)
-function tacticMarksHTML(floorIdx){
-  const a=activeStrat(); if(!a||!a.st||!Array.isArray(a.st.marks)) return "";
-  const players=a.T.side==="attack"?assignSlots(a.st,"attack"):null;
-  return a.st.marks.filter(mk=>mk.floor===floorIdx).map(mk=>{
-    if(mk.kind==="reinforce"){ const o=opById(mk.op); const opn=o?o.name:(mk.op||"");
-      return `<div class="mk tac reinf${mk.hatch?" hatch":""}" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tdot reinf">${mk.hatch?"▤":"▦"}</span><span class="mlb tac reinf">${esc(mk.label||"Reinforce")}${opn?` <b class="gop">${esc(opn)}</b>`:""}</span></div></div>`; }
-    if(mk.kind==="gadget"){ const o=opById(mk.op); const opn=o?o.name:(mk.op||"");
-      return `<div class="mk tac gad" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tdot gad">◈</span><span class="mlb tac gad">${esc(opn)}</span></div></div>`; }
-    if(mk.kind==="entry"){ const who=players?(players[mk.slot]||""):"";
-      return `<div class="mk tac entry" style="left:${mk.x}%;top:${mk.y}%"><div class="mkb"><span class="tarrow" style="transform:rotate(${(mk.dir||0)-90}deg)">➤</span>${who?`<span class="mlb tac entry">${esc(who)}</span>`:""}</div></div>`; }
-    return "";
-  }).join("");
-}
 function renderTacticsPanel(){
   const host=byId("tacticsPanel"); if(!host) return;
   const m=mapById(UI.maps.selectedId); if(!m||!m.bombsites||!m.bombsites.length){ host.innerHTML=""; return; }
@@ -9162,8 +8187,7 @@ function renderMapDetail(root){
 }
 function renderFloorTabs(){
   const m=mapById(UI.maps.selectedId); const edit=UI.maps.edit; const t=byId("floorTabs");
-  const a=activeStrat(); const markFloors=new Set((a&&a.st&&a.st.marks||[]).map(x=>x.floor));
-  t.innerHTML=m.floors.map((f,i)=>`<button class="floortab ${i===UI.maps.floorIdx?"active":""}${markFloors.has(i)?" hasmarks":""}" data-fi="${i}">${esc(f.name)}${markFloors.has(i)?'<span class="fmk"></span>':""}</button>`).join("")
+  t.innerHTML=m.floors.map((f,i)=>`<button class="floortab ${i===UI.maps.floorIdx?"active":""}" data-fi="${i}">${esc(f.name)}</button>`).join("")
     + (edit?`<button class="floortab add" id="addFloor">＋ floor</button>`:"");
   t.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{ UI.maps.floorIdx=+b.dataset.fi; renderFloorTabs(); renderFloorView(); });
   const af=byId("addFloor"); if(af) af.onclick=()=>{ m.floors.push({name:"New Floor",layoutImage:null,callouts:[]}); UI.maps.floorIdx=m.floors.length-1; markDirty(); renderFloorTabs(); renderFloorView(); };
@@ -9189,7 +8213,7 @@ function renderFloorView(){
     const lb=hasVid?`<span class="pk-play">▶</span>${lbTxt}`:lbTxt;
     const ds=site?` data-site="${esc(c.site||"")}"`:"";
     return `<div class="${cls}" data-pin="${ci}"${ds} style="left:${numOr(c.x,50)}%;top:${numOr(c.y,50)}%"><div class="mkb"><span class="mdot"></span><span class="mlb">${lb}</span></div></div>`;
-  }).join("")+tacticMarksHTML(UI.maps.floorIdx);
+  }).join("");
   // Layers/sites are evaluated at the MAP level so the toggles + site selection
   // stay present and active on every floor (some sites span two floors).
   const mapHasPeek=m.floors.some(fl=>(fl.callouts||[]).some(c=>c.type==="peek"));
