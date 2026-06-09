@@ -255,6 +255,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .opchip{background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
 .opchip.atk{background:var(--atk-bg);border-color:var(--atk-line);color:#a83d12}
 .opchip.def{background:var(--def-bg);border-color:var(--def-line);color:#1c5fa6}
+.opchip .wr{opacity:.65;font-weight:700;font-size:11px;font-variant-numeric:tabular-nums}
 .opchip .x{cursor:pointer;opacity:.6;font-weight:800}
 .opchip .x:hover{opacity:1}
 .occ{font-size:12px;color:var(--muted);font-weight:600}
@@ -319,7 +320,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 24,
+  "version": 25,
   "publishedAt": "2026-06-09",
   "maps": [
     {
@@ -4901,6 +4902,7 @@ const SEED_DATA =
       "id": "ash",
       "name": "Ash",
       "side": "attack",
+      "winRate": 50.2,
       "role": "entry",
       "notes": "Fast entry; breaching rounds destroy gadgets/hatches from range.",
       "howToCounter": "Hold unpredictable off-angles and slow her with barbed wire + traps (Kapkan/Frost/Ela). Don't peek the obvious lane into her R4-C. Deny the space her breaching rounds open by repositioning."
@@ -4909,6 +4911,7 @@ const SEED_DATA =
       "id": "sledge",
       "name": "Sledge",
       "side": "attack",
+      "winRate": 50.6,
       "role": "entry",
       "notes": "Hammer opens soft walls/floors/hatches silently for new angles & vertical.",
       "howToCounter": "Reinforce key walls, watch your ceiling/floor, and listen for hammer hits. Bandit/Mute don't stop the hammer — reposition off the new holes and hold a trade angle."
@@ -4917,6 +4920,7 @@ const SEED_DATA =
       "id": "thatcher",
       "name": "Thatcher",
       "side": "attack",
+      "winRate": 51.6,
       "role": "support",
       "notes": "EMP grenades disable electronics to enable the hard breach.",
       "howToCounter": "Spread your electronics, place Bandit batteries late & hidden, and re-apply gadgets after the EMP window. Expect a hard breach the moment he throws — be ready to re-Bandit."
@@ -4925,6 +4929,7 @@ const SEED_DATA =
       "id": "thermite",
       "name": "Thermite",
       "side": "attack",
+      "winRate": 51.4,
       "role": "hardbreach",
       "notes": "Exothermic charges open reinforced walls (if Bandit/Mute are cleared).",
       "howToCounter": "Protect reinforcements with Bandit/Mute/Kaid, deny the charge plant, and punish him as he places it. Killing the hard breacher stalls the entire attack — make him your priority."
@@ -4933,6 +4938,7 @@ const SEED_DATA =
       "id": "twitch",
       "name": "Twitch",
       "side": "attack",
+      "winRate": 50,
       "role": "support",
       "notes": "Shock drones snipe gadgets (batteries, Mira, traps, cams) and zap you.",
       "howToCounter": "Hunt the drones early (shoot, Mozzie pests, bait with Jäger). Hide Bandit batteries out of drone sightlines and re-apply gadgets after she leaves the room."
@@ -4941,6 +4947,7 @@ const SEED_DATA =
       "id": "montagne",
       "name": "Montagne",
       "side": "attack",
+      "winRate": 48.6,
       "role": "support",
       "notes": "Full-body extendable shield; gathers intel and bodies the plant.",
       "howToCounter": "Flank and melee/Caveira from behind, or use impacts/Capitão/Gridlock/Twitch. Don't tunnel the shield head-on — he's stalling for time and pushing the defuser in."
@@ -4949,6 +4956,7 @@ const SEED_DATA =
       "id": "glaz",
       "name": "Glaz",
       "side": "attack",
+      "winRate": 49,
       "role": "flex",
       "notes": "Thermal scope sees through his own smoke at range.",
       "howToCounter": "Don't hold still in smoke or open lanes; break his sightlines and relocate after he tags you. Punish his static scope with a wide flank."
@@ -4957,6 +4965,7 @@ const SEED_DATA =
       "id": "fuze",
       "name": "Fuze",
       "side": "attack",
+      "winRate": 48.8,
       "role": "support",
       "notes": "Cluster charges spam soft walls/hatches/shields — lethal area denial.",
       "howToCounter": "Don't anchor against a breakable wall; move off the wall the instant you hear the charge, and shoot the visible pucks. Reinforce or reposition the bomb away from the wall."
@@ -4965,6 +4974,7 @@ const SEED_DATA =
       "id": "blitz",
       "name": "Blitz",
       "side": "attack",
+      "winRate": 47.8,
       "role": "entry",
       "notes": "Shield flashes blind you for an aggressive push.",
       "howToCounter": "Hold off-angles, back up to keep distance, and trade with a teammate. Nitro/impact/Caveira from the side punish him — never peek his flash head-on."
@@ -4973,6 +4983,7 @@ const SEED_DATA =
       "id": "iq",
       "name": "IQ",
       "side": "attack",
+      "winRate": 49.6,
       "role": "support",
       "notes": "Detects electronics through walls and destroys/calls them out.",
       "howToCounter": "Hide or delay your electronics (nitro, batteries, traps, phones). Expect her to pre-aim your gadget spots — relocate them. She enables clean hard breaches, so respect the wall."
@@ -4981,6 +4992,7 @@ const SEED_DATA =
       "id": "buck",
       "name": "Buck",
       "side": "attack",
+      "winRate": 50.7,
       "role": "flex",
       "notes": "Skeleton Key shotgun opens soft surfaces for vertical play.",
       "howToCounter": "Watch floors/ceilings and reinforce; listen for shotgun vertical above/below the bomb. Trade his peeks and don't stand under an obvious vertical spot."
@@ -4989,6 +5001,7 @@ const SEED_DATA =
       "id": "blackbeard",
       "name": "Blackbeard",
       "side": "attack",
+      "winRate": 48.9,
       "role": "entry",
       "notes": "Rifle shield blocks headshots while aiming.",
       "howToCounter": "Body-shot him, flank, or force him to move with utility/grenades. Don't trade headshot duels into the shield — bait it, then push or angle his exposed body."
@@ -4997,6 +5010,7 @@ const SEED_DATA =
       "id": "capitao",
       "name": "Capitão",
       "side": "attack",
+      "winRate": 49.7,
       "role": "flex",
       "notes": "Asphyxiating fire bolts deny plant/area; micro-smokes cover pushes.",
       "howToCounter": "Don't hold burning plant spots — reposition out of the fire and punish his peek windows. A flexible entry; trade him with a teammate."
@@ -5005,6 +5019,7 @@ const SEED_DATA =
       "id": "hibana",
       "name": "Hibana",
       "side": "attack",
+      "winRate": 51.2,
       "role": "hardbreach",
       "notes": "X-Kairos pellets open reinforced walls & hatches at range.",
       "howToCounter": "Bandit/Mute/Kaid the walls and hatches, punish her as she aims the launcher, and watch hatches she can open from a floor away. Kill the hard breacher to stall."
@@ -5013,6 +5028,7 @@ const SEED_DATA =
       "id": "jackal",
       "name": "Jackal",
       "side": "attack",
+      "winRate": 50.9,
       "role": "intel",
       "notes": "Eyenox tracks footprints and pings roamers repeatedly.",
       "howToCounter": "Roamers keep moving, vault, and avoid leaving fresh tracks; bait the scan then relocate. Mute jammers don't stop him — kill him or break the chain of pings."
@@ -5021,6 +5037,7 @@ const SEED_DATA =
       "id": "ying",
       "name": "Ying",
       "side": "attack",
+      "winRate": 50.4,
       "role": "entry",
       "notes": "Candela flash clusters blind through walls/floors for pushes.",
       "howToCounter": "Look away / back off on the deploy sound and pre-aim the push. Warden negates the flash. Bandit/Mute don't stop candelas — trade post-flash."
@@ -5029,6 +5046,7 @@ const SEED_DATA =
       "id": "zofia",
       "name": "Zofia",
       "side": "attack",
+      "winRate": 51,
       "role": "entry",
       "notes": "Concussion + impact grenades; can self-revive from down.",
       "howToCounter": "Respect the concussion before a push and confirm your kills — she stands herself up. Hold trade angles; impacts open vertical and gadgets."
@@ -5037,6 +5055,7 @@ const SEED_DATA =
       "id": "dokkaebi",
       "name": "Dokkaebi",
       "side": "attack",
+      "winRate": 50.5,
       "role": "intel",
       "notes": "Rings defender phones (reveals you) and reads cams after a kill.",
       "howToCounter": "Shoot/silence your phone the instant it rings and don't rely on cams late round. Expect intel parity — she also frags, so respect the peek."
@@ -5045,6 +5064,7 @@ const SEED_DATA =
       "id": "lion",
       "name": "Lion",
       "side": "attack",
+      "winRate": 50.3,
       "role": "intel",
       "notes": "EX scans detect any MOVING defender through walls, repeatedly.",
       "howToCounter": "FREEZE during his scan (red icon), then reposition. Coordinate so the whole team holds still — punishes roamers who keep moving."
@@ -5053,6 +5073,7 @@ const SEED_DATA =
       "id": "finka",
       "name": "Finka",
       "side": "attack",
+      "winRate": 50.6,
       "role": "support",
       "notes": "Adrenal surge heals/revives team, boosts aim, negates flash/concussion.",
       "howToCounter": "Push downs to deny the rez-from-down, expect aggressive trades during the surge, and don't rely on flashes/concussions in that window."
@@ -5061,6 +5082,7 @@ const SEED_DATA =
       "id": "maverick",
       "name": "Maverick",
       "side": "attack",
+      "winRate": 51,
       "role": "hardbreach",
       "notes": "Blowtorch melts precise holes in reinforced walls/hatches quietly.",
       "howToCounter": "Listen for the torch, vary Bandit timing, and watch for pixel-peek holes. Re-check reinforced walls — he bypasses standard breach denial. Push or trade him off the wall."
@@ -5069,6 +5091,7 @@ const SEED_DATA =
       "id": "nomad",
       "name": "Nomad",
       "side": "attack",
+      "winRate": 51.5,
       "role": "flex",
       "notes": "Airjab repels knock you back off flanks/peeks.",
       "howToCounter": "Roamers watch for jabs on flank doors/windows and shoot the projectile; time pushes around the bump. Disrupts roam timing — don't peek right after the jab."
@@ -5077,6 +5100,7 @@ const SEED_DATA =
       "id": "gridlock",
       "name": "Gridlock",
       "side": "attack",
+      "winRate": 49.4,
       "role": "support",
       "notes": "Trax stingers carpet floors with caltrops to slow/deny flanks.",
       "howToCounter": "Shoot a path clear, avoid the spikes (slow + chip), and don't get caught crossing them in a gunfight. Area denial — reroute your flank."
@@ -5085,6 +5109,7 @@ const SEED_DATA =
       "id": "nokk",
       "name": "Nøkk",
       "side": "attack",
+      "winRate": 48.5,
       "role": "intel",
       "notes": "HEL silences footsteps and hides her from cams/Echo/Maestro.",
       "howToCounter": "Don't trust an empty cam feed — hold angles manually and listen close. She appears off-cam, so watch dead drone feeds and roam lanes."
@@ -5093,6 +5118,7 @@ const SEED_DATA =
       "id": "amaru",
       "name": "Amaru",
       "side": "attack",
+      "winRate": 48.3,
       "role": "entry",
       "notes": "Garra hook zips through windows/hatches for surprise entries.",
       "howToCounter": "Watch windows/hatches and pre-aim the vault — she's exposed mid-zip and loud. Trap windows (Kapkan/Frost) to punish the entry."
@@ -5101,6 +5127,7 @@ const SEED_DATA =
       "id": "kali",
       "name": "Kali",
       "side": "attack",
+      "winRate": 49.9,
       "role": "flex",
       "notes": "LV lance breaches small reinforced openings; DMR one-taps.",
       "howToCounter": "Don't hold static long angles; expect the lance on your Bandit batteries/gadgets and break her sightlines. Pairs with hard breach — protect the wall."
@@ -5109,6 +5136,7 @@ const SEED_DATA =
       "id": "iana",
       "name": "Iana",
       "side": "attack",
+      "winRate": 51.1,
       "role": "intel",
       "notes": "Replicator hologram scouts site risk-free and baits your shots.",
       "howToCounter": "Don't shoot the holo (it reveals you) — look for the shimmer/no-damage and hold position. She frags well after, so respect the real entry."
@@ -5117,6 +5145,7 @@ const SEED_DATA =
       "id": "ace",
       "name": "Ace",
       "side": "attack",
+      "winRate": 51.8,
       "role": "hardbreach",
       "notes": "SELMA charges auto-open reinforced walls/hatches in a spreading line.",
       "howToCounter": "Bandit/Mute/Kaid the surfaces and shoot the SELMA device as it deploys. Protect hatches — he's self-sufficient, so killing him stalls the breach."
@@ -5125,6 +5154,7 @@ const SEED_DATA =
       "id": "zero",
       "name": "Zero",
       "side": "attack",
+      "winRate": 50.8,
       "role": "intel",
       "notes": "Argus cams drill through walls for intel and can shoot to ping/kill gadgets.",
       "howToCounter": "Hunt the small in-wall cams and expect global intel; relocate gadgets he's seen. Mute jammers help vs the cams — check walls high and low."
@@ -5133,6 +5163,7 @@ const SEED_DATA =
       "id": "flores",
       "name": "Flores",
       "side": "attack",
+      "winRate": 49.8,
       "role": "support",
       "notes": "RCE-Ratero drones drive in and explode — kill gadgets, open soft walls.",
       "howToCounter": "Shoot the drone before it locks (it can't reverse), watch your batteries/traps, and listen for the beep. Clears denial util — re-apply after."
@@ -5141,6 +5172,7 @@ const SEED_DATA =
       "id": "osa",
       "name": "Osa",
       "side": "attack",
+      "winRate": 49.3,
       "role": "support",
       "notes": "Talon-8 transparent shields give attackers safe angles & plant cover.",
       "howToCounter": "Shoot her as she deploys, flank the shield, or impact/EMP it. Don't peek the protected angle — it stalls and enables the plant."
@@ -5149,6 +5181,7 @@ const SEED_DATA =
       "id": "sens",
       "name": "Sens",
       "side": "attack",
+      "winRate": 48.2,
       "role": "support",
       "notes": "R.O.U. projectors roll out light-screens that block your LOS across a lane.",
       "howToCounter": "You can shoot through/around the screen — it isn't solid cover. Reposition and pre-aim the covered lane; don't let them cross free."
@@ -5157,6 +5190,7 @@ const SEED_DATA =
       "id": "grim",
       "name": "Grim",
       "side": "attack",
+      "winRate": 48.6,
       "role": "intel",
       "notes": "Kawan swarm grenades tag and reveal anyone passing through the bees.",
       "howToCounter": "Avoid the cloud and shoot it down; don't cross while tagged. Expect a push on the ping — hold your trade angle."
@@ -5165,6 +5199,7 @@ const SEED_DATA =
       "id": "brava",
       "name": "Brava",
       "side": "attack",
+      "winRate": 50.1,
       "role": "support",
       "notes": "Kludge drone hacks your electronics to her side (cams, traps, Mira, gadgets).",
       "howToCounter": "Hide/delay electronics, shoot the yellow drone, and re-deploy after. Don't bunch gadgets where one hack flips them all against you."
@@ -5173,6 +5208,7 @@ const SEED_DATA =
       "id": "ram",
       "name": "Ram",
       "side": "attack",
+      "winRate": 50.7,
       "role": "entry",
       "notes": "BU-GI module destroys floors/soft walls/gadgets in a heavy area.",
       "howToCounter": "Move off soft floors/walls when it deploys, reinforce, and watch verticality. Aggressive soft-destruction entry — don't anchor on a breakable surface."
@@ -5181,6 +5217,7 @@ const SEED_DATA =
       "id": "deimos",
       "name": "Deimos",
       "side": "attack",
+      "winRate": 49.2,
       "role": "intel",
       "notes": "Tracker locks onto one defender, reveals them, and forces a duel (he gets a magnum).",
       "howToCounter": "The targeted player breaks LOS, uses cover and teammates to trade, and repositions — don't duel him isolated. The whole team should collapse to protect the tracked defender."
@@ -5189,6 +5226,7 @@ const SEED_DATA =
       "id": "striker",
       "name": "Striker",
       "side": "attack",
+      "winRate": 49.9,
       "role": "entry",
       "notes": "Recruit attacker — flexible loadout (frags, claymore, smoke, hard-hitting primaries).",
       "howToCounter": "No special gadget — treat as a generalist entry and play standard anti-entry. Read his utility choices (frags vs claymore) and counter accordingly."
@@ -5197,6 +5235,7 @@ const SEED_DATA =
       "id": "solid-snake",
       "name": "Solid Snake",
       "side": "attack",
+      "winRate": 50.6,
       "role": "flex",
       "notes": "Custom/collab pick in your IGL pool — treat as a stealth flex entry.",
       "howToCounter": "Play it like a quiet flanker: watch back lines and silent approaches, hold angles manually. Verify the exact kit in-app before relying on a hard counter."
@@ -5205,6 +5244,7 @@ const SEED_DATA =
       "id": "smoke",
       "name": "Smoke",
       "side": "defense",
+      "winRate": 52.4,
       "role": "anchor",
       "notes": "Toxic gas denies plant/defuse and pushes; can gas through tiny gaps.",
       "howToCounter": "Pre-fire and clear before stepping in, never plant in open gas range, and drone for his position to trade. Lion/Dokkaebi pressure him off the canister."
@@ -5213,6 +5253,7 @@ const SEED_DATA =
       "id": "mute",
       "name": "Mute",
       "side": "defense",
+      "winRate": 50.7,
       "role": "support",
       "notes": "Signal jammers block drones and disable hard-breach charges in radius.",
       "howToCounter": "Shoot the visible jammer domes or EMP them (Thatcher/Kali/IQ); bring Twitch to clear, or breach a wall a jammer doesn't cover. Find the gap in his coverage."
@@ -5221,6 +5262,7 @@ const SEED_DATA =
       "id": "castle",
       "name": "Castle",
       "side": "defense",
+      "winRate": 48,
       "role": "anchor",
       "notes": "Armor panels barricade doors/windows to reroute and stall.",
       "howToCounter": "Sledge/Buck/Ace/explosive/hard-melee remove panels; Kali/Twitch too. Don't waste time meleeing a panel under fire — breach a different way."
@@ -5229,6 +5271,7 @@ const SEED_DATA =
       "id": "pulse",
       "name": "Pulse",
       "side": "defense",
+      "winRate": 49.2,
       "role": "roamer",
       "notes": "Heartbeat sensor gives short-range intel through walls/floors.",
       "howToCounter": "Vary your plant spot, bait his peek, and use Lion/Dokkaebi/Nøkk to cut his info. Watch for cheeky floor pushes from below/above the bomb."
@@ -5237,6 +5280,7 @@ const SEED_DATA =
       "id": "doc",
       "name": "Doc",
       "side": "defense",
+      "winRate": 49.6,
       "role": "anchor",
       "notes": "Stim pistol self-revives, team-heals and overheals.",
       "howToCounter": "Commit to confirmed kills (push the down), focus-fire, and deny the res window. Expect a re-peek after you tag him — he can stand himself up."
@@ -5245,6 +5289,7 @@ const SEED_DATA =
       "id": "rook",
       "name": "Rook",
       "side": "defense",
+      "winRate": 49.4,
       "role": "anchor",
       "notes": "Armor plates give the whole site downs-instead-of-kills survivability.",
       "howToCounter": "Plan for extra shots and confirm downs (watch for Doc revives). Don't expect one-taps to kill — trade and push the down."
@@ -5253,6 +5298,7 @@ const SEED_DATA =
       "id": "kapkan",
       "name": "Kapkan",
       "side": "defense",
+      "winRate": 50.6,
       "role": "anchor",
       "notes": "EDDs on doorways/windows deal chip damage and reveal.",
       "howToCounter": "Drone and shoot the visible cylinder, or vault/destroy the frame. Cheap to clear with any throwaway — just don't run through unscouted."
@@ -5261,6 +5307,7 @@ const SEED_DATA =
       "id": "tachanka",
       "name": "Tachanka",
       "side": "defense",
+      "winRate": 48.5,
       "role": "anchor",
       "notes": "Shumikha launcher lobs incendiary grenades for area denial; strong LMG.",
       "howToCounter": "Clear fire from plant spots, don't push through the flames, and bait the grenade arc. Respect the LMG on long angles."
@@ -5269,6 +5316,7 @@ const SEED_DATA =
       "id": "jager",
       "name": "Jäger",
       "side": "defense",
+      "winRate": 50.5,
       "role": "support",
       "notes": "ADS destroys thrown projectiles (nades, candelas, smokes) in radius.",
       "howToCounter": "Bait the ADS empty with cheap throwables before committing real utility (Ash/Zofia/Fuze). Each ADS holds limited charges — track resets, drone it out and shoot it."
@@ -5277,6 +5325,7 @@ const SEED_DATA =
       "id": "bandit",
       "name": "Bandit",
       "side": "defense",
+      "winRate": 50.9,
       "role": "support",
       "notes": "Electrifies reinforced walls / barbed wire / shields — denies hard breach.",
       "howToCounter": "Beat the timing with 'Bandit tricking', or remove him first: Twitch shock-drones the batteries, Thatcher/Kali/IQ EMP them, Nomad/Flores flush him off the wall."
@@ -5285,6 +5334,7 @@ const SEED_DATA =
       "id": "frost",
       "name": "Frost",
       "side": "defense",
+      "winRate": 49.7,
       "role": "anchor",
       "notes": "Welcome Mats down you on rappels/windows/prone spots.",
       "howToCounter": "Drone vulnerable entries, vault carefully, and have a teammate ready to trade/clear the trap. Watch windows and short drops near site."
@@ -5293,6 +5343,7 @@ const SEED_DATA =
       "id": "valkyrie",
       "name": "Valkyrie",
       "side": "defense",
+      "winRate": 50.4,
       "role": "roamer",
       "notes": "Black Eye cams give global intel; often thrown to long/outside angles.",
       "howToCounter": "Hunt and shoot the small dark cam domes early; Twitch/IQ punish. Assume she sees your approach — vary timing and use Lion/Dokkaebi/Nøkk."
@@ -5301,6 +5352,7 @@ const SEED_DATA =
       "id": "caveira",
       "name": "Caveira",
       "side": "defense",
+      "winRate": 49.3,
       "role": "roamer",
       "notes": "Silent Step roamer; interrogates downs to reveal your whole team.",
       "howToCounter": "Don't get isolated, watch flanks and sound, and finish her fast or pull the downed teammate. She's near-silent — hold angles in pairs."
@@ -5309,6 +5361,7 @@ const SEED_DATA =
       "id": "echo",
       "name": "Echo",
       "side": "defense",
+      "winRate": 50.7,
       "role": "anchor",
       "notes": "Yokai drones cling to ceilings and concuss to deny plant/defuse.",
       "howToCounter": "Look up and shoot the drones; Twitch/IQ/Mozzie hunt them, EMP disables. Drone the ceiling before planting — he often double-roams or anchors."
@@ -5317,6 +5370,7 @@ const SEED_DATA =
       "id": "mira",
       "name": "Mira",
       "side": "defense",
+      "winRate": 51.6,
       "role": "anchor",
       "notes": "Black Mirror one-way windows give intel & angles.",
       "howToCounter": "Break the canister behind it (shoot the magnet) or melee it once placed; Twitch/a thrown projectile pops it. Never push the lit-up side blind."
@@ -5325,6 +5379,7 @@ const SEED_DATA =
       "id": "lesion",
       "name": "Lesion",
       "side": "defense",
+      "winRate": 50.3,
       "role": "roamer",
       "notes": "Gu mines cloak when armed, poison + slow on step and reveal you.",
       "howToCounter": "Drone for them, shoot on sight, and don't sprint blind through doorways. Each hit DOTs you — back off and heal; clear lanes before pushing."
@@ -5333,6 +5388,7 @@ const SEED_DATA =
       "id": "ela",
       "name": "Ela",
       "side": "defense",
+      "winRate": 49.8,
       "role": "roamer",
       "notes": "Grzmot concussion mines disorient for pushes/flanks; strong SMG.",
       "howToCounter": "Drone and shoot mines on walls/frames, push the post-concussion window carefully, and trade her in 1v1s — her recoil is high but lethal."
@@ -5341,6 +5397,7 @@ const SEED_DATA =
       "id": "vigil",
       "name": "Vigil",
       "side": "defense",
+      "winRate": 50.1,
       "role": "roamer",
       "notes": "Erebus cloak hides him from drones and scans.",
       "howToCounter": "Don't trust an empty drone feed in roam lanes — clear corners manually and use Lion/Dokkaebi/Pulse-bait. He'll flank, so watch your back lines."
@@ -5349,6 +5406,7 @@ const SEED_DATA =
       "id": "maestro",
       "name": "Maestro",
       "side": "defense",
+      "winRate": 50.8,
       "role": "anchor",
       "notes": "Evil Eye cams are bulletproof while the shutter is up; see through smoke.",
       "howToCounter": "Bait the shutter then shoot the lens, EMP it (Thatcher/Kali/IQ), or Twitch shock-dart it. Destroy with a hard hit (Sledge/Buck/explosive)."
@@ -5357,6 +5415,7 @@ const SEED_DATA =
       "id": "alibi",
       "name": "Alibi",
       "side": "defense",
+      "winRate": 49.7,
       "role": "anchor",
       "notes": "Prisma decoys reveal anyone who shoots them and mimic operators.",
       "howToCounter": "Don't shoot holograms (it pings you) — check for the shimmer or duplicate gadget. Clear decoys with drones; she's a strong anchor/roamer."
@@ -5365,6 +5424,7 @@ const SEED_DATA =
       "id": "clash",
       "name": "Clash",
       "side": "defense",
+      "winRate": 48.3,
       "role": "anchor",
       "notes": "CCE shield slows & shocks from the front; stalls pushes, roams with intel.",
       "howToCounter": "Flank/melee from behind, shoot her exposed feet/hands, or use Twitch/Nomad/impacts. Don't tunnel the shield head-on — she's baiting time."
@@ -5373,6 +5433,7 @@ const SEED_DATA =
       "id": "kaid",
       "name": "Kaid",
       "side": "defense",
+      "winRate": 51.1,
       "role": "support",
       "notes": "Electroclaw electrifies reinforced walls/hatches from another room.",
       "howToCounter": "Same as Bandit — Twitch, Thatcher/Kali/IQ, or flush him. Check the hatches above your breach point; his claw can reach from out of sight."
@@ -5381,6 +5442,7 @@ const SEED_DATA =
       "id": "mozzie",
       "name": "Mozzie",
       "side": "defense",
+      "winRate": 50,
       "role": "roamer",
       "notes": "Pests hijack your drones, feeding him your intel.",
       "howToCounter": "Hold drones back until needed, shoot pests, and don't leave drones idle in the open. He's also a strong roamer — clear flank lanes."
@@ -5389,6 +5451,7 @@ const SEED_DATA =
       "id": "warden",
       "name": "Warden",
       "side": "defense",
+      "winRate": 48.7,
       "role": "anchor",
       "notes": "Glasses negate smoke/flash for a few seconds while still/aiming.",
       "howToCounter": "Don't rely on flashes to clear him — bait the glasses, flank, or trade. He anchors hard near plant; force him to move."
@@ -5397,6 +5460,7 @@ const SEED_DATA =
       "id": "goyo",
       "name": "Goyo",
       "side": "defense",
+      "winRate": 49.5,
       "role": "anchor",
       "notes": "Volcán shields explode into fire when shot — deny plant/pushes.",
       "howToCounter": "Shoot the shield from a safe distance to pop it early, then push; never plant next to one. Watch shields on flank doors."
@@ -5405,6 +5469,7 @@ const SEED_DATA =
       "id": "wamai",
       "name": "Wamai",
       "side": "defense",
+      "winRate": 50.2,
       "role": "support",
       "notes": "Mag-NETs pull and detonate your thrown utility, with extra reach.",
       "howToCounter": "Bait them with throwaways (they reset on a timer), shoot the discs or EMP. Coordinate utility dumps to overwhelm Jäger + Wamai together."
@@ -5413,6 +5478,7 @@ const SEED_DATA =
       "id": "oryx",
       "name": "Oryx",
       "side": "defense",
+      "winRate": 48.9,
       "role": "roamer",
       "notes": "Dashes through soft walls and climbs hatches without rappel.",
       "howToCounter": "Watch for wall-dash flanks, hold angles, and don't assume a soft wall is safe. Trade fast — he's an unpredictable flanker."
@@ -5421,6 +5487,7 @@ const SEED_DATA =
       "id": "melusi",
       "name": "Melusi",
       "side": "defense",
+      "winRate": 50.4,
       "role": "anchor",
       "notes": "Banshees slow nearby attackers and screech intel; tanky from the front.",
       "howToCounter": "Destroy with explosives/impact/Twitch or shoot when exposed from the side/behind; EMP disables. Don't get caught slowed in the open."
@@ -5429,6 +5496,7 @@ const SEED_DATA =
       "id": "aruni",
       "name": "Aruni",
       "side": "defense",
+      "winRate": 51,
       "role": "support",
       "notes": "Surya Gates laser-seal hatches/doorways and damage anyone shooting through.",
       "howToCounter": "Disable lasers with EMP (Thatcher/Kali/IQ) or destroy the emitter; Twitch drone works. Don't melee the gate (it hurts) — break it from range."
@@ -5437,6 +5505,7 @@ const SEED_DATA =
       "id": "thunderbird",
       "name": "Thunderbird",
       "side": "defense",
+      "winRate": 49.6,
       "role": "support",
       "notes": "Kona stations auto-heal nearby defenders (and can heal attackers).",
       "howToCounter": "Destroy/watch the stations, push downs fast, and don't let her reset the site. Beware heals near the plant prolonging trades."
@@ -5445,6 +5514,7 @@ const SEED_DATA =
       "id": "thorn",
       "name": "Thorn",
       "side": "defense",
+      "winRate": 50.1,
       "role": "anchor",
       "notes": "Razorbloom proximity charges deny plant/defuse after a short delay.",
       "howToCounter": "Shoot the disc, EMP it, or back off when it arms. Clear plant spots and chokes before committing the defuser."
@@ -5453,6 +5523,7 @@ const SEED_DATA =
       "id": "azami",
       "name": "Azami",
       "side": "defense",
+      "winRate": 51.7,
       "role": "anchor",
       "notes": "Kiba Barriers re-cover breaches and seal hatches/lines of sight.",
       "howToCounter": "Force her to burn barriers early with chip damage, then push the gap before reset. Shoot the petals; explosives/hard breach overpower a single barrier. Watch run-out re-walls."
@@ -5461,6 +5532,7 @@ const SEED_DATA =
       "id": "solis",
       "name": "Solis",
       "side": "defense",
+      "winRate": 50.6,
       "role": "intel",
       "notes": "SPEC-IO detects active electronics (drones, phones, gadgets) through walls.",
       "howToCounter": "Stop your drones when she scans, run silent approaches, and don't telegraph pushes with active gadgets. Lion/Dokkaebi punish; she's an anchor with eyes on your tech."
@@ -5469,6 +5541,7 @@ const SEED_DATA =
       "id": "fenrir",
       "name": "Fenrir",
       "side": "defense",
+      "winRate": 51.2,
       "role": "support",
       "notes": "F-NATT dread mines fear-gas you (blur + slow) when triggered.",
       "howToCounter": "Shoot the mine before it triggers (red light) or eat it from cover; EMP (Thatcher/Kali/IQ) disables them. Watch plant-denial placements on/below the bomb."
@@ -5477,6 +5550,7 @@ const SEED_DATA =
       "id": "tubarao",
       "name": "Tubarão",
       "side": "defense",
+      "winRate": 50.5,
       "role": "support",
       "notes": "Zoto canisters freeze/slow and disable gadgets & Bandit-counter timing in radius.",
       "howToCounter": "Don't linger in the frost; pop the canister from range. He's a breach-denial support — clear before committing the hard breach."
@@ -5485,6 +5559,7 @@ const SEED_DATA =
       "id": "skopos",
       "name": "Skopós",
       "side": "defense",
+      "winRate": 50,
       "role": "roamer",
       "notes": "Two-body operator (controls two TALOS units) — holds two angles and trades itself.",
       "howToCounter": "Expect double info and a second body after a pick — clear BOTH units and don't over-rotate to one kill. Newer defender; verify exact behavior in-app."
@@ -5493,6 +5568,7 @@ const SEED_DATA =
       "id": "sentry",
       "name": "Sentry",
       "side": "defense",
+      "winRate": 49.2,
       "role": "anchor",
       "notes": "Recruit defender — flexible loadout (barbed wire, deployable shield, prox alarm, etc.).",
       "howToCounter": "No special gadget — read his loadout choices and counter accordingly. Treat as a generalist anchor."
@@ -6184,7 +6260,7 @@ function renderRoster(root){
       <div class="panel-h"><h3>Roster</h3></div>
       <div class="panel-b"><div class="players" id="players"></div></div>
     </div>
-    <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— operators ordered best → situational</span></div>
+    <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— operators ordered by win-rate (highest first)</span></div>
     <div class="rolegrid" id="roleGrid"></div>
   </div>`;
   if(!window._rosterDnd){ window._rosterDnd=true; document.addEventListener("dragend",()=>{ ROSTER_DRAG=null; document.querySelectorAll(".prow.drop-ok").forEach(r=>r.classList.remove("drop-ok")); }); }
@@ -6253,9 +6329,12 @@ function renderRoleGrid(){
   }).join("")||`<div class="empty">No roles.</div>`;
   bindRoleGrid();
 }
+function wrOf(id){ const o=opById(id); return o&&typeof o.winRate==="number"?o.winRate:-1; }
 function poolHTML(r,side,edit){
-  const key=side==="attack"?"attackOps":"defenseOps"; const cls=side==="attack"?"atk":"def"; const ids=r[key];
-  const chips=ids.map(id=>{ const o=opById(id); return `<span class="opchip ${cls}">${esc(o?o.name:id)}${edit?` <span class="x" data-poolrm="${esc(side)}|${esc(id)}">✕</span>`:""}</span>`; }).join("");
+  const key=side==="attack"?"attackOps":"defenseOps"; const cls=side==="attack"?"atk":"def";
+  // Display order = real win-rate, highest first (the stored array order is left untouched).
+  const ids=r[key].slice().sort((a,b)=>wrOf(b)-wrOf(a));
+  const chips=ids.map(id=>{ const o=opById(id); const wr=o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""; return `<span class="opchip ${cls}">${esc(o?o.name:id)}${wr}${edit?` <span class="x" data-poolrm="${esc(side)}|${esc(id)}">✕</span>`:""}</span>`; }).join("");
   return `<div class="poolblock"><div class="ph"><span class="lab ${cls==="atk"?"":""}" style="color:var(--${cls})">${side==="attack"?"Attack":"Defense"} pool</span><span class="muted small">(${ids.length})</span></div>
     <div class="chips">${chips||'<span class="empty">empty</span>'}</div>
     ${edit?`<select data-pooladd="${esc(side)}" style="max-width:240px;margin-top:8px"><option value="">＋ add ${side} op…</option>${opsBySide(side).filter(o=>!ids.includes(o.id)).map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}</select>`:""}</div>`;
