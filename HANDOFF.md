@@ -40,7 +40,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 17**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 20**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -124,9 +124,13 @@ NOT committed). Network access is available in the web session. Key facts to reb
     nearest room label.
   - **Spawn peeks** (`type` peek): peeks are PeekabooR6-only data and were NOT
     re-extracted — their old (peekaboo-space) %coords were **transformed** into the
-    new r6calls crop space by a per-floor **RANSAC affine fit** anchored on room
-    labels common to both the old and new sets (`/tmp/affine.js` + `/tmp/merge.js`;
-    all floors fit at RMSE ≤0.1%).
+    new r6calls crop space by a per-floor **axis-aligned per-axis linear fit**
+    (independent x and y scale+offset) anchored on room labels common to both sets.
+    PeekabooR6 and r6calls share orientation but differ in aspect, so a full affine
+    added shear that mis-extrapolated the perimeter peeks; the per-axis fit is the
+    correct model (RMSE ≤0.12%, consistent x/y scales across each map's floors).
+    PeekabooR6's source images are busy 3D screenshots, so auto wall/building
+    detection on them is unreliable — room-label correspondences are the anchor.
 - Image paths carry the cache-bust query **`?r5`** (was `?pk1`/`?bf`); bump it
   whenever the floor images are re-rendered.
 
@@ -148,8 +152,9 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
   but not true 4K; that's the ceiling for this source.
 - **Room names are baked into the image** (native r6calls placement). Earlier attempts
   to render them as overlay callouts read worse, so we dropped them. **Bomb sites** are
-  exact (from the r6calls SVG). **Spawn peeks** were affine-transformed from the old
-  PeekabooR6 coords (RMSE ≤0.1%) — essentially exact, still draggable in Edit. Site
+  exact (from the r6calls SVG). **Spawn peeks** were re-projected from the old
+  PeekabooR6 coords by a per-axis (axis-aligned scale) fit on room labels — now
+  land on their windows/doors, still draggable in Edit. Site
   names come from the nearest room, so 1–2 may read slightly off.
 - **Roofs** are intentionally the whole-map (not building-focused) view, no overlays.
 - The recommender + operators table from the original Phase-1 build are **set aside**
