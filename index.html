@@ -480,7 +480,7 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 41,
+  "version": 42,
   "publishedAt": "2026-06-10",
   "maps": [
     {
@@ -38008,11 +38008,30 @@ const SEED_DATA =
     {
       "name": "João",
       "attackRoles": [
-        "igl-atk"
+        "igl-atk",
+        "intel-atk",
+        "flex-atk"
       ],
       "defenseRoles": [
         "igl-def",
-        "anchor-def"
+        "trapper-def",
+        "anchor-def",
+        "flex-def"
+      ],
+      "favAtk": [
+        "ash",
+        "ram",
+        "solid-snake",
+        "capitao",
+        "brava"
+      ],
+      "favDef": [
+        "alibi",
+        "azami",
+        "echo",
+        "thorn",
+        "mozzie",
+        "lesion"
       ]
     },
     {
@@ -38022,7 +38041,9 @@ const SEED_DATA =
       ],
       "defenseRoles": [
         "roamer-def"
-      ]
+      ],
+      "favAtk": [],
+      "favDef": []
     },
     {
       "name": "Max",
@@ -38032,7 +38053,9 @@ const SEED_DATA =
       ],
       "defenseRoles": [
         "antibreach-def"
-      ]
+      ],
+      "favAtk": [],
+      "favDef": []
     },
     {
       "name": "Lora",
@@ -38041,7 +38064,9 @@ const SEED_DATA =
       ],
       "defenseRoles": [
         "anchor-def"
-      ]
+      ],
+      "favAtk": [],
+      "favDef": []
     },
     {
       "name": "unknown",
@@ -38052,7 +38077,9 @@ const SEED_DATA =
       "defenseRoles": [
         "antibreach-def",
         "flex-def"
-      ]
+      ],
+      "favAtk": [],
+      "favDef": []
     }
   ],
   "playerStats": [],
@@ -39254,7 +39281,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 8;
+const APP_BUILD = 9;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
