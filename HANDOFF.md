@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 40**, SEED **data v54** (see §13 for the session log).
+- **Current state:** PWA **build 41**, SEED **data v55** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -502,6 +502,21 @@ anchor 42 / trapper 28 / roamer 28 / intel 28 / antibreach 28 / utility 28 / sup
 repeated double; flex desc↔label 196/196. **UI:** `FLEX_SUB_LABEL` gained the defense subs and
 `assignTactic` labels `flex-def` too → chip reads e.g. **"Flex — 2nd Roamer"**. Base = anchor + anti-
 breach + recon(intel/trapper) + roamer + the varying flex. Transform: `/tmp/vary-def.js`.
+
+### Smoke/Mira → Support, Flex = every op, tactics re-synced (data v55)
+Owner refinements after the two-axis defense model settled:
+- **Smoke & Mira → Support** job (heal/armour pool now Doc/Rook/Thunderbird/**Smoke/Mira**); their
+  `op.role` is `support`. They stay Anchor by position. (So the merged Anti-Breach/Utility loses them.)
+- **Flex = "the role that doubles another role" → every op is in its side's Flex pool** (`flex-atk` = all
+  38 attackers, `flex-def` = all 37 defenders). This supersedes the earlier "anchor-capable only" rule:
+  a flex player doubling the roamer slot just picks a roamer, etc. (the tactic flex's `sub` decides what's
+  doubled; the role pool is now the whole side).
+- **Re-ran both tactic generators** so everything is consistent: defense `2nd Support` doubles now feature
+  Smoke/Mira and `2nd Utility` doubles don't; descriptions regenerated with the merged role names. Attack
+  re-ran too (its internal de-dup shifted 6 maps slightly; `/tmp/fix-dups.js` re-applied → 0 duplicate
+  core op-sets). Flex desc↔label 294/294 attack + 196/196 defense; 0 unknown op refs.
+- Scripts: `/tmp/reclassify.js` (Smoke/Mira + flex=all) → `/tmp/vary-def.js` → `/tmp/vary-tactics.js` →
+  `/tmp/fix-dups.js` (the generators' own version bump was removed; version set once).
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
