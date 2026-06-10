@@ -17,13 +17,17 @@ const BASE = "https://api.r6data.com/api/stats";
 
 if (!KEY) { console.error("ERROR: R6DATA_API_KEY is not set."); process.exit(1); }
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function fetchType(handle, platform, type, extra) {
   let url = `${BASE}?type=${type}&nameOnPlatform=${encodeURIComponent(handle)}&platformType=${encodeURIComponent(platform)}&platform_families=${encodeURIComponent(FAM)}`;
   if (extra) for (const k in extra) url += `&${k}=${encodeURIComponent(extra[k])}`;
-  const r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
-  const text = await r.text();
-  let json = null; try { json = JSON.parse(text); } catch (_) {}
-  return { status: r.status, ok: r.ok, json, text: json ? undefined : text.slice(0, 400) };
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
+    if (r.status === 429 && attempt < 3) { await sleep(1500 * Math.pow(2, attempt)); continue; }   // backoff on rate limit
+    const text = await r.text();
+    let json = null; try { json = JSON.parse(text); } catch (_) {}
+    return { status: r.status, ok: r.ok, json, text: json ? undefined : text.slice(0, 400) };
+  }
 }
 
 const numv = x => (x && typeof x === "object") ? (typeof x.value === "number" ? x.value : null) : (typeof x === "number" ? x : null);
@@ -67,22 +71,19 @@ async function fetchPlayer(p) {
     out.mmrHistory = seasonal.ok ? parseHistory(seasonal.json) : [];
     out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
 
-    // operators: all-time baseline + scoped per playlist (+season) when the API honours sessionType/seasonNumber
+    // operators: all-time baseline + per-playlist scope when the API honours sessionType.
+    // (No per-season grid — that's 50+ calls for veterans and trips the rate limit.)
     out.ops = {};
     const base = await fetchType(p.handle, platform, "operatorStats");
-    if (base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
+    if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
     for (const plId of Object.keys(PLAYLISTS)) {
-      const st = PLAYLISTS[plId].st;
-      for (const season of [null, ...out.seasons]) {
-        const extra = { sessionType: st }; if (season != null) extra.seasonNumber = season;
-        try {
-          const r = await fetchType(p.handle, platform, "operatorStats", extra);
-          if (r.ok && r.json && Array.isArray(r.json.operators)) {
-            const echoOk = String(r.json.sessionType) === st && (season == null || String(r.json.seasonNumber) === String(season));
-            if (echoOk) out.ops[`${plId}|${season == null ? "all" : season}`] = trimOps(r.json.operators);
-          }
-        } catch (_) {}
-      }
+      await sleep(250);
+      try {
+        const r = await fetchType(p.handle, platform, "operatorStats", { sessionType: PLAYLISTS[plId].st });
+        if (r && r.ok && r.json && Array.isArray(r.json.operators) && String(r.json.sessionType) === PLAYLISTS[plId].st) {
+          out.ops[`${plId}|all`] = trimOps(r.json.operators);
+        }
+      } catch (_) {}
     }
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
@@ -100,8 +101,9 @@ function isAuthFail(p) {
   for (const p of (cfg.players || [])) {
     process.stdout.write(`Fetching ${p.label} (${p.handle}/${p.platform})… `);
     const r = await fetchPlayer(p);
-    console.log(r.ok ? `ok [${r.fetchType}]` : `FAILED: ${r.error}`);
+    console.log(r.ok ? "ok" : `FAILED: ${r.error}`);
     players.push(r);
+    await sleep(600);   // be gentle with the rate limit between players
   }
   // key health: "invalid" if every player auth-fails (key rejected); "expired" if past the recorded date
   const anyOk = players.some(p => p.ok);
