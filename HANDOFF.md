@@ -119,9 +119,20 @@ always sees the full structure.
 - On load: if `SEED_DATA.version` > stored seedVersion and the user **hasn't edited**,
   the new seed is adopted silently; if they **have** edits, a non-destructive
   "load update / keep mine" banner shows.
-- **To publish to the stack:** Data → *Copy publish JSON* (auto-bumps version) →
-  replace the object between the BEGIN/END markers in `index.html` → commit & push →
-  Pages redeploys. Cache-bust image changes with a `?query` on the path (see below).
+- **To publish to the stack — in-app button (primary):** Data → **✓ Make changes
+  permanent** (`publishLive()`). With a stored GitHub **fine-grained token** (this repo,
+  Contents:read+write; in `localStorage["r6stack.gh_token"]`, never exported), it does an
+  atomic **git-data API** commit to `main`: reads the live `index.html` + `version.json` via
+  the **blob API** (contents API can't return >1 MB and index.html is ~1.3 MB), splices the
+  current `DB` (version bumped) between the BEGIN/END markers, bumps `APP_BUILD` +
+  `version.json.build`, writes both blobs → tree (base = current) → commit → moves the ref.
+  Pages redeploys (~1 min) and every client's update-checker (§ PWA note) prompts. Token
+  setup UI is `showTokenModal()`. ⚠️ Owner data commits land on `main` directly — when I push
+  code, rebase onto fresh `main` first (the seed block / `APP_BUILD` / `version.json` may have
+  moved). Manual fallback below.
+- **Manual publish:** Data → *Copy publish JSON* (auto-bumps version) → replace the object
+  between the BEGIN/END markers in `index.html` → commit & push → Pages redeploys.
+  Cache-bust image changes with a `?query` on the path (see below).
 
 ## 6. Where the images/labels came from (pipelines)
 All extraction was done with headless **puppeteer** + **curl** in `/tmp` (ephemeral,
