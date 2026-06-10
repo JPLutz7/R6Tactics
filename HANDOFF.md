@@ -43,6 +43,13 @@ mobile **and** desktop — own window, app icon, works **offline** (shell + data
 HTML is network-first so publishes still land; same-origin map images cache as you view them;
 cross-origin peek videos pass through). SW only runs on http(s), not `file://`. All paths are
 relative so it works under the `/R6Tactics/` Pages subpath.
+**In-app update prompt:** `index.html` carries `const APP_BUILD = N`; `version.json` holds the
+latest deployed `build`. The app polls `version.json` (on load, on focus, every 60s — fetched
+no-store, SW-bypassed) and shows a "🔄 New version available — Update" banner when
+`build > APP_BUILD`. Tap → reload into the new code (localStorage data kept; no reinstall).
+**⚠️ Every deploy, bump the build:** run `node scripts/bump-build.js` (bumps `version.json` +
+`APP_BUILD` in sync) so installed apps get the prompt — otherwise standalone PWAs can sit on
+the old version.
 **Mobile-ready (viewing):** phone media query (≤720px) + touch pan / pinch-zoom on the map
 viewer. **Verified on emulated iPhone (390×844 + landscape) and iPad (768×1024 portrait,
 1080/1180 landscape, 1024×1366 Pro)** — no overflow, pinch + zoomed-pan exact, 0 errors.
