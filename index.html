@@ -284,6 +284,9 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pwa-update button{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap}
 .pwa-update button:active{transform:scale(.96)}
 @keyframes pwaUpIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+.lnk{color:var(--accent);cursor:pointer;font-weight:700}
+.lnk:hover{text-decoration:underline}
+.ok-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:middle}
 .prow.drop-ok{outline:2px dashed var(--def);outline-offset:2px;background:var(--def-bg)}
 .rdrag{cursor:grab;font-size:15px;line-height:1;color:var(--muted2);padding:2px 5px;border-radius:6px;border:1px solid var(--line2);user-select:none}
 .rdrag:hover{color:var(--text);background:var(--panel3)}
@@ -36344,18 +36347,97 @@ function renderBanner(){
 /* data menu */
 function renderDataMenu(){
   const m=byId("dataMenu");
+  const tokSet=!!ghToken();
   m.innerHTML=`<div class="st" id="statusLine">${statusHTML()}</div>
     <div class="col">
+      <button class="btn primary" id="dmPublishLive">✓ Make changes permanent</button>
       <button class="btn" id="dmExport">⬇ Export JSON (backup)</button>
       <button class="btn" id="dmImport">⬆ Import JSON</button>
-      <button class="btn primary" id="dmPublish">⧉ Copy publish JSON</button>
+      <button class="btn" id="dmPublish">⧉ Copy publish JSON (manual)</button>
       <button class="btn danger" id="dmReset">↺ Reset to published</button>
     </div>
-    <div class="muted small" style="margin-top:10px;line-height:1.5">Publish to the whole stack: copy, paste into <span class="mono">index.html</span> between the <span class="mono">BEGIN/END</span> markers, bump <span class="mono">version</span>, push.</div>`;
+    <div class="muted small" style="margin-top:10px;line-height:1.5">“Make changes permanent” commits your edits to the live app and prompts everyone to update. ${tokSet?`<span class="ok-dot"></span>Publishing token set · <span id="dmTok" class="lnk">manage</span>`:`<span id="dmTok" class="lnk">Set up the publishing token →</span>`}</div>`;
+  byId("dmPublishLive").onclick=publishLive;
   byId("dmExport").onclick=exportJSON;
   byId("dmImport").onclick=()=>byId("importInput").click();
   byId("dmPublish").onclick=copyPublish;
+  const t=byId("dmTok"); if(t) t.onclick=showTokenModal;
   byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
+}
+/* ---- Make changes permanent: commit the edited seed to the live app via GitHub API ---- */
+const GH_REPO="JPLutz7/R6Tactics", GH_BRANCH="main";
+function ghToken(){ try{ return localStorage.getItem("r6stack.gh_token")||""; }catch(_){ return ""; } }
+function setGhToken(v){ try{ if(v) localStorage.setItem("r6stack.gh_token",v); else localStorage.removeItem("r6stack.gh_token"); }catch(_){} }
+function utf8ToB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64ToUtf8(b64){ return decodeURIComponent(escape(atob((b64||"").replace(/\s+/g,"")))); }
+async function ghApi(path, opts={}){
+  const r=await fetch("https://api.github.com"+path,{ ...opts, headers:{ "Authorization":"Bearer "+ghToken(), "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28", ...(opts.headers||{}) } });
+  if(r.status===401||r.status===403) throw new Error("AUTH");
+  if(!r.ok){ const t=await r.text().catch(()=>""); throw new Error("GitHub "+r.status+(t?": "+t.slice(0,160):"")); }
+  return r.json();
+}
+async function publishLive(){
+  if(!ghToken()){ showTokenModal(); return; }
+  if(!confirm("Publish your current edits to the LIVE app for everyone?\n\nThis commits to the site and shows the “Update” prompt to all users.")) return;
+  const btn=byId("dmPublishLive"); if(btn){ btn.disabled=true; btn.textContent="Publishing…"; }
+  try{
+    const [owner,repo]=GH_REPO.split("/");
+    // read current main via the git-data API (blob API has no 1MB content limit)
+    const ref=await ghApi(`/repos/${owner}/${repo}/git/ref/heads/${GH_BRANCH}`);
+    const baseSha=ref.object.sha;
+    const baseCommit=await ghApi(`/repos/${owner}/${repo}/git/commits/${baseSha}`);
+    const rootTree=await ghApi(`/repos/${owner}/${repo}/git/trees/${baseCommit.tree.sha}`);
+    const idxEntry=rootTree.tree.find(t=>t.path==="index.html"); if(!idxEntry) throw new Error("index.html not found in repo");
+    const verEntry=rootTree.tree.find(t=>t.path==="version.json");
+    const curIndex=b64ToUtf8((await ghApi(`/repos/${owner}/${repo}/git/blobs/${idxEntry.sha}`)).content);
+    let curBuild=0; if(verEntry){ try{ curBuild=(JSON.parse(b64ToUtf8((await ghApi(`/repos/${owner}/${repo}/git/blobs/${verEntry.sha}`)).content)).build|0); }catch(_){} }
+    const newBuild=curBuild+1;
+    const BEGIN="/* ====== BEGIN EMBEDDED DATA", END="/* ====== END EMBEDDED DATA";
+    const bi=curIndex.indexOf(BEGIN), ble=curIndex.indexOf("\n",bi)+1, ei=curIndex.indexOf(END);
+    if(bi<0||ei<0) throw new Error("Couldn't find the data markers in the live index.html");
+    const deployedVer=+((curIndex.slice(bi).match(/"version":\s*(\d+)/)||[])[1])||0;
+    const out=clone(DB); out.version=Math.max(SEED_DATA.version||1, deployedVer, DB.version||0)+1; out.publishedAt=new Date().toISOString().slice(0,10);
+    let newIndex=curIndex.slice(0,ble)+JSON.stringify(out,null,2)+"\n"+curIndex.slice(ei);
+    if(!/const APP_BUILD = \d+;/.test(newIndex)) throw new Error("APP_BUILD not found in live index.html");
+    newIndex=newIndex.replace(/const APP_BUILD = \d+;/, "const APP_BUILD = "+newBuild+";");
+    const newVer=JSON.stringify({build:newBuild})+"\n";
+    // atomic two-file commit via the git-data API
+    const bIdx=await ghApi(`/repos/${owner}/${repo}/git/blobs`,{method:"POST",body:JSON.stringify({content:utf8ToB64(newIndex),encoding:"base64"})});
+    const bVer=await ghApi(`/repos/${owner}/${repo}/git/blobs`,{method:"POST",body:JSON.stringify({content:utf8ToB64(newVer),encoding:"base64"})});
+    const tree=await ghApi(`/repos/${owner}/${repo}/git/trees`,{method:"POST",body:JSON.stringify({base_tree:baseCommit.tree.sha,tree:[
+      {path:"index.html",mode:"100644",type:"blob",sha:bIdx.sha},
+      {path:"version.json",mode:"100644",type:"blob",sha:bVer.sha}]})});
+    const commit=await ghApi(`/repos/${owner}/${repo}/git/commits`,{method:"POST",body:JSON.stringify({message:`Publish from app — data v${out.version}, build ${newBuild}`,tree:tree.sha,parents:[baseSha]})});
+    await ghApi(`/repos/${owner}/${repo}/git/refs/heads/${GH_BRANCH}`,{method:"PATCH",body:JSON.stringify({sha:commit.sha})});
+    META.seedVersion=out.version; META.dirty=false; writeMeta(META); refreshStatus();
+    toggleMenu(false);
+    toast("Published ✓ v"+out.version+" — live in ~1 min; everyone gets the Update prompt");
+  }catch(err){
+    const msg=String(err&&err.message||err);
+    if(msg.includes("AUTH")){ setGhToken(""); alert("GitHub token was rejected (expired, or missing Contents:write on this repo). Please set it again."); showTokenModal(); }
+    else alert("Publish failed.\n\n"+msg+"\n\nYour local edits are safe. You can retry, or use “Copy publish JSON (manual)”.");
+  }finally{ const b=byId("dmPublishLive"); if(b){ b.disabled=false; b.textContent="✓ Make changes permanent"; } }
+}
+function showTokenModal(){
+  let m=byId("ghTokModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="ghTokModal"; document.body.appendChild(m); }
+  m.innerHTML=`<div class="card"><div class="spread" style="margin-bottom:8px"><h3>Publishing token</h3><button class="iconbtn" id="gtClose" title="Close">✕</button></div>
+    <p class="muted small" style="line-height:1.55;margin:0 0 10px">A GitHub <b>fine-grained token</b> lets “Make changes permanent” write to the live app. One-time, ~2 min:</p>
+    <ol class="muted small" style="line-height:1.65;margin:0 0 12px;padding-left:18px">
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (sign in as the repo owner).</li>
+      <li><b>Repository access</b> → <i>Only select repositories</i> → <span class="mono">${esc(GH_REPO)}</span>.</li>
+      <li><b>Permissions</b> → Repository → <b>Contents</b> → <b>Read and write</b>.</li>
+      <li>Set an expiry, <b>Generate token</b>, copy the <span class="mono">github_pat_…</span>, paste below.</li>
+    </ol>
+    <input type="password" id="gtInput" autocomplete="off" placeholder="github_pat_…" value="${esc(ghToken())}" style="width:100%;font-family:var(--mono);font-size:12px;box-sizing:border-box" />
+    <p class="muted small" style="margin:8px 0 0">🔒 Stored only in this browser; never exported or shared. <span id="gtForget" class="lnk" style="${ghToken()?'':'display:none'}">Forget saved token</span></p>
+    <div class="row" style="margin-top:14px;justify-content:flex-end;gap:8px"><button class="btn" id="gtCancel">Cancel</button><button class="btn primary" id="gtSave">Save token</button></div>
+  </div>`;
+  m.classList.add("show");
+  const close=()=>m.classList.remove("show");
+  byId("gtClose").onclick=close; byId("gtCancel").onclick=close;
+  byId("gtSave").onclick=()=>{ const v=byId("gtInput").value.trim(); setGhToken(v); close(); toast(v?"Token saved":"Token cleared"); renderDataMenu(); };
+  byId("gtForget").onclick=()=>{ setGhToken(""); close(); toast("Token forgotten"); renderDataMenu(); };
+  m.onclick=e=>{ if(e.target===m) close(); };
 }
 function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.classList.contains("show"):force; if(show)renderDataMenu(); m.classList.toggle("show",show); }
 
@@ -37017,7 +37099,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 2;
+const APP_BUILD = 3;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
