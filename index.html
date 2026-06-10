@@ -38472,13 +38472,14 @@ async function publishLive(){
     toast("Published ✓ v"+out.version+" — live in ~1 min; everyone gets the Update prompt");
   }catch(err){
     const msg=String(err&&err.message||err);
-    if(msg.includes("AUTH")){ setGhToken(""); alert("GitHub token was rejected (expired, or missing Contents:write on this repo). Please set it again."); showTokenModal(); }
+    if(msg.includes("AUTH")){ setGhToken(""); showTokenModal("Your publishing token was rejected — it most likely <b>expired</b> (fine-grained tokens always do). Generate a fresh one and paste it below; your local edits are safe."); }
     else alert("Publish failed.\n\n"+msg+"\n\nYour local edits are safe. You can retry, or use “Copy publish JSON (manual)”.");
   }finally{ const b=byId("dmPublishLive"); if(b){ b.disabled=false; b.textContent="✓ Make changes permanent"; } }
 }
-function showTokenModal(){
+function showTokenModal(reason){
   let m=byId("ghTokModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="ghTokModal"; document.body.appendChild(m); }
   m.innerHTML=`<div class="card"><div class="spread" style="margin-bottom:8px"><h3>Publishing token</h3><button class="iconbtn" id="gtClose" title="Close">✕</button></div>
+    ${reason?`<p class="small" style="line-height:1.55;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:rgba(224,84,31,.12);border:1px solid rgba(224,84,31,.45);color:#ffcab0">⚠️ ${reason}</p>`:""}
     <p class="muted small" style="line-height:1.55;margin:0 0 10px">A GitHub <b>fine-grained token</b> lets “Make changes permanent” write to the live app. One-time, ~2 min:</p>
     <ol class="muted small" style="line-height:1.65;margin:0 0 12px;padding-left:18px">
       <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (sign in as the repo owner).</li>
@@ -39157,7 +39158,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 4;
+const APP_BUILD = 5;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
