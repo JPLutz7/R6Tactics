@@ -311,6 +311,31 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .detail-main{flex:1;min-width:0}
 .tactics-panel{flex:none;width:340px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:13px 15px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
 @media(max-width:1080px){.detail-cols{flex-direction:column}.tactics-panel{width:100%;position:static;max-height:none}}
+/* phones */
+@media(max-width:720px){
+  .topbar{padding:0 10px;gap:8px;height:50px}
+  .brand .sub{display:none}
+  .tabs{overflow-x:auto;scrollbar-width:none}
+  .tabs button{padding:8px 10px;font-size:13px;white-space:nowrap}
+  .tabs button .key{display:none}
+  .main{padding:10px}
+  .menu{width:min(300px,calc(100vw - 20px))}
+  .covergrid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .rolegrid{grid-template-columns:1fr}
+  .viewport{aspect-ratio:1/1}
+  .vp-hint{display:none}
+  .vp-zoom button{width:38px;height:38px;font-size:18px}
+  .floortabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+  .floortab{white-space:nowrap}
+  .toolbar h2{font-size:18px !important}
+  .prow{flex-wrap:wrap;gap:8px}
+  .psides{flex-basis:100%;order:5}
+  .opchip{padding:5px 11px;font-size:12px}
+  .tp-strat{padding:10px 12px}
+  .sg-def{padding:5px 10px}
+  .modal .card{padding:16px 18px;max-height:88vh;overflow:auto}
+  .modal .card video{max-width:100%}
+}
 .tp-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:9px}
 .tp-head h3{font-size:15px}
 .tp-group{margin-bottom:14px}
@@ -36634,7 +36659,7 @@ function renderFloorView(){
     <div class="${vpCls}" id="vp">
       <div class="stage" id="stage"><img class="floorimg" id="floorimg" src="${esc(f.layoutImage)}" draggable="false" alt=""><div id="markers">${markers}</div></div>
       <div class="vp-zoom"><button data-zoom="in" title="Zoom in">+</button><button data-zoom="out" title="Zoom out">−</button><button data-zoom="reset" title="Reset view">⟲</button></div>
-      <div class="vp-hint">drag to pan · scroll to zoom</div>
+      <div class="vp-hint">drag to pan · scroll / pinch to zoom</div>
     </div>
     ${edit?calloutEditorHTML(f):""}
   </div>`;
@@ -36671,6 +36696,20 @@ function setupViewer(edit){
   const pu=()=>{ vp.classList.remove("grabbing"); document.removeEventListener("mousemove",pm); document.removeEventListener("mouseup",pu); };
   vp.addEventListener("mousedown",e=>{ if(e.target.closest(".vp-ctrl,.vp-zoom,.vp-hint"))return; if(edit&&e.target.closest(".mk"))return;
     sx=e.clientX-MV.tx; sy=e.clientY-MV.ty; vp.classList.add("grabbing"); document.addEventListener("mousemove",pm); document.addEventListener("mouseup",pu); });
+  // touch: one finger pans, two fingers pinch-zoom (viewport has touch-action:none)
+  let tPan=null,tPinch=null;
+  const tDist=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+  vp.addEventListener("touchstart",e=>{ if(e.target.closest(".vp-ctrl,.vp-zoom"))return;
+    if(e.touches.length===1){ const t=e.touches[0]; tPan={x:t.clientX-MV.tx,y:t.clientY-MV.ty}; tPinch=null; }
+    else if(e.touches.length===2){ e.preventDefault(); tPan=null; tPinch={d:tDist(e.touches[0],e.touches[1])}; }
+  },{passive:false});
+  vp.addEventListener("touchmove",e=>{
+    if(tPinch&&e.touches.length===2){ e.preventDefault(); const r=vp.getBoundingClientRect(); const nd=tDist(e.touches[0],e.touches[1]);
+      if(tPinch.d>0) zoomAt((e.touches[0].clientX+e.touches[1].clientX)/2-r.left,(e.touches[0].clientY+e.touches[1].clientY)/2-r.top,nd/tPinch.d);
+      tPinch.d=nd; }
+    else if(tPan&&e.touches.length===1){ e.preventDefault(); const t=e.touches[0]; MV.tx=t.clientX-tPan.x; MV.ty=t.clientY-tPan.y; clamp(); apply(); }
+  },{passive:false});
+  vp.addEventListener("touchend",e=>{ if(e.touches.length===1){ const t=e.touches[0]; tPan={x:t.clientX-MV.tx,y:t.clientY-MV.ty}; tPinch=null; } else if(e.touches.length===0){ tPan=null; tPinch=null; } });
 }
 function bindFloorEdit(m,f){
   const host=byId("floorView");

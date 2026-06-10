@@ -35,6 +35,9 @@ README.md                    # GitHub Pages setup + "publish an update" workflow
 HANDOFF.md                   # this file
 ```
 There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
+**Mobile-ready (viewing):** phone media query (≤720px) + touch pan / pinch-zoom on the map
+viewer. Editing (✎ pin-drag, roster drag-assign) remains desktop-oriented — HTML5 drag
+events don't fire on touch.
 
 ## 3. App structure (two tabs)
 - **Maps** — table-of-contents gallery of cover tiles, grouped into pools
