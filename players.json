@@ -1,6 +1,8 @@
 {
-  "updated": "2026-06-10T17:00:57.683Z",
+  "updated": "2026-06-10T17:11:18.702Z",
   "source": "r6data.com",
+  "keyExpires": "2026-09-08",
+  "keyStatus": "ok",
   "players": [
     {
       "key": "joao",
@@ -81,12 +83,78 @@
     {
       "key": "leme",
       "label": "Leme",
-      "handle": "Mtaro",
+      "handle": "Mtaro.",
       "platform": "uplay",
-      "ok": false,
+      "ok": true,
       "fetchType": "stats",
-      "status": 500,
-      "error": "Server error during API calls"
+      "status": 200,
+      "raw": {
+        "platform_families_full_profiles": [
+          {
+            "profile_id": "372882c3-7b81-47b5-aa8d-37363c99dd9f",
+            "board_ids_full_profiles": [
+              {
+                "board_id": "ranked",
+                "full_profiles": [
+                  {
+                    "profile": {
+                      "rank": 12,
+                      "wins": 2,
+                      "kills": 37,
+                      "deaths": 22,
+                      "losses": 4,
+                      "abandon": 0,
+                      "max_rank": 12,
+                      "rank_points": 2105,
+                      "update_time": "0001-01-01T00:00:00+00:00",
+                      "max_rank_points": 2151
+                    },
+                    "season_id": 42,
+                    "season_statistics": {
+                      "kills": 37,
+                      "deaths": 22,
+                      "match_outcomes": {
+                        "wins": 2,
+                        "losses": 4,
+                        "abandons": 0
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "board_id": "casual",
+                "full_profiles": [
+                  {
+                    "profile": {
+                      "rank": 0,
+                      "wins": 1,
+                      "kills": 10,
+                      "deaths": 2,
+                      "losses": 0,
+                      "abandon": 0,
+                      "max_rank": 0,
+                      "rank_points": 0,
+                      "update_time": "0001-01-01T00:00:00+00:00",
+                      "max_rank_points": 0
+                    },
+                    "season_id": 42,
+                    "season_statistics": {
+                      "kills": 10,
+                      "deaths": 2,
+                      "match_outcomes": {
+                        "wins": 1,
+                        "losses": 0,
+                        "abandons": 0
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
