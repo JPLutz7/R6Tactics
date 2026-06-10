@@ -555,7 +555,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 53,
+  "version": 54,
   "publishedAt": "2026-06-10",
   "maps": [
     {
@@ -43457,7 +43457,7 @@ const SEED_DATA =
       "name": "Smoke",
       "side": "defense",
       "winRate": 52.4,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Toxic gas denies plant/defuse and pushes; can gas through tiny gaps.",
       "howToCounter": "Pre-fire and clear before stepping in, never plant in open gas range, and drone for his position to trade. Lion/Dokkaebi pressure him off the canister."
     },
@@ -43475,7 +43475,7 @@ const SEED_DATA =
       "name": "Castle",
       "side": "defense",
       "winRate": 48,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Armor panels barricade doors/windows to reroute and stall.",
       "howToCounter": "Sledge/Buck/Ace/explosive/hard-melee remove panels; Kali/Twitch too. Don't waste time meleeing a panel under fire — breach a different way."
     },
@@ -43520,7 +43520,7 @@ const SEED_DATA =
       "name": "Tachanka",
       "side": "defense",
       "winRate": 48.5,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Shumikha launcher lobs incendiary grenades for area denial; strong LMG.",
       "howToCounter": "Clear fire from plant spots, don't push through the flames, and bait the grenade arc. Respect the LMG on long angles."
     },
@@ -43583,7 +43583,7 @@ const SEED_DATA =
       "name": "Mira",
       "side": "defense",
       "winRate": 51.6,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Black Mirror one-way windows give intel & angles.",
       "howToCounter": "Break the canister behind it (shoot the magnet) or melee it once placed; Twitch/a thrown projectile pops it. Never push the lit-up side blind."
     },
@@ -43637,7 +43637,7 @@ const SEED_DATA =
       "name": "Clash",
       "side": "defense",
       "winRate": 48.3,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "CCE shield slows & shocks from the front; stalls pushes, roams with intel.",
       "howToCounter": "Flank/melee from behind, shoot her exposed feet/hands, or use Twitch/Nomad/impacts. Don't tunnel the shield head-on — she's baiting time."
     },
@@ -43664,7 +43664,7 @@ const SEED_DATA =
       "name": "Warden",
       "side": "defense",
       "winRate": 48.7,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Glasses negate smoke/flash for a few seconds while still/aiming.",
       "howToCounter": "Don't rely on flashes to clear him — bait the glasses, flank, or trade. He anchors hard near plant; force him to move."
     },
@@ -43673,7 +43673,7 @@ const SEED_DATA =
       "name": "Goyo",
       "side": "defense",
       "winRate": 49.5,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Volcán shields explode into fire when shot — deny plant/pushes.",
       "howToCounter": "Shoot the shield from a safe distance to pop it early, then push; never plant next to one. Watch shields on flank doors."
     },
@@ -43691,7 +43691,7 @@ const SEED_DATA =
       "name": "Oryx",
       "side": "defense",
       "winRate": 48.9,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Dashes through soft walls and climbs hatches without rappel.",
       "howToCounter": "Watch for wall-dash flanks, hold angles, and don't assume a soft wall is safe. Trade fast — he's an unpredictable flanker."
     },
@@ -43700,7 +43700,7 @@ const SEED_DATA =
       "name": "Melusi",
       "side": "defense",
       "winRate": 50.4,
-      "role": "utility",
+      "role": "trapper",
       "notes": "Banshees slow nearby attackers and screech intel; tanky from the front.",
       "howToCounter": "Destroy with explosives/impact/Twitch or shoot when exposed from the side/behind; EMP disables. Don't get caught slowed in the open."
     },
@@ -43736,7 +43736,7 @@ const SEED_DATA =
       "name": "Azami",
       "side": "defense",
       "winRate": 51.7,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Kiba Barriers re-cover breaches and seal hatches/lines of sight.",
       "howToCounter": "Force her to burn barriers early with chip damage, then push the gap before reset. Shoot the petals; explosives/hard breach overpower a single barrier. Watch run-out re-walls."
     },
@@ -43781,7 +43781,7 @@ const SEED_DATA =
       "name": "Sentry",
       "side": "defense",
       "winRate": 49.2,
-      "role": "utility",
+      "role": "antibreach",
       "notes": "Recruit defender — flexible loadout (barbed wire, deployable shield, prox alarm, etc.).",
       "howToCounter": "No special gadget — read his loadout choices and counter accordingly. Treat as a generalist anchor."
     }
@@ -43931,10 +43931,10 @@ const SEED_DATA =
     },
     {
       "id": "antibreach-def",
-      "name": "Anti-Breach",
+      "name": "Anti-Breach / Utility",
       "side": "defense",
       "group": "job",
-      "desc": "Job — denies the hard breach and protects reinforcements: batteries, jammers, projectile catch.",
+      "desc": "Job — denies the hard breach AND denies space: batteries / jammers / projectile-catch, plus one-ways, shields, gas and barricades.",
       "ops": [
         "bandit",
         "kaid",
@@ -43942,7 +43942,17 @@ const SEED_DATA =
         "wamai",
         "aruni",
         "jager",
-        "tubarao"
+        "tubarao",
+        "mira",
+        "goyo",
+        "smoke",
+        "castle",
+        "clash",
+        "warden",
+        "tachanka",
+        "azami",
+        "sentry",
+        "oryx"
       ]
     },
     {
@@ -43957,7 +43967,8 @@ const SEED_DATA =
         "thorn",
         "fenrir",
         "lesion",
-        "ela"
+        "ela",
+        "melusi"
       ]
     },
     {
@@ -43989,26 +44000,6 @@ const SEED_DATA =
         "doc",
         "rook",
         "thunderbird"
-      ]
-    },
-    {
-      "id": "utility-def",
-      "name": "Utility / Denial",
-      "side": "defense",
-      "group": "job",
-      "desc": "Job — one-ways, shields, gas and barricades; covers angles and denies space without a placed trap.",
-      "ops": [
-        "mira",
-        "goyo",
-        "smoke",
-        "castle",
-        "clash",
-        "warden",
-        "tachanka",
-        "azami",
-        "melusi",
-        "sentry",
-        "oryx"
       ]
     },
     {
@@ -45623,7 +45614,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 39;
+const APP_BUILD = 40;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

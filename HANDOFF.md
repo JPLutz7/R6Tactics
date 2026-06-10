@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 39**, SEED **data v53** (see §13 for the session log).
+- **Current state:** PWA **build 40**, SEED **data v54** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -477,12 +477,16 @@ Intel), implying only anchors stay on site — wrong: everyone except roamers an
 axes** (owner's call):
 - **Positions** (`group:"position"`): **Anchor** (34 ops — every defender except the pure roamers) ·
   **Roamer** (13). Most defenders anchor; only Vigil/Caveira/Oryx are pure roamers.
-- **Jobs** (`group:"job"`): **Anti-Breach** (7) · **Trapper** (6) · **Intel** (10) · **Support** =
-  heal/armour (3: Doc/Rook/Thunderbird) · **Utility / Denial** = one-ways/shields/gas/barricades (11) ·
-  **Flex** (8). **Flex = versatile ops that can ANCHOR (and may also roam) — never pure roamers**
-  (owner rule). Every defender = one position + one job; an op can sit in several pools (Bandit =
-  Anchor+Roamer + Anti-Breach + Flex). `operator.role` now holds the **job**; position is derived from
-  position-pool membership.
+- **Jobs** (`group:"job"`): **Anti-Breach / Utility** (17) · **Trapper** (7) · **Intel** (10) ·
+  **Support** = heal/armour (3: Doc/Rook/Thunderbird) · **Flex** (8). **Flex = versatile ops that can
+  ANCHOR (and may also roam) — never pure roamers** (owner rule). Every defender = one position + one
+  job; an op can sit in several pools (Bandit = Anchor+Roamer + Anti-Breach/Utility + Flex).
+  `operator.role` holds the **job**; position is derived from position-pool membership.
+  - **v54 refinement (owner):** the old separate **Utility/Denial** job (one-ways/shields/gas/barricades)
+    was **merged into Anti-Breach** → **"Anti-Breach / Utility"** (deny the breach *and* deny space), and
+    **Melusi moved to Trapper**. The defense tactic flex still carries a "2nd Utility" double as the
+    space-denial *flavor* of that job (vs "2nd Anti-Breach" = wall-denial); both draw from the merged pool.
+    (Oryx, the gadget-less pure-frag roamer, landed in Anti-Breach/Utility — the one still-awkward fit.)
 - **Schema:** roles gained a `group` field (`normalizeDB` defaults it; attack roles are all `job`).
   Roster role-grid renders three sections (Attack roles · Defense — Positions · Defense — Jobs); the
   op-modal shows position tag(s) + job. Added roles `support-def`, `utility-def`; reframed all defense
