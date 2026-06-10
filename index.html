@@ -555,7 +555,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 50,
+  "version": 51,
   "publishedAt": "2026-06-10",
   "maps": [
     {
@@ -43669,7 +43669,12 @@ const SEED_DATA =
         "maestro",
         "melusi",
         "goyo",
-        "tachanka"
+        "tachanka",
+        "castle",
+        "clash",
+        "warden",
+        "sentry",
+        "azami"
       ]
     },
     {
@@ -43684,7 +43689,8 @@ const SEED_DATA =
         "pulse",
         "lesion",
         "oryx",
-        "mozzie"
+        "mozzie",
+        "skopos"
       ]
     },
     {
@@ -43698,7 +43704,8 @@ const SEED_DATA =
         "ela",
         "lesion",
         "thorn",
-        "melusi"
+        "melusi",
+        "fenrir"
       ]
     },
     {
@@ -43713,7 +43720,8 @@ const SEED_DATA =
         "wamai",
         "jager",
         "aruni",
-        "tubarao"
+        "tubarao",
+        "thunderbird"
       ]
     },
     {
@@ -43741,7 +43749,8 @@ const SEED_DATA =
         "mute",
         "smoke",
         "maestro",
-        "ela"
+        "ela",
+        "azami"
       ]
     }
   ],
@@ -45333,7 +45342,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 36;
+const APP_BUILD = 37;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
