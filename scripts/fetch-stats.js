@@ -76,13 +76,13 @@ async function fetchPlayer(p) {
     // limit. Each scope is kept only if the API echoes the requested sessionType
     // (and seasonNumber), so the app can trust the scope; else it falls back.
     out.ops = {};
-    const RECENT = out.seasons.slice(0, 6);   // cap per-season operator fetches
+    const RECENT = out.seasons.slice(0, 4);   // cap per-season operator fetches (budget)
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
     for (const plId of Object.keys(PLAYLISTS)) {
       const st = PLAYLISTS[plId].st;
       for (const season of [null, ...RECENT]) {
-        await sleep(1200);   // stay under the per-minute rate limit
+        await sleep(1500);   // stay under the per-minute burst limit
         try {
           const extra = { sessionType: st }; if (season != null) extra.seasonNumber = season;
           const r = await fetchType(p.handle, platform, "operatorStats", extra);
