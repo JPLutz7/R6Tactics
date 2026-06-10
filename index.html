@@ -38669,6 +38669,8 @@ function boardFor(p,gm,season){
   return { won,lost,kills,deaths,wr,kd,mmr,peak,has:pick.length>0 };
 }
 function seasonsFor(p){ return (p&&p.seasons)||[]; }
+// season number → "Y{year} S{season}" (4 seasons/year; S42 = Y11 S2, S1 = Y1 S1)
+function seasonLabel(n){ n=+n; if(!n||n<1) return "S"+n; return "Y"+Math.ceil(n/4)+" S"+(((n-1)%4)+1); }
 function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
   if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};
   if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all seasons"};
@@ -38677,7 +38679,7 @@ function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
 }
 function boardGridHTML(p){
   const pl=curPlaylist(), b=boardFor(p,pl.gm,UI.players.season);
-  if(!b.has) return `<div class="pl-empty muted">No ${esc(pl.label)} data${UI.players.season==="all"?"":" for season "+esc(UI.players.season)}.</div>`;
+  if(!b.has) return `<div class="pl-empty muted">No ${esc(pl.label)} data${UI.players.season==="all"?"":" for "+esc(seasonLabel(UI.players.season))}.</div>`;
   const wr=b.wr!=null?Math.round(b.wr*100)+"%":"—", kd=b.kd!=null?b.kd.toFixed(2):"—", ranked=pl.gm==="pvp_ranked";
   return `<div class="pl-grid">
     ${ranked?statBox("MMR", b.mmr!=null?b.mmr.toLocaleString():"—", b.peak!=null?("peak "+b.peak.toLocaleString()):""):""}
@@ -38715,7 +38717,7 @@ function renderPlayersTab(root){
   if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
     if(UI.players.season!=="all" && !seasonsFor(p).map(String).includes(String(UI.players.season))) UI.players.season="all";
     const plToggle=PLAYLISTS.map(pl=>`<button class="pl-seg ${pl.id===UI.players.playlist?"on":""}" data-plpl="${pl.id}">${esc(pl.label)}</button>`).join("");
-    const seasonOpts=[["all","All seasons"],...seasonsFor(p).map(s=>[String(s),"Season "+s])];
+    const seasonOpts=[["all","All seasons"],...seasonsFor(p).map(s=>[String(s),seasonLabel(s)])];
     const seToggle=seasonOpts.map(([v,lab])=>`<button class="pl-seg ${String(UI.players.season)===v?"on":""}" data-plseason="${esc(v)}">${esc(lab)}</button>`).join("");
     body=`<div class="pl-seg-row">${plToggle}</div>
       <div class="pl-seg-row season">${seToggle}</div>
@@ -39508,7 +39510,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 18;
+const APP_BUILD = 19;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
