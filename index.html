@@ -39378,14 +39378,12 @@ function renderTacticsPanel(){
   if(T&&T.open){ renderTacticDetail(host,m,T); return; }
   if(UI.maps.suggest&&UI.maps.suggest.open){ renderSuggester(host,m); return; }
   const sideBlock=(side,label)=>{
-    const sites=m.bombsites.slice().sort((a,b)=>siteRecord(m,side,b.id).rate-siteRecord(m,side,a.id).rate); // best site win rate first
+    const sites=m.bombsites.slice().sort((a,b)=>((parseInt(a.site,10)||0)-(parseInt(b.site,10)||0))); // game order (site 1→4, top floor → basement)
     const items=sites.map(b=>{
       const strats=(((m.tactics||{})[side]||{})[b.id]||{}).strats||[];
       if(!strats.length) return "";
-      const srec=siteRecord(m,side,b.id);
-      const sBadge=`<span class="tp-site-wr ${srec.n?"logged":"prior"}" title="${srec.n?"site win rate from "+srec.w+"–"+srec.l+" logged rounds across these tactics":"estimate from operator data (no rounds logged here yet)"}">${Math.round(srec.rate*100)}%</span>`;
       const ordered=strats.map((st,si)=>({st,si})).sort((a,c)=>stratSuccessRate(c.st)-stratSuccessRate(a.st)); // best success rate first
-      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}${sBadge}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
+      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
     }).join("");
     return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span>${side==="attack"?`<div class="grow"></div><button class="btn sm" id="tpSuggest" title="Suggest the best attack vs the defenders you expect (prep)">🎯 Suggest</button>`:""}</div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
   };
@@ -39457,10 +39455,17 @@ function normTxt(s){ return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,""
 function statsPlayerForName(name){ const nm=normTxt(name); const ps=(STATS_DATA&&STATS_DATA.players)||[]; return ps.find(p=>normTxt(p.label)===nm||normTxt(p.key)===nm)||null; }
 // for a strat: average (over assigned players who have data) of their best ranked
 // win% among that slot's ops, mapped 40%→0 / 60%→1. null when no player has data.
+// RANKED only: last-4-seasons ranked aggregate, else ranked all-time. Never uses
+// casual/quick-match/all-playlists data — if a player has no ranked op data, they're neutral.
+function playerRankedOps(sp){ const o=(sp&&sp.ops)||{};
+  const recent=recentSeasons(sp).map(s=>o[`ranked|${s}`]).filter(Boolean);
+  if(recent.length) return aggregateOps(recent);
+  return o["ranked|all"]||null;
+}
 function stratOpProficiency(st){
   const assign=assignTactic(st,"attack"); let sum=0,n=0;
   assign.forEach(pk=>{ if(!pk.ops||!pk.ops.length)return; const sp=statsPlayerForName(pk.player); if(!sp)return;
-    const rows=(opsFor(sp,"ranked","all").rows)||[]; if(!rows.length)return;
+    const rows=playerRankedOps(sp); if(!rows||!rows.length)return;
     let best=null; pk.ops.forEach(id=>{ const nm=opById(id)&&opById(id).name; if(!nm)return; const r=rows.find(x=>normTxt(x.op)===normTxt(nm)); if(r&&typeof r.wp==="number"&&(best===null||r.wp>best))best=r.wp; });
     if(best!==null){ sum+=Math.max(0,Math.min(1,(best-40)/20)); n++; } });
   return n?sum/n:null;
@@ -40126,7 +40131,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 30;
+const APP_BUILD = 31;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
