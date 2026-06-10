@@ -343,6 +343,9 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 /* role pools grouped by side */
 .rolegrid-sides{display:flex;flex-direction:column;gap:26px}
 .roleside-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rolesub{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel2);padding:12px;margin:0 0 16px}
+.rolesub-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rolesub-tag{font-weight:800;font-size:14px;padding:3px 12px;border-radius:999px;color:var(--def);background:var(--def-bg);border:1px solid var(--def-line)}
 .opchip[data-op]{cursor:pointer}
 .opchip[data-op]:hover{filter:brightness(.96);box-shadow:0 1px 5px rgba(20,30,45,.14)}
 .opchip[data-op]:focus-visible{outline:2px solid var(--def);outline-offset:1px}
@@ -555,7 +558,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 55,
+  "version": 56,
   "publishedAt": "2026-06-10",
   "maps": [
     {
@@ -43942,7 +43945,7 @@ const SEED_DATA =
       "id": "roamer-def",
       "name": "Roamer",
       "side": "defense",
-      "group": "position",
+      "group": "roamer",
       "desc": "Position — plays off-site to flank, delay and pick attackers, stealing time and breaking the push.",
       "ops": [
         "vigil",
@@ -43964,7 +43967,7 @@ const SEED_DATA =
       "id": "antibreach-def",
       "name": "Anti-Breach / Utility",
       "side": "defense",
-      "group": "job",
+      "group": "anchor",
       "desc": "Job — denies the hard breach AND denies space: batteries / jammers / projectile-catch, plus one-ways, shields, gas and barricades.",
       "ops": [
         "bandit",
@@ -43988,7 +43991,7 @@ const SEED_DATA =
       "id": "trapper-def",
       "name": "Trapper",
       "side": "defense",
-      "group": "job",
+      "group": "anchor",
       "desc": "Job — placed traps and area denial that punish pushes and protect roam-clears and flanks.",
       "ops": [
         "kapkan",
@@ -44004,7 +44007,7 @@ const SEED_DATA =
       "id": "intel-def",
       "name": "Intel",
       "side": "defense",
-      "group": "job",
+      "group": "anchor",
       "desc": "Job — cams, sound and scans; finds attackers, denies their intel and calls rotations.",
       "ops": [
         "maestro",
@@ -44023,7 +44026,7 @@ const SEED_DATA =
       "id": "support-def",
       "name": "Support",
       "side": "defense",
-      "group": "job",
+      "group": "anchor",
       "desc": "Job — heal, armour and revive that keep the site players alive late.",
       "ops": [
         "doc",
@@ -44037,7 +44040,7 @@ const SEED_DATA =
       "id": "flex-def",
       "name": "Flex",
       "side": "defense",
-      "group": "job",
+      "group": "flex",
       "desc": "Job — versatile, deep-pool defenders who can anchor (and often roam too) to fill whatever the setup is missing.",
       "ops": [
         "smoke",
@@ -44446,7 +44449,7 @@ function normalizeDB(db){
     o.side=o.side==="defense"?"defense":"attack"; o.role=o.role||"flex"; o.notes=o.notes||""; o.howToCounter=o.howToCounter||""; });
   db.roles.forEach(r=>{ r.id=r.id||slug(r.name||"role"); r.name=r.name||r.id;
     r.side = r.side==="defense"?"defense":"attack";
-    r.group = r.group==="position"?"position":"job";   // defense splits into Position (anchor/roamer) vs Job; attack roles are all jobs
+    r.group = ["position","anchor","roamer","flex"].includes(r.group)?r.group:"job";   // defense grid groups: "anchor" subsection (site jobs) / "roamer" / "flex"; "position"=hidden anchor role (tactics only); attack roles are all "job"
     // migrate old unified roles ({attackOps,defenseOps}) -> single side-specific ops pool
     if(!Array.isArray(r.ops)) r.ops = r.side==="attack" ? (Array.isArray(r.attackOps)?r.attackOps:[]) : (Array.isArray(r.defenseOps)?r.defenseOps:[]);
     r.ops=r.ops.filter(id=>db.operators.some(o=>o.id===id&&o.side===r.side));
@@ -45530,16 +45533,23 @@ function rosterDoDrop(box,clientX){
 }
 function renderRoleGrid(){
   const wrap=byId("roleGrid"); const edit=UI.roster.edit;
-  const sec=(side,label,cls,group)=>{
-    const roles=DB.roles.filter(r=>r.side===side&&(!group||(r.group||"job")===group));
-    const cards=roles.map(r=>roleCardHTML(r,edit)).join("")||`<div class="empty">None.</div>`;
-    return `<div class="roleside">
-      <div class="roleside-h"><span class="tag ${cls}">${label}</span><span class="muted small">(${roles.length})</span><div class="grow"></div>${edit?`<button class="btn sm" data-addrole="${side}" data-addgroup="${group||"job"}">＋ role</button>`:""}</div>
-      <div class="rolegrid">${cards}</div>
-    </div>`;
-  };
-  // defense splits into two axes: where you play (Position) vs what you bring (Job)
-  wrap.innerHTML=sec("attack","Attack roles","atk")+sec("defense","Defense — Positions","def","position")+sec("defense","Defense — Jobs","def","job");
+  const cardsOf=roles=>roles.map(r=>roleCardHTML(r,edit)).join("");
+  const grp=(side,g)=>DB.roles.filter(r=>r.side===side&&r.group===g);
+  const addBtn=(side,g)=>edit?`<button class="btn sm" data-addrole="${side}" data-addgroup="${g}">＋ role</button>`:"";
+  // Attack — all jobs
+  const atk=DB.roles.filter(r=>r.side==="attack");
+  const atkSec=`<div class="roleside"><div class="roleside-h"><span class="tag atk">Attack roles</span><span class="muted small">(${atk.length})</span><div class="grow"></div>${addBtn("attack","job")}</div><div class="rolegrid">${cardsOf(atk)||'<div class="empty">None.</div>'}</div></div>`;
+  // Defense — "Anchor" is a SUBSECTION (every site job); Roamer + Flex are its siblings. The old Anchor *position* role (group "position") is not listed.
+  const dAnchor=grp("defense","anchor"), dRoamer=grp("defense","roamer"), dFlex=grp("defense","flex");
+  const defSec=`<div class="roleside">
+    <div class="roleside-h"><span class="tag def">Defense roles</span><span class="muted small">(${dAnchor.length+dRoamer.length+dFlex.length})</span></div>
+    <div class="rolesub">
+      <div class="rolesub-h"><span class="rolesub-tag">Anchor</span><span class="muted small">site players — hold the objective</span><div class="grow"></div>${addBtn("defense","anchor")}</div>
+      <div class="rolegrid">${cardsOf(dAnchor)||'<div class="empty">None.</div>'}</div>
+    </div>
+    <div class="rolegrid">${cardsOf(dRoamer)}${cardsOf(dFlex)}</div>
+  </div>`;
+  wrap.innerHTML=atkSec+defSec;
   bindRoleGrid();
 }
 function roleCardHTML(r,edit){
@@ -45589,11 +45599,12 @@ function openOpModal(id){
   const cls=o.side==="defense"?"def":"atk"; const sideLabel=o.side==="defense"?"Defense":"Attack";
   const wr=(typeof o.winRate==="number")?`<span class="op-wr ${cls}">${o.winRate.toFixed(1)}%</span>`:"";
   // defense ops carry two axes: position (which Anchor/Roamer pool they're in) + job (op.role)
-  const posTags=o.side==="defense"?DB.roles.filter(r=>r.group==="position"&&(r.ops||[]).includes(o.id)).map(r=>`<span class="tag role">${esc(r.name)}</span>`).join(""):"";
   const jobLabel=o.side==="defense"?((roleById(o.role+"-def")||{}).name||o.role):o.role;
+  // anchor is the default for defenders, so we don't tag it; just flag the ones who can roam
+  const roamTag=(o.side==="defense"&&((roleById("roamer-def")||{}).ops||[]).includes(o.id))?` <span class="tag role">Roamer</span>`:"";
   m.innerHTML=`<div class="card op-card">
     <div class="spread" style="margin-bottom:8px"><h3 style="margin:0">${esc(o.name)} ${wr}</h3><button class="iconbtn" id="opClose" title="Close">✕</button></div>
-    <div class="muted small" style="margin-bottom:12px"><span class="tag ${cls}">${sideLabel}</span>${posTags}${jobLabel?` <span class="tag role">${esc(jobLabel)}</span>`:""} · round win-rate (Ranked Plat+, approx)</div>
+    <div class="muted small" style="margin-bottom:12px"><span class="tag ${cls}">${sideLabel}</span>${jobLabel?` <span class="tag role">${esc(jobLabel)}</span>`:""}${roamTag} · round win-rate (Ranked Plat+, approx)</div>
     ${o.notes?`<p class="op-line"><b>What they do.</b> ${esc(o.notes)}</p>`:""}
     ${o.howToCounter?`<p class="op-line"><b>How to counter.</b> ${esc(o.howToCounter)}</p>`:""}
   </div>`;
@@ -45674,7 +45685,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 41;
+const APP_BUILD = 42;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

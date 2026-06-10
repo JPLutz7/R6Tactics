@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 41**, SEED **data v55** (see §13 for the session log).
+- **Current state:** PWA **build 42**, SEED **data v56** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -517,6 +517,20 @@ Owner refinements after the two-axis defense model settled:
   core op-sets). Flex desc↔label 294/294 attack + 196/196 defense; 0 unknown op refs.
 - Scripts: `/tmp/reclassify.js` (Smoke/Mira + flex=all) → `/tmp/vary-def.js` → `/tmp/vary-tactics.js` →
   `/tmp/fix-dups.js` (the generators' own version bump was removed; version set once).
+
+### Role grid: "Anchor" becomes a subsection, not a role (data v56)
+Owner: Anchor isn't a pickable role — it's where most defenders play. So the **role grid** is now
+3-level: `Attack` · `Defense → [Anchor subsection · Roamer · Flex]`, where the **Anchor subsection**
+holds every site job (**Anti-Breach/Utility, Trapper, Intel, Support**) and **Roamer + Flex** are its
+siblings. There is **no standalone "Anchor" card**. Implementation: `role.group` re-tagged — the site
+jobs → `"anchor"`, `roamer-def` → `"roamer"`, `flex-def` → `"flex"`; the old Anchor *position* role
+(`anchor-def`) is kept in data as `group:"position"` (hidden from the grid) because the **defense
+tactics' base "Anchor" slot** and the op-modal's roam-flag still resolve through it. `renderRoleGrid`
+rewritten (new `.rolesub` CSS); op-modal now shows `Defense · <Job>` + a `Roamer` flag (no Anchor tag,
+since anchor is the default). `normalizeDB` preserves the new group values.
+- **Still says "Anchor" in two spots (owner may want migrated):** the **defense tactic base slot**
+  labelled "Anchor" (the generic site-holder — 196 strats) and **João/Lora's roster** still list the old
+  `anchor-def` pick. Left as-is so tactics + their assignments keep working; surfaced to the owner.
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
