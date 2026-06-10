@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 37**, SEED **data v51** (see §13 for the session log).
+- **Current state:** PWA **build 38**, SEED **data v52** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -470,6 +470,26 @@ so append order is cosmetic). Note `operator.role` is coarse (18 anchor/9 suppor
 trappers + most intel folded in), so the **role `.ops` pools** are the real per-sub-role classification.
 A defense-flex variety pass (rotate a `flex-def` slot's 2nd job: 2nd anchor/roamer/trapper/intel/anti-
 breach, since the default double-up is already "2 anchors") is the natural follow-up — **not yet done**.
+
+### Defense roles → two-axis model: Position × Job (data v52) — Stage 1 of 2
+The flat defense role list conflated a *position* word (Anchor) with *job* words (Anti-breach/Trapper/
+Intel), implying only anchors stay on site — wrong: everyone except roamers anchors. Split into **two
+axes** (owner's call):
+- **Positions** (`group:"position"`): **Anchor** (34 ops — every defender except the pure roamers) ·
+  **Roamer** (13). Most defenders anchor; only Vigil/Caveira/Oryx are pure roamers.
+- **Jobs** (`group:"job"`): **Anti-Breach** (7) · **Trapper** (6) · **Intel** (10) · **Support** =
+  heal/armour (3: Doc/Rook/Thunderbird) · **Utility / Denial** = one-ways/shields/gas/barricades (11) ·
+  **Flex** (8). **Flex = versatile ops that can ANCHOR (and may also roam) — never pure roamers**
+  (owner rule). Every defender = one position + one job; an op can sit in several pools (Bandit =
+  Anchor+Roamer + Anti-Breach + Flex). `operator.role` now holds the **job**; position is derived from
+  position-pool membership.
+- **Schema:** roles gained a `group` field (`normalizeDB` defaults it; attack roles are all `job`).
+  Roster role-grid renders three sections (Attack roles · Defense — Positions · Defense — Jobs); the
+  op-modal shows position tag(s) + job. Added roles `support-def`, `utility-def`; reframed all defense
+  role descs. Existing roster/tactics ids untouched (non-breaking). Transform: `/tmp/def-roles.js`.
+- **Stage 2 (next, not done):** re-slot the **196 defense strats** to the new position+job slots and add
+  the same flex-2nd-job **variety + labels** as attack — incl. position doubles the owner asked for
+  ("2 roamers", 2 anchors, etc.), not just job doubles.
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
