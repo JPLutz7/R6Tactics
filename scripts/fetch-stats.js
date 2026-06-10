@@ -71,19 +71,28 @@ async function fetchPlayer(p) {
     out.mmrHistory = seasonal.ok ? parseHistory(seasonal.json) : [];
     out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
 
-    // operators: all-time baseline + per-playlist scope when the API honours sessionType.
-    // (No per-season grid — that's 50+ calls for veterans and trips the rate limit.)
+    // operators: all-time baseline, then per playlist × {all-seasons + recent seasons}.
+    // Bounded (recent seasons only) + spaced out so veterans don't trip the rate
+    // limit. Each scope is kept only if the API echoes the requested sessionType
+    // (and seasonNumber), so the app can trust the scope; else it falls back.
     out.ops = {};
+    const RECENT = out.seasons.slice(0, 6);   // cap per-season operator fetches
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
     for (const plId of Object.keys(PLAYLISTS)) {
-      await sleep(250);
-      try {
-        const r = await fetchType(p.handle, platform, "operatorStats", { sessionType: PLAYLISTS[plId].st });
-        if (r && r.ok && r.json && Array.isArray(r.json.operators) && String(r.json.sessionType) === PLAYLISTS[plId].st) {
-          out.ops[`${plId}|all`] = trimOps(r.json.operators);
-        }
-      } catch (_) {}
+      const st = PLAYLISTS[plId].st;
+      for (const season of [null, ...RECENT]) {
+        await sleep(1200);   // stay under the per-minute rate limit
+        try {
+          const extra = { sessionType: st }; if (season != null) extra.seasonNumber = season;
+          const r = await fetchType(p.handle, platform, "operatorStats", extra);
+          if (r && r.ok && r.json && Array.isArray(r.json.operators)
+              && String(r.json.sessionType) === st
+              && (season == null || String(r.json.seasonNumber) === String(season))) {
+            out.ops[`${plId}|${season == null ? "all" : season}`] = trimOps(r.json.operators);
+          }
+        } catch (_) {}
+      }
     }
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
@@ -97,10 +106,19 @@ function isAuthFail(p) {
 }
 
 (async () => {
+  // previous snapshot — so a rate-limited run keeps each player's last good data
+  let prev = [];
+  try { prev = (JSON.parse(fs.readFileSync(path.join(root, "players.json"), "utf8")).players) || []; } catch (_) {}
+  const prevOf = key => prev.find(x => x.key === key && x.ok);
+
   const players = [];
   for (const p of (cfg.players || [])) {
     process.stdout.write(`Fetching ${p.label} (${p.handle}/${p.platform})… `);
     const r = await fetchPlayer(p);
+    if (!r.ok) {
+      const old = prevOf(p.key);
+      if (old) { console.log(`FAILED (${r.error}) — kept previous good data`); players.push({ ...old, stale: true, staleReason: r.error }); await sleep(600); continue; }
+    }
     console.log(r.ok ? "ok" : `FAILED: ${r.error}`);
     players.push(r);
     await sleep(600);   // be gentle with the rate limit between players

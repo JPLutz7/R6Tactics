@@ -38671,10 +38671,22 @@ function boardFor(p,gm,season){
 function seasonsFor(p){ return (p&&p.seasons)||[]; }
 // season number → "Y{year} S{season}" (4 seasons/year; S42 = Y11 S2, S1 = Y1 S1)
 function seasonLabel(n){ n=+n; if(!n||n<1) return "S"+n; return "Y"+Math.ceil(n/4)+" S"+(((n-1)%4)+1); }
+// standard R6 rank-point thresholds → name/colour/image (verified: 1027=Copper 5, 2105=Silver 4).
+// Lets the rank badge follow the season toggle with no extra API calls.
+const R6_RANKS=[["Copper 5",1000,"#8a5a3c"],["Copper 4",1100,"#8a5a3c"],["Copper 3",1200,"#8a5a3c"],["Copper 2",1300,"#8a5a3c"],["Copper 1",1400,"#8a5a3c"],
+ ["Bronze 5",1500,"#a96b34"],["Bronze 4",1600,"#a96b34"],["Bronze 3",1700,"#a96b34"],["Bronze 2",1800,"#a96b34"],["Bronze 1",1900,"#a96b34"],
+ ["Silver 5",2000,"#7c8b97"],["Silver 4",2100,"#7c8b97"],["Silver 3",2200,"#7c8b97"],["Silver 2",2300,"#7c8b97"],["Silver 1",2400,"#7c8b97"],
+ ["Gold 5",2500,"#d6a93c"],["Gold 4",2600,"#d6a93c"],["Gold 3",2700,"#d6a93c"],["Gold 2",2800,"#d6a93c"],["Gold 1",2900,"#d6a93c"],
+ ["Platinum 5",3000,"#3aa6b9"],["Platinum 4",3100,"#3aa6b9"],["Platinum 3",3200,"#3aa6b9"],["Platinum 2",3300,"#3aa6b9"],["Platinum 1",3400,"#3aa6b9"],
+ ["Emerald 5",3500,"#2e9e6b"],["Emerald 4",3600,"#2e9e6b"],["Emerald 3",3700,"#2e9e6b"],["Emerald 2",3800,"#2e9e6b"],["Emerald 1",3900,"#2e9e6b"],
+ ["Diamond 5",4000,"#7b6cf0"],["Diamond 4",4100,"#7b6cf0"],["Diamond 3",4200,"#7b6cf0"],["Diamond 2",4300,"#7b6cf0"],["Diamond 1",4400,"#7b6cf0"],["Champion",4500,"#b0303a"]];
+function rankFromPoints(pts){ if(pts==null) return null; let cur=R6_RANKS[0]; for(const r of R6_RANKS){ if(pts>=r[1]) cur=r; else break; }
+  return { name:cur[0], color:cur[2], img:"https://r6data.com/assets/img/r6_ranks_img/"+cur[0].toLowerCase().replace(/\s+/g,"-")+".webp", points:pts }; }
 function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
-  if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};
-  if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all seasons"};
-  if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists · all seasons"};
+  if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};                 // exact playlist+season
+  if(season!=="all" && o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all seasons"};   // right playlist, season n/a
+  if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:null};                              // all-seasons selected
+  if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists & seasons"};                             // only the aggregate exists
   return {rows:null,scope:null};
 }
 function boardGridHTML(p){
@@ -38691,8 +38703,13 @@ function boardGridHTML(p){
     ${statBox("Deaths", b.deaths, "")}
   </div>`;
 }
-function rankBadgeHTML(p){ if(UI.players.playlist!=="ranked") return ""; const c=p&&p.rank; if(!c||!c.name) return "";
-  return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.name)}</div><div class="muted small">${esc(String(c.points||""))} RP · current</div></div></div>`; }
+function rankBadgeHTML(p){ if(UI.players.playlist!=="ranked") return "";
+  let c, sub;
+  if(UI.players.season==="all"){ c=p&&p.rank; sub="current"; }                  // all seasons → current rank
+  else { const seg=(p&&p.segments||[]).find(s=>s.type==="season"&&s.gamemode==="pvp_ranked"&&String(s.season)===String(UI.players.season));
+    c=seg?rankFromPoints(seg.rankPoints):null; sub=seasonLabel(UI.players.season); }
+  if(!c||!c.name) return "";
+  return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.name)}</div><div class="muted small">${esc(String(c.points!=null?c.points.toLocaleString():""))} RP · ${esc(sub)}</div></div></div>`; }
 function operatorTableHTML(p){ const {rows,scope}=opsFor(p,UI.players.playlist,UI.players.season); if(!rows||!rows.length) return "";
   const sorted=rows.slice().sort((a,b)=>(b.rp||0)-(a.rp||0)), all=UI.players.allOps, top=all?sorted:sorted.slice(0,8);
   const tr=o=>`<tr><td>${esc(o.op||"?")}${o.side?`<span class="pl-opside ${o.side==="Attacker"?"atk":"def"}">${o.side==="Attacker"?"A":"D"}</span>`:""}</td><td class="num">${o.rp!=null?o.rp:"—"}</td><td class="num">${o.wp!=null?o.wp+"%":"—"}</td><td class="num">${o.kd!=null?o.kd:"—"}</td><td class="num">${o.hs!=null?Math.round(o.hs)+"%":"—"}</td></tr>`;
@@ -39510,7 +39527,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 19;
+const APP_BUILD = 20;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
