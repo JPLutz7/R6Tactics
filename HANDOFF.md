@@ -22,7 +22,8 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
-- **Dev branch:** `claude/wizardly-tesla-6j23tl` → merged to `main` via PRs (GitHub Pages serves `main`, root).
+- **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
+- **Current state:** PWA **build 34**, SEED **data v48** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -254,19 +255,32 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 ## 10. PROMPT FOR THE NEXT CHAT
 Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
-> Continue work on the R6 Stack Command Center (Rainbow Six Siege prep dashboard).
-> **First read `HANDOFF.md` in the repo root** — full state, data model, file layout,
-> image/label extraction pipelines, conventions, the data/ToS rule (§1), and known
-> limitations. Single-file app (`index.html`) + `assets/`, deployed to GitHub Pages from
-> `main`; develop on the session's assigned `claude/*` branch and merge via PR. Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive). Validate with vm.Script syntax
-> checks + a puppeteer screenshot before deploying; cache-bust changed images with a
-> `?query`; bump SEED `version` when the embedded data changes.
+> Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a
+> 5-stack). **First read `HANDOFF.md`** in full — especially §1 (data/ToS rule), the data
+> model, and **§13 (the recent session log)** which has the newest systems and open threads.
 >
-> Then ask me what I want to do next (likely candidates: **refresh the operator
-> win-rates with exact numbers** from a logged-in R6 Tracker — see §11; add `pickRate`;
-> fine-tune label positions; fill tactics per bombsite; or fold the recommender/operators
-> into the Maps tab).
+> Single-file app (`index.html`, ~1.6 MB, all HTML/CSS/JS inlined) + `assets/` + `players.json`
+> + `scripts/` + `.github/workflows/`. Deployed to GitHub Pages from **`main`** (the default
+> branch). Develop on the session's assigned `claude/*` branch, **squash-merge via PR**, and I
+> like you to **auto-create + auto-merge** PRs. Live at https://jplutz7.github.io/R6Tactics/
+> (case-sensitive R/T).
+>
+> **Workflow that's been working:** make the change → run a headless **puppeteer** test
+> (puppeteer-core at `/tmp/node_modules`, Chrome at `/root/.cache/puppeteer/...`; serve the
+> repo over a tiny http server, stub `/players.json`) → `node scripts/bump-build.js` to bump
+> the PWA build (keeps `version.json` + `APP_BUILD` in sync; drives the in-app update banner)
+> → commit → `git rebase origin/main` (main gets bot `players.json` commits, so rebase first)
+> → force-push → PR → squash-merge. **Bump SEED `version` only for data/content changes**
+> (it triggers the "new data — adopt" flow for users; warn that unpublished local round-logs
+> are replaced on adopt).
+>
+> Then ask me what's next. **Open threads:** (1) confirm the **06:00 UTC stats sync** worked —
+> i.e. whether **Max** (`lnteligent.`) resolves and whether r6data honours **per-season ranked
+> operator scoping** (`ops` keys like `ranked|42`); if it does, the suggester's operator term
+> and the Players-tab per-season operators activate (and I can drop the redundant all-time op
+> call to save ~250 calls/mo). (2) Link **Lora** and the 5th member (`scripts/players.config.json`)
+> once I give you their Ubisoft handles. (3) Operator pools in the tactics are my **convention
+> picks**, not a sourced meta — a real pick-rate source could improve them.
 
 ---
 
@@ -364,3 +378,63 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 - **Read-&-counter suggester — DONE** (see the suggester bullet above): predicts the enemy's
   likely defense setup(s) from the ops you've seen + the site, and counters each. Possible
   next: an in-app editor for the `DB.suggester` weights, and tuning the per-archetype advice.
+
+## 13. Session log — Players tab, personalization, tactic content (builds 13→34, data v43→v48)
+Big additions since §12. Read this to understand the newest systems.
+
+### Players tab (live ranked stats, ToS-safe via §1)
+- **3rd main tab** (`📊 Players`). Reads `players.json` (same-origin) — **never** calls r6data
+  from the browser (the API needs an `api-key` header AND sends no CORS headers, so a static
+  PWA can't call it; the key must stay server-side).
+- **Pipeline:** `.github/workflows/player-stats.yml` (cron `0 6 * * *`, **once daily** to fit
+  r6data's **2,500 calls/month** budget — ~51 calls/run) runs `scripts/fetch-stats.js` using
+  the **`R6DATA_API_KEY`** repo secret, writes `players.json`, commits it. `scripts/players.config.json`
+  lists members (`joao`=JPLutz7, `leme`=Mtaro., `max`=lnteligent., `lora`/`unknown`=unlinked, empty
+  handle ⇒ skipped, no API cost). Fetch is **preserve-on-fail** (a rate-limited run keeps each
+  player's last-good data) with 429 retry/backoff + spacing.
+- **Data shape** per player: normalized `segments` (per-season × per-gamemode board stats),
+  `rank` (current), `mmrHistory`, `seasons`, and `ops` keyed `playlist|season` (e.g. `ranked|42`,
+  `all|all`). r6data's real `type=stats` is deeply nested (`platform_families_full_profiles[]
+  .board_ids_full_profiles[]{board_id, full_profiles[]{profile}}`). Per-op data is trimmed.
+- **UI:** player toggle; **playlist** toggle (Ranked/Unranked=`pvp_standard`/Quick Match=`pvp_casual`);
+  **season** toggle relabeled **"Last 4 seasons"** — aggregates the last 4 seasons only (boards
+  sum, win%/KD recomputed from totals; ops aggregate per-season scopes). Season labels are
+  **Year/Season** (`Y{ceil(n/4)} S{((n-1)%4)+1}`; S42=Y11 S2). Rank badge maps RP→rank via a
+  hardcoded R6 threshold table (`R6_RANKS`, client-side, no API). Operator table, MMR sparkline.
+- **API-key expiry** (90-day fine-grained key, expires ~2026-09-08, tracked in `players.config.json`
+  `api_key_expires`): the workflow **opens a GitHub Issue** (renewal link + steps) and the Players
+  tab shows a banner when ≤14 days / expired. **Can't auto-renew** (it's João's r6data account).
+- **PENDING:** per-season **ranked** operator scoping is unconfirmed (every completed sync only
+  returned `all|all`; the suggester op term is ranked-only and stays dormant until `ranked|<season>`
+  scopes appear). The next clean 06:00 UTC run (after the burst-limit cools) reveals it.
+
+### Device identity + IGL
+- **Local per-device identity** (`localStorage r6stack.me`): first-launch "Who's on this device?"
+  modal + Data-menu picker. Personalizes only the local view (never published): Players tab defaults
+  to your card; roster lists you first; **"(me)"** tag everywhere (`meTag()`); **Refresh button on
+  Players is João-only**.
+- **IGL is a player flag, NOT a role** (user's call — IGL ops were just intel ops; real IGLs play
+  any role). `igl:true` on **one** roster player at a time (initially João), toggled in roster edit
+  (`setIgl()`, one-at-a-time), shown as an **"IGL" badge** (`iglTag()`) in roster + tactic picks.
+  The `igl-atk`/`igl-def` **roles were removed**; their 487 tactic slots were converted
+  (`igl-atk→intel-atk`, `igl-def→anchor-def` — matches their job/ops).
+
+### Tactic content
+- **`★ Your job` card** (top of every tactic detail, for the device member): role + per-operator
+  **"what to do here"** lines — when the task text names an op, that op gets its own clause; else the
+  shared task + the op's gadget note. From `assignTactic()` + `opById().notes`.
+- **Paragraph `desc` per tactic** (`st.desc`, a **bullet array**), composed from the tactic's own
+  summary + setup + role/op tasks (`scripts/gen-desc.js`). Rendered as `<ul class="tp-desc">`.
+  Regenerate after any op/role change.
+- **Operators tailored per tactic, all maps** ("follow Clubhouse"): scaffold maps reused one op set
+  per strat-type across sites; now varied per site via type-aware **convention** pools in
+  `scripts/tailor.js` (kept Thermite/Hibana/Ace, Smoke/Goyo/Melusi etc. fixed; varied the deep-pool
+  roles). **Convention picks, not a sourced meta** (a data-driven win-rate version was tried and is
+  *worse* — op `role` is too coarse for defense sub-roles and win-rate ≠ pick-rate). Clubhouse was
+  already well-tailored and is the model.
+- **Sites order like the game** (by bombsite `site` field 1→4); the old (wrong) per-site win-rate
+  badges were removed.
+
+### Helper scripts (in `/tmp` during the session, re-creatable from this log)
+`scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
+the workflow — **committed**. `tailor.js` / `igl.js` transforms were run from `/tmp` (logic captured above).
