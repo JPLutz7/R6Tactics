@@ -1,0 +1,41 @@
+name: Refresh player stats
+
+# Pulls each stack member's ranked stats from the r6data API every 12h and
+# commits players.json. The api-key lives only as the R6DATA_API_KEY repo secret
+# (Settings → Secrets and variables → Actions), never in the client.
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"   # 00:00 and 12:00 UTC
+  workflow_dispatch: {}       # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+concurrency:
+  group: player-stats
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Fetch ranked stats
+        env:
+          R6DATA_API_KEY: ${{ secrets.R6DATA_API_KEY }}
+        run: node scripts/fetch-stats.js
+      - name: Commit if changed
+        run: |
+          git config user.name "r6tactics-stats-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if git diff --quiet -- players.json; then
+            echo "players.json unchanged — nothing to commit."
+          else
+            git add players.json
+            git commit -m "Refresh player ranked stats [skip ci]"
+            git push
+          fi

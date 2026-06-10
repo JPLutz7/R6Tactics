@@ -1,0 +1,8 @@
+{
+  "_comment": "Stack members wired to the r6data API. Add an entry per player; the 12h GitHub Action (player-stats.yml) fetches each and writes players.json. platform: uplay | psn | xbl | steam.",
+  "platform_families": "pc",
+  "players": [
+    { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
+    { "key": "leme", "label": "Leme", "handle": "Mtaro", "platform": "uplay" }
+  ]
+}
