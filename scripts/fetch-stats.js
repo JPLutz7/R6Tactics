@@ -113,6 +113,11 @@ function isAuthFail(p) {
 
   const players = [];
   for (const p of (cfg.players || [])) {
+    if (!p.handle || !String(p.handle).trim()) {   // reserved slot, no handle yet → no API calls
+      console.log(`${p.label}: not linked (no handle) — skipped`);
+      players.push({ key: p.key, label: p.label, handle: "", platform: p.platform || "uplay", ok: false, unlinked: true });
+      continue;
+    }
     process.stdout.write(`Fetching ${p.label} (${p.handle}/${p.platform})… `);
     const r = await fetchPlayer(p);
     if (!r.ok) {

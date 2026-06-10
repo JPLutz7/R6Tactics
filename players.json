@@ -2035,6 +2035,22 @@
       "ok": false,
       "status": 429,
       "error": "Rate limit exceeded"
+    },
+    {
+      "key": "lora",
+      "label": "Lora",
+      "handle": "",
+      "platform": "uplay",
+      "ok": false,
+      "unlinked": true
+    },
+    {
+      "key": "unknown",
+      "label": "unknown",
+      "handle": "",
+      "platform": "uplay",
+      "ok": false,
+      "unlinked": true
     }
   ]
 }
