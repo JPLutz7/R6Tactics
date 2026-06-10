@@ -249,6 +249,7 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .prow.me{border-color:var(--atk-line);box-shadow:inset 3px 0 0 var(--accent)}
 .me-picks{gap:8px}
 .me-pick{display:flex;align-items:center;gap:10px;justify-content:flex-start;font-weight:800;font-size:15px;padding:10px 12px}
+.metag{color:var(--accent);font-weight:800;font-size:.8em}
 .prow .pname{font-weight:700;font-size:15px;min-width:90px}
 .prow .pavatar{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#5a6b7e,#3a4654);font-size:14px}
 .tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:6px;font-weight:700;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
@@ -38504,6 +38505,8 @@ let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 function getMe(){ try{ return localStorage.getItem("r6stack.me")||""; }catch(_){ return ""; } }
 function setMe(v){ try{ if(v) localStorage.setItem("r6stack.me",v); else localStorage.removeItem("r6stack.me"); }catch(_){} }
 function meRosterIdx(){ const me=getMe(); if(!me)return -1; return (DB&&DB.roster||[]).findIndex(p=>normTxt(p.name)===me); }
+function isMeName(name){ const me=getMe(); return !!me && normTxt(name)===me; }
+function meTag(name){ return isMeName(name)?` <span class="metag">(me)</span>`:""; }
 function applyMeDefaults(){ const me=getMe(); if(!me)return; const players=statsPlayers(); const i=players.findIndex(p=>normTxt(p.label)===me||normTxt(p.key)===me); if(i>=0) UI.players.sel=i; }
 let ME_PROMPTED=false;   // session-only flag so 'Skip' doesn't re-pop the prompt this launch
 function showMeModal(){
@@ -38781,7 +38784,7 @@ function renderPlayersTab(root){
   if(!UI.players.touched) applyMeDefaults();   // default to your own card when you open the tab
   if(UI.players.sel>=players.length) UI.players.sel=0;
   const p=players[UI.players.sel]||players[0];
-  const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}</button>`).join("");
+  const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}${meTag(pl.label)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
   if(p&&(p.unlinked||!p.handle)){
@@ -38819,7 +38822,7 @@ function renderPlayersTab(root){
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div>${canRefresh?`<button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button>`:""}</div>
     ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
-    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
+    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")}${p?meTag(p.label):""} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
       <div class="panel-b">${body}</div></div>
     <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs daily via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add or link players.</div>`;
   root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; UI.players.touched=true; UI.players.allOps=false; renderPlayersTab(root); });
@@ -39037,10 +39040,10 @@ function renderTacticDetail(host,m,T){
   const assign=assignTactic(st,T.side);
   // operators: who picks what (just the op options)
   const picks=assign.map(pk=>`<div class="tp-pick">
-      <div class="tp-pick-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tag ${cls}" style="margin-left:auto">${esc(pk.roleName)}</span>`:""}</div>
+      <div class="tp-pick-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${meTag(pk.player)}${pk.roleName?`<span class="tag ${cls}" style="margin-left:auto">${esc(pk.roleName)}</span>`:""}</div>
       <div class="tp-pick-ops">${pk.ops.length?pk.ops.map(id=>{const o=opById(id);const fav=pk.favs&&pk.favs.has(id);return `<span class="opchip ${cls}${fav?" fav":""}" data-op="${esc(id)}" title="${fav?"★ "+esc(pk.player)+"'s favourite · ":""}Click for details" role="button" tabindex="0">${fav?"★ ":""}${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`}</div></div>`).join("");
   // gadgets / jobs organized by person
-  const jobs=assign.filter(pk=>pk.pos).map(pk=>`<div class="tp-job"><div class="tp-job-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tp-job-role">${esc(pk.roleName)}</span>`:""}</div><div class="tp-job-txt">${esc(pk.pos)}</div></div>`).join("");
+  const jobs=assign.filter(pk=>pk.pos).map(pk=>`<div class="tp-job"><div class="tp-job-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${meTag(pk.player)}${pk.roleName?`<span class="tp-job-role">${esc(pk.roleName)}</span>`:""}</div><div class="tp-job-txt">${esc(pk.pos)}</div></div>`).join("");
   const bullets=arr=>(arr||[]).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join("");
   const setupHead=T.side==="attack"?"Open up":"Reinforce";
   const setupItems=T.side==="attack"?st.breach:st.reinforce;
@@ -39394,7 +39397,7 @@ function renderPlayers(){
     const initials=(p.name||"?").trim().slice(0,2).toUpperCase(); const isMe=normTxt(p.name)===getMe();
     return `<div class="prow${isMe?" me":""}" data-p="${i}">
       <div class="pavatar">${esc(initials)}</div>
-      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}${isMe?` <span class="muted small" style="font-weight:500">· you</span>`:""}</div>`}
+      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}${meTag(p.name)}</div>`}
       <div class="psides">${sideRow(p,i,"attack")}${sideRow(p,i,"defense")}</div>
       <div class="grow"></div>
       ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
@@ -39608,7 +39611,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 25;
+const APP_BUILD = 26;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
