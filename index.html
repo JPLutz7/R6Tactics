@@ -39055,16 +39055,17 @@ function renderTacticDetail(host,m,T){
   const bullets=arr=>(arr||[]).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join("");
   // your-job spotlight: pull the logged-in member's part to the top, detailed + highlighted
   const jobBullets=pos=>String(pos||"").split(/\s*(?:[;•·\n]|\s–\s|\s—\s)\s*/).map(s=>s.trim()).filter(Boolean);
+  // if the task names an operator, surface just that clause for that op; else the whole task
+  const opClause=(opName,pos)=>{ const nm=normTxt(opName); return jobBullets(pos).find(c=>normTxt(c).includes(nm))||null; };
   const mine=getMe()?assign.find(pk=>isMeName(pk.player)):null;
   const yourJob=(mine&&(mine.ops.length||mine.pos))?(()=>{
     const opsHtml=mine.ops.length?mine.ops.map(id=>{const o=opById(id);const fav=mine.favs&&mine.favs.has(id);return `<span class="opchip ${cls}${fav?" fav":""}" data-op="${esc(id)}" role="button" tabindex="0" title="${fav?"★ your favourite · ":""}Click for details">${fav?"★ ":""}${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`;
-    const opDetail=mine.ops.map(id=>{const o=opById(id); if(!o||!o.notes)return""; return `<li><b>${esc(o.name)}</b> — ${esc(o.notes)}</li>`;}).filter(Boolean).join("");
-    const bl=jobBullets(mine.pos);
+    // one line per operator option: what to do here (op-specific clause or the shared task) + that op's tool
+    const taskLines=mine.ops.length?mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const instr=opClause(nm,mine.pos)||mine.pos||"";const tool=o&&o.notes?` <span class="muted">· ${esc(o.notes)}</span>`:"";return `<li><b>${esc(nm)}</b>${instr?` — ${esc(instr)}`:""}${tool}</li>`;}).join(""):jobBullets(mine.pos).map(x=>`<li>${esc(x)}</li>`).join("");
     return `<div class="tp-yourjob ${cls}"><div class="tp-yj-h">★ Your job${mine.roleName?` <span class="tag ${cls}">${esc(mine.roleName)}</span>`:""}</div>
       <div class="tp-yj-ops">${opsHtml}</div>
-      ${opDetail?`<div class="tp-yj-sub">Your operator${mine.ops.length>1?"s":""}</div><ul class="tp-yj-bul">${opDetail}</ul>`:""}
-      <div class="tp-yj-sub">Your tasks</div>
-      ${bl.length?`<ul class="tp-yj-bul">${bl.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<div class="muted small">No specific task noted for you on this strat.</div>`}</div>`;
+      <div class="tp-yj-sub">What to do — by operator option</div>
+      ${taskLines?`<ul class="tp-yj-bul">${taskLines}</ul>`:`<div class="muted small">No specific task noted for you on this strat.</div>`}</div>`;
   })():"";
   const setupHead=T.side==="attack"?"Open up":"Reinforce";
   const setupItems=T.side==="attack"?st.breach:st.reinforce;
@@ -39633,7 +39634,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 28;
+const APP_BUILD = 29;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
