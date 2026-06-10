@@ -247,6 +247,8 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .players{display:flex;flex-direction:column;gap:8px}
 .prow{display:flex;align-items:center;gap:12px;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
 .prow.me{border-color:var(--atk-line);box-shadow:inset 3px 0 0 var(--accent)}
+.me-picks{gap:8px}
+.me-pick{display:flex;align-items:center;gap:10px;justify-content:flex-start;font-weight:800;font-size:15px;padding:10px 12px}
 .prow .pname{font-weight:700;font-size:15px;min-width:90px}
 .prow .pavatar{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#5a6b7e,#3a4654);font-size:14px}
 .tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:6px;font-weight:700;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
@@ -38503,6 +38505,21 @@ function getMe(){ try{ return localStorage.getItem("r6stack.me")||""; }catch(_){
 function setMe(v){ try{ if(v) localStorage.setItem("r6stack.me",v); else localStorage.removeItem("r6stack.me"); }catch(_){} }
 function meRosterIdx(){ const me=getMe(); if(!me)return -1; return (DB&&DB.roster||[]).findIndex(p=>normTxt(p.name)===me); }
 function applyMeDefaults(){ const me=getMe(); if(!me)return; const players=statsPlayers(); const i=players.findIndex(p=>normTxt(p.label)===me||normTxt(p.key)===me); if(i>=0) UI.players.sel=i; }
+let ME_PROMPTED=false;   // session-only flag so 'Skip' doesn't re-pop the prompt this launch
+function showMeModal(){
+  const roster=(DB&&DB.roster)||[]; if(!roster.length) return;
+  let m=byId("meModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="meModal"; document.body.appendChild(m); }
+  const btns=roster.map(p=>`<button class="btn me-pick" data-me="${esc(normTxt(p.name))}"><span class="pl-tab-av">${esc((p.name||"?").trim().slice(0,2).toUpperCase())}</span>${esc(p.name)}</button>`).join("");
+  m.innerHTML=`<div class="card"><h3 style="margin:0 0 6px">Who's on this device?</h3>
+    <p class="muted small" style="line-height:1.55;margin:0 0 12px">Pick your name so the app opens on <b>your</b> stats and roster. This stays on this device — it never changes the shared data, and you can change it later in <b>Data</b>.</p>
+    <div class="col me-picks">${btns}</div>
+    <div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="meSkip">Skip for now</button></div></div>`;
+  m.classList.add("show");
+  const close=()=>m.classList.remove("show");
+  m.querySelectorAll("[data-me]").forEach(b=>b.onclick=()=>{ setMe(b.dataset.me); applyMeDefaults(); UI.players.touched=false; close(); render(); toast("You are "+b.dataset.me); });
+  byId("meSkip").onclick=()=>{ ME_PROMPTED=true; close(); };
+  m.onclick=e=>{ if(e.target===m){ ME_PROMPTED=true; close(); } };
+}
 
 /* =================================================================== *
  *  CHROME
@@ -39577,6 +39594,7 @@ function boot(){
   loadState();
   applyMeDefaults();   // default the Players tab to this device's member
   renderTabs(); renderBanner(); render();
+  if(!getMe() && !ME_PROMPTED) showMeModal();   // one-time "who are you?" until set
   loadStats(false);   // warm player stats so the suggester's operator term is ready
   byId("dataBtn").onclick=ev=>{ ev.stopPropagation(); toggleMenu(); };
   document.addEventListener("click",e=>{ const menu=byId("dataMenu"); if(menu.classList.contains("show") && !menu.contains(e.target) && e.target.id!=="dataBtn") toggleMenu(false); });
@@ -39590,7 +39608,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 24;
+const APP_BUILD = 25;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
