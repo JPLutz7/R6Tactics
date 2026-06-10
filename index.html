@@ -409,7 +409,13 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-top:4px}
 .pl-stat-s{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .pl-empty{padding:8px 2px}
-.pl-raw{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px;font-size:11px;overflow:auto;max-height:300px;white-space:pre-wrap}
+.pl-board{margin-bottom:16px}
+.pl-board+.pl-board{padding-top:6px;border-top:1px solid var(--line2)}
+.pl-board-h{font-size:13px;font-weight:800;letter-spacing:.3px;margin:4px 0 10px;color:var(--text)}
+.pl-section-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:16px 0 8px}
+.pl-extra{margin-bottom:8px}
+.pl-extra>summary{cursor:pointer;font-weight:700;font-size:12.5px;color:var(--accent);padding:6px 0}
+.pl-raw{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px;font-size:11px;overflow:auto;max-height:340px;white-space:pre-wrap}
 .tp-sidetoggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
 .tp-st-btn{flex:1;padding:9px 0;font-weight:800;font-size:13px;letter-spacing:.3px;background:var(--panel2);color:var(--muted);cursor:pointer;border:none;touch-action:manipulation}
 .tp-st-btn+.tp-st-btn{border-left:1px solid var(--line2)}
@@ -38652,6 +38658,35 @@ function keyBanner(){
   if(dead) return `<div class="pl-keybanner dead"><b>⚠️ r6data API key expired — stats are frozen.</b>${steps}</div>`;
   return `<div class="pl-keybanner soon"><b>⏳ r6data API key expires in ${days} day${days===1?"":"s"}</b> (on ${esc(STATS_DATA.keyExpires)}). Renew it before it stops syncing.${steps}</div>`;
 }
+// every board (ranked/casual/event/…) the stats payload carries, ranked first
+function allBoards(raw){
+  const out=[];
+  try{ for(const fam of (raw&&raw.platform_families_full_profiles||[]))
+    for(const b of (fam.board_ids_full_profiles||[])){ const fp=(b.full_profiles||[])[0]||{};
+      out.push({ board:b.board_id||"?", profile:fp.profile||{}, season:fp.season_statistics||null, seasonId:fp.season_id }); } }catch(_){}
+  out.sort((a,b)=>(b.board==="ranked"?1:0)-(a.board==="ranked"?1:0));
+  return out;
+}
+function statBox(lab,val,sub){ return `<div class="pl-stat"><div class="pl-stat-v">${val}</div><div class="pl-stat-l">${esc(lab)}</div>${sub?`<div class="pl-stat-s">${esc(sub)}</div>`:""}</div>`; }
+function boardCard(b){
+  const pr=b.profile||{}, w=num(pr.wins), l=num(pr.losses), k=num(pr.kills), de=num(pr.deaths);
+  const wr=(w!=null&&l!=null&&(w+l)>0)?Math.round(w/(w+l)*100)+"%":"—";
+  const kd=(k!=null&&de!=null&&de>0)?(k/de).toFixed(2):(k!=null&&de===0?String(k):"—");
+  const title=(b.board||"?").charAt(0).toUpperCase()+(b.board||"?").slice(1);
+  return `<div class="pl-board"><div class="pl-board-h">${esc(title)}${b.seasonId!=null?` <span class="muted small" style="font-weight:500">· season ${esc(b.seasonId)}</span>`:""}</div>
+    <div class="pl-grid">
+      ${statBox("MMR", pr.rank_points!=null?pr.rank_points:"—", pr.max_rank_points!=null?("peak "+pr.max_rank_points):"")}
+      ${statBox("Rank", pr.rank!=null?pr.rank:"—", pr.max_rank!=null?("max "+pr.max_rank):"")}
+      ${statBox("Win rate", wr, (w!=null&&l!=null)?(w+"W / "+l+"L"):"")}
+      ${statBox("K/D", kd, (k!=null&&de!=null)?(k+" / "+de):"")}
+      ${statBox("Wins", w!=null?w:"—","")}
+      ${statBox("Losses", l!=null?l:"—","")}
+      ${statBox("Kills", k!=null?k:"—","")}
+      ${statBox("Deaths", de!=null?de:"—","")}
+      ${statBox("Abandons", pr.abandon!=null?pr.abandon:"—","")}
+    </div></div>`;
+}
+function rawDetails(label,obj){ return `<details class="pl-extra"><summary>${esc(label)}</summary><pre class="pl-raw">${esc(JSON.stringify(obj,null,2).slice(0,40000))}</pre></details>`; }
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
@@ -38660,16 +38695,15 @@ function renderPlayersTab(root){
   const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
-  const rk=extractRanked(p);
-  if(rk){
-    const stat=(lab,val,sub)=>`<div class="pl-stat"><div class="pl-stat-v">${val}</div><div class="pl-stat-l">${lab}</div>${sub?`<div class="pl-stat-s">${sub}</div>`:""}</div>`;
-    const pct=rk.wr!=null?Math.round(rk.wr*100)+"%":"—";
-    body=`<div class="pl-grid">
-      ${stat("Ranked MMR", rk.mmr!=null?rk.mmr:"—", rk.maxMmr!=null?("peak "+rk.maxMmr):"")}
-      ${stat("Win rate", pct, (rk.wins!=null&&rk.losses!=null)?(rk.wins+"W / "+rk.losses+"L"):"")}
-      ${stat("K/D", rk.kd!=null?rk.kd.toFixed(2):"—", (rk.kills!=null&&rk.deaths!=null)?(rk.kills+" / "+rk.deaths):"")}
-      ${stat("Abandons", rk.abandon!=null?rk.abandon:"—","")}
-    </div>`;
+  const boards=(p&&p.ok&&p.raw)?allBoards(p.raw):[];
+  if(boards.length){
+    const extras=(p.more&&Object.keys(p.more).length)?
+      `<div class="pl-section-h">More from the API <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— extra data types; tell me which to surface as cards</span></div>`+
+      Object.keys(p.more).map(t=>rawDetails(t, p.more[t])).join("") : "";
+    body=`${boards.map(boardCard).join("")}
+      ${extras}
+      <div class="pl-section-h">Everything (raw)</div>
+      ${rawDetails("Full stats response", p.raw)}`;
   } else if(p&&p.error){
     body=`<div class="pl-empty"><b>Couldn't fetch ${esc(p.label||p.handle)}.</b><div class="muted small" style="margin-top:6px">${esc(p.error)}</div><div class="muted small" style="margin-top:6px">Check the handle/platform in <span class="mono">scripts/players.config.json</span>.</div></div>`;
   } else if(!updated){
@@ -38683,7 +38717,7 @@ function renderPlayersTab(root){
   } else {
     body=`<div class="pl-empty"><b>No ranked data for ${esc(p.label||p.handle)} yet.</b><div class="muted small" style="margin-top:6px">The sync ran but returned no ranked fields. Raw response below.</div>${p&&p.raw?`<details style="margin-top:8px"><summary class="lnk">show raw</summary><pre class="pl-raw">${esc(JSON.stringify(p.raw,null,2).slice(0,4000))}</pre></details>`:""}</div>`;
   }
-  root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live ranked stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
+  root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
     ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
     <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p?esc("@"+p.handle+" · "+(p.platform||"uplay")):""}</span></h3><span class="muted small">updated ${agoText(updated)}</span></div>
@@ -39452,7 +39486,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 15;
+const APP_BUILD = 16;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

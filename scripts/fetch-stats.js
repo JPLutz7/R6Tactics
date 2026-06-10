@@ -32,11 +32,14 @@ async function fetchType(handle, platform, type) {
   return { status: r.status, ok: r.ok, json, text: json ? undefined : text.slice(0, 400) };
 }
 
+// the extra data types to pull in addition to the core ranked/casual boards.
+const EXTRA_TYPES = ["fullStats", "operatorStats", "seasonalStats"];
+
 async function fetchPlayer(p) {
   const platform = p.platform || "uplay";
   const out = { key: p.key, label: p.label, handle: p.handle, platform, ok: false };
   try {
-    // try the documented player endpoint first; fall back to fullStats if it lacks ranked data
+    // core boards (ranked/casual/…) via the documented player endpoint
     let res = await fetchType(p.handle, platform, "stats");
     let used = "stats";
     if (!res.ok || !looksRanked(res.json)) {
@@ -47,6 +50,14 @@ async function fetchPlayer(p) {
     out.status = res.status;
     if (res.ok && res.json) { out.ok = true; out.raw = res.json; }
     else { out.error = res.json && (res.json.error || res.json.message) || res.text || ("HTTP " + res.status); }
+
+    // best-effort: pull every other data type too, so the app can surface it all
+    const more = {};
+    for (const t of EXTRA_TYPES) {
+      if (t === used) continue;                      // already have it as raw
+      try { const r = await fetchType(p.handle, platform, t); if (r.ok && r.json) more[t] = r.json; } catch (_) {}
+    }
+    if (Object.keys(more).length) out.more = more;
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
 }
