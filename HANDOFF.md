@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 36**, SEED **data v50** (see §13 for the session log).
+- **Current state:** PWA **build 37**, SEED **data v51** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -458,6 +458,18 @@ Buck/Sledge/Gridlock pool, and on Bank the **same op-set appeared in two flex sl
   (this was rebased onto their in-app **v49** publish → **v50**). Verified: vm.Script syntax, data-
   integrity + flex-consistency pass, jsdom boot + DOM render, puppeteer screenshot (no page errors).
 - Transform run from `/tmp/vary-tactics.js` (+ `/tmp/fix-dups.js` for the final core de-dup).
+
+### Defense role-pool coverage (data v51) — prereq for a future defense-flex pass
+Audit before touching defense: `flex-def` exists and is in the roster, but **0/196 defense strats
+use a flex slot**, and the `flex-def` ops pool (Bandit/Jäger/Mute/Smoke/Maestro/Ela) is **fully
+redundant** (each is already in a concrete role). The real gap was **8 defenders in no role pool at
+all** — now added: **Anchor** ← Castle, Clash, Warden, Sentry, Azami; **Anti-Breach/Support** ←
+Thunderbird; **Trapper** ← Fenrir; **Roamer** ← Skopós (per João's call; Azami "mainly anchor but
+flexible" so also in Flex). Non-flex roles now cover **37/37** defenders (pools render win-rate-sorted,
+so append order is cosmetic). Note `operator.role` is coarse (18 anchor/9 support/9 roamer/1 intel —
+trappers + most intel folded in), so the **role `.ops` pools** are the real per-sub-role classification.
+A defense-flex variety pass (rotate a `flex-def` slot's 2nd job: 2nd anchor/roamer/trapper/intel/anti-
+breach, since the default double-up is already "2 anchors") is the natural follow-up — **not yet done**.
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
