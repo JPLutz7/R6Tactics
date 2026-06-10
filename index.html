@@ -280,6 +280,10 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .rdrag{touch-action:none;user-select:none}
 .drag-ghost{position:fixed;z-index:90;pointer-events:none;transform:translate(-50%,-135%);background:var(--text);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;border-radius:8px;box-shadow:0 8px 24px rgba(20,30,45,.4);white-space:nowrap}
 body.rdragging{user-select:none;-webkit-user-select:none}
+.pwa-update{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:95;display:flex;align-items:center;gap:12px;background:var(--text);color:#fff;padding:9px 9px 9px 16px;border-radius:13px;box-shadow:0 12px 44px rgba(20,30,45,.45);font-size:13px;font-weight:600;max-width:calc(100vw - 24px);animation:pwaUpIn .25s ease}
+.pwa-update button{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap}
+.pwa-update button:active{transform:scale(.96)}
+@keyframes pwaUpIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
 .prow.drop-ok{outline:2px dashed var(--def);outline-offset:2px;background:var(--def-bg)}
 .rdrag{cursor:grab;font-size:15px;line-height:1;color:var(--muted2);padding:2px 5px;border-radius:6px;border:1px solid var(--line2);user-select:none}
 .rdrag:hover{color:var(--text);background:var(--panel3)}
@@ -37009,11 +37013,41 @@ function boot(){
 boot();
 </script>
 <script>
-/* PWA service worker — only on http(s), skipped on file:// and unsupported browsers */
+/* PWA: service worker + in-app update prompt.
+   APP_BUILD is the build this copy is running; version.json holds the latest
+   deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
+   newer build is live, a banner offers Update → reload (localStorage data kept). */
+const APP_BUILD = 1;
+function r6ShowUpdate(){
+  if (document.getElementById("pwaUpdate")) return;
+  const el = document.createElement("div");
+  el.id = "pwaUpdate"; el.className = "pwa-update";
+  el.innerHTML = '<span>🔄 New version available</span><button type="button" id="pwaUpdBtn">Update</button>';
+  el.querySelector("#pwaUpdBtn").onclick = async () => {
+    try { const reg = await navigator.serviceWorker.getRegistration(); if (reg && reg.waiting) reg.waiting.postMessage("skipWaiting"); } catch(_){}
+    location.reload();
+  };
+  document.body.appendChild(el);
+}
+async function r6CheckUpdate(){
+  try {
+    const r = await fetch("version.json?_=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j && typeof j.build === "number" && j.build > APP_BUILD) r6ShowUpdate();
+  } catch(_){}
+}
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW register failed:", err));
+    navigator.serviceWorker.register("sw.js")
+      .then(reg => { try { reg.update(); } catch(_){} })
+      .catch(err => console.warn("SW register failed:", err));
   });
+}
+if (location.protocol.startsWith("http")) {
+  r6CheckUpdate();
+  setInterval(r6CheckUpdate, 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) r6CheckUpdate(); });
 }
 </script>
 </body>

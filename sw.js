@@ -33,6 +33,7 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // peek videos etc. — let the network handle it
+  if (url.pathname.endsWith("version.json")) return; // update marker: always hit the network, never cache
 
   const isDoc = req.mode === "navigate" || req.destination === "document" ||
                 url.pathname.endsWith("/") || url.pathname.endsWith("index.html");
