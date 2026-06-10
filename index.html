@@ -389,6 +389,9 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .tp-group{margin-bottom:14px}
 .tp-group-h{margin:4px 0 8px}
 .tp-site-h{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700;margin:9px 0 5px}
+.tp-site-wr{margin-left:7px;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;padding:1px 7px;border-radius:999px;border:1px solid var(--line2);text-transform:none;letter-spacing:0}
+.tp-site-wr.logged{color:#1c7c3a;background:rgba(40,170,80,.12);border-color:rgba(40,170,80,.4)}
+.tp-site-wr.prior{color:var(--muted);background:var(--panel3);border-style:dashed}
 .tp-strat{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;padding:8px 11px;margin-bottom:6px;cursor:pointer}
 .tp-strat:hover{background:var(--panel3);border-color:var(--def-line)}
 .tp-group.atk .tp-strat:hover{border-color:var(--atk-line)}
@@ -38629,11 +38632,14 @@ function renderTacticsPanel(){
   if(T&&T.open){ renderTacticDetail(host,m,T); return; }
   if(UI.maps.suggest&&UI.maps.suggest.open){ renderSuggester(host,m); return; }
   const sideBlock=(side,label)=>{
-    const items=m.bombsites.map(b=>{
+    const sites=m.bombsites.slice().sort((a,b)=>siteRecord(m,side,b.id).rate-siteRecord(m,side,a.id).rate); // best site win rate first
+    const items=sites.map(b=>{
       const strats=(((m.tactics||{})[side]||{})[b.id]||{}).strats||[];
       if(!strats.length) return "";
+      const srec=siteRecord(m,side,b.id);
+      const sBadge=`<span class="tp-site-wr ${srec.n?"logged":"prior"}" title="${srec.n?"site win rate from "+srec.w+"–"+srec.l+" logged rounds across these tactics":"estimate from operator data (no rounds logged here yet)"}">${Math.round(srec.rate*100)}%</span>`;
       const ordered=strats.map((st,si)=>({st,si})).sort((a,c)=>stratSuccessRate(c.st)-stratSuccessRate(a.st)); // best success rate first
-      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
+      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}${sBadge}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
     }).join("");
     return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span>${side==="attack"?`<div class="grow"></div><button class="btn sm" id="tpSuggest" title="Suggest the best attack vs the defenders you expect (prep)">🎯 Suggest</button>`:""}</div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
   };
@@ -38689,6 +38695,15 @@ function stratProxy(st){
 const RATE_PRIOR_K=6;
 function stratSuccessRate(st){ const w=st.w|0,l=st.l|0,n=w+l; return (w+RATE_PRIOR_K*stratProxy(st))/(n+RATE_PRIOR_K); }
 function stratRecord(st){ const w=st.w|0,l=st.l|0; return {w,l,n:w+l,rate:stratSuccessRate(st),prior:stratProxy(st)}; }
+// A site's win rate (for one side) = its tactics' logged rounds pooled together,
+// shrunk toward the averaged operator-data prior. No public per-site dataset
+// exists, so this is your stack's own measured rate; used to order the sites.
+function siteRecord(m,side,siteId){
+  const strats=(((m.tactics||{})[side]||{})[siteId]||{}).strats||[];
+  let w=0,l=0,pSum=0,pN=0; strats.forEach(st=>{ w+=st.w|0; l+=st.l|0; pSum+=stratProxy(st); pN++; });
+  const prior=pN?pSum/pN:0.5;
+  return {w,l,n:w+l,rate:(w+RATE_PRIOR_K*prior)/(w+l+RATE_PRIOR_K),prior,strats:strats.length};
+}
 
 // Suggester ranking, in strict priority order: COUNTERS first, then SUCCESS RATE,
 // then FAVOURITE ops. Each term is in [0,1] (concrete is min-max normalized across
@@ -39329,7 +39344,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 11;
+const APP_BUILD = 12;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
