@@ -1,5 +1,92 @@
 {
-  "updated": null,
+  "updated": "2026-06-10T17:00:57.683Z",
   "source": "r6data.com",
-  "players": []
+  "players": [
+    {
+      "key": "joao",
+      "label": "Joao",
+      "handle": "JPLutz7",
+      "platform": "uplay",
+      "ok": true,
+      "fetchType": "stats",
+      "status": 200,
+      "raw": {
+        "platform_families_full_profiles": [
+          {
+            "profile_id": "016e209a-c742-4c01-a9f5-df3a678b9fad",
+            "board_ids_full_profiles": [
+              {
+                "board_id": "ranked",
+                "full_profiles": [
+                  {
+                    "profile": {
+                      "rank": 1,
+                      "wins": 2,
+                      "kills": 14,
+                      "deaths": 26,
+                      "losses": 4,
+                      "abandon": 0,
+                      "max_rank": 1,
+                      "rank_points": 1027,
+                      "update_time": "0001-01-01T00:00:00+00:00",
+                      "max_rank_points": 1027
+                    },
+                    "season_id": 42,
+                    "season_statistics": {
+                      "kills": 14,
+                      "deaths": 26,
+                      "match_outcomes": {
+                        "wins": 2,
+                        "losses": 4,
+                        "abandons": 0
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "board_id": "casual",
+                "full_profiles": [
+                  {
+                    "profile": {
+                      "rank": 0,
+                      "wins": 1,
+                      "kills": 2,
+                      "deaths": 3,
+                      "losses": 0,
+                      "abandon": 0,
+                      "max_rank": 0,
+                      "rank_points": 0,
+                      "update_time": "0001-01-01T00:00:00+00:00",
+                      "max_rank_points": 0
+                    },
+                    "season_id": 42,
+                    "season_statistics": {
+                      "kills": 2,
+                      "deaths": 3,
+                      "match_outcomes": {
+                        "wins": 1,
+                        "losses": 0,
+                        "abandons": 0
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "leme",
+      "label": "Leme",
+      "handle": "Mtaro",
+      "platform": "uplay",
+      "ok": false,
+      "fetchType": "stats",
+      "status": 500,
+      "error": "Server error during API calls"
+    }
+  ]
 }
