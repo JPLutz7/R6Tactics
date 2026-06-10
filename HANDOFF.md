@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 36**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 37**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
