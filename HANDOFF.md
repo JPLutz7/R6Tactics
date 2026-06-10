@@ -49,7 +49,7 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 
 Top-right **Data** menu: Export JSON · Import JSON · **Copy publish JSON** · Reset.
 
-## 4. Data model (embedded `SEED_DATA`, currently **version 39**)
+## 4. Data model (embedded `SEED_DATA`, currently **version 40**)
 Lives in `index.html` between `/* ====== BEGIN EMBEDDED DATA … */` and
 `/* ====== END EMBEDDED DATA ====== */`. It's pretty-printed JSON.
 ```
@@ -306,10 +306,7 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
   (unused by this UI).
 - **Coverage:** **ALL 25 maps are seeded — 490 strats** (2 defense + 3 attack per site; 3
-  sites on Presidential Plane & Stadium). Clubhouse is hand-written/bespoke; the other 24 use
-  the meta template (correct rooms/floors, standard op pools) — a solid editable baseline.
-  Good follow-ups: tighten a few off-reading site names (e.g. Consulate "Piano/Expo", Kafe
-  "Cocktail Entrance/Wood Stairs"), and deepen the template maps toward bespoke per VOD review.
+  sites on Presidential Plane & Stadium). ALL 25 maps are now hand-written/bespoke (v38–v40): every strat references its site's real geography (walls, stairs, windows, hatches, balconies) with site-tailored op picks. Refine further from VOD review.
 - **Sourcing:** **r6guides.com is dead** (now a parked "FIFA World Cup" page — verified; no
   Wayback guide snapshots, and archive.org is egress-blocked here). r6strat = login-gated
   private builder; Fandom = 403. So there is **no reachable structured strat DB** — strats are
