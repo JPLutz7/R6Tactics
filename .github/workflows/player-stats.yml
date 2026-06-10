@@ -40,3 +40,21 @@ jobs:
             git commit -m "Refresh player ranked stats [skip ci]"
             git push
           fi
+      # Fail the run (→ GitHub emails you) if the API key was rejected or has
+      # lapsed. Runs AFTER the commit so the app still gets the banner state.
+      - name: Alarm if API key expired/invalid
+        run: |
+          node -e '
+            const d = require("./players.json");
+            const exp = d.keyExpires ? Date.parse(d.keyExpires + "T23:59:59Z") : null;
+            const days = exp ? Math.ceil((exp - Date.now()) / 86400000) : null;
+            if (d.keyStatus === "invalid" || d.keyStatus === "expired") {
+              console.error("::error title=R6DATA_API_KEY expired::The r6data API key was rejected (keyStatus=" + d.keyStatus + "). Stats are frozen. Renew the key at r6data and update the R6DATA_API_KEY repo secret + api_key_expires in scripts/players.config.json.");
+              process.exit(1);
+            }
+            if (days != null && days <= 14) {
+              console.log("::warning title=R6DATA_API_KEY expiring soon::Key expires in " + days + " day(s) (on " + d.keyExpires + "). Rotate it soon.");
+            } else {
+              console.log("API key healthy" + (days != null ? " (" + days + " days left)" : "") + ".");
+            }
+          '
