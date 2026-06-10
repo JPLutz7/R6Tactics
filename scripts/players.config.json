@@ -1,11 +1,14 @@
 {
-  "_comment": "Stack members wired to the r6data API. Add an entry per player; the 12h GitHub Action (player-stats.yml) fetches each and writes players.json. platform: uplay | psn | xbl | steam.",
+  "_comment": "Stack members wired to the r6data API. Add an entry per player; the daily GitHub Action (player-stats.yml) fetches each and writes players.json. platform: uplay | psn | xbl | steam.",
+  "_handle_note": "Leave handle empty (\"\") to reserve a slot without linking — it shows a 'not linked yet' card and costs no API calls. Fill in the exact Ubisoft name (with any trailing dot) to activate it.",
   "_api_key_note": "The R6DATA_API_KEY secret expires ~90 days after issue. Update api_key_expires whenever you rotate the key so the app/Action can warn before it dies.",
   "api_key_expires": "2026-09-08",
   "platform_families": "pc",
   "players": [
     { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
     { "key": "leme", "label": "Leme", "handle": "Mtaro.", "platform": "uplay" },
-    { "key": "max", "label": "Max", "handle": "lnteligent.", "platform": "uplay" }
+    { "key": "max", "label": "Max", "handle": "lnteligent.", "platform": "uplay" },
+    { "key": "lora", "label": "Lora", "handle": "", "platform": "uplay" },
+    { "key": "unknown", "label": "unknown", "handle": "", "platform": "uplay" }
   ]
 }

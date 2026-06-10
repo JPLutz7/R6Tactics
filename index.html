@@ -38627,7 +38627,7 @@ function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.
  *  GitHub Action that commits players.json — the app just reads it)
  * =================================================================== */
 let STATS_DATA=null, STATS_FETCHED=0, STATS_LOADING=false;
-const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPLutz7",platform:"uplay"},{key:"leme",label:"Leme",handle:"Mtaro",platform:"uplay"}];
+const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPLutz7"},{key:"leme",label:"Leme",handle:"Mtaro."},{key:"max",label:"Max",handle:"lnteligent."},{key:"lora",label:"Lora",handle:"",unlinked:true},{key:"unknown",label:"unknown",handle:"",unlinked:true}];
 function statsPlayers(){ return (STATS_DATA&&STATS_DATA.players&&STATS_DATA.players.length)?STATS_DATA.players:STATS_FALLBACK; }
 async function loadStats(force){
   if(STATS_LOADING) return; if(!force && STATS_DATA && Date.now()-STATS_FETCHED<5*60*1000) return;
@@ -38752,7 +38752,14 @@ function renderPlayersTab(root){
   const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
-  if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
+  if(p&&(p.unlinked||!p.handle)){
+    body=`<div class="pl-empty"><b>${esc(p.label||"This player")} isn't linked yet.</b>
+      <div class="muted small" style="margin-top:8px;line-height:1.6">Reserve slot — add their account to start tracking stats:</div>
+      <ol class="muted small" style="line-height:1.7;margin:8px 0 0;padding-left:18px">
+        <li>Edit <span class="mono">scripts/players.config.json</span> → set this player's <span class="mono">handle</span> to their exact Ubisoft name (include any trailing <span class="mono">.</span>), and <span class="mono">platform</span> (uplay/psn/xbl/steam).</li>
+        <li>Run <b>Actions → Refresh player stats → Run workflow</b> (or wait for the daily sync).</li>
+      </ol></div>`;
+  } else if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
     if(UI.players.season!=="all" && !seasonsFor(p).map(String).includes(String(UI.players.season))) UI.players.season="all";
     const plToggle=PLAYLISTS.map(pl=>`<button class="pl-seg ${pl.id===UI.players.playlist?"on":""}" data-plpl="${pl.id}">${esc(pl.label)}</button>`).join("");
     const seasonOpts=[["all","Last 4 seasons"],...seasonsFor(p).map(s=>[String(s),seasonLabel(s)])];
@@ -38779,9 +38786,9 @@ function renderPlayersTab(root){
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
     ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
-    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p?esc("@"+p.handle+" · "+(p.platform||"uplay")):""}</span></h3><span class="muted small">updated ${agoText(updated)}</span></div>
+    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
       <div class="panel-b">${body}</div></div>
-    <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs every 12h via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add players.</div>`;
+    <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs daily via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add or link players.</div>`;
   root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; UI.players.allOps=false; renderPlayersTab(root); });
   root.querySelectorAll("[data-plpl]").forEach(b=>b.onclick=()=>{ UI.players.playlist=b.dataset.plpl; UI.players.allOps=false; renderPlayersTab(root); });
   root.querySelectorAll("[data-plseason]").forEach(b=>b.onclick=()=>{ UI.players.season=b.dataset.plseason; UI.players.allOps=false; renderPlayersTab(root); });
@@ -39548,7 +39555,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 21;
+const APP_BUILD = 22;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
