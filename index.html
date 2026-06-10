@@ -306,8 +306,15 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 /* roster: favourite operators per player */
 .pfavs{flex-basis:100%;width:100%;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line2)}
 .pfav-h{margin-bottom:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;font-size:10.5px}
-.pfav{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.pfav{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;padding:5px 8px;border-radius:8px}
+.pfav.atk{background:var(--atk-bg);border:1px solid var(--atk-line)}
+.pfav.def{background:var(--def-bg);border:1px solid var(--def-line)}
+.favlabel{flex:none;width:92px;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 0;margin-top:2px}
+.favlabel.atk{color:#a83d12}.favlabel.def{color:#1c5fa6}
 .favs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:26px}
+.roleadd{font-size:12px;font-weight:700;border-radius:7px;border:1px dashed var(--line3);background:var(--panel3);color:var(--muted);padding:4px 6px;cursor:pointer;max-width:150px}
+.roleadd.atk{border-color:var(--atk-line);color:#a83d12}
+.roleadd.def{border-color:var(--def-line);color:#1c5fa6}
 .favs>.empty{font-size:11px;border:1px dashed var(--line2);border-radius:7px;padding:3px 8px}
 .favchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:7px;border:1px solid var(--line3);background:var(--panel3)}
 .favchip.atk{border-color:var(--atk-line);background:var(--atk-bg);color:#a83d12}
@@ -38619,7 +38626,19 @@ function predictDefense(m,siteId,picked){
 }
 // fill the enemy team out to 5 from a predicted setup's pools (keeps the known picks)
 function predictedTeam(st,picked){ const t=(picked||[]).slice(); (st.slots||[]).forEach(s=>{ if(t.length>=5)return; const p=(s.ops||[]).find(o=>!t.includes(o)); if(p)t.push(p); }); return t.slice(0,5); }
-function bestCounter(m,siteId,team){ const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null; return atk.map((st,si)=>({st,si,score:scoreAttackStrat(st,team)+0.15*favAffinity(st,"attack")})).sort((a,b)=>b.score-a.score)[0]; }
+// favourite operators (read straight from the roster) weigh FAV_WEIGHT of the
+// ranking; concrete matchup data is the other (1-FAV_WEIGHT). Concrete scores are
+// min-max normalized across the site's strats so the blend is a true percentage.
+function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+function bestCounter(m,siteId,team){
+  const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null;
+  const W=favWeight();
+  const cand=atk.map((st,si)=>({st,si,concrete:scoreAttackStrat(st,team),fav:favAffinity(st,"attack")}));
+  const cs=cand.map(c=>c.concrete); const lo=Math.min(...cs), hi=Math.max(...cs);
+  const norm=v=>hi>lo?(v-lo)/(hi-lo):0.5;
+  cand.forEach(c=>{ c.score=(1-W)*norm(c.concrete)+W*c.fav; });
+  return cand.sort((a,b)=>b.score-a.score)[0];
+}
 function counterReason(team,approach){ const cfg=DB.suggester||{}; const arch=compArchetypes(team); const top=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0]; if(!top)return""; return `${(cfg.archetypeAdvice||{})[top]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[approach]||approach}.`; }
 function confLabel(known,gap){ if(known>=4&&gap>0.3)return"High"; if(known>=3&&gap>0.12)return"Medium"; return"Low"; }
 function renderSuggester(host,m){
@@ -38973,7 +38992,7 @@ function renderRoster(root){
   const edit=UI.roster.edit;
   root.innerHTML=`<div class="${edit?"roster-edit":""}">
     <div class="toolbar">
-      <div class="section-title" style="margin:0">${edit?"Drag a role's ⠿ handle onto a player's ATK or DEF list · drag chips to reorder · left→right = priority":"Players & the roles they prioritise — attack & defense (left → right)"}</div>
+      <div class="section-title" style="margin:0">${edit?"Add roles via the ＋ role dropdown (or drag the ⠿ handle) · drag chips to reorder · left→right = priority":"Players & the roles they prioritise — attack & defense (left → right)"}</div>
       <div class="grow"></div>
       ${edit?`<button class="btn sm" id="addPlayer">＋ player</button>`:""}
       <button class="btn ${edit?"on":""}" id="rosterEdit">✎ ${edit?"Done":"Edit"}</button>
@@ -38993,6 +39012,12 @@ function renderRoster(root){
 }
 function renderPlayers(){
   const wrap=byId("players"); const edit=UI.roster.edit;
+  const roleSelect=(p,i,side)=>{
+    const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
+    const avail=DB.roles.filter(r=>r.side===side && !(p[key]||[]).includes(r.id));
+    if(!avail.length) return "";
+    return `<select class="roleadd ${cls}" data-roleadd="${i}|${side}"><option value="">＋ role…</option>${avail.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join("")}</select>`;
+  };
   const sideRow=(p,i,side)=>{
     const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
     const chips=(p[key]||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
@@ -39000,7 +39025,7 @@ function renderPlayers(){
     }).join("");
     return `<div class="pside">
       <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
-      <div class="proles" data-drop="${i}|${side}">${chips||`<span class="empty muted">${edit?"drag "+(side==="attack"?"attack":"defense")+" roles here":"—"}</span>`}</div>
+      <div class="proles" data-drop="${i}|${side}">${chips||(edit?"":`<span class="empty muted">—</span>`)}${edit?roleSelect(p,i,side):""}</div>
     </div>`;
   };
   const favRow=(p,i,side)=>{
@@ -39009,9 +39034,9 @@ function renderPlayers(){
     const chips=ids.map((oid,k)=>{ const o=opById(oid); if(!o)return"";
       return `<span class="favchip ${cls}" ${edit?"":`data-op="${esc(oid)}" role="button" tabindex="0" title="Click for details"`}>${esc(o.name)}${edit?` <span class="x" data-favrm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
     }).join("");
-    return `<div class="pfav">
-      <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
-      <div class="favs">${chips||(edit?"":`<span class="empty muted">—</span>`)}${edit?`<button class="favadd ${cls}" data-favadd="${i}|${side}">＋ op</button>`:""}</div>
+    return `<div class="pfav ${cls}">
+      <span class="favlabel ${cls}">${side==="attack"?"⚔ Attackers":"🛡 Defenders"}</span>
+      <div class="favs">${chips||(edit?"":`<span class="empty muted">none yet</span>`)}${edit?`<button class="favadd ${cls}" data-favadd="${i}|${side}">＋ op</button>`:""}</div>
     </div>`;
   };
   wrap.innerHTML=DB.roster.map((p,i)=>{
@@ -39030,6 +39055,7 @@ function renderPlayers(){
 }
 function bindPlayers(){
   const wrap=byId("players"); if(!UI.roster.edit) return;
+  wrap.querySelectorAll("[data-roleadd]").forEach(sel=>sel.onchange=()=>{ const [i,side]=sel.dataset.roleadd.split("|"); const rid=sel.value; if(!rid)return; const key=side==="attack"?"attackRoles":"defenseRoles"; if(!DB.roster[+i][key].includes(rid)){ DB.roster[+i][key].push(rid); markDirty(); renderPlayers(); renderRoleGrid(); } });
   wrap.querySelectorAll("[data-favadd]").forEach(b=>b.onclick=()=>{ const [i,side]=b.dataset.favadd.split("|"); showFavPicker(+i,side); });
   wrap.querySelectorAll("[data-favrm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.favrm.split("|"); const key=side==="attack"?"favAtk":"favDef"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); });
   wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
@@ -39228,7 +39254,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 7;
+const APP_BUILD = 8;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
