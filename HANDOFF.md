@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 34**, SEED **data v48** (see §13 for the session log).
+- **Current state:** PWA **build 36**, SEED **data v50** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -435,6 +435,30 @@ Big additions since §12. Read this to understand the newest systems.
 - **Sites order like the game** (by bombsite `site` field 1→4); the old (wrong) per-site win-rate
   badges were removed.
 
+### Attack-tactic variety + flex second-role labels (build 36, data v50)
+The flex slot was the repetitive weak point (always a vertical/soft-breach "support", narrow
+Buck/Sledge/Gridlock pool, and on Bank the **same op-set appeared in two flex slots**). Reworked
+**all 294 attack strats** so the flex's job varies:
+- **Every attack strat now has the canonical 5 slots** `[hardbreach, entry, support, intel, flex]`
+  (the old "double-intel" hard-breach strats had their 2nd `intel-atk` converted to `flex-atk`).
+- **The flex carries a `sub`** ∈ `{entry, support, intel, breach}` = its **second job** ("2 entries / 2
+  supports / 2 intel / 2 breachers"). Assigned by a per-site rotation: **3 distinct jobs within every
+  site**, the dropped 4th **rotates across sites** for map-level variety (global spread ~73–74 each).
+  Vertical strats bias to `breach` and **lead with a floor-opener (Buck/Sledge)**, not a hard breacher.
+- **Flex ops** come from competitive per-job pools, rotated so they vary across strats/maps and the
+  flex lead ≠ the primary same-role lead. **Core slots** keep their meta lead + geography `pos`; only
+  **identical option-sets within a site were de-duplicated** (0 remain) so the 3 strats read differently.
+- **`st.desc` regenerated** for every attack strat (it embeds `Role (op1/op2) — pos`; flex bullet reads
+  `Flex — 2nd <Job> (...)`). Flex desc/label consistency: 294/294.
+- **UI:** `assignTactic` now labels a flex pick **`Flex — 2nd <Job>`** (`flexSecondJob()` reads `sl.sub`,
+  falls back to op-role inference where Buck/Sledge/hard-breach → "breach"). Relabels the chip in the
+  **Operators**, **Gadgets & jobs**, and **★ Your job** sections at once.
+- Op pools are still **convention picks, not a sourced meta** (per §13 — op `role` is too coarse and
+  win-rate ≠ pick-rate). Defense tactics untouched; the owner's round records + roster are preserved
+  (this was rebased onto their in-app **v49** publish → **v50**). Verified: vm.Script syntax, data-
+  integrity + flex-consistency pass, jsdom boot + DOM render, puppeteer screenshot (no page errors).
+- Transform run from `/tmp/vary-tactics.js` (+ `/tmp/fix-dups.js` for the final core de-dup).
+
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
-the workflow — **committed**. `tailor.js` / `igl.js` transforms were run from `/tmp` (logic captured above).
+the workflow — **committed**. `tailor.js` / `igl.js` / `vary-tactics.js` transforms were run from `/tmp` (logic captured above).
