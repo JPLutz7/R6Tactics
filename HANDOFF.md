@@ -28,6 +28,9 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 ## 2. Files
 ```
 index.html                  # the entire app: HTML + CSS + JS inlined (~7,300 lines). Light theme.
+manifest.json                # PWA manifest (installable app, standalone, theme #e0541f)
+sw.js                        # service worker — offline shell + runtime image cache (bump CACHE to refresh)
+assets/icons/                # PWA/app icons (icon-192/512, maskable-512, apple icon-180, favicon-64) — orange "R6"
 assets/covers/<id>.jpg       # 25 official Ubisoft map covers (gallery tiles)
 assets/floors/<id>/<n>.webp  # floor-plan images, one per floor index n
 assets/floors/CREDITS.txt    # attribution
@@ -35,6 +38,11 @@ README.md                    # GitHub Pages setup + "publish an update" workflow
 HANDOFF.md                   # this file
 ```
 There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
+**Installable PWA:** manifest + service worker make it "Add to Home Screen" / "Install" on
+mobile **and** desktop — own window, app icon, works **offline** (shell + data precached;
+HTML is network-first so publishes still land; same-origin map images cache as you view them;
+cross-origin peek videos pass through). SW only runs on http(s), not `file://`. All paths are
+relative so it works under the `/R6Tactics/` Pages subpath.
 **Mobile-ready (viewing):** phone media query (≤720px) + touch pan / pinch-zoom on the map
 viewer. **Verified on emulated iPhone (390×844 + landscape) and iPad (768×1024 portrait,
 1080/1180 landscape, 1024×1366 Pro)** — no overflow, pinch + zoomed-pan exact, 0 errors.

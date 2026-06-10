@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>R6 Stack // Callouts</title>
 <meta name="description" content="Client-side Rainbow Six callouts reference + roster for a 5-stack. Static reference data only — no live game/opponent integration." />
+<!-- PWA: installable on mobile + desktop, works offline -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#e0541f" />
+<link rel="icon" type="image/png" href="assets/icons/favicon-64.png" />
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="R6 Stack" />
 <style>
 /* ============================================================= *
  * R6 STACK — Callouts & Roster (single self-contained file)
@@ -36998,6 +37007,14 @@ function boot(){
   byId("imgInput").onchange=onImagePicked;
 }
 boot();
+</script>
+<script>
+/* PWA service worker — only on http(s), skipped on file:// and unsupported browsers */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW register failed:", err));
+  });
+}
 </script>
 </body>
 </html>
