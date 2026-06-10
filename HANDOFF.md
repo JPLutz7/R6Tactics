@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 42**, SEED **data v56** (see §13 for the session log).
+- **Current state:** PWA **build 43**, SEED **data v57** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -528,9 +528,13 @@ jobs → `"anchor"`, `roamer-def` → `"roamer"`, `flex-def` → `"flex"`; the o
 tactics' base "Anchor" slot** and the op-modal's roam-flag still resolve through it. `renderRoleGrid`
 rewritten (new `.rolesub` CSS); op-modal now shows `Defense · <Job>` + a `Roamer` flag (no Anchor tag,
 since anchor is the default). `normalizeDB` preserves the new group values.
-- **Still says "Anchor" in two spots (owner may want migrated):** the **defense tactic base slot**
-  labelled "Anchor" (the generic site-holder — 196 strats) and **João/Lora's roster** still list the old
-  `anchor-def` pick. Left as-is so tactics + their assignments keep working; surfaced to the owner.
+- **Anchor fully removed from data (v57):** the generic lead "anchor" tactic slot was **relabelled to
+  Support** (Doc/Rook/Thunderbird/Smoke/Mira — the lead site anchor; op-agnostic hold pos regenerated),
+  the **"2nd Anchor" flex double folded into the 6 remaining doubles** (Support/Roamer/Trapper/Intel/
+  Anti-Breach/Utility — even 33/33/33/33/32/32 spread, `siteSubs` fixed for 6 subs), the **`anchor-def`
+  role deleted**, and **anchor-def dropped from João + Lora** (João → [trapper,flex]; **Lora → [] —
+  open, pick her a new defense role**). `grep anchor-def` over the SEED = **0**. ("anchor" survives only
+  as the grid **subsection header** and as a verb in pos/strat-names, e.g. "anchor hold".)
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
