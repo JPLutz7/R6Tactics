@@ -23,7 +23,7 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 38**, SEED **data v52** (see §13 for the session log).
+- **Current state:** PWA **build 39**, SEED **data v53** (see §13 for the session log).
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -487,9 +487,17 @@ axes** (owner's call):
   Roster role-grid renders three sections (Attack roles · Defense — Positions · Defense — Jobs); the
   op-modal shows position tag(s) + job. Added roles `support-def`, `utility-def`; reframed all defense
   role descs. Existing roster/tactics ids untouched (non-breaking). Transform: `/tmp/def-roles.js`.
-- **Stage 2 (next, not done):** re-slot the **196 defense strats** to the new position+job slots and add
-  the same flex-2nd-job **variety + labels** as attack — incl. position doubles the owner asked for
-  ("2 roamers", 2 anchors, etc.), not just job doubles.
+### Defense tactic variety + flex second-role labels (data v53) — Stage 2 of 2 (DONE)
+Mirrors the attack pass for the **196 defense strats** (2 per site). Each strat's redundant 2nd-anchor
+slot became a **`flex-def`** slot whose **second role varies** across the site's two strats and across
+maps: **2nd Anchor / 2nd Roamer / 2nd Trapper / 2nd Intel / 2nd Anti-Breach / 2nd Utility / 2nd Support**
+(`sl.sub`). This produces the doubles the owner asked for — 2 anchors, **2 roamers**, **2 trappers**,
+2 intel, 2 anti-breach — competitively (flex ops from the matching role pool, lead ≠ the base same-role
+lead; base slots keep their geography `pos`, identical op-sets de-duped within a site). Spread:
+anchor 42 / trapper 28 / roamer 28 / intel 28 / antibreach 28 / utility 28 / support 14; 0 sites with a
+repeated double; flex desc↔label 196/196. **UI:** `FLEX_SUB_LABEL` gained the defense subs and
+`assignTactic` labels `flex-def` too → chip reads e.g. **"Flex — 2nd Roamer"**. Base = anchor + anti-
+breach + recon(intel/trapper) + roamer + the varying flex. Transform: `/tmp/vary-def.js`.
 
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
