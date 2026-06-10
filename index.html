@@ -38657,16 +38657,30 @@ function keyBanner(){
 const PLAYLISTS=[{id:"ranked",label:"Ranked",gm:"pvp_ranked"},{id:"unranked",label:"Unranked",gm:"pvp_standard"},{id:"quickmatch",label:"Quick Match",gm:"pvp_casual"}];
 function curPlaylist(){ return PLAYLISTS.find(x=>x.id===UI.players.playlist)||PLAYLISTS[0]; }
 function statBox(lab,val,sub){ return `<div class="pl-stat"><div class="pl-stat-v">${val}</div><div class="pl-stat-l">${esc(lab)}</div>${sub?`<div class="pl-stat-s">${esc(sub)}</div>`:""}</div>`; }
-// aggregate a playlist's board for a season ("all" = sum every season — self-updates as new seasons arrive)
+const RECENT_N=4;   // "All seasons" aggregates this many of the most recent seasons
+function recentSeasons(p){ return ((p&&p.seasons)||[]).slice(0,RECENT_N).map(String); }
+// aggregate a playlist's board for a season ("all" = sum the last RECENT_N seasons; self-updates)
 function boardFor(p,gm,season){
   const segs=(p.segments||[]).filter(s=>s.type==="season"&&s.gamemode===gm);
-  const pick=season==="all"?segs:segs.filter(s=>String(s.season)===String(season));
+  const recent=recentSeasons(p);
+  const pick=season==="all"?segs.filter(s=>recent.includes(String(s.season))):segs.filter(s=>String(s.season)===String(season));
   let won=0,lost=0,kills=0,deaths=0; pick.forEach(s=>{ won+=s.won||0; lost+=s.lost||0; kills+=s.kills||0; deaths+=s.deaths||0; });
   const games=won+lost, wr=games>0?won/games:null, kd=deaths>0?kills/deaths:(kills>0?kills:null);
   let mmr=null,peak=null;
-  if(gm==="pvp_ranked"){ if(season==="all"){ peak=Math.max(0,...segs.map(s=>s.maxRankPoints||0))||null; mmr=(p.rank&&p.rank.points)||null; }
+  if(gm==="pvp_ranked"){ if(season==="all"){ peak=Math.max(0,...pick.map(s=>s.maxRankPoints||0))||null; mmr=(p.rank&&p.rank.points)||null; }
     else{ const s=pick[0]; if(s){ mmr=s.rankPoints||null; peak=s.maxRankPoints||null; } } }
   return { won,lost,kills,deaths,wr,kd,mmr,peak,has:pick.length>0 };
+}
+// sum per-operator rows across season scopes, recomputing win%/K-D/HS% from totals
+function aggregateOps(scopes){
+  const m=new Map();
+  scopes.forEach(rows=>(rows||[]).forEach(o=>{ const key=(o.op||"?")+"|"+(o.side||""); let a=m.get(key);
+    if(!a){ a={op:o.op,side:o.side,rp:0,w:0,l:0,k:0,d:0,hsc:0}; m.set(key,a); }
+    a.rp+=o.rp||0; a.w+=o.w||0; a.l+=o.l||0; a.k+=o.k||0; a.d+=o.d||0;
+    a.hsc+=(o.hsc!=null?o.hsc:(o.hs!=null&&o.k!=null?o.hs/100*o.k:0)); }));
+  return [...m.values()].map(a=>({ op:a.op, side:a.side, rp:a.rp, w:a.w, l:a.l, k:a.k, d:a.d,
+    wp:(a.w+a.l)>0?Math.round(a.w/(a.w+a.l)*1000)/10:null, kd:a.d>0?Math.round(a.k/a.d*100)/100:null,
+    hs:a.k>0?Math.round(a.hsc/a.k*100):null }));
 }
 function seasonsFor(p){ return (p&&p.seasons)||[]; }
 // season number → "Y{year} S{season}" (4 seasons/year; S42 = Y11 S2, S1 = Y1 S1)
@@ -38683,10 +38697,17 @@ const R6_RANKS=[["Copper 5",1000,"#8a5a3c"],["Copper 4",1100,"#8a5a3c"],["Copper
 function rankFromPoints(pts){ if(pts==null) return null; let cur=R6_RANKS[0]; for(const r of R6_RANKS){ if(pts>=r[1]) cur=r; else break; }
   return { name:cur[0], color:cur[2], img:"https://r6data.com/assets/img/r6_ranks_img/"+cur[0].toLowerCase().replace(/\s+/g,"-")+".webp", points:pts }; }
 function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
-  if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};                 // exact playlist+season
-  if(season!=="all" && o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all seasons"};   // right playlist, season n/a
-  if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:null};                              // all-seasons selected
-  if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists & seasons"};                             // only the aggregate exists
+  if(season!=="all"){
+    if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};                // exact playlist+season
+    if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all-time"};                       // right playlist, season n/a
+    if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists & all-time"};
+    return {rows:null,scope:null};
+  }
+  // "all seasons" → aggregate the last-4 per-season scopes when present (matches the boards)
+  const scopes=recentSeasons(p).map(s=>o[`${playlistId}|${s}`]).filter(Boolean);
+  if(scopes.length) return {rows:aggregateOps(scopes),scope:null};
+  if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all-time"};                         // playlist all-time fallback
+  if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists · all-time"};
   return {rows:null,scope:null};
 }
 function boardGridHTML(p){
@@ -38734,7 +38755,7 @@ function renderPlayersTab(root){
   if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
     if(UI.players.season!=="all" && !seasonsFor(p).map(String).includes(String(UI.players.season))) UI.players.season="all";
     const plToggle=PLAYLISTS.map(pl=>`<button class="pl-seg ${pl.id===UI.players.playlist?"on":""}" data-plpl="${pl.id}">${esc(pl.label)}</button>`).join("");
-    const seasonOpts=[["all","All seasons"],...seasonsFor(p).map(s=>[String(s),seasonLabel(s)])];
+    const seasonOpts=[["all","Last 4 seasons"],...seasonsFor(p).map(s=>[String(s),seasonLabel(s)])];
     const seToggle=seasonOpts.map(([v,lab])=>`<button class="pl-seg ${String(UI.players.season)===v?"on":""}" data-plseason="${esc(v)}">${esc(lab)}</button>`).join("");
     body=`<div class="pl-seg-row">${plToggle}</div>
       <div class="pl-seg-row season">${seToggle}</div>
@@ -39527,7 +39548,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 20;
+const APP_BUILD = 21;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

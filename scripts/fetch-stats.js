@@ -50,7 +50,7 @@ function parseHistory(ss) { try { return ss.data.history.data.map(e => ({ ts: e[
 function trimOps(arr) {
   arr = Array.isArray(arr) ? arr : Object.values(arr || {});
   return arr.filter(o => o && (o.roundsPlayed || o.matchesPlayed))
-    .map(o => ({ op: o.operator, side: o.side, rp: o.roundsPlayed, wp: o.winPercent, kd: o.kd, hs: o.headshotPercent, w: o.wins, l: o.losses, k: o.kills, d: o.deaths }));
+    .map(o => ({ op: o.operator, side: o.side, rp: o.roundsPlayed, wp: o.winPercent, kd: o.kd, hs: o.headshotPercent, hsc: o.headshots, w: o.wins, l: o.losses, k: o.kills, d: o.deaths }));
 }
 
 async function fetchPlayer(p) {
