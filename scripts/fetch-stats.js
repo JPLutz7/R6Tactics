@@ -17,50 +17,73 @@ const BASE = "https://api.r6data.com/api/stats";
 
 if (!KEY) { console.error("ERROR: R6DATA_API_KEY is not set."); process.exit(1); }
 
-// recursively check whether an object contains ranked-looking fields
-function looksRanked(o) {
-  if (!o || typeof o !== "object") return false;
-  if ("rank_points" in o || "wins" in o || "losses" in o) return true;
-  return Object.values(o).some(looksRanked);
-}
-
-async function fetchType(handle, platform, type) {
-  const url = `${BASE}?type=${type}&nameOnPlatform=${encodeURIComponent(handle)}&platformType=${encodeURIComponent(platform)}&platform_families=${encodeURIComponent(FAM)}`;
+async function fetchType(handle, platform, type, extra) {
+  let url = `${BASE}?type=${type}&nameOnPlatform=${encodeURIComponent(handle)}&platformType=${encodeURIComponent(platform)}&platform_families=${encodeURIComponent(FAM)}`;
+  if (extra) for (const k in extra) url += `&${k}=${encodeURIComponent(extra[k])}`;
   const r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
   const text = await r.text();
   let json = null; try { json = JSON.parse(text); } catch (_) {}
   return { status: r.status, ok: r.ok, json, text: json ? undefined : text.slice(0, 400) };
 }
 
-// the extra data types to pull in addition to the core ranked/casual boards.
-const EXTRA_TYPES = ["fullStats", "operatorStats", "seasonalStats"];
+const numv = x => (x && typeof x === "object") ? (typeof x.value === "number" ? x.value : null) : (typeof x === "number" ? x : null);
+// playlist id -> the API's sessionType for operator scoping + the segment gamemode
+const PLAYLISTS = { ranked: { st: "ranked", gm: "pvp_ranked" }, unranked: { st: "standard", gm: "pvp_standard" }, quickmatch: { st: "quick-match", gm: "pvp_casual" } };
+
+function flattenSegments(full) {
+  const segs = full && full.data && full.data.segments;
+  if (!Array.isArray(segs)) return [];
+  return segs.map(s => ({
+    type: s.type, season: (s.attributes && s.attributes.season != null) ? s.attributes.season : null,
+    gamemode: (s.attributes && s.attributes.gamemode) || null,
+    won: numv(s.stats && s.stats.matchesWon), lost: numv(s.stats && s.stats.matchesLost),
+    kills: numv(s.stats && s.stats.kills), deaths: numv(s.stats && s.stats.deaths),
+    rankPoints: numv(s.stats && s.stats.rankPoints), maxRankPoints: numv(s.stats && s.stats.maxRankPoints),
+  }));
+}
+function parseRank(ss) { try { const c = ss.data.history.data[0][1]; return { name: c.metadata.rank, color: c.metadata.color, img: c.metadata.imageUrl, points: c.value }; } catch (_) { return null; } }
+function parseHistory(ss) { try { return ss.data.history.data.map(e => ({ ts: e[0], value: e[1].value, rank: e[1].metadata && e[1].metadata.rank })); } catch (_) { return []; } }
+function trimOps(arr) {
+  arr = Array.isArray(arr) ? arr : Object.values(arr || {});
+  return arr.filter(o => o && (o.roundsPlayed || o.matchesPlayed))
+    .map(o => ({ op: o.operator, side: o.side, rp: o.roundsPlayed, wp: o.winPercent, kd: o.kd, hs: o.headshotPercent, w: o.wins, l: o.losses, k: o.kills, d: o.deaths }));
+}
 
 async function fetchPlayer(p) {
   const platform = p.platform || "uplay";
   const out = { key: p.key, label: p.label, handle: p.handle, platform, ok: false };
   try {
-    // core boards (ranked/casual/…) via the documented player endpoint
-    let res = await fetchType(p.handle, platform, "stats");
-    let used = "stats";
-    if (!res.ok || !looksRanked(res.json)) {
-      const alt = await fetchType(p.handle, platform, "fullStats");
-      if (alt.ok && (looksRanked(alt.json) || !res.ok)) { res = alt; used = "fullStats"; }
-    }
-    out.fetchType = used;
-    out.status = res.status;
-    if (res.ok && res.json) { out.ok = true; out.raw = res.json; }
-    else { out.error = res.json && (res.json.error || res.json.message) || res.text || ("HTTP " + res.status); }
+    const stats = await fetchType(p.handle, platform, "stats");
+    out.status = stats.status;
+    if (!stats.ok) { out.error = (stats.json && (stats.json.error || stats.json.message)) || stats.text || ("HTTP " + stats.status); return out; }
+    out.ok = true;
 
-    // best-effort: pull every other data type too, so the app can surface it all
-    const more = {};
-    for (const t of EXTRA_TYPES) {
-      if (t === used) continue;                      // already have it as raw
-      try { const r = await fetchType(p.handle, platform, t); if (r.ok && r.json) more[t] = r.json; } catch (_) {}
+    const [full, seasonal] = await Promise.all([
+      fetchType(p.handle, platform, "fullStats"),
+      fetchType(p.handle, platform, "seasonalStats"),
+    ]);
+    out.segments = full.ok ? flattenSegments(full.json) : [];
+    out.rank = seasonal.ok ? parseRank(seasonal.json) : null;
+    out.mmrHistory = seasonal.ok ? parseHistory(seasonal.json) : [];
+    out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
+
+    // operators: all-time baseline + scoped per playlist (+season) when the API honours sessionType/seasonNumber
+    out.ops = {};
+    const base = await fetchType(p.handle, platform, "operatorStats");
+    if (base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
+    for (const plId of Object.keys(PLAYLISTS)) {
+      const st = PLAYLISTS[plId].st;
+      for (const season of [null, ...out.seasons]) {
+        const extra = { sessionType: st }; if (season != null) extra.seasonNumber = season;
+        try {
+          const r = await fetchType(p.handle, platform, "operatorStats", extra);
+          if (r.ok && r.json && Array.isArray(r.json.operators)) {
+            const echoOk = String(r.json.sessionType) === st && (season == null || String(r.json.seasonNumber) === String(season));
+            if (echoOk) out.ops[`${plId}|${season == null ? "all" : season}`] = trimOps(r.json.operators);
+          }
+        } catch (_) {}
+      }
     }
-    // fullStats.operators is an exact duplicate of operatorStats (~34KB) — drop it
-    // but keep fullStats.data.segments + all-time boards (those are unique).
-    if (more.fullStats && more.operatorStats && more.fullStats.operators) delete more.fullStats.operators;
-    if (Object.keys(more).length) out.more = more;
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
 }

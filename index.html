@@ -409,8 +409,11 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-top:4px}
 .pl-stat-s{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .pl-empty{padding:8px 2px}
-.pl-board{margin-bottom:16px}
-.pl-board+.pl-board{padding-top:6px;border-top:1px solid var(--line2)}
+.pl-seg-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pl-seg-row.season{margin-bottom:14px}
+.pl-seg{padding:7px 12px;font-weight:700;font-size:12.5px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;touch-action:manipulation}
+.pl-seg.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
+.pl-seg-row.season .pl-seg.on{background:var(--def-bg);color:#1c5fa6;border-color:var(--def-line)}
 .pl-board-h{font-size:13px;font-weight:800;letter-spacing:.3px;margin:4px 0 10px;color:var(--text)}
 .pl-section-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:16px 0 8px}
 .pl-rankbadge{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 12px;border:1px solid var(--line2);border-radius:12px;background:var(--panel2)}
@@ -38490,7 +38493,7 @@ const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Playe
 const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null, tacticSide:"attack" },
   roster:{ edit:false },
-  players:{ sel:0, allOps:false } };
+  players:{ sel:0, allOps:false, playlist:"ranked", season:"all" } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 
@@ -38633,28 +38636,7 @@ async function loadStats(force){
   catch(_){}
   finally{ STATS_LOADING=false; if(UI.tab==="players") renderPlayersTab(byId("view")); }
 }
-// find ranked-looking fields anywhere in the raw API payload (shape may vary)
-function findRanked(o,seen){ seen=seen||new Set(); if(!o||typeof o!=="object"||seen.has(o)) return null; seen.add(o);
-  if("rank_points" in o || ("wins" in o && "losses" in o)) return o;
-  for(const k in o){ const f=findRanked(o[k],seen); if(f) return f; } return null; }
-// r6data shape: platform_families_full_profiles[].board_ids_full_profiles[]{board_id, full_profiles[]{profile}}
-// — pick the "ranked" board explicitly (not casual/event); fall back to a generic scan.
-function rankedProfile(raw){
-  try{ for(const fam of (raw.platform_families_full_profiles||[]))
-    for(const b of (fam.board_ids_full_profiles||[]))
-      if(b.board_id==="ranked"){ const fp=(b.full_profiles||[])[0]; if(fp&&fp.profile) return fp.profile; }
-  }catch(_){}
-  return findRanked(raw);
-}
 function num(v){ return (typeof v==="number"&&isFinite(v))?v:null; }
-function extractRanked(p){
-  if(!p||!p.raw) return null; const r=rankedProfile(p.raw); if(!r) return null;
-  const wins=num(r.wins), losses=num(r.losses), kills=num(r.kills), deaths=num(r.deaths);
-  const wr=(wins!=null&&losses!=null&&(wins+losses)>0)?wins/(wins+losses):null;
-  const kd=(kills!=null&&deaths!=null&&deaths>0)?kills/deaths:(kills!=null&&deaths===0?kills:null);
-  return { mmr:num(r.rank_points), rank:num(r.rank), maxMmr:num(r.max_rank_points), maxRank:num(r.max_rank),
-           wins, losses, wr, kills, deaths, kd, abandon:num(r.abandon) };
-}
 function agoText(iso){ if(!iso) return "never"; const t=Date.parse(iso); if(isNaN(t)) return "unknown";
   const s=Math.max(0,(Date.now()-t)/1000); if(s<90) return "just now"; const m=s/60; if(m<90) return Math.round(m)+" min ago";
   const h=m/60; if(h<36) return Math.round(h)+" h ago"; return Math.round(h/24)+" d ago"; }
@@ -38671,56 +38653,57 @@ function keyBanner(){
   if(dead) return `<div class="pl-keybanner dead"><b>⚠️ r6data API key expired — stats are frozen.</b>${steps}</div>`;
   return `<div class="pl-keybanner soon"><b>⏳ r6data API key expires in ${days} day${days===1?"":"s"}</b> (on ${esc(STATS_DATA.keyExpires)}). Renew it before it stops syncing.${steps}</div>`;
 }
-// every board (ranked/casual/event/…) the stats payload carries, ranked first
-function allBoards(raw){
-  const out=[];
-  try{ for(const fam of (raw&&raw.platform_families_full_profiles||[]))
-    for(const b of (fam.board_ids_full_profiles||[])){ const fp=(b.full_profiles||[])[0]||{};
-      out.push({ board:b.board_id||"?", profile:fp.profile||{}, season:fp.season_statistics||null, seasonId:fp.season_id }); } }catch(_){}
-  out.sort((a,b)=>(b.board==="ranked"?1:0)-(a.board==="ranked"?1:0));
-  return out;
-}
+// ---- normalized stats model (computed live from players.json each render) ----
+const PLAYLISTS=[{id:"ranked",label:"Ranked",gm:"pvp_ranked"},{id:"unranked",label:"Unranked",gm:"pvp_standard"},{id:"quickmatch",label:"Quick Match",gm:"pvp_casual"}];
+function curPlaylist(){ return PLAYLISTS.find(x=>x.id===UI.players.playlist)||PLAYLISTS[0]; }
 function statBox(lab,val,sub){ return `<div class="pl-stat"><div class="pl-stat-v">${val}</div><div class="pl-stat-l">${esc(lab)}</div>${sub?`<div class="pl-stat-s">${esc(sub)}</div>`:""}</div>`; }
-function boardCard(b){
-  const pr=b.profile||{}, w=num(pr.wins), l=num(pr.losses), k=num(pr.kills), de=num(pr.deaths);
-  const wr=(w!=null&&l!=null&&(w+l)>0)?Math.round(w/(w+l)*100)+"%":"—";
-  const kd=(k!=null&&de!=null&&de>0)?(k/de).toFixed(2):(k!=null&&de===0?String(k):"—");
-  const title=(b.board||"?").charAt(0).toUpperCase()+(b.board||"?").slice(1);
-  return `<div class="pl-board"><div class="pl-board-h">${esc(title)}${b.seasonId!=null?` <span class="muted small" style="font-weight:500">· season ${esc(b.seasonId)}</span>`:""}</div>
-    <div class="pl-grid">
-      ${statBox("MMR", pr.rank_points!=null?pr.rank_points:"—", pr.max_rank_points!=null?("peak "+pr.max_rank_points):"")}
-      ${statBox("Rank", pr.rank!=null?pr.rank:"—", pr.max_rank!=null?("max "+pr.max_rank):"")}
-      ${statBox("Win rate", wr, (w!=null&&l!=null)?(w+"W / "+l+"L"):"")}
-      ${statBox("K/D", kd, (k!=null&&de!=null)?(k+" / "+de):"")}
-      ${statBox("Wins", w!=null?w:"—","")}
-      ${statBox("Losses", l!=null?l:"—","")}
-      ${statBox("Kills", k!=null?k:"—","")}
-      ${statBox("Deaths", de!=null?de:"—","")}
-      ${statBox("Abandons", pr.abandon!=null?pr.abandon:"—","")}
-    </div></div>`;
+// aggregate a playlist's board for a season ("all" = sum every season — self-updates as new seasons arrive)
+function boardFor(p,gm,season){
+  const segs=(p.segments||[]).filter(s=>s.type==="season"&&s.gamemode===gm);
+  const pick=season==="all"?segs:segs.filter(s=>String(s.season)===String(season));
+  let won=0,lost=0,kills=0,deaths=0; pick.forEach(s=>{ won+=s.won||0; lost+=s.lost||0; kills+=s.kills||0; deaths+=s.deaths||0; });
+  const games=won+lost, wr=games>0?won/games:null, kd=deaths>0?kills/deaths:(kills>0?kills:null);
+  let mmr=null,peak=null;
+  if(gm==="pvp_ranked"){ if(season==="all"){ peak=Math.max(0,...segs.map(s=>s.maxRankPoints||0))||null; mmr=(p.rank&&p.rank.points)||null; }
+    else{ const s=pick[0]; if(s){ mmr=s.rankPoints||null; peak=s.maxRankPoints||null; } } }
+  return { won,lost,kills,deaths,wr,kd,mmr,peak,has:pick.length>0 };
 }
-function rawDetails(label,obj){ return `<details class="pl-extra"><summary>${esc(label)}</summary><pre class="pl-raw">${esc(JSON.stringify(obj,null,2).slice(0,40000))}</pre></details>`; }
-// ---- promoted cards from the extra API data ----
-function rankHistory(p){ try{ return (p.more.seasonalStats.data.history.data||[]).map(e=>({ts:e[0],value:e[1].value,display:e[1].displayValue,rank:e[1].metadata&&e[1].metadata.rank,color:e[1].metadata&&e[1].metadata.color,img:e[1].metadata&&e[1].metadata.imageUrl})); }catch(_){ return []; } }
-function currentRank(p){ const h=rankHistory(p); return h.length?h[0]:null; }   // newest first
-function operatorRows(p){ try{ let o=p.more.operatorStats.operators; o=Array.isArray(o)?o:Object.values(o);
-  return o.filter(x=>x&&(x.roundsPlayed||x.matchesPlayed)).map(x=>({name:x.operator,side:x.side,rounds:num(x.roundsPlayed),win:num(x.winPercent),kd:num(x.kd),hs:num(x.headshotPercent),k:num(x.kills),d:num(x.deaths)}))
-    .sort((a,b)=>(b.rounds||0)-(a.rounds||0)); }catch(_){ return []; } }
+function seasonsFor(p){ return (p&&p.seasons)||[]; }
+function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
+  if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};
+  if(o[`${playlistId}|all`]) return {rows:o[`${playlistId}|all`],scope:"all seasons"};
+  if(o["all|all"]) return {rows:o["all|all"],scope:"all playlists · all seasons"};
+  return {rows:null,scope:null};
+}
+function boardGridHTML(p){
+  const pl=curPlaylist(), b=boardFor(p,pl.gm,UI.players.season);
+  if(!b.has) return `<div class="pl-empty muted">No ${esc(pl.label)} data${UI.players.season==="all"?"":" for season "+esc(UI.players.season)}.</div>`;
+  const wr=b.wr!=null?Math.round(b.wr*100)+"%":"—", kd=b.kd!=null?b.kd.toFixed(2):"—", ranked=pl.gm==="pvp_ranked";
+  return `<div class="pl-grid">
+    ${ranked?statBox("MMR", b.mmr!=null?b.mmr.toLocaleString():"—", b.peak!=null?("peak "+b.peak.toLocaleString()):""):""}
+    ${statBox("Win rate", wr, b.won+"W / "+b.lost+"L")}
+    ${statBox("K/D", kd, b.kills+" / "+b.deaths)}
+    ${statBox("Wins", b.won, "")}
+    ${statBox("Losses", b.lost, "")}
+    ${statBox("Kills", b.kills, "")}
+    ${statBox("Deaths", b.deaths, "")}
+  </div>`;
+}
+function rankBadgeHTML(p){ if(UI.players.playlist!=="ranked") return ""; const c=p&&p.rank; if(!c||!c.name) return "";
+  return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.name)}</div><div class="muted small">${esc(String(c.points||""))} RP · current</div></div></div>`; }
+function operatorTableHTML(p){ const {rows,scope}=opsFor(p,UI.players.playlist,UI.players.season); if(!rows||!rows.length) return "";
+  const sorted=rows.slice().sort((a,b)=>(b.rp||0)-(a.rp||0)), all=UI.players.allOps, top=all?sorted:sorted.slice(0,8);
+  const tr=o=>`<tr><td>${esc(o.op||"?")}${o.side?`<span class="pl-opside ${o.side==="Attacker"?"atk":"def"}">${o.side==="Attacker"?"A":"D"}</span>`:""}</td><td class="num">${o.rp!=null?o.rp:"—"}</td><td class="num">${o.wp!=null?o.wp+"%":"—"}</td><td class="num">${o.kd!=null?o.kd:"—"}</td><td class="num">${o.hs!=null?Math.round(o.hs)+"%":"—"}</td></tr>`;
+  return `<div class="pl-section-h">Operators <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">· ${sorted.length}${scope?" · "+esc(scope):""}</span></div>
+    <table class="pl-optbl"><thead><tr><th>Operator</th><th class="num">Rnds</th><th class="num">Win%</th><th class="num">K/D</th><th class="num">HS%</th></tr></thead><tbody>${top.map(tr).join("")}</tbody></table>
+    ${sorted.length>8?`<button class="lnk" id="plMoreOps">${all?"show top 8":"show all "+sorted.length+" →"}</button>`:""}`; }
 function sparklineSVG(vals){ if(!vals||vals.length<2) return ""; const w=260,h=42,pad=4,min=Math.min(...vals),max=Math.max(...vals),rng=(max-min)||1;
   const pts=vals.map((v,i)=>{ const x=pad+i*(w-2*pad)/(vals.length-1); const y=h-pad-((v-min)/rng)*(h-2*pad); return x.toFixed(1)+","+y.toFixed(1); }).join(" ");
   return `<svg class="pl-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/></svg>`; }
-function rankBadgeHTML(p){ const c=currentRank(p); if(!c||!c.rank) return "";
-  return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.rank)}</div><div class="muted small">${esc(String(c.display||c.value||""))} RP · ranked</div></div></div>`; }
-function operatorTableHTML(p){ const rows=operatorRows(p); if(!rows.length) return "";
-  const all=UI.players.allOps, top=all?rows:rows.slice(0,8);
-  const tr=o=>`<tr><td>${esc(o.name||"?")}${o.side?`<span class="pl-opside ${o.side==="Attacker"?"atk":"def"}">${o.side==="Attacker"?"A":"D"}</span>`:""}</td><td class="num">${o.rounds!=null?o.rounds:"—"}</td><td class="num">${o.win!=null?o.win+"%":"—"}</td><td class="num">${o.kd!=null?o.kd:"—"}</td><td class="num">${o.hs!=null?Math.round(o.hs)+"%":"—"}</td></tr>`;
-  return `<div class="pl-section-h">Operators <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">· ${rows.length} played · by rounds</span></div>
-    <table class="pl-optbl"><thead><tr><th>Operator</th><th class="num">Rnds</th><th class="num">Win%</th><th class="num">K/D</th><th class="num">HS%</th></tr></thead><tbody>${top.map(tr).join("")}</tbody></table>
-    ${rows.length>8?`<button class="lnk" id="plMoreOps">${all?"show top 8":"show all "+rows.length+" →"}</button>`:""}`; }
-function mmrHistoryHTML(p){ const h=rankHistory(p); if(h.length<2) return "";
-  const pts=h.slice().reverse();   // oldest → newest
-  return `<div class="pl-section-h">MMR history</div>${sparklineSVG(pts.map(x=>x.value))}
-    <div class="pl-mmrlist">${pts.slice(-8).reverse().map(x=>`<div class="pl-mmrrow"><span class="muted small">${new Date(x.ts).toLocaleDateString()}</span><b>${esc(String(x.display||x.value))}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
+function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return ""; const h=(p&&p.mmrHistory)||[]; if(h.length<2) return "";
+  const chrono=h.slice().reverse();   // stored newest-first → oldest→newest for the trend line
+  return `<div class="pl-section-h">MMR history</div>${sparklineSVG(chrono.map(x=>x.value))}
+    <div class="pl-mmrlist">${h.slice(0,8).map(x=>`<div class="pl-mmrrow"><span class="muted small">${new Date(x.ts).toLocaleDateString()}</span><b>${esc(String((x.value!=null?x.value.toLocaleString():"")))}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
@@ -38729,18 +38712,17 @@ function renderPlayersTab(root){
   const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
-  const boards=(p&&p.ok&&p.raw)?allBoards(p.raw):[];
-  if(boards.length){
-    const extras=(p.more&&Object.keys(p.more).length)?
-      `<div class="pl-section-h">More from the API <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— raw extras</span></div>`+
-      Object.keys(p.more).map(t=>rawDetails(t, p.more[t])).join("") : "";
-    body=`${rankBadgeHTML(p)}
-      ${boards.map(boardCard).join("")}
+  if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
+    if(UI.players.season!=="all" && !seasonsFor(p).map(String).includes(String(UI.players.season))) UI.players.season="all";
+    const plToggle=PLAYLISTS.map(pl=>`<button class="pl-seg ${pl.id===UI.players.playlist?"on":""}" data-plpl="${pl.id}">${esc(pl.label)}</button>`).join("");
+    const seasonOpts=[["all","All seasons"],...seasonsFor(p).map(s=>[String(s),"Season "+s])];
+    const seToggle=seasonOpts.map(([v,lab])=>`<button class="pl-seg ${String(UI.players.season)===v?"on":""}" data-plseason="${esc(v)}">${esc(lab)}</button>`).join("");
+    body=`<div class="pl-seg-row">${plToggle}</div>
+      <div class="pl-seg-row season">${seToggle}</div>
+      ${rankBadgeHTML(p)}
+      ${boardGridHTML(p)}
       ${operatorTableHTML(p)}
-      ${mmrHistoryHTML(p)}
-      ${extras}
-      <div class="pl-section-h">Everything (raw)</div>
-      ${rawDetails("Full stats response", p.raw)}`;
+      ${mmrHistoryHTML(p)}`;
   } else if(p&&p.error){
     body=`<div class="pl-empty"><b>Couldn't fetch ${esc(p.label||p.handle)}.</b><div class="muted small" style="margin-top:6px">${esc(p.error)}</div><div class="muted small" style="margin-top:6px">Check the handle/platform in <span class="mono">scripts/players.config.json</span>.</div></div>`;
   } else if(!updated){
@@ -38752,7 +38734,7 @@ function renderPlayersTab(root){
         <li>Repo → <b>Actions → Refresh player stats → Run workflow</b> (then it auto-runs every 12h).</li>
       </ol></div>`;
   } else {
-    body=`<div class="pl-empty"><b>No ranked data for ${esc(p.label||p.handle)} yet.</b><div class="muted small" style="margin-top:6px">The sync ran but returned no ranked fields. Raw response below.</div>${p&&p.raw?`<details style="margin-top:8px"><summary class="lnk">show raw</summary><pre class="pl-raw">${esc(JSON.stringify(p.raw,null,2).slice(0,4000))}</pre></details>`:""}</div>`;
+    body=`<div class="pl-empty"><b>No stats for ${esc(p.label||p.handle)} yet.</b><div class="muted small" style="margin-top:6px">The sync ran but returned no playlist data.</div></div>`;
   }
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
     ${keyBanner()}
@@ -38761,6 +38743,8 @@ function renderPlayersTab(root){
       <div class="panel-b">${body}</div></div>
     <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs every 12h via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add players.</div>`;
   root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; UI.players.allOps=false; renderPlayersTab(root); });
+  root.querySelectorAll("[data-plpl]").forEach(b=>b.onclick=()=>{ UI.players.playlist=b.dataset.plpl; UI.players.allOps=false; renderPlayersTab(root); });
+  root.querySelectorAll("[data-plseason]").forEach(b=>b.onclick=()=>{ UI.players.season=b.dataset.plseason; UI.players.allOps=false; renderPlayersTab(root); });
   byId("plRefresh").onclick=()=>{ loadStats(true); toast("Refreshing…"); };
   const mo=byId("plMoreOps"); if(mo) mo.onclick=()=>{ UI.players.allOps=!UI.players.allOps; renderPlayersTab(root); };
 }
@@ -39524,7 +39508,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 17;
+const APP_BUILD = 18;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
