@@ -395,6 +395,10 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .tp-strat{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;padding:8px 11px;margin-bottom:6px;cursor:pointer}
 .tp-strat:hover{background:var(--panel3);border-color:var(--def-line)}
 .tp-group.atk .tp-strat:hover{border-color:var(--atk-line)}
+.pl-keybanner{border-radius:10px;padding:11px 13px;margin-bottom:14px;line-height:1.5;font-size:13px}
+.pl-keybanner.dead{background:rgba(210,70,70,.13);border:1px solid rgba(210,70,70,.55);color:#b23030}
+.pl-keybanner.soon{background:rgba(224,140,31,.13);border:1px solid rgba(224,140,31,.5);color:#a8650f}
+.pl-keybanner a{color:inherit;font-weight:700}
 .pl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .pl-tab{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;font-weight:800;font-size:14px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;touch-action:manipulation}
 .pl-tab.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
@@ -38635,6 +38639,19 @@ function extractRanked(p){
 function agoText(iso){ if(!iso) return "never"; const t=Date.parse(iso); if(isNaN(t)) return "unknown";
   const s=Math.max(0,(Date.now()-t)/1000); if(s<90) return "just now"; const m=s/60; if(m<90) return Math.round(m)+" min ago";
   const h=m/60; if(h<36) return Math.round(h)+" h ago"; return Math.round(h/24)+" d ago"; }
+// loud, unmissable banner when the r6data API key has expired (or is about to)
+function keyBanner(){
+  if(!STATS_DATA) return "";
+  const ex=STATS_DATA.keyExpires;
+  const days=ex?Math.ceil((Date.parse(ex+"T00:00:00Z")-Date.now())/86400000):null;       // intuitive countdown
+  const past=ex?(Date.now()>Date.parse(ex+"T23:59:59Z")):false;                            // truly past the day
+  const dead=STATS_DATA.keyStatus==="invalid"||STATS_DATA.keyStatus==="expired"||past;
+  const soon=!dead&&days!=null&&days<=14;
+  if(!dead&&!soon) return "";
+  const steps=`<ol class="muted small" style="line-height:1.7;margin:6px 0 0;padding-left:18px"><li>Get a fresh key at <a href="https://r6data.com" target="_blank" rel="noopener">r6data.com</a>.</li><li>Repo → <b>Settings → Secrets and variables → Actions</b> → update <span class="mono">R6DATA_API_KEY</span>.</li><li>Update <span class="mono">api_key_expires</span> in <span class="mono">scripts/players.config.json</span>, then re-run the action.</li></ol>`;
+  if(dead) return `<div class="pl-keybanner dead"><b>⚠️ r6data API key expired — stats are frozen.</b>${steps}</div>`;
+  return `<div class="pl-keybanner soon"><b>⏳ r6data API key expires in ${days} day${days===1?"":"s"}</b> (on ${esc(STATS_DATA.keyExpires)}). Renew it before it stops syncing.${steps}</div>`;
+}
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
@@ -38667,6 +38684,7 @@ function renderPlayersTab(root){
     body=`<div class="pl-empty"><b>No ranked data for ${esc(p.label||p.handle)} yet.</b><div class="muted small" style="margin-top:6px">The sync ran but returned no ranked fields. Raw response below.</div>${p&&p.raw?`<details style="margin-top:8px"><summary class="lnk">show raw</summary><pre class="pl-raw">${esc(JSON.stringify(p.raw,null,2).slice(0,4000))}</pre></details>`:""}</div>`;
   }
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live ranked stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
+    ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
     <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p?esc("@"+p.handle+" · "+(p.platform||"uplay")):""}</span></h3><span class="muted small">updated ${agoText(updated)}</span></div>
       <div class="panel-b">${body}</div></div>
@@ -39434,7 +39452,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 14;
+const APP_BUILD = 15;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

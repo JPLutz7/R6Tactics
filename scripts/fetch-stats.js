@@ -51,6 +51,13 @@ async function fetchPlayer(p) {
   return out;
 }
 
+// an auth/key problem (vs a per-player handle problem) — drives the expiry alarm
+function isAuthFail(p) {
+  if (p.ok) return false;
+  if (p.status === 401 || p.status === 403) return true;
+  return /api[- ]?key|invalid key|unauthor|expired|forbidden/i.test(p.error || "");
+}
+
 (async () => {
   const players = [];
   for (const p of (cfg.players || [])) {
@@ -59,7 +66,17 @@ async function fetchPlayer(p) {
     console.log(r.ok ? `ok [${r.fetchType}]` : `FAILED: ${r.error}`);
     players.push(r);
   }
-  const data = { updated: new Date().toISOString(), source: "r6data.com", players };
+  // key health: "invalid" if every player auth-fails (key rejected); "expired" if past the recorded date
+  const anyOk = players.some(p => p.ok);
+  const allAuthFail = players.length > 0 && players.every(isAuthFail);
+  const expires = cfg.api_key_expires || null;
+  const pastDate = expires && (Date.now() > Date.parse(expires + "T23:59:59Z"));
+  let keyStatus = "ok";
+  if (allAuthFail) keyStatus = "invalid";
+  else if (!anyOk && pastDate) keyStatus = "expired";
+  else if (pastDate) keyStatus = "expired";
+
+  const data = { updated: new Date().toISOString(), source: "r6data.com", keyExpires: expires, keyStatus, players };
   fs.writeFileSync(path.join(root, "players.json"), JSON.stringify(data, null, 2) + "\n");
-  console.log("Wrote players.json (" + players.filter(p => p.ok).length + "/" + players.length + " ok)");
+  console.log("Wrote players.json (" + players.filter(p => p.ok).length + "/" + players.length + " ok, keyStatus=" + keyStatus + ")");
 })().catch(e => { console.error("FATAL:", e); process.exit(1); });
