@@ -38,8 +38,10 @@ There is **no build step**. Open `index.html` (or the Pages URL) and it runs.
 **Mobile-ready (viewing):** phone media query (≤720px) + touch pan / pinch-zoom on the map
 viewer. **Verified on emulated iPhone (390×844 + landscape) and iPad (768×1024 portrait,
 1080/1180 landscape, 1024×1366 Pro)** — no overflow, pinch + zoomed-pan exact, 0 errors.
-iPad 768–1080 gets the stacked-tactics layout; >1080 gets the side panel. Editing (✎ pin-drag, roster drag-assign) remains desktop-oriented — HTML5 drag
-events don't fire on touch.
+iPad 768–1080 gets the stacked-tactics layout; >1080 gets the side panel. **Editing also works on touch** — pin-drag and roster drag-assign were rewritten from
+mouse/HTML5-DnD to **pointer events** (`rosterPointerDrag`/`rosterDoDrop`; pin uses
+`setPointerCapture`). A custom drag-ghost + `elementFromPoint` drop targeting replaces native
+DnD; `.rdrag`/`.prole` get `touch-action:none`. Verified on touch + mouse.
 
 ## 3. App structure (two tabs)
 - **Maps** — table-of-contents gallery of cover tiles, grouped into pools

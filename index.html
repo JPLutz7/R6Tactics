@@ -266,8 +266,11 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .prole .pri{font-size:9px;font-weight:800;color:#fff;background:#5a6b7e;border-radius:4px;padding:0 4px}
 .prole .x{cursor:pointer;opacity:.5;font-weight:800}
 .prole .x:hover{opacity:1;color:#c2434f}
-.roster-edit .prole{cursor:grab}
+.roster-edit .prole{cursor:grab;touch-action:none;user-select:none}
 .roster-edit .prole:active{cursor:grabbing}
+.rdrag{touch-action:none;user-select:none}
+.drag-ghost{position:fixed;z-index:90;pointer-events:none;transform:translate(-50%,-135%);background:var(--text);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;border-radius:8px;box-shadow:0 8px 24px rgba(20,30,45,.4);white-space:nowrap}
+body.rdragging{user-select:none;-webkit-user-select:none}
 .prow.drop-ok{outline:2px dashed var(--def);outline-offset:2px;background:var(--def-bg)}
 .rdrag{cursor:grab;font-size:15px;line-height:1;color:var(--muted2);padding:2px 5px;border-radius:6px;border:1px solid var(--line2);user-select:none}
 .rdrag:hover{color:var(--text);background:var(--panel3)}
@@ -36700,6 +36703,7 @@ function setupViewer(edit){
   let tPan=null,tPinch=null;
   const tDist=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
   vp.addEventListener("touchstart",e=>{ if(e.target.closest(".vp-ctrl,.vp-zoom"))return;
+    if(edit&&e.touches.length===1&&e.target.closest(".mk"))return;  // let edit-mode pin drag take a one-finger touch
     if(e.touches.length===1){ const t=e.touches[0]; tPan={x:t.clientX-MV.tx,y:t.clientY-MV.ty}; tPinch=null; }
     else if(e.touches.length===2){ e.preventDefault(); tPan=null; tPinch={d:tDist(e.touches[0],e.touches[1])}; }
   },{passive:false});
@@ -36729,15 +36733,16 @@ function bindFloorEdit(m,f){
   host.querySelectorAll(".mk").forEach(pin=>{
     const k=+pin.dataset.pin; const c=f.callouts[k]; if(!c)return;
     const body=pin.querySelector(".mkb");
-    body.onmousedown=ev=>{ ev.preventDefault(); ev.stopPropagation(); const vp=byId("vp");
-      const move=e=>{ const r=vp.getBoundingClientRect();
+    body.addEventListener("pointerdown",ev=>{ if(ev.pointerType==="mouse"&&ev.button!==0)return; ev.preventDefault(); ev.stopPropagation(); const vp=byId("vp");
+      try{ body.setPointerCapture(ev.pointerId); }catch(_){}
+      const move=e=>{ e.preventDefault(); const r=vp.getBoundingClientRect();
         const sxp=(e.clientX-r.left-MV.tx)/MV.s, syp=(e.clientY-r.top-MV.ty)/MV.s;
         c.x=Math.round(Math.min(100,Math.max(0,sxp/MV.baseW*100))*10)/10;
         c.y=Math.round(Math.min(100,Math.max(0,syp/MV.baseH*100))*10)/10;
         pin.style.left=c.x+"%"; pin.style.top=c.y+"%";
         const row=host.querySelector(`[data-co="${k}"]`); if(row){ row.querySelector("[data-cox]").value=c.x; row.querySelector("[data-coy]").value=c.y; } };
-      const up2=()=>{ document.removeEventListener("mousemove",move); document.removeEventListener("mouseup",up2); markDirty(); };
-      document.addEventListener("mousemove",move); document.addEventListener("mouseup",up2); };
+      const up2=()=>{ body.removeEventListener("pointermove",move); body.removeEventListener("pointerup",up2); body.removeEventListener("pointercancel",up2); markDirty(); };
+      body.addEventListener("pointermove",move); body.addEventListener("pointerup",up2); body.addEventListener("pointercancel",up2); });
   });
 }
 function setPin(host,k,c){ const pin=host.querySelector(`.mk[data-pin="${k}"]`); if(pin){ pin.style.left=c.x+"%"; pin.style.top=c.y+"%"; } }
@@ -36789,7 +36794,6 @@ function renderRoster(root){
     <div class="section-title">Roles &amp; operator pools <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— click any operator for details · ordered by win-rate</span></div>
     <div class="rolegrid-sides" id="roleGrid"></div>
   </div>`;
-  if(!window._rosterDnd){ window._rosterDnd=true; document.addEventListener("dragend",()=>{ ROSTER_DRAG=null; document.querySelectorAll(".proles.drop-ok").forEach(r=>r.classList.remove("drop-ok")); }); }
   byId("rosterEdit").onclick=()=>{ UI.roster.edit=!UI.roster.edit; renderRoster(root); };
   if(edit){
     byId("addPlayer").onclick=()=>{ DB.roster.push({name:"New Player",attackRoles:[],defenseRoles:[]}); markDirty(); renderPlayers(); };
@@ -36801,7 +36805,7 @@ function renderPlayers(){
   const sideRow=(p,i,side)=>{
     const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
     const chips=(p[key]||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
-      return `<span class="prole ${cls}" ${edit?`draggable="true" data-chip="${i}|${side}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
+      return `<span class="prole ${cls}" ${edit?`data-chip="${i}|${side}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
     }).join("");
     return `<div class="pside">
       <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
@@ -36825,23 +36829,42 @@ function bindPlayers(){
   wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
   wrap.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ DB.roster.splice(+b.closest("[data-p]").dataset.p,1); markDirty(); renderPlayers(); renderRoleGrid(); });
   wrap.querySelectorAll("[data-chiprm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.chiprm.split("|"); const key=side==="attack"?"attackRoles":"defenseRoles"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); renderRoleGrid(); });
-  wrap.querySelectorAll("[data-chip]").forEach(c=>c.addEventListener("dragstart",e=>{ const [i,side,k]=c.dataset.chip.split("|"); ROSTER_DRAG={kind:"chip",player:+i,side,idx:+k}; e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain","chip");}catch(_){}}));
-  wrap.querySelectorAll(".proles[data-drop]").forEach(box=>{
-    const [pi,side]=box.dataset.drop.split("|"); const i=+pi; const key=side==="attack"?"attackRoles":"defenseRoles";
-    const compatible=()=>{ if(!ROSTER_DRAG)return false; if(ROSTER_DRAG.kind==="pool"){ const r=roleById(ROSTER_DRAG.roleId); return !!r&&r.side===side; } return ROSTER_DRAG.side===side; };
-    box.addEventListener("dragover",e=>{ if(!compatible())return; e.preventDefault(); e.dataTransfer.dropEffect=ROSTER_DRAG.kind==="pool"?"copy":"move"; box.classList.add("drop-ok"); });
-    box.addEventListener("dragleave",e=>{ if(!box.contains(e.relatedTarget)) box.classList.remove("drop-ok"); });
-    box.addEventListener("drop",e=>{ if(!compatible())return; e.preventDefault(); box.classList.remove("drop-ok");
-      const pos=rosterInsertIndex(box,e.clientX), P=DB.roster[i];
-      if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P[key].includes(rid)){ P[key].splice(pos,0,rid); markDirty(); } }
-      else { const src=DB.roster[ROSTER_DRAG.player], rid=src[key][ROSTER_DRAG.idx];
-        if(ROSTER_DRAG.player===i){ src[key].splice(ROSTER_DRAG.idx,1); let np=pos; if(ROSTER_DRAG.idx<np)np--; src[key].splice(Math.max(0,np),0,rid); markDirty(); }
-        else if(rid&&!P[key].includes(rid)){ src[key].splice(ROSTER_DRAG.idx,1); P[key].splice(pos,0,rid); markDirty(); } }
-      ROSTER_DRAG=null; renderPlayers(); renderRoleGrid();
-    });
-  });
+  wrap.querySelectorAll("[data-chip]").forEach(c=>c.addEventListener("pointerdown",e=>{
+    if(e.target.closest("[data-chiprm]"))return; const [i,side,k]=c.dataset.chip.split("|");
+    const key=side==="attack"?"attackRoles":"defenseRoles"; const r=roleById((DB.roster[+i][key]||[])[+k]);
+    rosterPointerDrag(e,{kind:"chip",player:+i,side,idx:+k}, r?r.name:"role"); }));
 }
 function rosterInsertIndex(box,clientX){ const chips=[...box.querySelectorAll(".prole")]; for(let j=0;j<chips.length;j++){ const r=chips[j].getBoundingClientRect(); if(clientX<r.left+r.width/2) return j; } return chips.length; }
+// pointer-based roster drag (works for mouse + touch; replaces HTML5 DnD)
+function rosterPointerDrag(downEv,drag,label){
+  if(downEv.pointerType==="mouse"&&downEv.button!==0)return;
+  const sx=downEv.clientX, sy=downEv.clientY; let engaged=false,ghost=null,okBox=null;
+  const compat=box=>{ if(!box)return false; const side=box.dataset.drop.split("|")[1]; if(drag.kind==="pool"){ const r=roleById(drag.roleId); return !!r&&r.side===side; } return drag.side===side; };
+  const boxUnder=(x,y)=>{ if(ghost)ghost.style.display="none"; const el=document.elementFromPoint(x,y); if(ghost)ghost.style.display=""; const box=el?el.closest(".proles[data-drop]"):null; return (box&&compat(box))?box:null; };
+  const clearOk=()=>{ if(okBox){okBox.classList.remove("drop-ok");okBox=null;} };
+  const onMove=ev=>{
+    if(!engaged){ if(Math.hypot(ev.clientX-sx,ev.clientY-sy)<6)return; engaged=true; ROSTER_DRAG=drag;
+      ghost=document.createElement("div"); ghost.className="drag-ghost"; ghost.textContent=label; document.body.appendChild(ghost); document.body.classList.add("rdragging"); }
+    ev.preventDefault(); ghost.style.left=ev.clientX+"px"; ghost.style.top=ev.clientY+"px";
+    const box=boxUnder(ev.clientX,ev.clientY); if(box!==okBox){ clearOk(); if(box){ box.classList.add("drop-ok"); okBox=box; } }
+  };
+  const onUp=ev=>{
+    document.removeEventListener("pointermove",onMove); document.removeEventListener("pointerup",onUp); document.removeEventListener("pointercancel",onUp);
+    if(engaged){ const box=boxUnder(ev.clientX,ev.clientY); clearOk(); if(ghost)ghost.remove(); document.body.classList.remove("rdragging");
+      if(box) rosterDoDrop(box,ev.clientX); else ROSTER_DRAG=null; }
+    else ROSTER_DRAG=null;
+  };
+  document.addEventListener("pointermove",onMove,{passive:false}); document.addEventListener("pointerup",onUp); document.addEventListener("pointercancel",onUp);
+}
+function rosterDoDrop(box,clientX){
+  const [pi,side]=box.dataset.drop.split("|"); const i=+pi; const key=side==="attack"?"attackRoles":"defenseRoles";
+  const pos=rosterInsertIndex(box,clientX), P=DB.roster[i];
+  if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P[key].includes(rid)){ P[key].splice(pos,0,rid); markDirty(); } }
+  else { const src=DB.roster[ROSTER_DRAG.player], rid=src[key][ROSTER_DRAG.idx];
+    if(ROSTER_DRAG.player===i){ src[key].splice(ROSTER_DRAG.idx,1); let np=pos; if(ROSTER_DRAG.idx<np)np--; src[key].splice(Math.max(0,np),0,rid); markDirty(); }
+    else if(rid&&!P[key].includes(rid)){ src[key].splice(ROSTER_DRAG.idx,1); P[key].splice(pos,0,rid); markDirty(); } }
+  ROSTER_DRAG=null; renderPlayers(); renderRoleGrid();
+}
 function renderRoleGrid(){
   const wrap=byId("roleGrid"); const edit=UI.roster.edit;
   const sec=(side,label,cls)=>{
@@ -36860,7 +36883,7 @@ function roleCardHTML(r,edit){
   const occ=DB.roster.filter(p=>(p[sideKey]||[]).includes(r.id)).map(p=>p.name);
   return `<div class="rolecard" data-role="${esc(r.id)}">
     <div class="rh">
-      ${edit?`<span class="rdrag" draggable="true" data-rdrag="${esc(r.id)}" title="Drag onto a player's ${r.side==="attack"?"ATK":"DEF"} list">⠿</span>`:""}
+      ${edit?`<span class="rdrag" data-rdrag="${esc(r.id)}" title="Drag onto a player's ${r.side==="attack"?"ATK":"DEF"} list">⠿</span>`:""}
       ${edit?`<input type="text" data-rname value="${esc(r.name)}" style="max-width:170px;font-weight:800;font-size:15px">`:`<h3>${esc(r.name)}</h3>`}
       <span class="occ">${occ.length?occ.map(n=>`<b>${esc(n)}</b>`).join(", "):'<span style="color:var(--muted2)">—</span>'}</span>
       <div class="grow"></div>
@@ -36886,7 +36909,7 @@ function bindRoleGrid(){
   if(UI.roster.edit) grid.querySelectorAll("[data-addrole]").forEach(b=>b.onclick=()=>{ const side=b.dataset.addrole; const id=uid("role"); DB.roles.push({id,name:"New Role",side,desc:"",ops:[]}); markDirty(); renderRoleGrid(); renderPlayers(); });
   grid.querySelectorAll("[data-role]").forEach(card=>{
     const r=roleById(card.dataset.role); if(!r)return;
-    const h=card.querySelector("[data-rdrag]"); if(h) h.addEventListener("dragstart",e=>{ ROSTER_DRAG={kind:"pool",roleId:r.id}; e.dataTransfer.effectAllowed="copy"; try{e.dataTransfer.setData("text/plain","role");}catch(_){}});
+    const h=card.querySelector("[data-rdrag]"); if(h) h.addEventListener("pointerdown",e=>rosterPointerDrag(e,{kind:"pool",roleId:r.id}, r.name));
     const rn=card.querySelector("[data-rname]"); if(rn){ rn.oninput=e=>{ r.name=e.target.value; markDirty(); }; rn.onchange=()=>{ renderPlayers(); }; }
     const rde=card.querySelector("[data-rdesc]"); if(rde) rde.oninput=e=>{ r.desc=e.target.value; markDirty(); };
     const del=card.querySelector("[data-rdel]"); if(del) del.onclick=()=>{ if(confirm(`Delete role "${r.name}"? It will be removed from any players.`)){ DB.roles=DB.roles.filter(x=>x.id!==r.id); DB.roster.forEach(p=>{ p.attackRoles=(p.attackRoles||[]).filter(id=>id!==r.id); p.defenseRoles=(p.defenseRoles||[]).filter(id=>id!==r.id); }); markDirty(); renderRoleGrid(); renderPlayers(); } };
