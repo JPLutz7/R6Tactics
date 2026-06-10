@@ -303,6 +303,28 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .prole.def{border-color:var(--def-line);background:var(--def-bg);color:#1c5fa6}
 .prole.atk .pri{background:#c2683e}.prole.def .pri{background:#3f78b0}
 .proles.drop-ok{outline:2px dashed var(--muted2);outline-offset:2px;border-radius:7px}
+/* roster: favourite operators per player */
+.pfavs{flex-basis:100%;width:100%;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line2)}
+.pfav-h{margin-bottom:7px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;font-size:10.5px}
+.pfav{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.favs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:26px}
+.favs>.empty{font-size:11px;border:1px dashed var(--line2);border-radius:7px;padding:3px 8px}
+.favchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:7px;border:1px solid var(--line3);background:var(--panel3)}
+.favchip.atk{border-color:var(--atk-line);background:var(--atk-bg);color:#a83d12}
+.favchip.def{border-color:var(--def-line);background:var(--def-bg);color:#1c5fa6}
+.favchip[data-op]{cursor:pointer}
+.favchip[data-op]:hover{filter:brightness(.96)}
+.favchip .x{cursor:pointer;opacity:.5;font-weight:800}
+.favchip .x:hover{opacity:1;color:#c2434f}
+.favadd{font-size:12px;font-weight:800;border-radius:7px;border:1px dashed var(--line3);background:transparent;color:var(--muted);padding:3px 9px;cursor:pointer}
+.favadd:hover{color:var(--text);border-color:var(--muted2)}
+.favadd.atk{color:var(--atk);border-color:var(--atk-line)}
+.favadd.def{color:var(--def);border-color:var(--def-line)}
+.fav-pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:7px;max-height:50vh;overflow:auto;margin:6px 0 14px}
+.fav-pick{font-size:12.5px;font-weight:700;padding:7px 6px;border-radius:8px;border:1px solid var(--line2);background:var(--panel3);color:var(--text);cursor:pointer;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav-pick.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.opchip.fav{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.sg-fav{margin-top:7px;font-size:11.5px;color:#a83d12;font-weight:600;line-height:1.45}
 /* role pools grouped by side */
 .rolegrid-sides{display:flex;flex-direction:column;gap:26px}
 .roleside-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -38318,6 +38340,7 @@ function normalizeDB(db){
     r.desc=r.desc||r.notes||"";
     delete r.attackOps; delete r.defenseOps; delete r.attackRoleLabel; delete r.defenseRoleLabel; delete r.notes; });
   const roleSide=id=>{ const r=db.roles.find(x=>x.id===id); return r?r.side:null; };
+  const opSide=id=>{ const o=db.operators.find(x=>x.id===id); return o?o.side:null; };
   db.roster.forEach(p=>{ p.name=p.name||"";
     if(!Array.isArray(p.attackRoles)||!Array.isArray(p.defenseRoles)){
       const old = Array.isArray(p.roles) ? p.roles : (p.roleId ? [p.roleId] : []);
@@ -38326,6 +38349,8 @@ function normalizeDB(db){
     }
     p.attackRoles=p.attackRoles.filter(id=>roleSide(id)==="attack");
     p.defenseRoles=p.defenseRoles.filter(id=>roleSide(id)==="defense");
+    p.favAtk=(Array.isArray(p.favAtk)?p.favAtk:[]).filter(id=>opSide(id)==="attack");
+    p.favDef=(Array.isArray(p.favDef)?p.favDef:[]).filter(id=>opSide(id)==="defense");
     delete p.roles; delete p.roleId; delete p.notes; });
   if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
     db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
@@ -38534,9 +38559,17 @@ function assignTactic(st,side){
   const maxr=Math.max(0,...players.map(p=>p.prefs.length));
   for(let r=0;r<maxr;r++) players.forEach(pl=>{ if(assigned.has(pl.pi))return; const role=pl.prefs[r]; if(!role)return; const slot=slots.find(s=>s.role===role&&s._taken===null); if(slot){ slot._taken=pl.pi; assigned.set(pl.pi,slot); } });
   players.forEach(pl=>{ if(assigned.has(pl.pi))return; const slot=slots.find(s=>s._taken===null); if(slot){ slot._taken=pl.pi; assigned.set(pl.pi,slot); } });
+  const favKey=side==="attack"?"favAtk":"favDef";
   return players.map(pl=>{ const slot=assigned.get(pl.pi); const role=slot?roleById(slot.role):null;
-    return { player:pl.name, roleName:role?role.name:"", ops:slot?(slot.ops||[]):[], pos:slot?slot.pos:"" }; });
+    const favs=new Set((DB.roster[pl.pi]&&DB.roster[pl.pi][favKey])||[]);
+    // when a slot offers several ops, surface this player's favourites first
+    const ops=(slot?(slot.ops||[]):[]).slice().sort((a,b)=>(favs.has(b)?1:0)-(favs.has(a)?1:0));
+    return { player:pl.name, roleName:role?role.name:"", ops, pos:slot?slot.pos:"", favs }; });
 }
+/* favourites the stack has flagged on a side (operator id set) */
+function allFavs(side){ const key=side==="attack"?"favAtk":"favDef"; const s=new Set(); DB.roster.forEach(p=>(p[key]||[]).forEach(o=>s.add(o))); return s; }
+/* fraction of a strat's slots that can be filled with a stack favourite (0..1) */
+function favAffinity(st,side){ const favs=allFavs(side); if(!favs.size)return 0; let hit=0,tot=0; (st.slots||[]).forEach(s=>{ tot++; if((s.ops||[]).some(o=>favs.has(o)))hit++; }); return tot?hit/tot:0; }
 function renderTacticsPanel(){
   const host=byId("tacticsPanel"); if(!host) return;
   const m=mapById(UI.maps.selectedId); if(!m||!m.bombsites||!m.bombsites.length){ host.innerHTML=""; return; }
@@ -38586,7 +38619,7 @@ function predictDefense(m,siteId,picked){
 }
 // fill the enemy team out to 5 from a predicted setup's pools (keeps the known picks)
 function predictedTeam(st,picked){ const t=(picked||[]).slice(); (st.slots||[]).forEach(s=>{ if(t.length>=5)return; const p=(s.ops||[]).find(o=>!t.includes(o)); if(p)t.push(p); }); return t.slice(0,5); }
-function bestCounter(m,siteId,team){ const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null; return atk.map((st,si)=>({st,si,score:scoreAttackStrat(st,team)})).sort((a,b)=>b.score-a.score)[0]; }
+function bestCounter(m,siteId,team){ const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null; return atk.map((st,si)=>({st,si,score:scoreAttackStrat(st,team)+0.15*favAffinity(st,"attack")})).sort((a,b)=>b.score-a.score)[0]; }
 function counterReason(team,approach){ const cfg=DB.suggester||{}; const arch=compArchetypes(team); const top=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0]; if(!top)return""; return `${(cfg.archetypeAdvice||{})[top]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[approach]||approach}.`; }
 function confLabel(known,gap){ if(known>=4&&gap>0.3)return"High"; if(known>=3&&gap>0.12)return"Medium"; return"Low"; }
 function renderSuggester(host,m){
@@ -38605,12 +38638,14 @@ function renderSuggester(host,m){
     const fills=team.filter(id=>!S.defenders.includes(id));
     const counter=bestCounter(m,S.siteId,team);
     const tells=(p.distinctive.length?p.distinctive:p.matched).map(opName);
+    const favSet=allFavs("attack");
+    const favOps=counter?[...new Set((counter.st.slots||[]).flatMap(s=>(s.ops||[])).filter(o=>favSet.has(o)))]:[];
     return `<div class="sg-pred ${idx===0?"top":""}">
       <div class="sg-pred-h"><span class="sg-pred-tag">${idx===0?"Most likely":"Also possible"}</span><span class="sg-pred-nm">${esc(p.st.name)}</span><span class="sg-conf ${conf.toLowerCase()}">${conf}</span></div>
       ${p.st.summary?`<div class="muted small sg-pred-sum">${esc(p.st.summary)}</div>`:""}
       ${tells.length?`<div class="sg-tells"><b>Tells:</b> ${tells.map(esc).join(", ")}</div>`:""}
       ${fills.length?`<div class="sg-fills muted small">probably rounds out with ${fills.map(esc).join(", ")}</div>`:""}
-      ${counter?`<button class="sg-counter" data-sgopen="${counter.si}"><span class="sg-counter-lab">► Counter</span> <b>${esc(counter.st.name)}</b> <span class="tag role sg-ap">${esc((cfg.approachLabels||{})[counter.st.approach]||counter.st.approach||"")}</span><div class="sg-counter-why">${esc(counterReason(team,counter.st.approach))}</div></button>`:""}
+      ${counter?`<button class="sg-counter" data-sgopen="${counter.si}"><span class="sg-counter-lab">► Counter</span> <b>${esc(counter.st.name)}</b> <span class="tag role sg-ap">${esc((cfg.approachLabels||{})[counter.st.approach]||counter.st.approach||"")}</span><div class="sg-counter-why">${esc(counterReason(team,counter.st.approach))}</div>${favOps.length?`<div class="sg-fav">★ Comfort picks your stack flagged: ${favOps.map(opName).map(esc).join(", ")}</div>`:""}</button>`:""}
     </div>`;
   }).join("");
   const siteBtns=m.bombsites.map(b=>`<button class="sg-site ${b.id===S.siteId?"on":""}" data-sgsite="${esc(b.id)}">${esc(b.name)}</button>`).join("");
@@ -38645,7 +38680,7 @@ function renderTacticDetail(host,m,T){
   // operators: who picks what (just the op options)
   const picks=assign.map(pk=>`<div class="tp-pick">
       <div class="tp-pick-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tag ${cls}" style="margin-left:auto">${esc(pk.roleName)}</span>`:""}</div>
-      <div class="tp-pick-ops">${pk.ops.length?pk.ops.map(id=>{const o=opById(id);return `<span class="opchip ${cls}" data-op="${esc(id)}" title="Click for details" role="button" tabindex="0">${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`}</div></div>`).join("");
+      <div class="tp-pick-ops">${pk.ops.length?pk.ops.map(id=>{const o=opById(id);const fav=pk.favs&&pk.favs.has(id);return `<span class="opchip ${cls}${fav?" fav":""}" data-op="${esc(id)}" title="${fav?"★ "+esc(pk.player)+"'s favourite · ":""}Click for details" role="button" tabindex="0">${fav?"★ ":""}${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`}</div></div>`).join("");
   // gadgets / jobs organized by person
   const jobs=assign.filter(pk=>pk.pos).map(pk=>`<div class="tp-job"><div class="tp-job-who"><span class="pavatar sm">${esc((pk.player||"?").trim().slice(0,2).toUpperCase())}</span><b>${esc(pk.player)}</b>${pk.roleName?`<span class="tp-job-role">${esc(pk.roleName)}</span>`:""}</div><div class="tp-job-txt">${esc(pk.pos)}</div></div>`).join("");
   const bullets=arr=>(arr||[]).filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join("");
@@ -38968,6 +39003,17 @@ function renderPlayers(){
       <div class="proles" data-drop="${i}|${side}">${chips||`<span class="empty muted">${edit?"drag "+(side==="attack"?"attack":"defense")+" roles here":"—"}</span>`}</div>
     </div>`;
   };
+  const favRow=(p,i,side)=>{
+    const key=side==="attack"?"favAtk":"favDef"; const cls=side==="attack"?"atk":"def";
+    const ids=p[key]||[];
+    const chips=ids.map((oid,k)=>{ const o=opById(oid); if(!o)return"";
+      return `<span class="favchip ${cls}" ${edit?"":`data-op="${esc(oid)}" role="button" tabindex="0" title="Click for details"`}>${esc(o.name)}${edit?` <span class="x" data-favrm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
+    }).join("");
+    return `<div class="pfav">
+      <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
+      <div class="favs">${chips||(edit?"":`<span class="empty muted">—</span>`)}${edit?`<button class="favadd ${cls}" data-favadd="${i}|${side}">＋ op</button>`:""}</div>
+    </div>`;
+  };
   wrap.innerHTML=DB.roster.map((p,i)=>{
     const initials=(p.name||"?").trim().slice(0,2).toUpperCase();
     return `<div class="prow" data-p="${i}">
@@ -38976,12 +39022,16 @@ function renderPlayers(){
       <div class="psides">${sideRow(p,i,"attack")}${sideRow(p,i,"defense")}</div>
       <div class="grow"></div>
       ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
+      <div class="pfavs"><div class="pfav-h muted">Favourite operators</div>${favRow(p,i,"attack")}${favRow(p,i,"defense")}</div>
     </div>`;
   }).join("")||`<div class="empty">No players.</div>`;
+  wrap.querySelectorAll(".favchip[data-op]").forEach(c=>{ c.onclick=()=>openOpModal(c.dataset.op); c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(c.dataset.op); } }; });
   bindPlayers();
 }
 function bindPlayers(){
   const wrap=byId("players"); if(!UI.roster.edit) return;
+  wrap.querySelectorAll("[data-favadd]").forEach(b=>b.onclick=()=>{ const [i,side]=b.dataset.favadd.split("|"); showFavPicker(+i,side); });
+  wrap.querySelectorAll("[data-favrm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.favrm.split("|"); const key=side==="attack"?"favAtk":"favDef"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); });
   wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
   wrap.querySelectorAll("[data-pdel]").forEach(b=>b.onclick=()=>{ DB.roster.splice(+b.closest("[data-p]").dataset.p,1); markDirty(); renderPlayers(); renderRoleGrid(); });
   wrap.querySelectorAll("[data-chiprm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.chiprm.split("|"); const key=side==="attack"?"attackRoles":"defenseRoles"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); renderRoleGrid(); });
@@ -38989,6 +39039,24 @@ function bindPlayers(){
     if(e.target.closest("[data-chiprm]"))return; const [i,side,k]=c.dataset.chip.split("|");
     const key=side==="attack"?"attackRoles":"defenseRoles"; const r=roleById((DB.roster[+i][key]||[])[+k]);
     rosterPointerDrag(e,{kind:"chip",player:+i,side,idx:+k}, r?r.name:"role"); }));
+}
+// operator picker for a player's favourites (multi-select toggle list, side-scoped)
+function showFavPicker(pi,side){
+  const p=DB.roster[pi]; if(!p) return;
+  const key=side==="attack"?"favAtk":"favDef";
+  const cur=new Set(p[key]||[]);
+  const ops=opsBySide(side);
+  let m=byId("favPickModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="favPickModal"; document.body.appendChild(m); }
+  m.innerHTML=`<div class="card"><div class="spread" style="margin-bottom:6px"><h3 style="margin:0">${esc(p.name||"Player")} — favourite ${side==="attack"?"attackers":"defenders"}</h3><button class="iconbtn" id="fpClose" title="Close">✕</button></div>
+    <p class="muted small" style="margin:0 0 4px">Tap to toggle. These float to the front when a tactic offers this player a choice of ops, and the recommender prefers counters your stack is comfy on.</p>
+    <div class="fav-pick-grid">${ops.map(o=>`<button class="fav-pick ${cur.has(o.id)?"on":""}" data-fp="${esc(o.id)}">${esc(o.name)}</button>`).join("")}</div>
+    <div class="row" style="justify-content:flex-end;gap:8px"><button class="btn primary" id="fpDone">Done</button></div></div>`;
+  m.classList.add("show");
+  const commit=()=>{ p[key]=[...cur]; markDirty(); renderPlayers(); };
+  const close=()=>{ commit(); m.classList.remove("show"); };
+  byId("fpClose").onclick=close; byId("fpDone").onclick=close;
+  m.onclick=e=>{ if(e.target===m) close(); };
+  m.querySelectorAll("[data-fp]").forEach(b=>b.onclick=()=>{ const id=b.dataset.fp; if(cur.has(id)){ cur.delete(id); b.classList.remove("on"); } else { cur.add(id); b.classList.add("on"); } });
 }
 function rosterInsertIndex(box,clientX){ const chips=[...box.querySelectorAll(".prole")]; for(let j=0;j<chips.length;j++){ const r=chips[j].getBoundingClientRect(); if(clientX<r.left+r.width/2) return j; } return chips.length; }
 // pointer-based roster drag (works for mouse + touch; replaces HTML5 DnD)
@@ -39160,7 +39228,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 6;
+const APP_BUILD = 7;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
