@@ -413,6 +413,19 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-board+.pl-board{padding-top:6px;border-top:1px solid var(--line2)}
 .pl-board-h{font-size:13px;font-weight:800;letter-spacing:.3px;margin:4px 0 10px;color:var(--text)}
 .pl-section-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:16px 0 8px}
+.pl-rankbadge{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 12px;border:1px solid var(--line2);border-radius:12px;background:var(--panel2)}
+.pl-rankimg{width:52px;height:52px;object-fit:contain;flex:none}
+.pl-rankname{font-size:18px;font-weight:900;letter-spacing:.2px}
+.pl-optbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:4px}
+.pl-optbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700;padding:4px 8px;border-bottom:1px solid var(--line2)}
+.pl-optbl td{padding:6px 8px;border-bottom:1px solid var(--line2)}
+.pl-optbl td.num,.pl-optbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+.pl-opside{display:inline-block;margin-left:6px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:5px;vertical-align:middle}
+.pl-opside.atk{color:#a83d12;background:var(--atk-bg)}.pl-opside.def{color:#1c5fa6;background:var(--def-bg)}
+.pl-spark{width:100%;height:42px;display:block;margin:2px 0 8px}
+.pl-mmrlist{display:flex;flex-direction:column;gap:3px}
+.pl-mmrrow{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.pl-mmrrow b{min-width:54px}
 .pl-extra{margin-bottom:8px}
 .pl-extra>summary{cursor:pointer;font-weight:700;font-size:12.5px;color:var(--accent);padding:6px 0}
 .pl-raw{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px;font-size:11px;overflow:auto;max-height:340px;white-space:pre-wrap}
@@ -38477,7 +38490,7 @@ const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Playe
 const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null, tacticSide:"attack" },
   roster:{ edit:false },
-  players:{ sel:0 } };
+  players:{ sel:0, allOps:false } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 
@@ -38687,6 +38700,27 @@ function boardCard(b){
     </div></div>`;
 }
 function rawDetails(label,obj){ return `<details class="pl-extra"><summary>${esc(label)}</summary><pre class="pl-raw">${esc(JSON.stringify(obj,null,2).slice(0,40000))}</pre></details>`; }
+// ---- promoted cards from the extra API data ----
+function rankHistory(p){ try{ return (p.more.seasonalStats.data.history.data||[]).map(e=>({ts:e[0],value:e[1].value,display:e[1].displayValue,rank:e[1].metadata&&e[1].metadata.rank,color:e[1].metadata&&e[1].metadata.color,img:e[1].metadata&&e[1].metadata.imageUrl})); }catch(_){ return []; } }
+function currentRank(p){ const h=rankHistory(p); return h.length?h[0]:null; }   // newest first
+function operatorRows(p){ try{ let o=p.more.operatorStats.operators; o=Array.isArray(o)?o:Object.values(o);
+  return o.filter(x=>x&&(x.roundsPlayed||x.matchesPlayed)).map(x=>({name:x.operator,side:x.side,rounds:num(x.roundsPlayed),win:num(x.winPercent),kd:num(x.kd),hs:num(x.headshotPercent),k:num(x.kills),d:num(x.deaths)}))
+    .sort((a,b)=>(b.rounds||0)-(a.rounds||0)); }catch(_){ return []; } }
+function sparklineSVG(vals){ if(!vals||vals.length<2) return ""; const w=260,h=42,pad=4,min=Math.min(...vals),max=Math.max(...vals),rng=(max-min)||1;
+  const pts=vals.map((v,i)=>{ const x=pad+i*(w-2*pad)/(vals.length-1); const y=h-pad-((v-min)/rng)*(h-2*pad); return x.toFixed(1)+","+y.toFixed(1); }).join(" ");
+  return `<svg class="pl-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/></svg>`; }
+function rankBadgeHTML(p){ const c=currentRank(p); if(!c||!c.rank) return "";
+  return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.rank)}</div><div class="muted small">${esc(String(c.display||c.value||""))} RP · ranked</div></div></div>`; }
+function operatorTableHTML(p){ const rows=operatorRows(p); if(!rows.length) return "";
+  const all=UI.players.allOps, top=all?rows:rows.slice(0,8);
+  const tr=o=>`<tr><td>${esc(o.name||"?")}${o.side?`<span class="pl-opside ${o.side==="Attacker"?"atk":"def"}">${o.side==="Attacker"?"A":"D"}</span>`:""}</td><td class="num">${o.rounds!=null?o.rounds:"—"}</td><td class="num">${o.win!=null?o.win+"%":"—"}</td><td class="num">${o.kd!=null?o.kd:"—"}</td><td class="num">${o.hs!=null?Math.round(o.hs)+"%":"—"}</td></tr>`;
+  return `<div class="pl-section-h">Operators <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">· ${rows.length} played · by rounds</span></div>
+    <table class="pl-optbl"><thead><tr><th>Operator</th><th class="num">Rnds</th><th class="num">Win%</th><th class="num">K/D</th><th class="num">HS%</th></tr></thead><tbody>${top.map(tr).join("")}</tbody></table>
+    ${rows.length>8?`<button class="lnk" id="plMoreOps">${all?"show top 8":"show all "+rows.length+" →"}</button>`:""}`; }
+function mmrHistoryHTML(p){ const h=rankHistory(p); if(h.length<2) return "";
+  const pts=h.slice().reverse();   // oldest → newest
+  return `<div class="pl-section-h">MMR history</div>${sparklineSVG(pts.map(x=>x.value))}
+    <div class="pl-mmrlist">${pts.slice(-8).reverse().map(x=>`<div class="pl-mmrrow"><span class="muted small">${new Date(x.ts).toLocaleDateString()}</span><b>${esc(String(x.display||x.value))}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
@@ -38698,9 +38732,12 @@ function renderPlayersTab(root){
   const boards=(p&&p.ok&&p.raw)?allBoards(p.raw):[];
   if(boards.length){
     const extras=(p.more&&Object.keys(p.more).length)?
-      `<div class="pl-section-h">More from the API <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— extra data types; tell me which to surface as cards</span></div>`+
+      `<div class="pl-section-h">More from the API <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— raw extras</span></div>`+
       Object.keys(p.more).map(t=>rawDetails(t, p.more[t])).join("") : "";
-    body=`${boards.map(boardCard).join("")}
+    body=`${rankBadgeHTML(p)}
+      ${boards.map(boardCard).join("")}
+      ${operatorTableHTML(p)}
+      ${mmrHistoryHTML(p)}
       ${extras}
       <div class="pl-section-h">Everything (raw)</div>
       ${rawDetails("Full stats response", p.raw)}`;
@@ -38723,8 +38760,9 @@ function renderPlayersTab(root){
     <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p?esc("@"+p.handle+" · "+(p.platform||"uplay")):""}</span></h3><span class="muted small">updated ${agoText(updated)}</span></div>
       <div class="panel-b">${body}</div></div>
     <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs every 12h via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add players.</div>`;
-  root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; renderPlayersTab(root); });
+  root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; UI.players.allOps=false; renderPlayersTab(root); });
   byId("plRefresh").onclick=()=>{ loadStats(true); toast("Refreshing…"); };
+  const mo=byId("plMoreOps"); if(mo) mo.onclick=()=>{ UI.players.allOps=!UI.players.allOps; renderPlayersTab(root); };
 }
 const VIEWS={ maps:renderMaps, roster:renderRoster, players:renderPlayersTab };
 function render(){ const v=byId("view"); v.innerHTML=""; VIEWS[UI.tab](v); }
@@ -39486,7 +39524,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 16;
+const APP_BUILD = 17;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");

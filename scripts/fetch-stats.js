@@ -57,6 +57,9 @@ async function fetchPlayer(p) {
       if (t === used) continue;                      // already have it as raw
       try { const r = await fetchType(p.handle, platform, t); if (r.ok && r.json) more[t] = r.json; } catch (_) {}
     }
+    // fullStats.operators is an exact duplicate of operatorStats (~34KB) — drop it
+    // but keep fullStats.data.segments + all-time boards (those are unique).
+    if (more.fullStats && more.operatorStats && more.fullStats.operators) delete more.fullStats.operators;
     if (Object.keys(more).length) out.more = more;
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
