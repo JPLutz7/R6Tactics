@@ -395,6 +395,17 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .tp-strat{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:9px;padding:8px 11px;margin-bottom:6px;cursor:pointer}
 .tp-strat:hover{background:var(--panel3);border-color:var(--def-line)}
 .tp-group.atk .tp-strat:hover{border-color:var(--atk-line)}
+.pl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.pl-tab{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;font-weight:800;font-size:14px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;touch-action:manipulation}
+.pl-tab.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
+.pl-tab-av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font-size:12px;font-weight:800}
+.pl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.pl-stat{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px}
+.pl-stat-v{font-size:28px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--text);line-height:1.1}
+.pl-stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-top:4px}
+.pl-stat-s{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.pl-empty{padding:8px 2px}
+.pl-raw{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px;font-size:11px;overflow:auto;max-height:300px;white-space:pre-wrap}
 .tp-sidetoggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
 .tp-st-btn{flex:1;padding:9px 0;font-weight:800;font-size:13px;letter-spacing:.3px;background:var(--panel2);color:var(--muted);cursor:pointer;border:none;touch-action:manipulation}
 .tp-st-btn+.tp-st-btn{border-left:1px solid var(--line2)}
@@ -38452,10 +38463,11 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
 /* =================================================================== *
  *  UI STATE
  * =================================================================== */
-const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"]];
+const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Players"]];
 const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null, tacticSide:"attack" },
-  roster:{ edit:false } };
+  roster:{ edit:false },
+  players:{ sel:0 } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 
@@ -38584,7 +38596,76 @@ function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.
 /* =================================================================== *
  *  RENDER SWITCH
  * =================================================================== */
-const VIEWS={ maps:renderMaps, roster:renderRoster };
+/* =================================================================== *
+ *  PLAYERS  (live ranked stats from r6data, refreshed every 12h by a
+ *  GitHub Action that commits players.json — the app just reads it)
+ * =================================================================== */
+let STATS_DATA=null, STATS_FETCHED=0, STATS_LOADING=false;
+const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPLutz7",platform:"uplay"},{key:"leme",label:"Leme",handle:"Mtaro",platform:"uplay"}];
+function statsPlayers(){ return (STATS_DATA&&STATS_DATA.players&&STATS_DATA.players.length)?STATS_DATA.players:STATS_FALLBACK; }
+async function loadStats(force){
+  if(STATS_LOADING) return; if(!force && STATS_DATA && Date.now()-STATS_FETCHED<5*60*1000) return;
+  STATS_LOADING=true;
+  try{ const r=await fetch("players.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ STATS_DATA=await r.json(); STATS_FETCHED=Date.now(); } }
+  catch(_){}
+  finally{ STATS_LOADING=false; if(UI.tab==="players") renderPlayersTab(byId("view")); }
+}
+// find ranked-looking fields anywhere in the raw API payload (shape may vary)
+function findRanked(o,seen){ seen=seen||new Set(); if(!o||typeof o!=="object"||seen.has(o)) return null; seen.add(o);
+  if("rank_points" in o || ("wins" in o && "losses" in o)) return o;
+  for(const k in o){ const f=findRanked(o[k],seen); if(f) return f; } return null; }
+function num(v){ return (typeof v==="number"&&isFinite(v))?v:null; }
+function extractRanked(p){
+  if(!p||!p.raw) return null; const r=findRanked(p.raw); if(!r) return null;
+  const wins=num(r.wins), losses=num(r.losses), kills=num(r.kills), deaths=num(r.deaths);
+  const wr=(wins!=null&&losses!=null&&(wins+losses)>0)?wins/(wins+losses):null;
+  const kd=(kills!=null&&deaths!=null&&deaths>0)?kills/deaths:(kills!=null&&deaths===0?kills:null);
+  return { mmr:num(r.rank_points), rank:num(r.rank), maxMmr:num(r.max_rank_points), maxRank:num(r.max_rank),
+           wins, losses, wr, kills, deaths, kd, abandon:num(r.abandon) };
+}
+function agoText(iso){ if(!iso) return "never"; const t=Date.parse(iso); if(isNaN(t)) return "unknown";
+  const s=Math.max(0,(Date.now()-t)/1000); if(s<90) return "just now"; const m=s/60; if(m<90) return Math.round(m)+" min ago";
+  const h=m/60; if(h<36) return Math.round(h)+" h ago"; return Math.round(h/24)+" d ago"; }
+function renderPlayersTab(root){
+  loadStats(false);
+  const players=statsPlayers();
+  if(UI.players.sel>=players.length) UI.players.sel=0;
+  const p=players[UI.players.sel]||players[0];
+  const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}</button>`).join("");
+  const updated=STATS_DATA?STATS_DATA.updated:null;
+  let body;
+  const rk=extractRanked(p);
+  if(rk){
+    const stat=(lab,val,sub)=>`<div class="pl-stat"><div class="pl-stat-v">${val}</div><div class="pl-stat-l">${lab}</div>${sub?`<div class="pl-stat-s">${sub}</div>`:""}</div>`;
+    const pct=rk.wr!=null?Math.round(rk.wr*100)+"%":"—";
+    body=`<div class="pl-grid">
+      ${stat("Ranked MMR", rk.mmr!=null?rk.mmr:"—", rk.maxMmr!=null?("peak "+rk.maxMmr):"")}
+      ${stat("Win rate", pct, (rk.wins!=null&&rk.losses!=null)?(rk.wins+"W / "+rk.losses+"L"):"")}
+      ${stat("K/D", rk.kd!=null?rk.kd.toFixed(2):"—", (rk.kills!=null&&rk.deaths!=null)?(rk.kills+" / "+rk.deaths):"")}
+      ${stat("Abandons", rk.abandon!=null?rk.abandon:"—","")}
+    </div>`;
+  } else if(p&&p.error){
+    body=`<div class="pl-empty"><b>Couldn't fetch ${esc(p.label||p.handle)}.</b><div class="muted small" style="margin-top:6px">${esc(p.error)}</div><div class="muted small" style="margin-top:6px">Check the handle/platform in <span class="mono">scripts/players.config.json</span>.</div></div>`;
+  } else if(!updated){
+    body=`<div class="pl-empty"><b>No stats synced yet.</b>
+      <div class="muted small" style="margin-top:8px;line-height:1.6">This tab reads <span class="mono">players.json</span>, refreshed every 12h by a GitHub Action. To activate it once:</div>
+      <ol class="muted small" style="line-height:1.7;margin:8px 0 0;padding-left:18px">
+        <li>Get an API key from <a href="https://r6data.com" target="_blank" rel="noopener">r6data.com</a>.</li>
+        <li>Repo → <b>Settings → Secrets and variables → Actions</b> → <b>New repository secret</b> → name <span class="mono">R6DATA_API_KEY</span>.</li>
+        <li>Repo → <b>Actions → Refresh player stats → Run workflow</b> (then it auto-runs every 12h).</li>
+      </ol></div>`;
+  } else {
+    body=`<div class="pl-empty"><b>No ranked data for ${esc(p.label||p.handle)} yet.</b><div class="muted small" style="margin-top:6px">The sync ran but returned no ranked fields. Raw response below.</div>${p&&p.raw?`<details style="margin-top:8px"><summary class="lnk">show raw</summary><pre class="pl-raw">${esc(JSON.stringify(p.raw,null,2).slice(0,4000))}</pre></details>`:""}</div>`;
+  }
+  root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live ranked stats</span></div><div class="grow"></div><button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button></div>
+    <div class="pl-tabs">${toggle}</div>
+    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")} <span class="muted small" style="font-weight:500">${p?esc("@"+p.handle+" · "+(p.platform||"uplay")):""}</span></h3><span class="muted small">updated ${agoText(updated)}</span></div>
+      <div class="panel-b">${body}</div></div>
+    <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs every 12h via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add players.</div>`;
+  root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; renderPlayersTab(root); });
+  byId("plRefresh").onclick=()=>{ loadStats(true); toast("Refreshing…"); };
+}
+const VIEWS={ maps:renderMaps, roster:renderRoster, players:renderPlayersTab };
 function render(){ const v=byId("view"); v.innerHTML=""; VIEWS[UI.tab](v); }
 
 /* =================================================================== *
@@ -39344,7 +39425,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 12;
+const APP_BUILD = 13;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
