@@ -3,6 +3,7 @@ name: Refresh player stats
 # Pulls each stack member's ranked stats from the r6data API every 12h and
 # commits players.json. The api-key lives only as the R6DATA_API_KEY repo secret
 # (Settings → Secrets and variables → Actions), never in the client.
+# (re-registered after enabling Actions)
 
 on:
   schedule:
