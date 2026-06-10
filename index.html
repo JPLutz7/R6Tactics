@@ -394,6 +394,17 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .tp-group.atk .tp-strat:hover{border-color:var(--atk-line)}
 .tp-strat-nm{display:block;font-weight:700;font-size:13px;color:var(--text)}
 .tp-strat-sum{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.tp-strat-rate{float:right;margin-left:8px;font-weight:800;font-size:12px;font-variant-numeric:tabular-nums;padding:1px 7px;border-radius:999px;border:1px solid var(--line2)}
+.tp-strat-rate.logged{color:#1c7c3a;background:rgba(40,170,80,.12);border-color:rgba(40,170,80,.4)}
+.tp-strat-rate.prior{color:var(--muted);background:var(--panel3);border-style:dashed}
+.tp-rec{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.tp-rec-btn{font-weight:800;font-size:14px;border-radius:9px;padding:9px 18px;cursor:pointer;border:1px solid var(--line2);touch-action:manipulation}
+.tp-rec-btn.win{color:#136b2e;background:rgba(40,170,80,.14);border-color:rgba(40,170,80,.5)}
+.tp-rec-btn.win:active{background:rgba(40,170,80,.3)}
+.tp-rec-btn.loss{color:#9a2727;background:rgba(210,70,70,.12);border-color:rgba(210,70,70,.45)}
+.tp-rec-btn.loss:active{background:rgba(210,70,70,.28)}
+.tp-rec-stat{display:flex;align-items:baseline;gap:8px}
+.tp-rec-rate{font-weight:900;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text)}
 .tp-empty{padding:5px 2px}
 .tp-detail-h{display:flex;align-items:center;gap:8px;margin-bottom:9px}
 .tp-title{font-size:16px;margin:2px 0}
@@ -38362,7 +38373,8 @@ function normalizeDB(db){
       [A,D].forEach(T=>{ if(!Array.isArray(T.strats))T.strats=[];
         T.strats.forEach(st=>{ st.id=st.id||uid("strat"); st.name=st.name||"Strat"; st.summary=st.summary||"";
           if(!Array.isArray(st.reinforce))st.reinforce=[]; if(!Array.isArray(st.rotations))st.rotations=[]; if(!Array.isArray(st.breach))st.breach=[];
-          if(!Array.isArray(st.slots))st.slots=[]; st.slots.forEach(sl=>{ sl.role=sl.role||""; sl.pos=sl.pos||""; if(!Array.isArray(sl.ops))sl.ops=[]; }); }); }); });
+          if(!Array.isArray(st.slots))st.slots=[]; st.slots.forEach(sl=>{ sl.role=sl.role||""; sl.pos=sl.pos||""; if(!Array.isArray(sl.ops))sl.ops=[]; });
+          if(typeof st.w!=="number"||st.w<0)st.w=0; if(typeof st.l!=="number"||st.l<0)st.l=0; }); }); });
   });
   db.operators.forEach(o=>{ o.id=o.id||slug(o.name||"op"); o.name=o.name||o.id;
     o.side=o.side==="defense"?"defense":"attack"; o.role=o.role||"flex"; o.notes=o.notes||""; o.howToCounter=o.howToCounter||""; });
@@ -38604,6 +38616,7 @@ function assignTactic(st,side){
 function allFavs(side){ const key=side==="attack"?"favAtk":"favDef"; const s=new Set(); DB.roster.forEach(p=>(p[key]||[]).forEach(o=>s.add(o))); return s; }
 /* fraction of a strat's slots that can be filled with a stack favourite (0..1) */
 function favAffinity(st,side){ const favs=allFavs(side); if(!favs.size)return 0; let hit=0,tot=0; (st.slots||[]).forEach(s=>{ tot++; if((s.ops||[]).some(o=>favs.has(o)))hit++; }); return tot?hit/tot:0; }
+let LAST_REC=null; // last logged round {st,field} — enables one-tap "undo last"
 function renderTacticsPanel(){
   const host=byId("tacticsPanel"); if(!host) return;
   const m=mapById(UI.maps.selectedId); if(!m||!m.bombsites||!m.bombsites.length){ host.innerHTML=""; return; }
@@ -38614,7 +38627,8 @@ function renderTacticsPanel(){
     const items=m.bombsites.map(b=>{
       const strats=(((m.tactics||{})[side]||{})[b.id]||{}).strats||[];
       if(!strats.length) return "";
-      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${strats.map((st,si)=>`<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`).join("")}</div>`;
+      const ordered=strats.map((st,si)=>({st,si})).sort((a,c)=>stratSuccessRate(c.st)-stratSuccessRate(a.st)); // best success rate first
+      return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
     }).join("");
     return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span>${side==="attack"?`<div class="grow"></div><button class="btn sm" id="tpSuggest" title="Suggest the best attack vs the defenders you expect (prep)">🎯 Suggest</button>`:""}</div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
   };
@@ -38653,17 +38667,32 @@ function predictDefense(m,siteId,picked){
 }
 // fill the enemy team out to 5 from a predicted setup's pools (keeps the known picks)
 function predictedTeam(st,picked){ const t=(picked||[]).slice(); (st.slots||[]).forEach(s=>{ if(t.length>=5)return; const p=(s.ops||[]).find(o=>!t.includes(o)); if(p)t.push(p); }); return t.slice(0,5); }
-// favourite operators (read straight from the roster) weigh FAV_WEIGHT of the
-// ranking; concrete matchup data is the other (1-FAV_WEIGHT). Concrete scores are
-// min-max normalized across the site's strats so the blend is a true percentage.
+// ---- per-tactic success rate (self-logged ✓/✗ per round, with a data prior) ----
+// Prior = average operator win-rate of the ops named in the strat's slots, mapped
+// to [0,1] (40%→0, 60%→1). Used until the tactic has logged rounds.
+function stratProxy(st){
+  const ids=[...new Set((st.slots||[]).flatMap(s=>(s.ops||[])))];
+  let sum=0,n=0; ids.forEach(id=>{ const o=opById(id); if(o&&typeof o.winRate==="number"){ sum+=o.winRate; n++; } });
+  const avg=n?sum/n:50; return Math.max(0,Math.min(1,(avg-40)/20));
+}
+// Confidence-weighted: observed W/L shrunk toward the prior (k pseudo-rounds) so
+// 1–2 rounds don't dominate; converges to the real rate as you log more.
+const RATE_PRIOR_K=6;
+function stratSuccessRate(st){ const w=st.w|0,l=st.l|0,n=w+l; return (w+RATE_PRIOR_K*stratProxy(st))/(n+RATE_PRIOR_K); }
+function stratRecord(st){ const w=st.w|0,l=st.l|0; return {w,l,n:w+l,rate:stratSuccessRate(st),prior:stratProxy(st)}; }
+
+// Suggester ranking, in strict priority order: COUNTERS first, then SUCCESS RATE,
+// then FAVOURITE ops. Each term is in [0,1] (concrete is min-max normalized across
+// the site's strats), blended with descending weights so counters dominate.
 function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+function rateWeight(){ const w=DB.suggester&&DB.suggester.rateWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.20; }
 function bestCounter(m,siteId,team){
   const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null;
-  const W=favWeight();
-  const cand=atk.map((st,si)=>({st,si,concrete:scoreAttackStrat(st,team),fav:favAffinity(st,"attack")}));
+  const Wf=favWeight(), Wr=rateWeight(), Wc=Math.max(0,1-Wf-Wr); // counters get the rest (dominant)
+  const cand=atk.map((st,si)=>({st,si,concrete:scoreAttackStrat(st,team),rate:stratSuccessRate(st),fav:favAffinity(st,"attack")}));
   const cs=cand.map(c=>c.concrete); const lo=Math.min(...cs), hi=Math.max(...cs);
   const norm=v=>hi>lo?(v-lo)/(hi-lo):0.5;
-  cand.forEach(c=>{ c.score=(1-W)*norm(c.concrete)+W*c.fav; });
+  cand.forEach(c=>{ c.score=Wc*norm(c.concrete)+Wr*c.rate+Wf*c.fav; });
   return cand.sort((a,b)=>b.score-a.score)[0];
 }
 function counterReason(team,approach){ const cfg=DB.suggester||{}; const arch=compArchetypes(team); const top=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0]; if(!top)return""; return `${(cfg.archetypeAdvice||{})[top]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[approach]||approach}.`; }
@@ -38737,12 +38766,22 @@ function renderTacticDetail(host,m,T){
     <div class="tp-detail-h"><button class="btn sm" id="tpBack">← Tactics</button><span class="tag ${cls}">${T.side==="attack"?"Attack":"Defense"}</span></div>
     <h3 class="tp-title">${esc(st.name)}</h3>
     <div class="muted small tp-site-lbl">${esc(b?b.name:"")}${st.summary?` — ${esc(st.summary)}`:""}</div>
+    <div class="tp-sec-h">Round record <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">— tap after each round; feeds the suggester & ordering</span></div>
+    ${(()=>{ const rec=stratRecord(st); const can=LAST_REC&&LAST_REC.st===st&&st[LAST_REC.field]>0;
+      return `<div class="tp-rec">
+        <button class="tp-rec-btn win" id="recWin">✓ Win</button>
+        <button class="tp-rec-btn loss" id="recLoss">✗ Loss</button>
+        <div class="tp-rec-stat"><span class="tp-rec-rate">${Math.round(rec.rate*100)}%</span> <span class="muted small">${rec.w}–${rec.l}${rec.n<5?" · "+(rec.n?"early — still partly operator-data estimate":"no rounds yet — operator-data estimate"):""}</span>${can?` <span class="lnk" id="recUndo">undo last</span>`:""}</div>
+      </div>`; })()}
     <div class="tp-sec-h">Operators — who picks what</div>
     <div class="tp-picks">${picks}</div>
     ${sec(setupHead,setupItems)}
     ${T.side==="defense"?sec("Rotations",st.rotations):""}
     ${jobs?`<div class="tp-sec-h">Gadgets &amp; jobs — by player</div><div class="tp-jobs">${jobs}</div>`:""}</div>`;
   byId("tpBack").onclick=()=>{ UI.maps.tactic=null; UI.maps.siteFilter="all"; renderFloorView(); renderTacticsPanel(); };
+  byId("recWin").onclick=()=>{ st.w=(st.w|0)+1; LAST_REC={st,field:"w"}; markDirty(); renderTacticsPanel(); };
+  byId("recLoss").onclick=()=>{ st.l=(st.l|0)+1; LAST_REC={st,field:"l"}; markDirty(); renderTacticsPanel(); };
+  const undo=byId("recUndo"); if(undo) undo.onclick=()=>{ if(LAST_REC&&LAST_REC.st===st&&st[LAST_REC.field]>0){ st[LAST_REC.field]--; LAST_REC=null; markDirty(); renderTacticsPanel(); } };
   host.querySelectorAll(".opchip[data-op]").forEach(ch=>{ ch.onclick=()=>openOpModal(ch.dataset.op); ch.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(ch.dataset.op); } }; });
 }
 
@@ -39281,7 +39320,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 9;
+const APP_BUILD = 10;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
