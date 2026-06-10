@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: player-stats
@@ -40,21 +41,29 @@ jobs:
             git commit -m "Refresh player ranked stats [skip ci]"
             git push
           fi
-      # Fail the run (→ GitHub emails you) if the API key was rejected or has
-      # lapsed. Runs AFTER the commit so the app still gets the banner state.
-      - name: Alarm if API key expired/invalid
-        run: |
-          node -e '
-            const d = require("./players.json");
-            const exp = d.keyExpires ? Date.parse(d.keyExpires + "T23:59:59Z") : null;
-            const days = exp ? Math.ceil((exp - Date.now()) / 86400000) : null;
-            if (d.keyStatus === "invalid" || d.keyStatus === "expired") {
-              console.error("::error title=R6DATA_API_KEY expired::The r6data API key was rejected (keyStatus=" + d.keyStatus + "). Stats are frozen. Renew the key at r6data and update the R6DATA_API_KEY repo secret + api_key_expires in scripts/players.config.json.");
-              process.exit(1);
-            }
-            if (days != null && days <= 14) {
-              console.log("::warning title=R6DATA_API_KEY expiring soon::Key expires in " + days + " day(s) (on " + d.keyExpires + "). Rotate it soon.");
+      # On key expiry/rejection, open a GitHub Issue (assigned + @mention) so GitHub
+      # emails the owner the renewal LINK + STEPS — not just a generic failure email.
+      # Runs after the commit so the app still gets the banner state; de-dupes on an
+      # open 'r6data-key' issue so it won't spam every 12h.
+      - name: Alarm if API key expiring/expired (opens an Issue → emails you)
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { decide } = require('./scripts/key-alarm-decide.js');
+            const d = JSON.parse(fs.readFileSync('players.json', 'utf8'));
+            const r = decide(d);
+            if (r.state === 'ok') { core.info('API key healthy' + (r.days != null ? ` (${r.days} days left)` : '')); return; }
+            const repo = { owner: context.repo.owner, repo: context.repo.repo };
+            const label = 'r6data-key';
+            try { await github.rest.issues.getLabel({ ...repo, name: label }); }
+            catch (e) { await github.rest.issues.createLabel({ ...repo, name: label, color: 'd73a4a', description: 'r6data API key health' }); }
+            const open = await github.rest.issues.listForRepo({ ...repo, state: 'open', labels: label });
+            if (open.data.length === 0) {
+              const issue = await github.rest.issues.create({ ...repo, title: r.title, body: r.body, labels: [label], assignees: ['JPLutz7'] });
+              core.notice('Opened ' + r.title + ' (#' + issue.data.number + ')');
             } else {
-              console.log("API key healthy" + (days != null ? " (" + days + " days left)" : "") + ".");
+              core.info('r6data-key issue already open (#' + open.data[0].number + ') — not duplicating.');
             }
-          '
+            if (r.state === 'bad') core.setFailed('r6data API key invalid/expired — see the opened issue for renewal steps.');
