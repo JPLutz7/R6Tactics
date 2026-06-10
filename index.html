@@ -38614,9 +38614,18 @@ async function loadStats(force){
 function findRanked(o,seen){ seen=seen||new Set(); if(!o||typeof o!=="object"||seen.has(o)) return null; seen.add(o);
   if("rank_points" in o || ("wins" in o && "losses" in o)) return o;
   for(const k in o){ const f=findRanked(o[k],seen); if(f) return f; } return null; }
+// r6data shape: platform_families_full_profiles[].board_ids_full_profiles[]{board_id, full_profiles[]{profile}}
+// — pick the "ranked" board explicitly (not casual/event); fall back to a generic scan.
+function rankedProfile(raw){
+  try{ for(const fam of (raw.platform_families_full_profiles||[]))
+    for(const b of (fam.board_ids_full_profiles||[]))
+      if(b.board_id==="ranked"){ const fp=(b.full_profiles||[])[0]; if(fp&&fp.profile) return fp.profile; }
+  }catch(_){}
+  return findRanked(raw);
+}
 function num(v){ return (typeof v==="number"&&isFinite(v))?v:null; }
 function extractRanked(p){
-  if(!p||!p.raw) return null; const r=findRanked(p.raw); if(!r) return null;
+  if(!p||!p.raw) return null; const r=rankedProfile(p.raw); if(!r) return null;
   const wins=num(r.wins), losses=num(r.losses), kills=num(r.kills), deaths=num(r.deaths);
   const wr=(wins!=null&&losses!=null&&(wins+losses)>0)?wins/(wins+losses):null;
   const kd=(kills!=null&&deaths!=null&&deaths>0)?kills/deaths:(kills!=null&&deaths===0?kills:null);
@@ -39425,7 +39434,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 13;
+const APP_BUILD = 14;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
