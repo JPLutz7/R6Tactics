@@ -38634,7 +38634,10 @@ async function loadStats(force){
   STATS_LOADING=true;
   try{ const r=await fetch("players.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ STATS_DATA=await r.json(); STATS_FETCHED=Date.now(); } }
   catch(_){}
-  finally{ STATS_LOADING=false; if(UI.tab==="players") renderPlayersTab(byId("view")); }
+  finally{ STATS_LOADING=false;
+    if(UI.tab==="players") renderPlayersTab(byId("view"));
+    else if(UI.tab==="maps" && UI.maps.suggest && UI.maps.suggest.open){ const m=mapById(UI.maps.selectedId), host=byId("tacticsPanel"); if(m&&host) renderSuggester(host,m); } // refresh suggester once op stats land
+  }
 }
 function num(v){ return (typeof v==="number"&&isFinite(v))?v:null; }
 function agoText(iso){ if(!iso) return "never"; const t=Date.parse(iso); if(isNaN(t)) return "unknown";
@@ -38860,7 +38863,7 @@ function renderTacticsPanel(){
     ${sideBlock(sideSel,sideSel==="attack"?"Attack":"Defense")}`;
   host.querySelectorAll("[data-tside]").forEach(b=>b.onclick=()=>{ UI.maps.tacticSide=b.dataset.tside; renderTacticsPanel(); });
   host.querySelectorAll(".tp-strat").forEach(b=>b.onclick=()=>openTactic(b.dataset.side,b.dataset.site,+b.dataset.si));
-  const sg=byId("tpSuggest"); if(sg) sg.onclick=()=>{ UI.maps.suggest={open:true,siteId:(m.bombsites[0]||{}).id||null,defenders:[]}; renderTacticsPanel(); };
+  const sg=byId("tpSuggest"); if(sg) sg.onclick=()=>{ loadStats(false); UI.maps.suggest={open:true,siteId:(m.bombsites[0]||{}).id||null,defenders:[]}; renderTacticsPanel(); };
 }
 /* ---- attack-strat suggester (prep tool: rank a site's attack strats vs an expected defense) ---- */
 function scoreAttackStrat(st,defenderIds){
@@ -38916,18 +38919,33 @@ function siteRecord(m,side,siteId){
   return {w,l,n:w+l,rate:(w+RATE_PRIOR_K*prior)/(w+l+RATE_PRIOR_K),prior,strats:strats.length};
 }
 
-// Suggester ranking, in strict priority order: COUNTERS first, then SUCCESS RATE,
-// then FAVOURITE ops. Each term is in [0,1] (concrete is min-max normalized across
-// the site's strats), blended with descending weights so counters dominate.
-function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+// ---- operator proficiency: how well the roster-assigned players perform on the
+// ops a strat uses (live ranked, last-4-seasons win% from the Players tab) ----
+function normTxt(s){ return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim(); }
+function statsPlayerForName(name){ const nm=normTxt(name); const ps=(STATS_DATA&&STATS_DATA.players)||[]; return ps.find(p=>normTxt(p.label)===nm||normTxt(p.key)===nm)||null; }
+// for a strat: average (over assigned players who have data) of their best ranked
+// win% among that slot's ops, mapped 40%→0 / 60%→1. null when no player has data.
+function stratOpProficiency(st){
+  const assign=assignTactic(st,"attack"); let sum=0,n=0;
+  assign.forEach(pk=>{ if(!pk.ops||!pk.ops.length)return; const sp=statsPlayerForName(pk.player); if(!sp)return;
+    const rows=(opsFor(sp,"ranked","all").rows)||[]; if(!rows.length)return;
+    let best=null; pk.ops.forEach(id=>{ const nm=opById(id)&&opById(id).name; if(!nm)return; const r=rows.find(x=>normTxt(x.op)===normTxt(nm)); if(r&&typeof r.wp==="number"&&(best===null||r.wp>best))best=r.wp; });
+    if(best!==null){ sum+=Math.max(0,Math.min(1,(best-40)/20)); n++; } });
+  return n?sum/n:null;
+}
+// Suggester ranking: COUNTERS first, then SUCCESS RATE, OPERATOR proficiency,
+// FAVOURITES. Each term is [0,1] (concrete is min-max normalized across the site's
+// strats); blended with descending weights so counters dominate.
+function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.10; }
 function rateWeight(){ const w=DB.suggester&&DB.suggester.rateWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.20; }
+function opWeight(){ const w=DB.suggester&&DB.suggester.opWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
 function bestCounter(m,siteId,team){
   const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null;
-  const Wf=favWeight(), Wr=rateWeight(), Wc=Math.max(0,1-Wf-Wr); // counters get the rest (dominant)
-  const cand=atk.map((st,si)=>({st,si,concrete:scoreAttackStrat(st,team),rate:stratSuccessRate(st),fav:favAffinity(st,"attack")}));
+  const Wf=favWeight(), Wr=rateWeight(), Wop=opWeight(), Wc=Math.max(0,1-Wf-Wr-Wop); // counters get the rest (dominant)
+  const cand=atk.map((st,si)=>({st,si,concrete:scoreAttackStrat(st,team),rate:stratSuccessRate(st),fav:favAffinity(st,"attack"),op:stratOpProficiency(st)}));
   const cs=cand.map(c=>c.concrete); const lo=Math.min(...cs), hi=Math.max(...cs);
   const norm=v=>hi>lo?(v-lo)/(hi-lo):0.5;
-  cand.forEach(c=>{ c.score=Wc*norm(c.concrete)+Wr*c.rate+Wf*c.fav; });
+  cand.forEach(c=>{ const opv=(c.op==null?0.5:c.op); c.score=Wc*norm(c.concrete)+Wr*c.rate+Wop*opv+Wf*c.fav; }); // no op data → neutral 0.5
   return cand.sort((a,b)=>b.score-a.score)[0];
 }
 function counterReason(team,approach){ const cfg=DB.suggester||{}; const arch=compArchetypes(team); const top=Object.keys(arch).sort((a,b)=>arch[b]-arch[a])[0]; if(!top)return""; return `${(cfg.archetypeAdvice||{})[top]||"play to your strengths"}; lead with ${(cfg.approachLabels||{})[approach]||approach}.`; }
@@ -39543,6 +39561,7 @@ function cycleMap(dir){ if(UI.maps.view!=="detail")return; const i=DB.maps.findI
 function boot(){
   loadState();
   renderTabs(); renderBanner(); render();
+  loadStats(false);   // warm player stats so the suggester's operator term is ready
   byId("dataBtn").onclick=ev=>{ ev.stopPropagation(); toggleMenu(); };
   document.addEventListener("click",e=>{ const menu=byId("dataMenu"); if(menu.classList.contains("show") && !menu.contains(e.target) && e.target.id!=="dataBtn") toggleMenu(false); });
   byId("importInput").onchange=onImportFile;
@@ -39555,7 +39574,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 22;
+const APP_BUILD = 23;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
