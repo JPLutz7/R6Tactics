@@ -7,7 +7,9 @@ name: Refresh player stats
 
 on:
   schedule:
-    - cron: "0 */12 * * *"   # 00:00 and 12:00 UTC
+    # Once daily (06:00 UTC) to stay within r6data's 2,500 calls/month budget.
+    # ~50 calls/run x ~30 days = ~1,500/month, leaving headroom for manual runs.
+    - cron: "0 6 * * *"
   workflow_dispatch: {}       # manual "Run workflow" button
 
 permissions:
