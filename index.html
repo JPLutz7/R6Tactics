@@ -558,7 +558,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 61,
+  "version": 62,
   "publishedAt": "2026-06-11",
   "maps": [
     {
@@ -44130,8 +44130,8 @@ const SEED_DATA =
         "flex-atk"
       ],
       "defenseRoles": [
-        "trapper-def",
-        "flex-def"
+        "flex-def",
+        "trapper-def"
       ],
       "favAtk": [
         "ash",
@@ -44153,9 +44153,7 @@ const SEED_DATA =
     {
       "name": "Leme",
       "attackRoles": [
-        "entry-atk",
-        "intel-atk",
-        "hardbreach-atk"
+        "entry-atk"
       ],
       "defenseRoles": [
         "roamer-def"
@@ -44166,34 +44164,27 @@ const SEED_DATA =
     {
       "name": "Max",
       "attackRoles": [
-        "support-atk",
-        "intel-atk"
+        "support-atk"
       ],
       "defenseRoles": [
         "antibreach-def"
       ],
-      "favAtk": [],
+      "favAtk": [
+        "fuze"
+      ],
       "favDef": []
     },
     {
       "name": "Lora",
-      "attackRoles": [
-        "hardbreach-atk"
-      ],
+      "attackRoles": [],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     },
     {
       "name": "unknown",
-      "attackRoles": [
-        "hardbreach-atk",
-        "flex-atk"
-      ],
-      "defenseRoles": [
-        "antibreach-def",
-        "flex-def"
-      ],
+      "attackRoles": [],
+      "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     }
@@ -45794,7 +45785,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 53;
+const APP_BUILD = 54;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
