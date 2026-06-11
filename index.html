@@ -44556,7 +44556,7 @@ function renderDataMenu(){
 const GH_REPO="JPLutz7/R6Tactics", GH_BRANCH="main";
 // Set this to your Cloudflare Worker URL to let the whole stack publish with one shared TEAM password
 // (no personal GitHub token / repo access needed). Empty = fall back to the personal-token flow below.
-const PUBLISH_PROXY_URL="";
+const PUBLISH_PROXY_URL="https://r6tactics-publish.joaopmlutz.workers.dev";
 function ghToken(){ try{ return localStorage.getItem("r6stack.gh_token")||""; }catch(_){ return ""; } }
 function setGhToken(v){ try{ if(v) localStorage.setItem("r6stack.gh_token",v); else localStorage.removeItem("r6stack.gh_token"); }catch(_){} }
 function teamPass(){ try{ return localStorage.getItem("r6stack.team_pass")||""; }catch(_){ return ""; } }
@@ -45677,7 +45677,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 43;
+const APP_BUILD = 44;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
