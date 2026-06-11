@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-11T11:13:16.240Z",
+  "updated": "2026-06-11T11:19:07.079Z",
   "source": "r6data.com",
   "keyExpires": "2026-09-08",
   "keyStatus": "ok",
@@ -1045,7 +1045,9 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded"
     },
     {
       "key": "leme",
@@ -2171,7 +2173,9 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded"
     },
     {
       "key": "max",
@@ -2243,7 +2247,9 @@
         42,
         41
       ],
-      "ops": {}
+      "ops": {},
+      "stale": true,
+      "staleReason": "Rate limit exceeded"
     },
     {
       "key": "lora",
