@@ -44504,6 +44504,9 @@ function normalizeDB(db){
     p.favAtk=(Array.isArray(p.favAtk)?p.favAtk:[]).filter(id=>opSide(id)==="attack");
     p.favDef=(Array.isArray(p.favDef)?p.favDef:[]).filter(id=>opSide(id)==="defense");
     delete p.roles; delete p.roleId; delete p.notes; });
+  // attack: exactly one role per player and unique across players (defense keeps its multi-role priority list)
+  const usedAtk=new Set();
+  db.roster.forEach(p=>{ const pick=(p.attackRoles||[]).find(id=>!usedAtk.has(id)); if(pick)usedAtk.add(pick); p.attackRoles=pick?[pick]:[]; });
   if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
     db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
   const claimed=new Set();
@@ -45516,15 +45519,19 @@ function renderRoster(root){
 function renderPlayers(){
   const wrap=byId("players"); const edit=UI.roster.edit;
   const roleSelect=(p,i,side)=>{
-    const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
-    const avail=DB.roles.filter(r=>r.side===side && !(p[key]||[]).includes(r.id));
+    const cls=side==="attack"?"atk":"def"; let avail;
+    if(side==="attack"){                                   // single role per player + unique → offer only when empty, only free roles
+      if((p.attackRoles||[]).length) return "";
+      const taken=new Set(DB.roster.flatMap(q=>q.attackRoles||[]));
+      avail=DB.roles.filter(r=>r.side==="attack" && !taken.has(r.id));
+    } else { avail=DB.roles.filter(r=>r.side==="defense" && !(p.defenseRoles||[]).includes(r.id)); }
     if(!avail.length) return "";
     return `<select class="roleadd ${cls}" data-roleadd="${i}|${side}"><option value="">＋ role…</option>${avail.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join("")}</select>`;
   };
   const sideRow=(p,i,side)=>{
     const key=side==="attack"?"attackRoles":"defenseRoles"; const cls=side==="attack"?"atk":"def";
     const chips=(p[key]||[]).map((rid,k)=>{ const r=roleById(rid); if(!r)return"";
-      return `<span class="prole ${cls}" ${edit?`data-chip="${i}|${side}|${k}"`:""}><span class="pri">${k+1}</span>${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
+      return `<span class="prole ${cls}" ${edit?`data-chip="${i}|${side}|${k}"`:""}>${side==="defense"?`<span class="pri">${k+1}</span>`:""}${esc(r.name)}${edit?` <span class="x" data-chiprm="${i}|${side}|${k}" title="Remove">✕</span>`:""}</span>`;
     }).join("");
     return `<div class="pside">
       <span class="sidetag ${cls}">${side==="attack"?"ATK":"DEF"}</span>
@@ -45562,7 +45569,9 @@ function renderPlayers(){
 }
 function bindPlayers(){
   const wrap=byId("players"); if(!UI.roster.edit) return;
-  wrap.querySelectorAll("[data-roleadd]").forEach(sel=>sel.onchange=()=>{ const [i,side]=sel.dataset.roleadd.split("|"); const rid=sel.value; if(!rid)return; const key=side==="attack"?"attackRoles":"defenseRoles"; if(!DB.roster[+i][key].includes(rid)){ DB.roster[+i][key].push(rid); markDirty(); renderPlayers(); renderRoleGrid(); } });
+  wrap.querySelectorAll("[data-roleadd]").forEach(sel=>sel.onchange=()=>{ const [i,side]=sel.dataset.roleadd.split("|"); const rid=sel.value; if(!rid)return;
+    if(side==="attack"){ setAtkRole(+i,rid); return; }   // one unique attack role per player
+    const key="defenseRoles"; if(!DB.roster[+i][key].includes(rid)){ DB.roster[+i][key].push(rid); markDirty(); renderPlayers(); renderRoleGrid(); } });
   wrap.querySelectorAll("[data-favadd]").forEach(b=>b.onclick=()=>{ const [i,side]=b.dataset.favadd.split("|"); showFavPicker(+i,side); });
   wrap.querySelectorAll("[data-favrm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.favrm.split("|"); const key=side==="attack"?"favAtk":"favDef"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); });
   wrap.querySelectorAll("[data-pname]").forEach(inp=>inp.oninput=e=>{ DB.roster[+inp.closest("[data-p]").dataset.p].name=e.target.value; markDirty(); });
@@ -45613,8 +45622,17 @@ function rosterPointerDrag(downEv,drag,label){
   };
   document.addEventListener("pointermove",onMove,{passive:false}); document.addEventListener("pointerup",onUp); document.addEventListener("pointercancel",onUp);
 }
+function setAtkRole(i,rid){   // give player i one attack role, unique across the roster
+  if(!rid)return; DB.roster.forEach(p=>{ p.attackRoles=(p.attackRoles||[]).filter(id=>id!==rid); });
+  DB.roster[i].attackRoles=[rid]; markDirty(); renderPlayers(); renderRoleGrid();
+}
 function rosterDoDrop(box,clientX){
-  const [pi,side]=box.dataset.drop.split("|"); const i=+pi; const key=side==="attack"?"attackRoles":"defenseRoles";
+  const [pi,side]=box.dataset.drop.split("|"); const i=+pi;
+  if(side==="attack"){   // single role per player, unique across players (no list/reorder)
+    const rid=ROSTER_DRAG.kind==="pool"?ROSTER_DRAG.roleId:((DB.roster[ROSTER_DRAG.player].attackRoles||[])[ROSTER_DRAG.idx]);
+    ROSTER_DRAG=null; setAtkRole(i,rid); return;
+  }
+  const key="defenseRoles";
   const pos=rosterInsertIndex(box,clientX), P=DB.roster[i];
   if(ROSTER_DRAG.kind==="pool"){ const rid=ROSTER_DRAG.roleId; if(rid&&!P[key].includes(rid)){ P[key].splice(pos,0,rid); markDirty(); } }
   else { const src=DB.roster[ROSTER_DRAG.player], rid=src[key][ROSTER_DRAG.idx];
@@ -45776,7 +45794,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 52;
+const APP_BUILD = 53;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
