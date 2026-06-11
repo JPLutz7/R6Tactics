@@ -44529,7 +44529,7 @@ function renderBanner(){
 /* data menu */
 function renderDataMenu(){
   const m=byId("dataMenu");
-  const tokSet=!!ghToken();
+  const tokSet=!!ghToken(); const useProxy=!!PUBLISH_PROXY_URL; const passSet=!!teamPass();
   const offBuild=(typeof APP_BUILD!=="undefined"?APP_BUILD:"?");
   m.innerHTML=`<div class="st" id="statusLine">${statusHTML()}</div>
     <div class="muted small" style="margin:2px 0 10px;line-height:1.5">Published / official version: <b>data v${SEED_DATA.version} · build ${offBuild}</b>${META&&META.dirty?` <span style="color:#ffcab0">· you have unpublished local edits</span>`:``}</div>
@@ -44540,7 +44540,7 @@ function renderDataMenu(){
       <button class="btn" id="dmPublish">⧉ Copy publish JSON (manual)</button>
       <button class="btn danger" id="dmReset">↺ Reset to published</button>
     </div>
-    <div class="muted small" style="margin-top:10px;line-height:1.5">“Make changes permanent” commits your edits to the live app and prompts everyone to update. ${tokSet?`<span class="ok-dot"></span>Publishing token set · <span id="dmTok" class="lnk">manage</span>`:`<span id="dmTok" class="lnk">Set up the publishing token →</span>`}</div>
+    <div class="muted small" style="margin-top:10px;line-height:1.5">“Make changes permanent” commits your edits to the live app and prompts everyone to update. ${useProxy?(passSet?`<span class="ok-dot"></span>Team password set · <span id="dmTok" class="lnk">change</span>`:`<span id="dmTok" class="lnk">Enter the team publish password →</span>`):(tokSet?`<span class="ok-dot"></span>Publishing token set · <span id="dmTok" class="lnk">manage</span>`:`<span id="dmTok" class="lnk">Set up the publishing token →</span>`)}</div>
     <div style="border-top:1px solid var(--line2);margin:12px 0 10px"></div>
     <div class="muted small" style="line-height:1.5;margin-bottom:6px">This device is <b>— local only, personalizes your view, never published</b>:</div>
     <select id="dmMe" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-weight:700;box-sizing:border-box">${[`<option value="">— not set —</option>`,...((DB&&DB.roster||[]).map(p=>`<option value="${esc(normTxt(p.name))}" ${getMe()===normTxt(p.name)?"selected":""}>${esc(p.name)}</option>`))].join("")}</select>`;
@@ -44549,13 +44549,18 @@ function renderDataMenu(){
   byId("dmExport").onclick=exportJSON;
   byId("dmImport").onclick=()=>byId("importInput").click();
   byId("dmPublish").onclick=copyPublish;
-  const t=byId("dmTok"); if(t) t.onclick=showTokenModal;
+  const t=byId("dmTok"); if(t) t.onclick=useProxy?showTeamPassModal:showTokenModal;
   byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
 }
 /* ---- Make changes permanent: commit the edited seed to the live app via GitHub API ---- */
 const GH_REPO="JPLutz7/R6Tactics", GH_BRANCH="main";
+// Set this to your Cloudflare Worker URL to let the whole stack publish with one shared TEAM password
+// (no personal GitHub token / repo access needed). Empty = fall back to the personal-token flow below.
+const PUBLISH_PROXY_URL="";
 function ghToken(){ try{ return localStorage.getItem("r6stack.gh_token")||""; }catch(_){ return ""; } }
 function setGhToken(v){ try{ if(v) localStorage.setItem("r6stack.gh_token",v); else localStorage.removeItem("r6stack.gh_token"); }catch(_){} }
+function teamPass(){ try{ return localStorage.getItem("r6stack.team_pass")||""; }catch(_){ return ""; } }
+function setTeamPass(v){ try{ if(v) localStorage.setItem("r6stack.team_pass",v); else localStorage.removeItem("r6stack.team_pass"); }catch(_){} }
 function utf8ToB64(str){ return btoa(unescape(encodeURIComponent(str))); }
 function b64ToUtf8(b64){ return decodeURIComponent(escape(atob((b64||"").replace(/\s+/g,"")))); }
 async function ghApi(path, opts={}){
@@ -44565,6 +44570,7 @@ async function ghApi(path, opts={}){
   return r.json();
 }
 async function publishLive(){
+  if(PUBLISH_PROXY_URL) return publishViaProxy();   // shared-password proxy (no personal token)
   if(!ghToken()){ showTokenModal(); return; }
   if(!confirm("Publish your current edits to the LIVE app for everyone?\n\nThis commits to the site and shows the “Update” prompt to all users.")) return;
   const btn=byId("dmPublishLive"); if(btn){ btn.disabled=true; btn.textContent="Publishing…"; }
@@ -44626,6 +44632,38 @@ function showTokenModal(reason){
   byId("gtClose").onclick=close; byId("gtCancel").onclick=close;
   byId("gtSave").onclick=()=>{ const v=byId("gtInput").value.trim(); setGhToken(v); close(); toast(v?"Token saved":"Token cleared"); renderDataMenu(); };
   byId("gtForget").onclick=()=>{ setGhToken(""); close(); toast("Token forgotten"); renderDataMenu(); };
+  m.onclick=e=>{ if(e.target===m) close(); };
+}
+/* ---- publish via the shared-password Cloudflare Worker (no personal token) ---- */
+async function publishViaProxy(){
+  if(!teamPass()){ showTeamPassModal(); return; }
+  if(!confirm("Publish your current edits to the LIVE app for everyone?\n\nThis commits to the site and shows the “Update” prompt to all users.")) return;
+  const btn=byId("dmPublishLive"); if(btn){ btn.disabled=true; btn.textContent="Publishing…"; }
+  try{
+    const r=await fetch(PUBLISH_PROXY_URL,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ password:teamPass(), data:clone(DB) }) });
+    let j={}; try{ j=await r.json(); }catch(_){}
+    if(r.status===401||r.status===403){ setTeamPass(""); showTeamPassModal("That team password was rejected — ask the owner for the current one. Your local edits are safe."); return; }
+    if(!r.ok||!j.ok) throw new Error((j&&j.error)||("Publish proxy error "+r.status));
+    META.seedVersion=j.version; META.dirty=false; writeMeta(META); refreshStatus();
+    toggleMenu(false);
+    toast("Published ✓ v"+j.version+" — live in ~1 min; everyone gets the Update prompt");
+  }catch(err){ alert("Publish failed.\n\n"+String(err&&err.message||err)+"\n\nYour local edits are safe. You can retry, or use “Copy publish JSON (manual)”."); }
+  finally{ const b=byId("dmPublishLive"); if(b){ b.disabled=false; b.textContent="✓ Make changes permanent"; } }
+}
+function showTeamPassModal(reason){
+  let m=byId("teamPassModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="teamPassModal"; document.body.appendChild(m); }
+  m.innerHTML=`<div class="card"><div class="spread" style="margin-bottom:8px"><h3>Team publish password</h3><button class="iconbtn" id="tpClose" title="Close">✕</button></div>
+    ${reason?`<p class="small" style="line-height:1.55;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:rgba(224,84,31,.12);border:1px solid rgba(224,84,31,.45);color:#ffcab0">⚠️ ${reason}</p>`:""}
+    <p class="muted small" style="line-height:1.55;margin:0 0 10px">Enter the shared password the owner gave the stack. It lets “Make changes permanent” publish for everyone — <b>no GitHub account or token needed</b>.</p>
+    <input type="password" id="tpInput" autocomplete="off" placeholder="team password" value="${esc(teamPass())}" style="width:100%;font-size:13px;box-sizing:border-box" />
+    <p class="muted small" style="margin:8px 0 0">🔒 Stored only in this browser; never exported. <span id="tpForget" class="lnk" style="${teamPass()?'':'display:none'}">Forget</span></p>
+    <div class="row" style="margin-top:14px;justify-content:flex-end;gap:8px"><button class="btn" id="tpCancel">Cancel</button><button class="btn primary" id="tpSave">Save</button></div>
+  </div>`;
+  m.classList.add("show");
+  const close=()=>m.classList.remove("show");
+  byId("tpClose").onclick=close; byId("tpCancel").onclick=close;
+  byId("tpSave").onclick=()=>{ setTeamPass(byId("tpInput").value.trim()); close(); toast("Saved"); renderDataMenu(); };
+  byId("tpForget").onclick=()=>{ setTeamPass(""); close(); toast("Forgotten"); renderDataMenu(); };
   m.onclick=e=>{ if(e.target===m) close(); };
 }
 function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.classList.contains("show"):force; if(show)renderDataMenu(); m.classList.toggle("show",show); }
