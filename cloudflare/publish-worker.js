@@ -64,6 +64,11 @@ export default {
       if (bi < 0 || ei < 0) throw new Error("data markers not found in index.html");
       const deployedVer = +((curIndex.slice(bi).match(/"version":\s*(\d+)/) || [])[1]) || 0;
 
+      // race-free clobber guard: reject a publish whose edits were based on an older
+      // version than what's currently live (someone published in between), unless forced.
+      if (body.baseVersion != null && deployedVer > (body.baseVersion | 0) && !body.force)
+        return json({ ok: false, conflict: true, deployedVer, error: "newer version already published" }, 409);
+
       const out = body.data;
       out.version = Math.max(deployedVer, out.version | 0) + 1;
       out.publishedAt = new Date().toISOString().slice(0, 10);
