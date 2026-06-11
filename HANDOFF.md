@@ -23,7 +23,12 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** PWA **build 43**, SEED **data v57** (see §13 for the session log).
+- **Current state:** **Alpha v58.47** (SEED **data v58**, PWA **build 47**). The app now shows its
+  version as **"Alpha v{data}.{build}"** (helper `appVersion()`/`dataVersion()`, const `RELEASE`).
+  Still alpha until the full 5-stack is linked; flip to official **v1.0** then by setting `RELEASE="1.0"`.
+  Publishing is now via a **shared-password Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) —
+  teammates publish with a team password, no personal token. Data menu has a **"Check for app updates"**
+  button. (See §13 for the session log.)
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
