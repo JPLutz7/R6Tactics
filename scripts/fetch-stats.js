@@ -69,28 +69,16 @@ async function fetchPlayer(p) {
     out.mmrHistory = seasonal.ok ? parseHistory(seasonal.json) : [];
     out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
 
-    // operators: r6data operatorStats has NO playlist/season scoping — every
-    // sessionType / seasonNumber / gameMode / board_id / playlist param is ignored
-    // and returns the same all-time, all-playlist data (verified by probe: all echo
-    // sessionType=all, seasonNumber=null, identical counts). So one call is enough.
+    // operators: r6data operatorStats has NO playlist/season scoping. Confirmed conclusively by an
+    // endpoint-discovery probe (Jun 2026): every scoping param (sessionType / seasonNumber / season /
+    // gameMode / gamemode / board_id / boardId / playlist) is ignored — the response always echoes
+    // sessionType=all, seasonNumber=null with identical counts — and every alternative endpoint name
+    // (operators / seasonalOperatorStats / operatorStatsBySeason / operatorStats2) returns HTTP 400.
+    // So one all-time call is the ceiling; the site's per-season view uses a non-public path our key
+    // can't reach. (The temporary R6_DEBUG_OPS probe that established this has been removed.)
     out.ops = {};
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
-    // TEMP: map where r6data's site gets per-season/playlist operators (it does — verified on the site)
-    if (process.env.R6_DEBUG_OPS === "1" && !global.__d) {
-      global.__d = true;
-      const op0 = base && base.json && base.json.operators && (Array.isArray(base.json.operators) ? base.json.operators[0] : Object.values(base.json.operators)[0]);
-      console.log("  [opObj] keys=" + (op0 ? Object.keys(op0).join(",") : "-") + " sample=" + JSON.stringify(op0).slice(0, 400));
-      for (const ty of ["stats", "fullStats"]) {
-        const st = await fetchType(p.handle, platform, ty);
-        let n = 0;
-        (function walk(o, path, d) {
-          if (n > 70 || d > 8 || o == null) return;
-          if (Array.isArray(o)) { console.log(`  [${ty}] ${path}[] len=${o.length}`); n++; if (o.length) walk(o[0], path + "[0]", d + 1); return; }
-          if (typeof o === "object") { const ks = Object.keys(o); console.log(`  [${ty}] ${path} {${ks.join(",")}}`); n++; for (const k of ks) { if (/board_id|^season$|playlist|gamemode/i.test(k)) console.log(`  [${ty}] ${path}.${k}=${JSON.stringify(o[k]).slice(0, 80)}`); walk(o[k], path + "." + k, d + 1); } }
-        })(st.json, ty[0].toUpperCase(), 0);
-      }
-    }
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
 }
