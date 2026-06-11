@@ -44633,7 +44633,7 @@ function renderDataMenu(){
   byId("dmExport").onclick=exportJSON;
   byId("dmImport").onclick=()=>byId("importInput").click();
   byId("dmPublish").onclick=copyPublish;
-  const t=byId("dmTok"); if(t) t.onclick=useProxy?showTeamPassModal:showTokenModal;
+  const t=byId("dmTok"); if(t) t.onclick=useProxy?(()=>showTeamPassModal()):(()=>showTokenModal());
   byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
   byId("dmCheckUpd").onclick=checkForUpdatesManual;
 }
@@ -44720,22 +44720,33 @@ function showTokenModal(reason){
   m.onclick=e=>{ if(e.target===m) close(); };
 }
 /* ---- publish via the shared-password Cloudflare Worker (no personal token) ---- */
-async function publishViaProxy(){
-  if(!teamPass()){ showTeamPassModal(); return; }
-  if(!confirm("Publish your current edits to the LIVE app for everyone?\n\nThis commits to the site and shows the “Update” prompt to all users.")) return;
+async function publishViaProxy(force){
+  if(!teamPass()){ toast("⚠️ Not published — you need the team password first"); showTeamPassModal("Your changes are NOT published yet. Enter the team password to publish (ask João for it).", ()=>publishViaProxy()); return; }
+  if(!force){   // clobber pre-check: did someone publish a newer version since this app loaded?
+    let lb=null; try{ lb=await liveBuild(); }catch(_){}
+    if(lb!=null && lb>SYNCED_BUILD){
+      if(!confirm("⚠️ A newer version (build "+lb+") was published after you opened the app — you're on build "+SYNCED_BUILD+".\n\nPublishing now OVERWRITES it and discards whatever your teammate just published.\n\nRecommended: Cancel → reload the app → redo your edits.\n\nOverwrite anyway?")) return;
+      force=true;
+    } else if(!confirm("Publish your current edits to the LIVE app for everyone?\n\nThis commits to the site and shows the “Update” prompt to all users.")) return;
+  }
   const btn=byId("dmPublishLive"); if(btn){ btn.disabled=true; btn.textContent="Publishing…"; }
   try{
-    const r=await fetch(PUBLISH_PROXY_URL,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ password:teamPass(), data:clone(DB) }) });
+    const r=await fetch(PUBLISH_PROXY_URL,{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ password:teamPass(), data:clone(DB), baseVersion:(META&&META.seedVersion)||0, force:!!force }) });
     let j={}; try{ j=await r.json(); }catch(_){}
-    if(r.status===401||r.status===403){ setTeamPass(""); showTeamPassModal("That team password was rejected — ask the owner for the current one. Your local edits are safe."); return; }
+    if(r.status===401||r.status===403){ setTeamPass(""); toast("⚠️ Team password rejected — nothing was published"); showTeamPassModal("That team password was rejected — ask João for the current one. Your changes are NOT published; your local edits are safe.", ()=>publishViaProxy()); return; }
+    if(r.status===409||(j&&j.conflict)){ const dv=(j&&j.deployedVer!=null)?dataVersion(j.deployedVer):"a newer version";   // race-free guard (worker): someone published since you loaded
+      if(confirm("⚠️ Someone published "+dv+" after you loaded the app — publishing overwrites their changes.\n\nReload to get the latest (recommended), or overwrite anyway?")) setTimeout(()=>publishViaProxy(true),0);
+      return; }
     if(!r.ok||!j.ok) throw new Error((j&&j.error)||("Publish proxy error "+r.status));
+    if(typeof j.build==="number") SYNCED_BUILD=j.build;
     META.seedVersion=j.version; META.dirty=false; writeMeta(META); refreshStatus();
     toggleMenu(false);
     toast("Published ✓ "+dataVersion(j.version)+" — live in ~1 min; everyone gets the Update prompt");
-  }catch(err){ alert("Publish failed.\n\n"+String(err&&err.message||err)+"\n\nYour local edits are safe. You can retry, or use “Copy publish JSON (manual)”."); }
+  }catch(err){ alert("⚠️ Publish failed — NOTHING was published.\n\n"+String(err&&err.message||err)+"\n\nYour local edits are safe. Retry, or use “Copy publish JSON (manual)”."); }
   finally{ const b=byId("dmPublishLive"); if(b){ b.disabled=false; b.textContent="✓ Make changes permanent"; } }
 }
-function showTeamPassModal(reason){
+function showTeamPassModal(reason, onSaved){
+  if(reason&&typeof reason!=="string") reason=null;   // ignore a click Event passed as the handler arg
   let m=byId("teamPassModal"); if(!m){ m=document.createElement("div"); m.className="modal"; m.id="teamPassModal"; document.body.appendChild(m); }
   m.innerHTML=`<div class="card"><div class="spread" style="margin-bottom:8px"><h3>Team publish password</h3><button class="iconbtn" id="tpClose" title="Close">✕</button></div>
     ${reason?`<p class="small" style="line-height:1.55;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:rgba(224,84,31,.12);border:1px solid rgba(224,84,31,.45);color:#ffcab0">⚠️ ${reason}</p>`:""}
@@ -44747,7 +44758,7 @@ function showTeamPassModal(reason){
   m.classList.add("show");
   const close=()=>m.classList.remove("show");
   byId("tpClose").onclick=close; byId("tpCancel").onclick=close;
-  byId("tpSave").onclick=()=>{ setTeamPass(byId("tpInput").value.trim()); close(); toast("Saved"); renderDataMenu(); };
+  byId("tpSave").onclick=()=>{ setTeamPass(byId("tpInput").value.trim()); close(); toast("Saved"); renderDataMenu(); if(onSaved&&teamPass()) onSaved(); };
   byId("tpForget").onclick=()=>{ setTeamPass(""); close(); toast("Forgotten"); renderDataMenu(); };
   m.onclick=e=>{ if(e.target===m) close(); };
 }
@@ -45786,7 +45797,9 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 55;
+const APP_BUILD = 56;
+let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
+async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
