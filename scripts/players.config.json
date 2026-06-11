@@ -7,7 +7,7 @@
   "players": [
     { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
     { "key": "leme", "label": "Leme", "handle": "Mtaro.", "platform": "uplay" },
-    { "key": "max", "label": "Max", "handle": "lnteligent.", "platform": "uplay" },
+    { "key": "max", "label": "Max", "handle": "lnteIigent.", "platform": "uplay" },
     { "key": "lora", "label": "Lora", "handle": "", "platform": "uplay" },
     { "key": "unknown", "label": "unknown", "handle": "", "platform": "uplay" }
   ]
