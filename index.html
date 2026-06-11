@@ -44542,7 +44542,8 @@ function renderDataMenu(){
     <div class="muted small" style="margin-top:10px;line-height:1.5">“Make changes permanent” commits your edits to the live app and prompts everyone to update. ${useProxy?(passSet?`<span class="ok-dot"></span>Team password set · <span id="dmTok" class="lnk">change</span>`:`<span id="dmTok" class="lnk">Enter the team publish password →</span>`):(tokSet?`<span class="ok-dot"></span>Publishing token set · <span id="dmTok" class="lnk">manage</span>`:`<span id="dmTok" class="lnk">Set up the publishing token →</span>`)}</div>
     <div style="border-top:1px solid var(--line2);margin:12px 0 10px"></div>
     <div class="muted small" style="line-height:1.5;margin-bottom:6px">This device is <b>— local only, personalizes your view, never published</b>:</div>
-    <select id="dmMe" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-weight:700;box-sizing:border-box">${[`<option value="">— not set —</option>`,...((DB&&DB.roster||[]).map(p=>`<option value="${esc(normTxt(p.name))}" ${getMe()===normTxt(p.name)?"selected":""}>${esc(p.name)}</option>`))].join("")}</select>`;
+    <select id="dmMe" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-weight:700;box-sizing:border-box">${[`<option value="">— not set —</option>`,...((DB&&DB.roster||[]).map(p=>`<option value="${esc(normTxt(p.name))}" ${getMe()===normTxt(p.name)?"selected":""}>${esc(p.name)}</option>`))].join("")}</select>
+    <button class="btn" id="dmCheckUpd" style="margin-top:12px;width:100%">🔄 Check for app updates <span class="muted" style="font-weight:600">· on build ${offBuild}</span></button>`;
   byId("dmPublishLive").onclick=publishLive;
   byId("dmMe").onchange=e=>{ setMe(e.target.value); applyMeDefaults(); UI.players.touched=false; renderDataMenu(); render(); toast(e.target.value?("You are "+e.target.value):"Identity cleared"); };
   byId("dmExport").onclick=exportJSON;
@@ -44550,6 +44551,7 @@ function renderDataMenu(){
   byId("dmPublish").onclick=copyPublish;
   const t=byId("dmTok"); if(t) t.onclick=useProxy?showTeamPassModal:showTokenModal;
   byId("dmReset").onclick=()=>{ if(confirm("Discard your local working copy and reload the published seed? Export first if you want a backup.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toggleMenu(false); toast("Reset to published seed"); } };
+  byId("dmCheckUpd").onclick=checkForUpdatesManual;
 }
 /* ---- Make changes permanent: commit the edited seed to the live app via GitHub API ---- */
 const GH_REPO="JPLutz7/R6Tactics", GH_BRANCH="main";
@@ -45676,7 +45678,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 45;
+const APP_BUILD = 46;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
@@ -45695,6 +45697,23 @@ async function r6CheckUpdate(){
     const j = await r.json();
     if (j && typeof j.build === "number" && j.build > APP_BUILD) r6ShowUpdate();
   } catch(_){}
+}
+/* manual "Check for updates" (Data menu) — same check, but with explicit feedback */
+async function checkForUpdatesManual(){
+  const b = byId("dmCheckUpd"); const label = b ? b.innerHTML : ""; if (b){ b.disabled = true; b.textContent = "Checking…"; }
+  try {
+    const r = await fetch("version.json?_=" + Date.now(), { cache: "no-store" });
+    const j = r.ok ? await r.json() : null;
+    const live = (j && typeof j.build === "number") ? j.build : null;
+    if (live == null){ toast("Couldn't reach the update server — try again"); return; }
+    if (live > APP_BUILD){
+      if (confirm("New version available (build " + live + "; you're on " + APP_BUILD + ").\n\nReload now to update? Your local data is kept.")){
+        try { const reg = await navigator.serviceWorker.getRegistration(); if (reg && reg.waiting) reg.waiting.postMessage("skipWaiting"); } catch(_){}
+        location.reload();
+      }
+    } else toast("You're on the latest version (build " + APP_BUILD + ")");
+  } catch(_){ toast("Couldn't check — you may be offline"); }
+  finally { if (b){ b.disabled = false; b.innerHTML = label; } }
 }
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => {
