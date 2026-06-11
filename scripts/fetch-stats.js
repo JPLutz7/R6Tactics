@@ -77,8 +77,10 @@ async function fetchPlayer(p) {
     // (and seasonNumber), so the app can trust the scope; else it falls back.
     out.ops = {};
     const RECENT = out.seasons.slice(0, 4);   // cap per-season operator fetches (budget)
+    const DBG = process.env.R6_DEBUG_OPS === "1";   // temporary: probe how r6data scopes operators
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
+    if (DBG) console.log(`  [ops/${p.label}] seasons=${JSON.stringify(out.seasons)} base: status=${base&&base.status} keys=${base&&base.json?Object.keys(base.json).join(","):"-"} sessionType=${base&&base.json&&base.json.sessionType} seasonNumber=${base&&base.json&&base.json.seasonNumber} nOps=${base&&base.json&&base.json.operators?(Array.isArray(base.json.operators)?base.json.operators.length:Object.keys(base.json.operators).length):"-"}`);
     for (const plId of Object.keys(PLAYLISTS)) {
       const st = PLAYLISTS[plId].st;
       for (const season of [null, ...RECENT]) {
@@ -86,6 +88,8 @@ async function fetchPlayer(p) {
         try {
           const extra = { sessionType: st }; if (season != null) extra.seasonNumber = season;
           const r = await fetchType(p.handle, platform, "operatorStats", extra);
+          const nOps = r&&r.json&&r.json.operators ? (Array.isArray(r.json.operators)?r.json.operators.length:Object.keys(r.json.operators).length) : "-";
+          if (DBG && plId === "ranked") console.log(`  [ops/${p.label}] ranked|${season==null?"all":season}: status=${r&&r.status} keys=${r&&r.json?Object.keys(r.json).join(","):"-"} echo sessionType=${r&&r.json&&r.json.sessionType} seasonNumber=${r&&r.json&&r.json.seasonNumber} nOps=${nOps}`);
           if (r && r.ok && r.json && Array.isArray(r.json.operators)
               && String(r.json.sessionType) === st
               && (season == null || String(r.json.seasonNumber) === String(season))) {

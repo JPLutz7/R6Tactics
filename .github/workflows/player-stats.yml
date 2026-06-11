@@ -7,9 +7,10 @@ name: Refresh player stats
 
 on:
   schedule:
-    # Once daily (06:00 UTC) to stay within r6data's 2,500 calls/month budget.
-    # ~50 calls/run x ~30 days = ~1,500/month, leaving headroom for manual runs.
-    - cron: "0 6 * * *"
+    # Once daily (~06:23 UTC) to fit r6data's 2,500 calls/month budget.
+    # Off the top of the hour on purpose: GitHub delays/drops :00 schedules under
+    # load (their docs recommend avoiding it), which is why the first 06:00 run missed.
+    - cron: "23 6 * * *"
   workflow_dispatch: {}       # manual "Run workflow" button
 
 permissions:
@@ -31,6 +32,7 @@ jobs:
       - name: Fetch ranked stats
         env:
           R6DATA_API_KEY: ${{ secrets.R6DATA_API_KEY }}
+          R6_DEBUG_OPS: "1"   # temporary: log how r6data scopes per-season/playlist operators
         run: node scripts/fetch-stats.js
       - name: Commit if changed
         run: |
