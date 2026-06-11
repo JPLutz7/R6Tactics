@@ -44752,7 +44752,7 @@ function showTeamPassModal(reason, onSaved){
     ${reason?`<p class="small" style="line-height:1.55;margin:0 0 10px;padding:8px 10px;border-radius:8px;background:rgba(224,84,31,.12);border:1px solid rgba(224,84,31,.45);color:#ffcab0">⚠️ ${reason}</p>`:""}
     <p class="muted small" style="line-height:1.55;margin:0 0 10px">Enter the shared password the owner gave the stack. It lets “Make changes permanent” publish for everyone — <b>no GitHub account or token needed</b>.</p>
     <input type="password" id="tpInput" autocomplete="off" placeholder="team password" value="${esc(teamPass())}" style="width:100%;font-size:13px;box-sizing:border-box" />
-    <p class="muted small" style="margin:8px 0 0">🔒 Stored only in this browser; never exported. <span id="tpForget" class="lnk" style="${teamPass()?'':'display:none'}">Forget</span></p>
+    <p class="muted small" style="margin:8px 0 0">🔒 Stored only in this browser; never exported. <span id="tpShow" class="lnk">Show</span> · <span id="tpCopy" class="lnk">Copy</span><span id="tpForget" class="lnk" style="${teamPass()?'':'display:none'}"> · Forget</span></p>
     <div class="row" style="margin-top:14px;justify-content:flex-end;gap:8px"><button class="btn" id="tpCancel">Cancel</button><button class="btn primary" id="tpSave">Save</button></div>
   </div>`;
   m.classList.add("show");
@@ -44760,6 +44760,12 @@ function showTeamPassModal(reason, onSaved){
   byId("tpClose").onclick=close; byId("tpCancel").onclick=close;
   byId("tpSave").onclick=()=>{ setTeamPass(byId("tpInput").value.trim()); close(); toast("Saved"); renderDataMenu(); if(onSaved&&teamPass()) onSaved(); };
   byId("tpForget").onclick=()=>{ setTeamPass(""); close(); toast("Forgotten"); renderDataMenu(); };
+  byId("tpShow").onclick=e=>{ const inp=byId("tpInput"), masked=inp.type==="password"; inp.type=masked?"text":"password"; e.target.textContent=masked?"Hide":"Show"; };
+  byId("tpCopy").onclick=async()=>{ const v=byId("tpInput").value; if(!v){ toast("Nothing to copy"); return; }
+    try{ await navigator.clipboard.writeText(v); toast("Password copied"); }
+    catch(_){ const inp=byId("tpInput"), t=inp.type; inp.type="text"; inp.select();
+      try{ document.execCommand("copy"); toast("Password copied"); }catch(e2){ toast("Couldn't copy — select the field and copy manually"); }
+      inp.type=t; try{ window.getSelection().removeAllRanges(); }catch(e3){} } };
   m.onclick=e=>{ if(e.target===m) close(); };
 }
 function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.classList.contains("show"):force; if(show)renderDataMenu(); m.classList.toggle("show",show); }
@@ -45797,7 +45803,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 56;
+const APP_BUILD = 57;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
