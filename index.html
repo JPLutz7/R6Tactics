@@ -44513,15 +44513,20 @@ function renderTabs(){
 }
 function switchTab(tab){ UI.tab=tab; renderTabs(); render(); window.scrollTo({top:0}); }
 function refreshStatus(){ const el=byId("statusLine"); if(el) el.innerHTML=statusHTML(); }
-function statusHTML(){ return `<span class="dot ${META.dirty?"dirty":"clean"}"></span> ${META.dirty?"Local edits":"Published"} · v${SEED_DATA.version}`; }
+/* Version label — shows "Alpha v{data}.{build}" while in alpha; flip to the official
+   "v{RELEASE}" once the full 5-stack is in by setting RELEASE below (e.g. "1.0"). */
+const RELEASE = "";   // "" = alpha · otherwise the official version string, e.g. "1.0"
+function appVersion(){ return RELEASE ? ("v"+RELEASE) : ("Alpha v"+SEED_DATA.version+"."+(typeof APP_BUILD!=="undefined"?APP_BUILD:"?")); }
+function dataVersion(v){ const n=(v==null?SEED_DATA.version:v); return RELEASE ? ("v"+RELEASE) : ("Alpha v"+n); }
+function statusHTML(){ return `<span class="dot ${META.dirty?"dirty":"clean"}"></span> ${META.dirty?"Local edits":"Published"} · ${appVersion()}`; }
 
 function renderBanner(){
   const slot=byId("bannerSlot");
   if(!UPDATE_AVAILABLE){ slot.innerHTML=""; return; }
   slot.innerHTML=`<div class="banner"><span style="font-size:18px">📡</span>
-    <div class="grow"><b>New data published (v${SEED_DATA.version}).</b> You have local edits — load the update to match the stack, or keep yours.</div>
+    <div class="grow"><b>New data published (${dataVersion()}).</b> You have local edits — load the update to match the stack, or keep yours.</div>
     <button class="btn primary sm" id="bnLoad">Load update</button><button class="btn ghost sm" id="bnKeep">Keep mine</button></div>`;
-  byId("bnLoad").onclick=()=>{ if(confirm("Replace your local copy with published v"+SEED_DATA.version+"? Export first if unsure.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toast("Loaded published v"+SEED_DATA.version);} };
+  byId("bnLoad").onclick=()=>{ if(confirm("Replace your local copy with published "+dataVersion()+"? Export first if unsure.")){ adoptSeed(); UI.maps.selectedId=null; UI.maps.view="toc"; renderBanner(); render(); toast("Loaded "+dataVersion());} };
   byId("bnKeep").onclick=()=>{ dismissUpdate(); renderBanner(); toast("Keeping your local copy"); };
 }
 
@@ -44531,7 +44536,7 @@ function renderDataMenu(){
   const tokSet=!!ghToken(); const useProxy=!!PUBLISH_PROXY_URL; const passSet=!!teamPass();
   const offBuild=(typeof APP_BUILD!=="undefined"?APP_BUILD:"?");
   m.innerHTML=`<div class="st" id="statusLine">${statusHTML()}</div>
-    <div class="muted small" style="margin:2px 0 10px;line-height:1.5">Published / official version: <b>data v${SEED_DATA.version} · build ${offBuild}</b>${META&&META.dirty?` <span style="color:#ffcab0">· you have unpublished local edits</span>`:``}</div>
+    <div class="muted small" style="margin:2px 0 10px;line-height:1.5">Live version: <b>${appVersion()}</b>${META&&META.dirty?` <span style="color:#ffcab0">· you have unpublished local edits</span>`:``}</div>
     <div class="col">
       <button class="btn primary" id="dmPublishLive">✓ Make changes permanent</button>
       <button class="btn" id="dmExport">⬇ Export JSON (backup)</button>
@@ -44543,7 +44548,7 @@ function renderDataMenu(){
     <div style="border-top:1px solid var(--line2);margin:12px 0 10px"></div>
     <div class="muted small" style="line-height:1.5;margin-bottom:6px">This device is <b>— local only, personalizes your view, never published</b>:</div>
     <select id="dmMe" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-weight:700;box-sizing:border-box">${[`<option value="">— not set —</option>`,...((DB&&DB.roster||[]).map(p=>`<option value="${esc(normTxt(p.name))}" ${getMe()===normTxt(p.name)?"selected":""}>${esc(p.name)}</option>`))].join("")}</select>
-    <button class="btn" id="dmCheckUpd" style="margin-top:12px;width:100%">🔄 Check for app updates <span class="muted" style="font-weight:600">· on build ${offBuild}</span></button>`;
+    <button class="btn" id="dmCheckUpd" style="margin-top:12px;width:100%">🔄 Check for app updates <span class="muted" style="font-weight:600">· on ${appVersion()}</span></button>`;
   byId("dmPublishLive").onclick=publishLive;
   byId("dmMe").onchange=e=>{ setMe(e.target.value); applyMeDefaults(); UI.players.touched=false; renderDataMenu(); render(); toast(e.target.value?("You are "+e.target.value):"Identity cleared"); };
   byId("dmExport").onclick=exportJSON;
@@ -44606,7 +44611,7 @@ async function publishLive(){
     await ghApi(`/repos/${owner}/${repo}/git/refs/heads/${GH_BRANCH}`,{method:"PATCH",body:JSON.stringify({sha:commit.sha})});
     META.seedVersion=out.version; META.dirty=false; writeMeta(META); refreshStatus();
     toggleMenu(false);
-    toast("Published ✓ v"+out.version+" — live in ~1 min; everyone gets the Update prompt");
+    toast("Published ✓ "+dataVersion(out.version)+" — live in ~1 min; everyone gets the Update prompt");
   }catch(err){
     const msg=String(err&&err.message||err);
     if(msg.includes("AUTH")){ setGhToken(""); showTokenModal("Your publishing token was rejected — it most likely <b>expired</b> (fine-grained tokens always do). Generate a fresh one and paste it below; your local edits are safe."); }
@@ -44647,7 +44652,7 @@ async function publishViaProxy(){
     if(!r.ok||!j.ok) throw new Error((j&&j.error)||("Publish proxy error "+r.status));
     META.seedVersion=j.version; META.dirty=false; writeMeta(META); refreshStatus();
     toggleMenu(false);
-    toast("Published ✓ v"+j.version+" — live in ~1 min; everyone gets the Update prompt");
+    toast("Published ✓ "+dataVersion(j.version)+" — live in ~1 min; everyone gets the Update prompt");
   }catch(err){ alert("Publish failed.\n\n"+String(err&&err.message||err)+"\n\nYour local edits are safe. You can retry, or use “Copy publish JSON (manual)”."); }
   finally{ const b=byId("dmPublishLive"); if(b){ b.disabled=false; b.textContent="✓ Make changes permanent"; } }
 }
@@ -45678,7 +45683,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 46;
+const APP_BUILD = 47;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
@@ -45711,7 +45716,7 @@ async function checkForUpdatesManual(){
         try { const reg = await navigator.serviceWorker.getRegistration(); if (reg && reg.waiting) reg.waiting.postMessage("skipWaiting"); } catch(_){}
         location.reload();
       }
-    } else toast("You're on the latest version (build " + APP_BUILD + ")");
+    } else toast("You're on the latest — " + appVersion());
   } catch(_){ toast("Couldn't check — you may be offline"); }
   finally { if (b){ b.disabled = false; b.innerHTML = label; } }
 }
