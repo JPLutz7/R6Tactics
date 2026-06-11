@@ -44881,10 +44881,19 @@ function operatorTableHTML(p){ const {rows,scope}=opsFor(p,UI.players.playlist,U
 function sparklineSVG(vals){ if(!vals||vals.length<2) return ""; const w=260,h=42,pad=4,min=Math.min(...vals),max=Math.max(...vals),rng=(max-min)||1;
   const pts=vals.map((v,i)=>{ const x=pad+i*(w-2*pad)/(vals.length-1); const y=h-pad-((v-min)/rng)*(h-2*pad); return x.toFixed(1)+","+y.toFixed(1); }).join(" ");
   return `<svg class="pl-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/></svg>`; }
-function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return ""; const h=(p&&p.mmrHistory)||[]; if(h.length<2) return "";
-  const chrono=h.slice().reverse();   // stored newest-first → oldest→newest for the trend line
-  return `<div class="pl-section-h">MMR history</div>${sparklineSVG(chrono.map(x=>x.value))}
-    <div class="pl-mmrlist">${h.slice(0,8).map(x=>`<div class="pl-mmrrow"><span class="muted small">${new Date(x.ts).toLocaleDateString()}</span><b>${esc(String((x.value!=null?x.value.toLocaleString():"")))}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
+function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return "";
+  // One point per ranked season — that season's end-of-season standing (rankPoints) — plus the live current MMR.
+  const segs=(p&&p.segments||[]).filter(s=>s.type==="season"&&s.gamemode==="pvp_ranked"&&s.rankPoints!=null);
+  const bySeason=new Map(); segs.forEach(s=>bySeason.set(+s.season,s.rankPoints));   // de-dupe to one entry per season
+  const order=[...bySeason.keys()].sort((a,b)=>a-b);                                 // oldest → newest for the trend line
+  const pts=order.map(n=>({label:seasonLabel(n), value:bySeason.get(n), rank:(rankFromPoints(bySeason.get(n))||{}).name}));
+  const cur=(p&&p.rank&&p.rank.points!=null)?p.rank.points:null;                      // live current MMR
+  if(cur!=null){ const last=pts[pts.length-1];
+    if(last&&last.value===cur) last.label+=" · now";                                  // newest season standing already equals the current MMR
+    else pts.push({label:"Current", value:cur, rank:(p.rank.name)||(rankFromPoints(cur)||{}).name}); }
+  if(pts.length<2) return "";
+  return `<div class="pl-section-h">MMR by season</div>${sparklineSVG(pts.map(x=>x.value))}
+    <div class="pl-mmrlist">${pts.slice().reverse().map(x=>`<div class="pl-mmrrow"><span class="muted small">${esc(x.label)}</span><b>${x.value!=null?x.value.toLocaleString():""}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
@@ -45766,7 +45775,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 50;
+const APP_BUILD = 51;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
