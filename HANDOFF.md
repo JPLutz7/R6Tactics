@@ -260,32 +260,44 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 ## 10. PROMPT FOR THE NEXT CHAT
 Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
-> Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a
-> 5-stack). **First read `HANDOFF.md`** in full — especially §1 (data/ToS rule), the data
-> model, and **§13 (the recent session log)** which has the newest systems and open threads.
+> Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a 5-stack).
+> **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system /
+> structure), and **§13** (the session log) whose **last entry, "NEXT TASK — pilot", is your job**.
 >
-> Single-file app (`index.html`, ~1.6 MB, all HTML/CSS/JS inlined) + `assets/` + `players.json`
-> + `scripts/` + `.github/workflows/`. Deployed to GitHub Pages from **`main`** (the default
-> branch). Develop on the session's assigned `claude/*` branch, **squash-merge via PR**, and I
-> like you to **auto-create + auto-merge** PRs. Live at https://jplutz7.github.io/R6Tactics/
-> (case-sensitive R/T).
+> Single-file app (`index.html`, ~1.7 MB, all HTML/CSS/JS inlined) + `assets/` + `players.json` +
+> `scripts/` + `cloudflare/` + `.github/workflows/`. Deployed to GitHub Pages from **`main`** (default
+> branch). Live at https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v58.47**
+> (SEED data v58, build 47). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge**
+> PRs per change.
 >
-> **Workflow that's been working:** make the change → run a headless **puppeteer** test
-> (puppeteer-core at `/tmp/node_modules`, Chrome at `/root/.cache/puppeteer/...`; serve the
-> repo over a tiny http server, stub `/players.json`) → `node scripts/bump-build.js` to bump
-> the PWA build (keeps `version.json` + `APP_BUILD` in sync; drives the in-app update banner)
-> → commit → `git rebase origin/main` (main gets bot `players.json` commits, so rebase first)
-> → force-push → PR → squash-merge. **Bump SEED `version` only for data/content changes**
-> (it triggers the "new data — adopt" flow for users; warn that unpublished local round-logs
-> are replaced on adopt).
+> **Workflow (container starts fresh — nothing preinstalled):** make the change → verify with a
+> `vm.Script` syntax check on the inlined `<script>`s + a quick **jsdom** boot/render smoke
+> (`npm i jsdom` in `/tmp`; stub `fetch`/`serviceWorker`; `DB` is a top-level `let`, reach it via
+> `window.eval`) → `node scripts/bump-build.js` (bumps `version.json` + `APP_BUILD` together; drives the
+> in-app update banner) → commit → **the branch diverges from `main` after each squash-merge, so
+> `git fetch origin main && git reset --hard origin/main && git cherry-pick <yourcommit>`** (or rebase)
+> before pushing → force-with-lease push → PR → squash-merge. **Bump SEED `version` for any data change**
+> (triggers the "new data — adopt" flow; the app reads `cloudflare/`/proxy-published data too). The data
+> lives in `index.html` between the BEGIN/END EMBEDDED DATA markers; edit it with a `/tmp` node script that
+> splices `JSON.stringify(DB,null,2)` back between the markers (don't hand-edit the 40k-line block).
 >
-> Then ask me what's next. **Open threads:** (1) confirm the **06:00 UTC stats sync** worked —
-> i.e. whether **Max** (`lnteligent.`) resolves and whether r6data honours **per-season ranked
-> operator scoping** (`ops` keys like `ranked|42`); if it does, the suggester's operator term
-> and the Players-tab per-season operators activate (and I can drop the redundant all-time op
-> call to save ~250 calls/mo). (2) Link **Lora** and the 5th member (`scripts/players.config.json`)
-> once I give you their Ubisoft handles. (3) Operator pools in the tactics are my **convention
-> picks**, not a sourced meta — a real pick-rate source could improve them.
+> **YOUR TASK — the tactics-revision pilot (4 Pro-pool maps, ~80 strats):** revise those strats against
+> real **written** sources (`WebSearch`/`WebFetch`) + your own R6 knowledge. **You cannot watch video**
+> (YouTube guides / pro VODs are out of reach — see §13); hybrid text+knowledge is the method. **Keep the
+> exact org structure & variety** (spelled out in §13's NEXT-TASK entry + §12): Attack = 5 slots
+> `[hardbreach, entry, support, intel, flex]`, 3 strats/site, **3 distinct flex doubles per site** (drop
+> rotates across the map); Defense = `[support, antibreach, recon, roamer, flex]`, 2 strats/site, **2
+> distinct doubles**; roles are **Position×Job** (Anchor subsection / Roamer / Flex); flex slots labelled
+> "Flex — 2nd <Job>"; **regenerate `st.desc`** after op changes. Pick the Pro maps from `DB.pools` (id
+> `pro`). Rough budget ~1–2M tokens / ~1–2 h. **When the pilot's done, show me sample sites + the actual
+> token cost and ask before doing the remaining ~410 strats.**
+>
+> **Other open threads (not the pilot):** (1) **per-season/playlist operators** — r6data's `operatorStats`
+> has no scoping, but the r6data *website* shows it, so a different endpoint exists; I'll paste the
+> `api.r6data.com` request URL from the site's DevTools — wire it into `fetch-stats.js` and **strip the
+> `R6_DEBUG_OPS` probe** that's still armed. (2) Link **Lora** + the **5th member** in
+> `scripts/players.config.json` once I give handles → then set **`RELEASE="1.0"`** to leave Alpha. (3) The
+> shared-password publish proxy (`cloudflare/`) is live; teammates publish with the team password.
 
 ---
 
@@ -384,7 +396,7 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   likely defense setup(s) from the ops you've seen + the site, and counters each. Possible
   next: an in-app editor for the `DB.suggester` weights, and tuning the per-archetype advice.
 
-## 13. Session log — Players tab, personalization, tactic content (builds 13→34, data v43→v48)
+## 13. Session log — Players tab → role model, tactic variety, publishing, versioning (builds 13→47, data v43→v58)
 Big additions since §12. Read this to understand the newest systems.
 
 ### Players tab (live ranked stats, ToS-safe via §1)
@@ -553,6 +565,53 @@ since anchor is the default). `normalizeDB` preserves the new group values.
   open, pick her a new defense role**). `grep anchor-def` over the SEED = **0**. ("anchor" survives only
   as the grid **subsection header** and as a verb in pos/strat-names, e.g. "anchor hold".)
 
+### Stats threads RESOLVED + publishing/versioning + the tactics-revision plan (data v58, Alpha v58.47)
+**Player-stats threads closed (see also the Players-tab subsection above):**
+- **Max links** — real tag is **`lnteIigent.`** (capital I), not `lnteligent.`. Fixed in `players.config.json`.
+- **Cron** moved `0 6` → **`23 6`** (off the top of the hour; GitHub drops brand-new `:00` schedules).
+- **Per-season/playlist operator scoping does NOT exist in r6data** — probed every param
+  (`sessionType=pvp_ranked`, `gameMode`, `board_id=pvp_ranked|ranked|<season>`, `playlist`+`season`);
+  all ignored, always echo `sessionType=all`/`seasonNumber=null`. So `ops` is `all|all` only.
+- **Removed the 15 redundant scoped operator calls/player** (they returned identical all-time data AND
+  were what kept tripping the rate limit). Each run is now ~4 calls/player (~12/run) — no more backoff.
+  *Open (unconfirmed):* the r6data **website** *does* show per-season/playlist operators, so a different
+  endpoint exists — owner to grab the `api.r6data.com` request URL from the site's DevTools (desktop);
+  there's a temporary `R6_DEBUG_OPS` probe + env still armed in `fetch-stats.js`/workflow to map it,
+  **remember to strip that debug** once the per-season fetch is wired in (or if abandoned).
+
+**Publishing & versioning:**
+- **Shared-password publish proxy (`cloudflare/publish-worker.js` + README):** a Cloudflare Worker holds
+  the bot GitHub token + a `TEAM_PASSWORD` as secrets; the app POSTs `{password, data}` and the Worker
+  commits `index.html`+`version.json` (mirrors `publishLive`). App: `PUBLISH_PROXY_URL` is **set** to
+  `https://r6tactics-publish.joaopmlutz.workers.dev`; "Make changes permanent" → `publishViaProxy()` with
+  `teamPass()` (localStorage), team-password modal. Teammates publish with just the password — no token.
+  Personal-token flow + "Copy publish JSON" remain as fallbacks. **Verified live** (wrong-pass → 401).
+- **"🔄 Check for app updates"** button in the Data menu (`checkForUpdatesManual()`) — manual version poll.
+- **Alpha versioning:** app shows **"Alpha v{data}.{build}"** (e.g. `Alpha v58.47`) via `appVersion()` /
+  `dataVersion()` + const **`RELEASE`** (`""`=alpha). **Flip to official `v1.0` by setting `RELEASE="1.0"`
+  once the full 5-stack is linked.**
+
+### NEXT TASK — pilot: revise the tactics with real research (owner-requested)
+Owner wants all 490 strats revised against real sources while **keeping the exact org structure + variety**.
+Feasibility established this session:
+- **No video.** Can't watch YouTube guides / pro VODs; transcripts unreliable, setups are visual. The
+  richest sources are out of reach. Work from **written web guides + the model's own R6 knowledge**.
+- Most structured strat DBs are dead/gated (r6guides dead, r6strat login, Fandom 403, trackers Cloudflare-
+  walled). So: **hybrid** — model R6 knowledge as backbone + **WebSearch verification per map** (current
+  meta / bans / reworks), then hand-tune per site. (`WebSearch`/`WebFetch` available.)
+- **Pilot = the 4 Pro-pool maps first** (`DB.pools` id `pro`, ~80 strats). Rough budget **~1–2M tokens,
+  ~1–2 h**; full run ~5–10M / ~4–8 h. Pilot → judge quality vs cost → greenlight the rest.
+- **MUST preserve** (see §12 + the variety entries above): Attack strat = `[hardbreach, entry, support,
+  intel, flex]`, flex `sub`∈{entry,support,intel,breach}, **3 strats/site, 3 distinct doubles/site**, the
+  dropped one rotating across the map; Defense strat = `[support(lead anchor), antibreach, recon(intel|
+  trapper), roamer, flex]`, flex `sub`∈{support,roamer,trapper,intel,antibreach,utility}, **2 strats/site,
+  2 distinct doubles**; roles are **Position×Job** (Anchor subsection / Roamer / Flex; flex=all ops);
+  `flex-atk`/`flex-def` slots labelled "Flex — 2nd <Job>"; **regenerate `st.desc`** (`Role (op1/op2) — pos`)
+  after any op change. Bump SEED `version` (data change) and the PWA build.
+
 ### Helper scripts (in `/tmp` during the session, re-creatable from this log)
 `scripts/gen-desc.js` (descriptions, **committed**). `scripts/fetch-stats.js`, `players.config.json`,
-the workflow — **committed**. `tailor.js` / `igl.js` / `vary-tactics.js` transforms were run from `/tmp` (logic captured above).
+the workflow — **committed**. `tailor.js`/`igl.js`/`vary-tactics.js`/`vary-def.js`/`def-roles.js`/
+`merge-util.js`/`retag-anchor.js` transforms were run from `/tmp` (logic captured in the entries above).
+Note: the container starts **fresh** — no `/tmp` deps preinstalled; `npm i jsdom` (and `puppeteer` if you
+want screenshots) as needed. Verify via `vm.Script` syntax check + a jsdom boot/render smoke.
