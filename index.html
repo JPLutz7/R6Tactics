@@ -44631,7 +44631,8 @@ function renderDataMenu(){
     <div style="border-top:1px solid var(--line2);margin:12px 0 10px"></div>
     <div class="muted small" style="line-height:1.5;margin-bottom:6px">This device is <b>— local only, personalizes your view, never published</b>:</div>
     <select id="dmMe" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);font-weight:700;box-sizing:border-box">${[`<option value="">— not set —</option>`,...((DB&&DB.roster||[]).map(p=>`<option value="${esc(normTxt(p.name))}" ${getMe()===normTxt(p.name)?"selected":""}>${esc(p.name)}</option>`))].join("")}</select>
-    <button class="btn" id="dmCheckUpd" style="margin-top:12px;width:100%">🔄 Check for app updates <span class="muted" style="font-weight:600">· on ${appVersion()}</span></button>`;
+    <button class="btn" id="dmCheckUpd" style="margin-top:12px;width:100%;justify-content:center">🔄 Check for app updates</button>
+    <div class="muted small" style="text-align:center;margin-top:5px">on ${appVersion()}</div>`;
   byId("dmPublishLive").onclick=publishLive;
   byId("dmMe").onchange=e=>{ setMe(e.target.value); applyMeDefaults(); UI.players.touched=false; renderDataMenu(); render(); toast(e.target.value?("You are "+e.target.value):"Identity cleared"); };
   byId("dmExport").onclick=exportJSON;
@@ -45775,7 +45776,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 51;
+const APP_BUILD = 52;
 function r6ShowUpdate(){
   if (document.getElementById("pwaUpdate")) return;
   const el = document.createElement("div");
