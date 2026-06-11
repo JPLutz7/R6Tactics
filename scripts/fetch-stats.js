@@ -81,6 +81,27 @@ async function fetchPlayer(p) {
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
     if (DBG) console.log(`  [ops/${p.label}] seasons=${JSON.stringify(out.seasons)} base: status=${base&&base.status} keys=${base&&base.json?Object.keys(base.json).join(","):"-"} sessionType=${base&&base.json&&base.json.sessionType} seasonNumber=${base&&base.json&&base.json.seasonNumber} nOps=${base&&base.json&&base.json.operators?(Array.isArray(base.json.operators)?base.json.operators.length:Object.keys(base.json.operators).length):"-"}`);
+    // one-time param-name/value probe to find what actually scopes operators (sessionType=ranked is ignored)
+    if (DBG && !global.__probed) {
+      global.__probed = true;
+      const season = out.seasons[0];
+      const trials = [
+        { sessionType: "pvp_ranked", seasonNumber: season },
+        { sessionType: "pvp_ranked" },
+        { gameMode: "pvp_ranked", seasonNumber: season },
+        { board_id: "pvp_ranked", seasonNumber: season },
+        { board_id: `ranked|${season}` },
+        { playlist: "ranked", season: season },
+      ];
+      for (const t of trials) {
+        await sleep(1500);
+        try {
+          const r = await fetchType(p.handle, platform, "operatorStats", t);
+          const n = r&&r.json&&r.json.operators ? (Array.isArray(r.json.operators)?r.json.operators.length:Object.keys(r.json.operators).length) : "-";
+          console.log(`  [probe] ${JSON.stringify(t)} -> status=${r&&r.status} echo sessionType=${r&&r.json&&r.json.sessionType} seasonNumber=${r&&r.json&&r.json.seasonNumber} nOps=${n}`);
+        } catch (e) { console.log(`  [probe] ${JSON.stringify(t)} -> error ${e&&e.message}`); }
+      }
+    }
     for (const plId of Object.keys(PLAYLISTS)) {
       const st = PLAYLISTS[plId].st;
       for (const season of [null, ...RECENT]) {
