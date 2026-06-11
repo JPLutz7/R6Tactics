@@ -32,6 +32,7 @@ jobs:
       - name: Fetch ranked stats
         env:
           R6DATA_API_KEY: ${{ secrets.R6DATA_API_KEY }}
+          R6_DEBUG_OPS: "1"   # temporary: map where r6data exposes per-season/playlist operators
         run: node scripts/fetch-stats.js
       - name: Commit if changed
         run: |
