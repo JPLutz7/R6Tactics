@@ -404,9 +404,21 @@ Big additions since §12. Read this to understand the newest systems.
 - **API-key expiry** (90-day fine-grained key, expires ~2026-09-08, tracked in `players.config.json`
   `api_key_expires`): the workflow **opens a GitHub Issue** (renewal link + steps) and the Players
   tab shows a banner when ≤14 days / expired. **Can't auto-renew** (it's João's r6data account).
-- **PENDING:** per-season **ranked** operator scoping is unconfirmed (every completed sync only
-  returned `all|all`; the suggester op term is ranked-only and stays dormant until `ranked|<season>`
-  scopes appear). The next clean 06:00 UTC run (after the burst-limit cools) reveals it.
+- **RESOLVED (these were the open threads):**
+  - **Max now links** — his tag is `lnteIigent.` (capital **I**), not `lnteligent.` (lowercase L);
+    identical-looking, so r6data 500'd on the wrong one. Fixed in `players.config.json`.
+  - **Per-season/playlist operator scoping does NOT exist in r6data.** Probed every candidate
+    (`sessionType=pvp_ranked`, `gameMode`, `board_id=pvp_ranked`, `board_id=ranked|<season>`,
+    `playlist`+`season`) — **all ignored**, every response echoes `sessionType=all, seasonNumber=null`
+    with identical operator counts. `operatorStats` only honours handle+platform. So `ops` is just
+    `all|all` (all-time) and that's the ceiling; the suggester's ranked-op term can only ever use
+    all-time op data (or stay on convention pools).
+  - **Removed the 15 redundant scoped operator calls/player** (they all returned the same all-time
+    data and were what kept tripping the rate limit). Each run is now ~4 calls/player (≈12/run total)
+    → no more burst-limit backoff; huge headroom under the 2,500/mo budget.
+  - **Cron moved `0 6` → `23 6`** (off the top of the hour). The schedule was new (added 2026-06-10)
+    and its only chance (2026-06-11 06:00 UTC) was dropped — GitHub delays/drops `:00` schedules under
+    load. `:23` should fire reliably going forward.
 
 ### Device identity + IGL
 - **Local per-device identity** (`localStorage r6stack.me`): first-launch "Who's on this device?"
