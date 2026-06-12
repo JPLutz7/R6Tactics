@@ -12,6 +12,8 @@ on:
     # load (their docs recommend avoiding it), which is why the first 06:00 run missed.
     - cron: "23 6 * * *"
   workflow_dispatch: {}       # manual "Run workflow" button
+  repository_dispatch:        # reliable external trigger — the Cloudflare Worker cron POSTs this daily
+    types: [refresh-stats]    #   (GitHub's own scheduled cron is unreliable and has never fired here)
 
 permissions:
   contents: write
