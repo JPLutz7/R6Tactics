@@ -559,7 +559,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 67,
+  "version": 68,
   "publishedAt": "2026-06-12",
   "maps": [
     {
@@ -897,7 +897,13 @@ const SEED_DATA =
                       "hibana",
                       "ace"
                     ],
-                    "pos": "Open the Bedroom-Construction double wall from inside Construction once the trick is cleared."
+                    "pos": "Open the Bedroom-Construction double wall from inside Construction once the trick is cleared.",
+                    "task": "Open the Bedroom-Construction double reinforced wall from inside Construction once the battery trick is cleared.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn both reinforced panels open once batteries are down.",
+                      "hibana": "X-KAIROS pellets pop the reinforced wall from a safe Construction angle.",
+                      "ace": "SELMA breachers stick on and auto-open the double panel top-down."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -906,7 +912,13 @@ const SEED_DATA =
                       "twitch",
                       "kali"
                     ],
-                    "pos": "EMP the battery trick on the double wall; Twitch-drone the Construction gadgets first."
+                    "pos": "EMP the battery trick on the double wall; Twitch-drone the Construction gadgets first.",
+                    "task": "Strip the battery trick off the Bedroom-Construction double wall and clear the Construction gadgets before the breach.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the wall batteries through the reinforcement.",
+                      "twitch": "Shock Drone scouts Construction and zaps the batteries and traps off the wall.",
+                      "kali": "LV Lance spike blasts the gadgets clinging behind the soft Construction wall."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -915,7 +927,13 @@ const SEED_DATA =
                       "zofia",
                       "sledge"
                     ],
-                    "pos": "Entry through the opened double wall into Master Bedroom; clear toward the Gym soft wall."
+                    "pos": "Entry through the opened double wall into Master Bedroom; clear toward the Gym soft wall.",
+                    "task": "Lead entry through the opened double wall into Master Bedroom and clear toward the Gym soft wall.",
+                    "how": {
+                      "ash": "M120 breaching rounds blow barricades and soft cover ahead of the push.",
+                      "zofia": "Concussion and impact grenades soften anchors before swinging the hole.",
+                      "sledge": "Breaching hammer smashes the Gym soft wall to extend the clear."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -924,7 +942,13 @@ const SEED_DATA =
                       "zero",
                       "dokkaebi"
                     ],
-                    "pos": "Jackal the Bedroom Hallway roamers; Zero-cam Master Bedroom before the commit."
+                    "pos": "Jackal the Bedroom Hallway roamers; Zero-cam Master Bedroom before the commit.",
+                    "task": "Track the Bedroom Hallway roamers and scout Master Bedroom before the team commits.",
+                    "how": {
+                      "jackal": "Eyenox reveals roamer footprints to chase them off Bedroom Hallway.",
+                      "zero": "Argus cams drill into Master Bedroom to spot anchors pre-commit.",
+                      "dokkaebi": "Logic Bomb rings the anchors' phones and exposes their positions."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -934,7 +958,13 @@ const SEED_DATA =
                       "iq"
                     ],
                     "pos": "Flores the site utility and the double-wall denial, then watch the Eastern Stairs flank.",
-                    "sub": "support"
+                    "sub": "support",
+                    "task": "Destroy site utility and the double-wall denial, then watch the Eastern Stairs flank.",
+                    "how": {
+                      "twitch": "Shock Drone picks off batteries and traps holding the double wall.",
+                      "flores": "RCE-Ratero drone flies in and detonates on the wall denial gadgets.",
+                      "iq": "Detector marks electronics through walls to shoot the denial out."
+                    }
                   }
                 ],
                 "breach": [
@@ -967,7 +997,13 @@ const SEED_DATA =
                       "ace"
                     ],
                     "pos": "Buck the Stage/Strip Club ceiling under Gym; shred the default Gym angles from below.",
-                    "sub": "breach"
+                    "sub": "breach",
+                    "task": "Open the Stage/Strip Club ceiling under Gym from 1F and shred the default Gym angles from below.",
+                    "how": {
+                      "buck": "Skeleton Key shotgun blasts the soft Gym floor open from underneath.",
+                      "sledge": "Breaching hammer caves the Strip Club ceiling under Gym.",
+                      "ace": "SELMA on the ceiling opens a wide hole into Gym from below."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -976,7 +1012,13 @@ const SEED_DATA =
                       "hibana",
                       "maverick"
                     ],
-                    "pos": "Secondary-breach the Bedroom-Construction double wall if the floor play gets patched."
+                    "pos": "Secondary-breach the Bedroom-Construction double wall if the floor play gets patched.",
+                    "task": "Secondary-breach the Bedroom-Construction double reinforced wall if the floor play gets patched.",
+                    "how": {
+                      "ace": "SELMA breachers auto-open both reinforced panels top-down.",
+                      "hibana": "X-KAIROS pellets blow the reinforced wall from cover.",
+                      "maverick": "Suri torch quietly cuts the reinforced panels even through batteries."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -985,7 +1027,13 @@ const SEED_DATA =
                       "flores",
                       "osa"
                     ],
-                    "pos": "Flores the ADS and battery denial on the double wall before the secondary breach."
+                    "pos": "Flores the ADS and battery denial on the double wall before the secondary breach.",
+                    "task": "Clear the ADS and battery denial on the double wall before the secondary breach.",
+                    "how": {
+                      "thatcher": "EMP grenades fry the wall batteries and any nearby ADS.",
+                      "flores": "RCE-Ratero drone detonates on the batteries and the ADS.",
+                      "osa": "Talon shield deploys to cover the breacher while utility is cleared."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -994,7 +1042,13 @@ const SEED_DATA =
                       "ram",
                       "blackbeard"
                     ],
-                    "pos": "Hit Bedroom Hallway off the main stairs as the floor opens; Blackbeard wins the re-peeks."
+                    "pos": "Hit Bedroom Hallway off the main stairs as the floor opens; Blackbeard wins the re-peeks.",
+                    "task": "Hit Bedroom Hallway off the main stairs as the floor opens and win the re-peeks.",
+                    "how": {
+                      "ash": "Breaching rounds clear barricades to rush Bedroom Hallway.",
+                      "ram": "BU-GI breacher tears open the soft floor to flush anchors out.",
+                      "blackbeard": "H.U.L.L. shield keeps the rifle up to win hallway re-peeks."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1003,7 +1057,13 @@ const SEED_DATA =
                       "iana",
                       "nokk"
                     ],
-                    "pos": "Jackal the Strip Club roamers; Iana-drone Gym before the floor goes."
+                    "pos": "Jackal the Strip Club roamers; Iana-drone Gym before the floor goes.",
+                    "task": "Track the Strip Club roamers and scout Gym before the floor goes.",
+                    "how": {
+                      "jackal": "Eyenox footprints hunt the Strip Club roamers below.",
+                      "iana": "Gemini Replicator drone scouts Gym safely before the breach.",
+                      "nokk": "HEL field slips past cams to peek Gym undetected."
+                    }
                   }
                 ],
                 "breach": [
@@ -1036,7 +1096,13 @@ const SEED_DATA =
                       "sledge",
                       "ying"
                     ],
-                    "pos": "Push the main stairs to Bedroom Hallway; Ying-flash the hallway cross before the swing."
+                    "pos": "Push the main stairs to Bedroom Hallway; Ying-flash the hallway cross before the swing.",
+                    "task": "Push the main stairs to Bedroom Hallway and clear the hallway cross before the swing.",
+                    "how": {
+                      "ash": "Breaching rounds blow soft cover to open the hallway push.",
+                      "sledge": "Hammer opens soft walls to take new angles on the cross.",
+                      "ying": "Candela flash clusters blind the hallway cross before swinging."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1046,7 +1112,13 @@ const SEED_DATA =
                       "nokk"
                     ],
                     "pos": "Zero-cam Construction and Bedroom Hallway; call the rotates between the two pincers.",
-                    "sub": "intel"
+                    "sub": "intel",
+                    "task": "Watch Construction and Bedroom Hallway on cams and call the rotates between the two pincers.",
+                    "how": {
+                      "zero": "Argus cams drill both Construction and the hallway for intel.",
+                      "iana": "Gemini drone mirrors both approaches to call rotations.",
+                      "nokk": "HEL field lets her slip in close to relay anchor movement."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1055,7 +1127,13 @@ const SEED_DATA =
                       "ace",
                       "maverick"
                     ],
-                    "pos": "Open the Bedroom-Construction double wall on the call; Maverick-trick it if EMPs are spent."
+                    "pos": "Open the Bedroom-Construction double wall on the call; Maverick-trick it if EMPs are spent.",
+                    "task": "Open the Bedroom-Construction double reinforced wall on the call, with a quiet-cut backup if EMPs are spent.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the panels once batteries are down.",
+                      "ace": "SELMA auto-opens the double wall top-down on command.",
+                      "maverick": "Suri torch cuts the reinforced wall silently when EMPs are gone."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1064,7 +1142,13 @@ const SEED_DATA =
                       "kali",
                       "iq"
                     ],
-                    "pos": "EMP the double-wall trick; IQ the C4s waiting on the Bedroom Hallway pinch."
+                    "pos": "EMP the double-wall trick; IQ the C4s waiting on the Bedroom Hallway pinch.",
+                    "task": "Clear the double-wall trick and the C4 waiting on the Bedroom Hallway pinch.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the wall batteries for the breach.",
+                      "kali": "LV Lance blasts the denial gadgets behind the soft wall.",
+                      "iq": "Detector spots the C4 through walls to shoot it off the pinch."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1073,7 +1157,13 @@ const SEED_DATA =
                       "lion",
                       "iana"
                     ],
-                    "pos": "Dokkaebi-ring on the commit; call the two-way split between hallway and Construction."
+                    "pos": "Dokkaebi-ring on the commit; call the two-way split between hallway and Construction.",
+                    "task": "Disrupt the anchors on the commit and call the two-way split between hallway and Construction.",
+                    "how": {
+                      "dokkaebi": "Logic Bomb rings anchor phones to break their holds.",
+                      "lion": "EE-ONE-D scan flags any defender moving between the pincers.",
+                      "iana": "Gemini drone tracks both lanes to time the split."
+                    }
                   }
                 ],
                 "breach": [
@@ -1117,7 +1207,13 @@ const SEED_DATA =
                       "maverick",
                       "hibana"
                     ],
-                    "pos": "Thermite the Cash wall from the top of Eastern Stairs; the plant goes down behind the stairs cover."
+                    "pos": "Thermite the Cash wall from the top of Eastern Stairs; the plant goes down behind the stairs cover.",
+                    "task": "Open the Cash reinforced wall from the top of Eastern Stairs so the plant goes behind the stairs cover.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the Cash wall once batteries are cleared.",
+                      "maverick": "Suri torch cuts the reinforced Cash wall even through battery denial.",
+                      "hibana": "X-KAIROS pellets blow the Cash wall from the Eastern landing."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1126,7 +1222,13 @@ const SEED_DATA =
                       "iq",
                       "flores"
                     ],
-                    "pos": "EMP the wall trick from the Eastern landing; IQ the C4 held for the plant deny."
+                    "pos": "EMP the wall trick from the Eastern landing; IQ the C4 held for the plant deny.",
+                    "task": "Strip the wall trick from the Eastern landing and clear the C4 held for the plant deny.",
+                    "how": {
+                      "thatcher": "EMP grenades kill the wall batteries from the landing.",
+                      "iq": "Detector marks the C4 through the wall to shoot it out.",
+                      "flores": "RCE-Ratero drone detonates on the batteries and the C4."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1135,7 +1237,13 @@ const SEED_DATA =
                       "ying",
                       "ram"
                     ],
-                    "pos": "Entry up Eastern Stairs; clear the top-of-stairs lurk and the Construction cross."
+                    "pos": "Entry up Eastern Stairs; clear the top-of-stairs lurk and the Construction cross.",
+                    "task": "Lead entry up Eastern Stairs and clear the top-of-stairs lurk and the Construction cross.",
+                    "how": {
+                      "ash": "Breaching rounds clear barricades to rush the stairs top.",
+                      "ying": "Candela flashes blind the stairs lurk and Construction cross.",
+                      "ram": "BU-GI breacher rips floor to flush the top-of-stairs holder."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1144,7 +1252,13 @@ const SEED_DATA =
                       "lion",
                       "iana"
                     ],
-                    "pos": "Jackal the Bar-side roamers; Lion-scan the retake once the plant is down."
+                    "pos": "Jackal the Bar-side roamers; Lion-scan the retake once the plant is down.",
+                    "task": "Track the Bar-side roamers and scan the retake once the plant is down.",
+                    "how": {
+                      "jackal": "Eyenox footprints chase the Bar-side roamers.",
+                      "lion": "EE-ONE-D scan flags retaking defenders post-plant.",
+                      "iana": "Gemini drone watches the retake lanes into Cash."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1154,7 +1268,13 @@ const SEED_DATA =
                       "zero"
                     ],
                     "pos": "Zero-cam Cash Room before the commit and call the anchor as the team pushes.",
-                    "sub": "intel"
+                    "sub": "intel",
+                    "task": "Scout Cash Room before the commit and call the anchor as the team pushes.",
+                    "how": {
+                      "lion": "EE-ONE-D scan pings the anchors moving inside Cash.",
+                      "dokkaebi": "Logic Bomb rings phones to locate the Cash anchor.",
+                      "zero": "Argus cams drill into Cash for a pre-commit read."
+                    }
                   }
                 ],
                 "breach": [
@@ -1187,7 +1307,13 @@ const SEED_DATA =
                       "sledge"
                     ],
                     "pos": "Buck the Cash Room floor from Lounge below; shred the default plant cover from underneath.",
-                    "sub": "breach"
+                    "sub": "breach",
+                    "task": "Open the Cash Room floor from Lounge below and shred the default plant cover from underneath.",
+                    "how": {
+                      "buck": "Skeleton Key shotgun blows the Cash floor open from Lounge.",
+                      "ace": "SELMA on the ceiling tears a wide hole up into Cash.",
+                      "sledge": "Breaching hammer caves the Cash floor from below."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1196,7 +1322,13 @@ const SEED_DATA =
                       "flores",
                       "osa"
                     ],
-                    "pos": "Flores the battery trick on the Eastern wall; Osa-shield the Lounge doorway hold."
+                    "pos": "Flores the battery trick on the Eastern wall; Osa-shield the Lounge doorway hold.",
+                    "task": "Clear the battery trick on the Eastern wall and hold the Lounge doorway.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the Eastern wall batteries.",
+                      "flores": "RCE-Ratero drone detonates on the wall batteries.",
+                      "osa": "Talon shield anchors in the Lounge doorway for a safe hold."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1205,7 +1337,13 @@ const SEED_DATA =
                       "hibana",
                       "thermite"
                     ],
-                    "pos": "Ace the Cash wall at Eastern Stairs once the floor splits the anchors."
+                    "pos": "Ace the Cash wall at Eastern Stairs once the floor splits the anchors.",
+                    "task": "Open the Cash reinforced wall at Eastern Stairs once the floor splits the anchors.",
+                    "how": {
+                      "ace": "SELMA auto-opens the Cash wall top-down at the stairs.",
+                      "hibana": "X-KAIROS pellets blow the Cash wall from the landing.",
+                      "thermite": "Exothermic Charges burn the Cash wall once denial is gone."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1214,7 +1352,13 @@ const SEED_DATA =
                       "ram",
                       "blackbeard"
                     ],
-                    "pos": "Entry topside off Eastern Stairs into the split anchors; trade onto the broken floor."
+                    "pos": "Entry topside off Eastern Stairs into the split anchors; trade onto the broken floor.",
+                    "task": "Entry topside off Eastern Stairs into the split anchors and trade onto the broken floor.",
+                    "how": {
+                      "ash": "Breaching rounds open cover to swing the split anchors.",
+                      "ram": "BU-GI breacher widens the floor break to trade through.",
+                      "blackbeard": "H.U.L.L. shield wins the topside trade with rifle up."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1223,7 +1367,13 @@ const SEED_DATA =
                       "iana",
                       "nokk"
                     ],
-                    "pos": "Lion-scan on the commit; call the two-level hit so both floors swing together."
+                    "pos": "Lion-scan on the commit; call the two-level hit so both floors swing together.",
+                    "task": "Scan on the commit and call the two-level hit so both floors swing together.",
+                    "how": {
+                      "lion": "EE-ONE-D scan pings defenders on both levels at once.",
+                      "iana": "Gemini drone mirrors both floors to sync the hit.",
+                      "nokk": "HEL field slips in to relay timing undetected."
+                    }
                   }
                 ],
                 "breach": [
@@ -1256,7 +1406,13 @@ const SEED_DATA =
                       "blackbeard",
                       "striker"
                     ],
-                    "pos": "Drop the eastern roof hatch onto the top of Eastern Stairs; win the opening into Cash."
+                    "pos": "Drop the eastern roof hatch onto the top of Eastern Stairs; win the opening into Cash.",
+                    "task": "Drop the eastern roof hatch onto the top of Eastern Stairs and win the opening into Cash.",
+                    "how": {
+                      "ash": "Breaching rounds blow soft cover to push off the hatch drop.",
+                      "blackbeard": "H.U.L.L. shield tanks the drop and wins the opening duel.",
+                      "striker": "Frags and stuns off the hatch clear the landing into Cash."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1266,7 +1422,13 @@ const SEED_DATA =
                       "striker"
                     ],
                     "pos": "Swing in behind the lead and trade into Cash Room; punish the anchor when the wall lands.",
-                    "sub": "entry"
+                    "sub": "entry",
+                    "task": "Swing in behind the lead and trade into Cash Room, punishing the anchor when the wall lands.",
+                    "how": {
+                      "blackbeard": "H.U.L.L. shield trades into Cash with rifle still up.",
+                      "ram": "BU-GI breacher tears floor to open the anchor's cover.",
+                      "striker": "Stun and frag combo clears the anchor on the swing."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1275,7 +1437,13 @@ const SEED_DATA =
                       "ace",
                       "maverick"
                     ],
-                    "pos": "Open the Cash-Construction wall once the denial is gone; Maverick-trick it as plan B."
+                    "pos": "Open the Cash-Construction wall once the denial is gone; Maverick-trick it as plan B.",
+                    "task": "Open the Cash-Construction reinforced wall once the denial is gone, with a quiet-cut plan B.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the Cash-Construction wall.",
+                      "ace": "SELMA auto-opens the reinforced wall top-down.",
+                      "maverick": "Suri torch cuts the wall silently as the backup plan."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1284,7 +1452,13 @@ const SEED_DATA =
                       "osa",
                       "gridlock"
                     ],
-                    "pos": "EMP the wall trick; Osa-shield the Construction push and Gridlock the Bedroom Hallway flank."
+                    "pos": "EMP the wall trick; Osa-shield the Construction push and Gridlock the Bedroom Hallway flank.",
+                    "task": "Strip the wall trick, cover the Construction push, and lock the Bedroom Hallway flank.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the wall batteries for the breach.",
+                      "osa": "Talon shield covers the Construction push line.",
+                      "gridlock": "Trax Stingers blanket the Bedroom Hallway flank route."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1293,7 +1467,13 @@ const SEED_DATA =
                       "nokk",
                       "grim"
                     ],
-                    "pos": "Dokkaebi the anchors off their cams; Grim the hallway flank as both teams commit."
+                    "pos": "Dokkaebi the anchors off their cams; Grim the hallway flank as both teams commit.",
+                    "task": "Pull the anchors off their cams and watch the hallway flank as both teams commit.",
+                    "how": {
+                      "dokkaebi": "Logic Bomb rings phones to break anchors off cams.",
+                      "nokk": "HEL field slips the hallway flank past detection.",
+                      "grim": "Kawan Hive bees tag any defender flanking the hallway."
+                    }
                   }
                 ],
                 "breach": [
@@ -1337,7 +1517,13 @@ const SEED_DATA =
                       "ace",
                       "maverick"
                     ],
-                    "pos": "Thermite the Stock Room exterior wall from the Construction Site yard; plant Stock off the wall."
+                    "pos": "Thermite the Stock Room exterior wall from the Construction Site yard; plant Stock off the wall.",
+                    "task": "Open the Stock Room exterior reinforced wall from the Construction Site yard so the plant goes off the wall.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the Stock exterior wall from the yard.",
+                      "ace": "SELMA on the exterior wall auto-opens it top-down.",
+                      "maverick": "Suri torch cuts the exterior wall quietly through denial."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1346,7 +1532,13 @@ const SEED_DATA =
                       "gridlock",
                       "fuze"
                     ],
-                    "pos": "EMP the wall trick from outside; Gridlock the Garage-side flank before the plant."
+                    "pos": "EMP the wall trick from outside; Gridlock the Garage-side flank before the plant.",
+                    "task": "Strip the wall trick from outside and lock the Garage-side flank before the plant.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the exterior wall batteries.",
+                      "gridlock": "Trax Stingers blanket the Garage-side flank route.",
+                      "fuze": "Cluster Charge on the wall clears gadgets and anchors behind it."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1355,7 +1547,13 @@ const SEED_DATA =
                       "striker",
                       "amaru"
                     ],
-                    "pos": "Entry the opened wall into Stock; clear the Bar pillar cross before the plant."
+                    "pos": "Entry the opened wall into Stock; clear the Bar pillar cross before the plant.",
+                    "task": "Lead entry through the opened wall into Stock and clear the Bar pillar cross before the plant.",
+                    "how": {
+                      "ash": "Breaching rounds open cover to swing into Stock.",
+                      "striker": "Frags and stuns clear the Bar pillar cross on entry.",
+                      "amaru": "Garra Hook zips through the new hole to take the cross fast."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1364,7 +1562,13 @@ const SEED_DATA =
                       "grim",
                       "zero"
                     ],
-                    "pos": "Jackal the basement roamers off the stairs; Zero-cam Bar before the commit."
+                    "pos": "Jackal the basement roamers off the stairs; Zero-cam Bar before the commit.",
+                    "task": "Track the basement roamers off the stairs and scout Bar before the commit.",
+                    "how": {
+                      "jackal": "Eyenox footprints hunt roamers off the basement stairs.",
+                      "grim": "Kawan Hive bees tag roamers pushing up the stairs.",
+                      "zero": "Argus cams drill into Bar for a pre-commit read."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1374,7 +1578,13 @@ const SEED_DATA =
                       "striker"
                     ],
                     "pos": "Ying-flash the Bar side as the wall opens; win the refrag and hold the off-angle.",
-                    "sub": "entry"
+                    "sub": "entry",
+                    "task": "Blind the Bar side as the wall opens, win the refrag, and hold the off-angle.",
+                    "how": {
+                      "ying": "Candela flash clusters blind the Bar side on the open.",
+                      "ram": "BU-GI breacher rips floor to break the Bar holder's cover.",
+                      "striker": "Stuns blind the Bar cross to win the refrag."
+                    }
                   }
                 ],
                 "breach": [
@@ -1407,7 +1617,13 @@ const SEED_DATA =
                       "ace"
                     ],
                     "pos": "Sledge the Stock Room ceiling from Construction/Cash above; deny the anchors their cover.",
-                    "sub": "breach"
+                    "sub": "breach",
+                    "task": "Open the Stock Room ceiling from Construction/Cash above and deny the anchors their cover.",
+                    "how": {
+                      "sledge": "Breaching hammer caves the Stock ceiling from above.",
+                      "maverick": "Suri torch opens precise holes in the Stock ceiling.",
+                      "ace": "SELMA on the floor tears a wide hole down into Stock."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1416,7 +1632,13 @@ const SEED_DATA =
                       "fuze",
                       "finka"
                     ],
-                    "pos": "EMP the ceiling-claw denial; Fuze the default anchors through the soft floor."
+                    "pos": "EMP the ceiling-claw denial; Fuze the default anchors through the soft floor.",
+                    "task": "Clear the ceiling-claw denial and punish the default anchors through the soft floor.",
+                    "how": {
+                      "thatcher": "EMP grenades fry the claws denying the ceiling.",
+                      "fuze": "Cluster Charge on the floor rains bomblets onto the anchors.",
+                      "finka": "Adrenal Surge boosts teammates pushing the opened ceiling."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1425,7 +1647,13 @@ const SEED_DATA =
                       "kali",
                       "hibana"
                     ],
-                    "pos": "Maverick-cut the Stock exterior wall quietly if the ceiling play gets patched."
+                    "pos": "Maverick-cut the Stock exterior wall quietly if the ceiling play gets patched.",
+                    "task": "Cut the Stock exterior reinforced wall quietly if the ceiling play gets patched.",
+                    "how": {
+                      "maverick": "Suri torch silently cuts the Stock exterior wall.",
+                      "kali": "LV Lance blasts gadgets and soft cover behind the wall.",
+                      "hibana": "X-KAIROS pellets blow the exterior wall from the yard."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1434,7 +1662,13 @@ const SEED_DATA =
                       "amaru",
                       "zofia"
                     ],
-                    "pos": "Entry 1F through Lounge into Bar once the vertical splits the anchors."
+                    "pos": "Entry 1F through Lounge into Bar once the vertical splits the anchors.",
+                    "task": "Entry 1F through Lounge into Bar once the vertical splits the anchors.",
+                    "how": {
+                      "ash": "Breaching rounds clear barricades through Lounge into Bar.",
+                      "amaru": "Garra Hook pulls her through a Lounge window into Bar.",
+                      "zofia": "Impact and concussion grenades open the Lounge-Bar push."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1443,7 +1677,13 @@ const SEED_DATA =
                       "zero",
                       "dokkaebi"
                     ],
-                    "pos": "Jackal the roam; Zero-cam the site through the opened ceiling holes."
+                    "pos": "Jackal the roam; Zero-cam the site through the opened ceiling holes.",
+                    "task": "Hunt the roam and scout the site through the opened ceiling holes.",
+                    "how": {
+                      "jackal": "Eyenox footprints chase the roamers down.",
+                      "zero": "Argus cams peek the site through the new ceiling holes.",
+                      "dokkaebi": "Logic Bomb rings phones to flush hidden anchors."
+                    }
                   }
                 ],
                 "breach": [
@@ -1476,7 +1716,13 @@ const SEED_DATA =
                       "zofia",
                       "sledge"
                     ],
-                    "pos": "Take Garage through the side door; pressure Lounge into Bar as the wall threat sets."
+                    "pos": "Take Garage through the side door; pressure Lounge into Bar as the wall threat sets.",
+                    "task": "Take Garage through the side door and pressure Lounge into Bar as the wall threat sets.",
+                    "how": {
+                      "ash": "Breaching rounds clear the Garage side door barricade.",
+                      "zofia": "Impact grenades open the Garage-Lounge push lanes.",
+                      "sledge": "Hammer opens soft walls to pressure Lounge into Bar."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1486,7 +1732,13 @@ const SEED_DATA =
                       "capitao"
                     ],
                     "pos": "Gridlock the Garage and Blue Stairs run-outs; Nomad the Construction Site counter-flank.",
-                    "sub": "support"
+                    "sub": "support",
+                    "task": "Deny the Garage and Blue Stairs run-outs and cover the Construction Site counter-flank.",
+                    "how": {
+                      "gridlock": "Trax Stingers blanket the Garage and Blue Stairs run-outs.",
+                      "nomad": "Airjab mines blast counter-flankers off the Construction yard.",
+                      "capitao": "Asphyxiating bolts deny the run-out lanes with fire."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1495,7 +1747,13 @@ const SEED_DATA =
                       "hibana",
                       "ace"
                     ],
-                    "pos": "Open the Garage shutters or the Stock exterior wall once the denial is gone."
+                    "pos": "Open the Garage shutters or the Stock exterior wall once the denial is gone.",
+                    "task": "Open the Garage shutters or the Stock exterior reinforced wall once the denial is gone.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the reinforced shutters or wall.",
+                      "hibana": "X-KAIROS pellets pop the shutter or exterior wall.",
+                      "ace": "SELMA auto-opens the shutter or exterior wall top-down."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1504,7 +1762,13 @@ const SEED_DATA =
                       "finka",
                       "brava"
                     ],
-                    "pos": "EMP the shutter trick; Finka-boost the double commit onto Bar."
+                    "pos": "EMP the shutter trick; Finka-boost the double commit onto Bar.",
+                    "task": "Strip the shutter trick and boost the double commit onto Bar.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the shutter batteries.",
+                      "finka": "Adrenal Surge boosts the team's double commit onto Bar.",
+                      "brava": "Kludge Drone hacks or destroys the shutter denial electronics."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1513,7 +1777,13 @@ const SEED_DATA =
                       "zero",
                       "lion"
                     ],
-                    "pos": "Dokkaebi the cams away from the split; call the two-way push."
+                    "pos": "Dokkaebi the cams away from the split; call the two-way push.",
+                    "task": "Pull the cams away from the split and call the two-way push.",
+                    "how": {
+                      "dokkaebi": "Logic Bomb rings phones to break anchors off cams.",
+                      "zero": "Argus cams feed both lanes to call the split.",
+                      "lion": "EE-ONE-D scan pings defenders reacting to the push."
+                    }
                   }
                 ],
                 "breach": [
@@ -1557,7 +1827,13 @@ const SEED_DATA =
                       "thermite",
                       "ace"
                     ],
-                    "pos": "Hibana the reinforced Kitchen hatch above Arsenal; open it as the stairs push starts."
+                    "pos": "Hibana the reinforced Kitchen hatch above Arsenal; open it as the stairs push starts.",
+                    "task": "Open the reinforced Kitchen hatch above Arsenal as the stairs push starts.",
+                    "how": {
+                      "hibana": "X-KAIROS pellets blow the reinforced Kitchen hatch open.",
+                      "thermite": "Exothermic Charge burns the hatch once batteries are cleared.",
+                      "ace": "SELMA on the hatch auto-opens it down into Arsenal."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1566,7 +1842,13 @@ const SEED_DATA =
                       "brava",
                       "twitch"
                     ],
-                    "pos": "EMP the hatch denial from Kitchen; Twitch-drone Blue Stairs for roamers."
+                    "pos": "EMP the hatch denial from Kitchen; Twitch-drone Blue Stairs for roamers.",
+                    "task": "Strip the hatch denial from Kitchen and scout Blue Stairs for roamers.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the hatch batteries from Kitchen.",
+                      "brava": "Kludge Drone hacks or destroys the hatch denial electronics.",
+                      "twitch": "Shock Drone scouts Blue Stairs and zaps roamer gadgets."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1575,7 +1857,13 @@ const SEED_DATA =
                       "zofia",
                       "sledge"
                     ],
-                    "pos": "Entry down Blue Stairs into Arsenal as the hatch drops."
+                    "pos": "Entry down Blue Stairs into Arsenal as the hatch drops.",
+                    "task": "Lead entry down Blue Stairs into Arsenal as the hatch drops.",
+                    "how": {
+                      "ash": "Breaching rounds clear cover down Blue Stairs into Arsenal.",
+                      "zofia": "Concussion grenades soften anchors before the stair drop.",
+                      "sledge": "Hammer opens soft walls to widen the Arsenal entry."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1584,7 +1872,13 @@ const SEED_DATA =
                       "dokkaebi",
                       "lion"
                     ],
-                    "pos": "Jackal the stair roamers; Dokkaebi-call the Church anchors off their cams."
+                    "pos": "Jackal the stair roamers; Dokkaebi-call the Church anchors off their cams.",
+                    "task": "Track the stair roamers and pull the Church anchors off their cams.",
+                    "how": {
+                      "jackal": "Eyenox footprints hunt roamers on the staircases.",
+                      "dokkaebi": "Logic Bomb rings phones to break Church anchors off cams.",
+                      "lion": "EE-ONE-D scan pings defenders moving in the basement."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1594,7 +1888,13 @@ const SEED_DATA =
                       "zofia"
                     ],
                     "pos": "Second man down Central Stairs; Blackbeard wins the Church wooden-barrier duel.",
-                    "sub": "entry"
+                    "sub": "entry",
+                    "task": "Second man down Central Stairs and win the Church wooden-barrier duel.",
+                    "how": {
+                      "blackbeard": "H.U.L.L. shield wins the barrier duel with rifle up.",
+                      "sledge": "Hammer breaks the wooden barrier to clear the duel.",
+                      "zofia": "Impact grenades blow the barrier and concuss the holder."
+                    }
                   }
                 ],
                 "breach": [
@@ -1628,7 +1928,13 @@ const SEED_DATA =
                       "twitch"
                     ],
                     "pos": "Capitao-deny the Church barrier from above; Gridlock the Memorial flank behind the vertical.",
-                    "sub": "support"
+                    "sub": "support",
+                    "task": "Deny the Church barrier from above and lock the Memorial flank behind the vertical.",
+                    "how": {
+                      "gridlock": "Trax Stingers blanket the Memorial flank route.",
+                      "capitao": "Asphyxiating bolts burn the Church barrier hold from above.",
+                      "twitch": "Shock Drone zaps gadgets holding the Church barrier."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1637,7 +1943,13 @@ const SEED_DATA =
                       "twitch",
                       "kali"
                     ],
-                    "pos": "EMP the hatch batteries from Kitchen; Twitch the Evil Eyes through the floor holes."
+                    "pos": "EMP the hatch batteries from Kitchen; Twitch the Evil Eyes through the floor holes.",
+                    "task": "Strip the hatch batteries from Kitchen and clear the Evil Eyes through the floor holes.",
+                    "how": {
+                      "thatcher": "EMP grenades disable the hatch batteries from Kitchen.",
+                      "twitch": "Shock Drone shoots the Evil Eyes through the floor holes.",
+                      "kali": "LV Lance blasts the Evil Eyes and gadgets through the floor."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1646,7 +1958,13 @@ const SEED_DATA =
                       "maverick",
                       "thermite"
                     ],
-                    "pos": "Open the reinforced Kitchen hatch over Arsenal once the trick is cleared."
+                    "pos": "Open the reinforced Kitchen hatch over Arsenal once the trick is cleared.",
+                    "task": "Open the reinforced Kitchen hatch over Arsenal once the trick is cleared.",
+                    "how": {
+                      "ace": "SELMA auto-opens the reinforced hatch into Arsenal.",
+                      "maverick": "Suri torch cuts the hatch silently through denial.",
+                      "thermite": "Exothermic Charge burns the hatch once batteries are down."
+                    }
                   },
                   {
                     "role": "entry-atk",
@@ -1655,7 +1973,13 @@ const SEED_DATA =
                       "buck",
                       "ash"
                     ],
-                    "pos": "Sledge opens the Bar floor and the Bar hatch over Utility/Church, then drops the stairs."
+                    "pos": "Sledge opens the Bar floor and the Bar hatch over Utility/Church, then drops the stairs.",
+                    "task": "Open the Bar floor and the Bar hatch over Utility/Church, then drop the stairs.",
+                    "how": {
+                      "sledge": "Breaching hammer caves the Bar floor and Bar hatch open.",
+                      "buck": "Skeleton Key shotgun blows the soft Bar floor through.",
+                      "ash": "Breaching rounds open soft cover to drop the stairs after."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1664,7 +1988,13 @@ const SEED_DATA =
                       "lion",
                       "iana"
                     ],
-                    "pos": "Jackal the stair roamers; Lion-scan the retake as the floor opens."
+                    "pos": "Jackal the stair roamers; Lion-scan the retake as the floor opens.",
+                    "task": "Track the stair roamers and scan the retake as the floor opens.",
+                    "how": {
+                      "jackal": "Eyenox footprints hunt the stair roamers.",
+                      "lion": "EE-ONE-D scan flags retaking defenders post-open.",
+                      "iana": "Gemini drone watches the retake lanes."
+                    }
                   }
                 ],
                 "breach": [
@@ -1697,7 +2027,13 @@ const SEED_DATA =
                       "ying",
                       "ram"
                     ],
-                    "pos": "Ying-flood Central Stairs into Church; win the first pick at the barrier."
+                    "pos": "Ying-flood Central Stairs into Church; win the first pick at the barrier.",
+                    "task": "Flood Central Stairs into Church and win the first pick at the barrier.",
+                    "how": {
+                      "ash": "Breaching rounds blow the barrier to flood Central Stairs.",
+                      "ying": "Candela flash clusters blind the barrier on the flood.",
+                      "ram": "BU-GI breacher tears through to open the Church push."
+                    }
                   },
                   {
                     "role": "flex-atk",
@@ -1707,7 +2043,13 @@ const SEED_DATA =
                       "iana"
                     ],
                     "pos": "Nokk slips Blue Hallway behind the flood; call the Arsenal rotate and kill the flank.",
-                    "sub": "intel"
+                    "sub": "intel",
+                    "task": "Slip Blue Hallway behind the flood, call the Arsenal rotate, and kill the flank.",
+                    "how": {
+                      "nokk": "HEL field slips Blue Hallway past cams undetected.",
+                      "zero": "Argus cams watch Arsenal to call the rotate.",
+                      "iana": "Gemini drone scouts the flank route into Blue Hallway."
+                    }
                   },
                   {
                     "role": "support-atk",
@@ -1716,7 +2058,13 @@ const SEED_DATA =
                       "brava",
                       "thatcher"
                     ],
-                    "pos": "Fuze Church through the Bar floor above; EMP the wall denial before the breach."
+                    "pos": "Fuze Church through the Bar floor above; EMP the wall denial before the breach.",
+                    "task": "Hit Church through the Bar floor above and clear the wall denial before the breach.",
+                    "how": {
+                      "fuze": "Cluster Charge on the Bar floor rains bomblets onto Church.",
+                      "brava": "Kludge Drone hacks or destroys the wall denial electronics.",
+                      "thatcher": "EMP grenades disable the wall batteries before the breach."
+                    }
                   },
                   {
                     "role": "hardbreach-atk",
@@ -1725,7 +2073,13 @@ const SEED_DATA =
                       "maverick",
                       "hibana"
                     ],
-                    "pos": "Open the Arsenal-Blue Stairs wall once the defender utility is spent."
+                    "pos": "Open the Arsenal-Blue Stairs wall once the defender utility is spent.",
+                    "task": "Open the Arsenal-Blue Stairs reinforced wall once the defender utility is spent.",
+                    "how": {
+                      "thermite": "Exothermic Charges burn the Arsenal-Blue Stairs wall.",
+                      "maverick": "Suri torch cuts the reinforced wall silently.",
+                      "hibana": "X-KAIROS pellets blow the reinforced wall open."
+                    }
                   },
                   {
                     "role": "intel-atk",
@@ -1734,7 +2088,13 @@ const SEED_DATA =
                       "iana",
                       "nokk"
                     ],
-                    "pos": "Dokkaebi-ring the anchors; coordinate the two-stair timing on the call."
+                    "pos": "Dokkaebi-ring the anchors; coordinate the two-stair timing on the call.",
+                    "task": "Disrupt the anchors and coordinate the two-stair timing on the call.",
+                    "how": {
+                      "dokkaebi": "Logic Bomb rings phones to break the anchors' holds.",
+                      "iana": "Gemini drone mirrors both stairs to sync the timing.",
+                      "nokk": "HEL field slips in to relay the two-stair timing."
+                    }
                   }
                 ],
                 "breach": [
@@ -1785,7 +2145,13 @@ const SEED_DATA =
                       "rook",
                       "thunderbird"
                     ],
-                    "pos": "Anchor Master Bedroom; hold the double-wall cross and deny the plant late."
+                    "pos": "Anchor Master Bedroom; hold the double-wall cross and deny the plant late.",
+                    "task": "Anchor Master Bedroom, hold the double-wall cross, and deny the plant late.",
+                    "how": {
+                      "doc": "Stim pistol revives and overheals anchors to hold the cross longer.",
+                      "rook": "Armor plates harden the anchors holding the double-wall cross.",
+                      "thunderbird": "Kona stations heal anchors near the plant to deny it late."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -1795,7 +2161,13 @@ const SEED_DATA =
                       "smoke"
                     ],
                     "pos": "Drop Rook plates and keep the Master Bedroom anchors alive; rearm the hold late.",
-                    "sub": "support"
+                    "sub": "support",
+                    "task": "Reinforce the Master Bedroom anchors with survivability and rearm the hold late.",
+                    "how": {
+                      "rook": "Armor plates give the bedroom anchors a survivability buffer.",
+                      "thunderbird": "Kona stations auto-heal anchors to rearm the late hold.",
+                      "smoke": "Gas grenades deny the plant zone to buy the anchors time."
+                    }
                   },
                   {
                     "role": "antibreach-def",
@@ -1804,7 +2176,13 @@ const SEED_DATA =
                       "mute",
                       "wamai"
                     ],
-                    "pos": "Bandit-trick the Bedroom-Construction double wall; Wamai the EMPs thrown at it."
+                    "pos": "Bandit-trick the Bedroom-Construction double wall; Wamai the EMPs thrown at it.",
+                    "task": "Keep the Bedroom-Construction double wall electrified and stop the EMPs thrown at it.",
+                    "how": {
+                      "bandit": "Batteries electrify the double wall to fry breach charges.",
+                      "mute": "Signal jammers stop the hard-breach charges from arming.",
+                      "wamai": "Mag-NETs pull and detonate the EMPs thrown at the wall."
+                    }
                   },
                   {
                     "role": "intel-def",
@@ -1813,7 +2191,13 @@ const SEED_DATA =
                       "solis",
                       "alibi"
                     ],
-                    "pos": "Evil Eyes on the Construction double wall + Bedroom Hallway; Solis-check the drones late."
+                    "pos": "Evil Eyes on the Construction double wall + Bedroom Hallway; Solis-check the drones late.",
+                    "task": "Watch the Construction double wall and Bedroom Hallway, and check the drones late.",
+                    "how": {
+                      "maestro": "Evil Eye cams cover the double wall and Bedroom Hallway.",
+                      "solis": "SPEC-IO scans out attacker drones near the wall late.",
+                      "alibi": "Prisma decoys bait pushes and flag drones at the wall."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -1822,7 +2206,13 @@ const SEED_DATA =
                       "lesion",
                       "mozzie"
                     ],
-                    "pos": "Roam Cash/Eastern Stairs side; pinch the Construction take from behind."
+                    "pos": "Roam Cash/Eastern Stairs side; pinch the Construction take from behind.",
+                    "task": "Roam the Cash/Eastern Stairs side and pinch the Construction take from behind.",
+                    "how": {
+                      "vigil": "ERC-7 hides him from drones to set up the Construction pinch.",
+                      "lesion": "Gu mines slow and reveal attackers in the Construction take.",
+                      "mozzie": "Pests hijack attacker drones scouting the Construction push."
+                    }
                   }
                 ],
                 "rotations": [
@@ -1862,7 +2252,13 @@ const SEED_DATA =
                       "mute",
                       "wamai"
                     ],
-                    "pos": "Kaid the Construction double wall and the Spa wall; keep both charges off."
+                    "pos": "Kaid the Construction double wall and the Spa wall; keep both charges off.",
+                    "task": "Keep the Construction double wall and the Spa wall denied with both charges off.",
+                    "how": {
+                      "kaid": "Rtila electro-claws electrify both walls from the far side.",
+                      "mute": "Signal jammers stop the breach charges on both walls.",
+                      "wamai": "Mag-NETs catch the EMPs and projectiles thrown at the walls."
+                    }
                   },
                   {
                     "role": "support-def",
@@ -1871,7 +2267,13 @@ const SEED_DATA =
                       "thunderbird",
                       "smoke"
                     ],
-                    "pos": "Lock down Gym; soak first contact, deny the defuser and trade for time."
+                    "pos": "Lock down Gym; soak first contact, deny the defuser and trade for time.",
+                    "task": "Lock down Gym, soak first contact, deny the defuser, and trade for time.",
+                    "how": {
+                      "doc": "Stim pistol revives and overheals to soak first contact.",
+                      "thunderbird": "Kona stations heal the Gym anchor through the trade.",
+                      "smoke": "Gas grenades deny the defuser plant to stall the round."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -1881,7 +2283,13 @@ const SEED_DATA =
                       "ela"
                     ],
                     "pos": "Roam Strip Club/Stage below Gym; break the under-floor play before it sets.",
-                    "sub": "roamer"
+                    "sub": "roamer",
+                    "task": "Roam Strip Club/Stage below Gym and break the under-floor play before it sets.",
+                    "how": {
+                      "caveira": "Silent Step sneaks under Gym to interrogate the floor opener.",
+                      "oryx": "Dash through soft walls to punish the under-floor breacher fast.",
+                      "ela": "Grzmot mines concuss attackers setting the under-floor play."
+                    }
                   },
                   {
                     "role": "trapper-def",
@@ -1890,7 +2298,13 @@ const SEED_DATA =
                       "lesion",
                       "melusi"
                     ],
-                    "pos": "Grzmot the Bedroom Hallway door and the Construction entry; slow the pinch."
+                    "pos": "Grzmot the Bedroom Hallway door and the Construction entry; slow the pinch.",
+                    "task": "Trap the Bedroom Hallway door and the Construction entry to slow the pinch.",
+                    "how": {
+                      "ela": "Grzmot mines concuss attackers at the hallway and entry.",
+                      "lesion": "Gu mines slow and reveal pushers at both choke points.",
+                      "melusi": "Banshees slow attackers through the hallway and entry."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -1899,7 +2313,13 @@ const SEED_DATA =
                       "vigil",
                       "pulse"
                     ],
-                    "pos": "Mozzie the Construction-side drones; flank up Eastern Stairs late."
+                    "pos": "Mozzie the Construction-side drones; flank up Eastern Stairs late.",
+                    "task": "Deny the Construction-side drones and flank up Eastern Stairs late.",
+                    "how": {
+                      "mozzie": "Pests hijack the Construction-side attacker drones.",
+                      "vigil": "ERC-7 hides his late flank up Eastern Stairs from cams.",
+                      "pulse": "HB scanner finds attackers through walls to time the flank."
+                    }
                   }
                 ],
                 "rotations": [
@@ -1949,7 +2369,13 @@ const SEED_DATA =
                       "smoke",
                       "doc"
                     ],
-                    "pos": "Mira one-way from Cash into CCTV denies the wall plant; Smoke the defuse late."
+                    "pos": "Mira one-way from Cash into CCTV denies the wall plant; Smoke the defuse late.",
+                    "task": "Set a one-way from Cash into CCTV to deny the wall plant and hold the defuse late.",
+                    "how": {
+                      "mira": "Black Mirror from Cash gives the one-way onto the plant.",
+                      "smoke": "Gas grenades deny the defuse zone under the wall late.",
+                      "doc": "Stim pistol overheals the one-way holder to stay alive."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -1959,7 +2385,13 @@ const SEED_DATA =
                       "ela"
                     ],
                     "pos": "Double-roam Bar/Construction; delay and pick, then fall back through Construction.",
-                    "sub": "roamer"
+                    "sub": "roamer",
+                    "task": "Double-roam Bar/Construction, delay and pick, then fall back through Construction.",
+                    "how": {
+                      "caveira": "Silent Step roams Bar for an interrogate, then slips back.",
+                      "oryx": "Dash through soft walls to pick and rotate through Construction.",
+                      "ela": "Grzmot mines concuss pushers as she delays and falls back."
+                    }
                   },
                   {
                     "role": "antibreach-def",
@@ -1968,7 +2400,13 @@ const SEED_DATA =
                       "jager",
                       "tubarao"
                     ],
-                    "pos": "Bandit-trick the CCTV wall and the Eastern Stairs Cash wall; deny both breaches."
+                    "pos": "Bandit-trick the CCTV wall and the Eastern Stairs Cash wall; deny both breaches.",
+                    "task": "Keep the CCTV wall and the Eastern Stairs Cash wall denied against both breaches.",
+                    "how": {
+                      "bandit": "Batteries electrify both walls to fry the breach charges.",
+                      "jager": "ADS intercepts the projectiles and EMPs thrown at the walls.",
+                      "tubarao": "Zoto canister freezes and pauses the breaching gadgets."
+                    }
                   },
                   {
                     "role": "intel-def",
@@ -1977,7 +2415,13 @@ const SEED_DATA =
                       "pulse",
                       "maestro"
                     ],
-                    "pos": "Valkyrie cams on Eastern Stairs + Garage; call the roof climb early."
+                    "pos": "Valkyrie cams on Eastern Stairs + Garage; call the roof climb early.",
+                    "task": "Cam Eastern Stairs and Garage and call the roof climb early.",
+                    "how": {
+                      "valkyrie": "Black Eye cams cover Eastern Stairs and Garage approaches.",
+                      "pulse": "HB scanner reads attackers stacking through the walls.",
+                      "maestro": "Evil Eye cams watch the stairs and call the roof climb."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -1986,7 +2430,13 @@ const SEED_DATA =
                       "alibi",
                       "caveira"
                     ],
-                    "pos": "Roam Lounge/Bar below site; punish the under-Cash vertical setup."
+                    "pos": "Roam Lounge/Bar below site; punish the under-Cash vertical setup.",
+                    "task": "Roam Lounge/Bar below site and punish the under-Cash vertical setup.",
+                    "how": {
+                      "vigil": "ERC-7 hides him below site to ambush the vertical setup.",
+                      "alibi": "Prisma decoys bait and flag the under-Cash breacher.",
+                      "caveira": "Silent Step sneaks Lounge to interrogate the floor opener."
+                    }
                   }
                 ],
                 "rotations": [
@@ -2026,7 +2476,13 @@ const SEED_DATA =
                       "aruni",
                       "jager"
                     ],
-                    "pos": "Kaid the eastern roof hatch and the Cash wall; Aruni the Eastern Stairs door."
+                    "pos": "Kaid the eastern roof hatch and the Cash wall; Aruni the Eastern Stairs door.",
+                    "task": "Keep the eastern roof hatch and the Cash wall denied and lock the Eastern Stairs door.",
+                    "how": {
+                      "kaid": "Rtila electro-claws electrify the roof hatch and Cash wall.",
+                      "aruni": "Surya gate seals and zaps anything at the Eastern Stairs door.",
+                      "jager": "ADS intercepts projectiles thrown at the hatch and wall."
+                    }
                   },
                   {
                     "role": "support-def",
@@ -2035,7 +2491,13 @@ const SEED_DATA =
                       "rook",
                       "thunderbird"
                     ],
-                    "pos": "Lock down CCTV Room; soak first contact, deny the defuser and trade for time."
+                    "pos": "Lock down CCTV Room; soak first contact, deny the defuser and trade for time.",
+                    "task": "Lock down CCTV Room, soak first contact, deny the defuser, and trade for time.",
+                    "how": {
+                      "doc": "Stim pistol revives and overheals to soak first contact.",
+                      "rook": "Armor plates harden the CCTV anchors through the trade.",
+                      "thunderbird": "Kona stations heal the CCTV anchor over the defuser deny."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -2045,7 +2507,13 @@ const SEED_DATA =
                       "lesion"
                     ],
                     "pos": "Off-angle traps into Cash and the Eastern landing; protect the wall denial.",
-                    "sub": "trapper"
+                    "sub": "trapper",
+                    "task": "Set off-angle traps into Cash and the Eastern landing to protect the wall denial.",
+                    "how": {
+                      "thorn": "Razorbloom shells detonate on attackers near the wall denial.",
+                      "fenrir": "Dread Mines black out vision at the Cash off-angles.",
+                      "lesion": "Gu mines slow and reveal attackers on the landing."
+                    }
                   },
                   {
                     "role": "trapper-def",
@@ -2054,7 +2522,13 @@ const SEED_DATA =
                       "frost",
                       "thorn"
                     ],
-                    "pos": "Trap the Eastern Stairs door and the Construction entry."
+                    "pos": "Trap the Eastern Stairs door and the Construction entry.",
+                    "task": "Trap the Eastern Stairs door and the Construction entry.",
+                    "how": {
+                      "kapkan": "EDDs blast attackers crossing the door and entry.",
+                      "frost": "Welcome Mats down attackers vaulting the door and entry.",
+                      "thorn": "Razorbloom shells punish pushes at both choke points."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -2063,7 +2537,13 @@ const SEED_DATA =
                       "caveira",
                       "oryx"
                     ],
-                    "pos": "Roam Lounge/Bar under the site; break the floor play before it starts."
+                    "pos": "Roam Lounge/Bar under the site; break the floor play before it starts.",
+                    "task": "Roam Lounge/Bar under the site and break the floor play before it starts.",
+                    "how": {
+                      "vigil": "ERC-7 hides him under site to ambush the floor opener.",
+                      "caveira": "Silent Step sneaks Lounge to interrogate the breacher.",
+                      "oryx": "Dash through soft walls to punish the floor play fast."
+                    }
                   }
                 ],
                 "rotations": [
@@ -2113,7 +2593,13 @@ const SEED_DATA =
                       "rook",
                       "thunderbird"
                     ],
-                    "pos": "Anchor Stock behind the wall denial; hold the Bar cross and deny the plant late."
+                    "pos": "Anchor Stock behind the wall denial; hold the Bar cross and deny the plant late.",
+                    "task": "Anchor Stock behind the wall denial, hold the Bar cross, and deny the plant late.",
+                    "how": {
+                      "doc": "Stim pistol overheals the Stock anchors to hold longer.",
+                      "rook": "Armor plates harden the anchors behind the wall denial.",
+                      "thunderbird": "Kona stations heal anchors near the plant to deny it late."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -2123,7 +2609,13 @@ const SEED_DATA =
                       "ela"
                     ],
                     "pos": "Trap the Lounge-to-Bar approach and the Stock doorway so a fast push gets punished.",
-                    "sub": "trapper"
+                    "sub": "trapper",
+                    "task": "Trap the Lounge-to-Bar approach and the Stock doorway so a fast push gets punished.",
+                    "how": {
+                      "thorn": "Razorbloom shells detonate on the Lounge-Bar approach.",
+                      "lesion": "Gu mines slow and reveal pushers at the Stock doorway.",
+                      "ela": "Grzmot mines concuss attackers rushing the approach."
+                    }
                   },
                   {
                     "role": "antibreach-def",
@@ -2132,7 +2624,13 @@ const SEED_DATA =
                       "mute",
                       "wamai"
                     ],
-                    "pos": "Bandit-trick the Stock exterior wall and the Garage shutters."
+                    "pos": "Bandit-trick the Stock exterior wall and the Garage shutters.",
+                    "task": "Keep the Stock exterior wall and the Garage shutters denied.",
+                    "how": {
+                      "bandit": "Batteries electrify the exterior wall and shutters.",
+                      "mute": "Signal jammers stop breach charges on the wall and shutters.",
+                      "wamai": "Mag-NETs catch the EMPs and projectiles thrown at them."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -2141,7 +2639,13 @@ const SEED_DATA =
                       "caveira",
                       "oryx"
                     ],
-                    "pos": "Roam Garage/Lounge; pinch the main entry from behind."
+                    "pos": "Roam Garage/Lounge; pinch the main entry from behind.",
+                    "task": "Roam Garage/Lounge and pinch the main entry from behind.",
+                    "how": {
+                      "vigil": "ERC-7 hides him in Garage to set the entry pinch.",
+                      "caveira": "Silent Step roams Lounge for an interrogate pick.",
+                      "oryx": "Dash through soft walls to pinch the entry fast."
+                    }
                   },
                   {
                     "role": "intel-def",
@@ -2150,7 +2654,13 @@ const SEED_DATA =
                       "solis",
                       "alibi"
                     ],
-                    "pos": "Valkyrie cams on the Construction Site yard + Garage; call the push."
+                    "pos": "Valkyrie cams on the Construction Site yard + Garage; call the push.",
+                    "task": "Cam the Construction Site yard and Garage and call the push.",
+                    "how": {
+                      "valkyrie": "Black Eye cams cover the yard and Garage approaches.",
+                      "solis": "SPEC-IO scans out attacker drones to read the push.",
+                      "alibi": "Prisma decoys bait and flag attackers at the approaches."
+                    }
                   }
                 ],
                 "rotations": [
@@ -2189,7 +2699,13 @@ const SEED_DATA =
                       "kaid",
                       "aruni"
                     ],
-                    "pos": "Kaid the Stock exterior wall; Azami the ceiling holes as the vertical opens."
+                    "pos": "Kaid the Stock exterior wall; Azami the ceiling holes as the vertical opens.",
+                    "task": "Keep the Stock exterior wall denied and seal the ceiling holes as the vertical opens.",
+                    "how": {
+                      "azami": "Kiba Barriers seal the ceiling holes the vertical opens.",
+                      "kaid": "Rtila electro-claws electrify the Stock exterior wall.",
+                      "aruni": "Surya gate seals and zaps the opening ceiling breaches."
+                    }
                   },
                   {
                     "role": "support-def",
@@ -2198,7 +2714,13 @@ const SEED_DATA =
                       "smoke",
                       "mira"
                     ],
-                    "pos": "Lock down Bar; play the late defuser deny from the Stock doorway."
+                    "pos": "Lock down Bar; play the late defuser deny from the Stock doorway.",
+                    "task": "Lock down Bar and play the late defuser deny from the Stock doorway.",
+                    "how": {
+                      "doc": "Stim pistol overheals the Bar anchor for the late deny.",
+                      "smoke": "Gas grenades deny the defuser from the Stock doorway.",
+                      "mira": "Black Mirror in the Stock doorway holds the defuse one-way."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -2208,7 +2730,13 @@ const SEED_DATA =
                       "pulse"
                     ],
                     "pos": "Solis the 2F drones before the vertical sets; warn the anchors early.",
-                    "sub": "intel"
+                    "sub": "intel",
+                    "task": "Scan the 2F drones before the vertical sets and warn the anchors early.",
+                    "how": {
+                      "solis": "SPEC-IO scans out the 2F attacker drones early.",
+                      "mozzie": "Pests hijack the 2F drones before the vertical sets.",
+                      "pulse": "HB scanner reads attackers stacking above through the floor."
+                    }
                   },
                   {
                     "role": "trapper-def",
@@ -2217,7 +2745,13 @@ const SEED_DATA =
                       "fenrir",
                       "lesion"
                     ],
-                    "pos": "Trap the Lounge door and the Garage side entry."
+                    "pos": "Trap the Lounge door and the Garage side entry.",
+                    "task": "Trap the Lounge door and the Garage side entry.",
+                    "how": {
+                      "ela": "Grzmot mines concuss attackers at the door and entry.",
+                      "fenrir": "Dread Mines black out vision at the Lounge and Garage.",
+                      "lesion": "Gu mines slow and reveal pushers at both entries."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -2226,7 +2760,13 @@ const SEED_DATA =
                       "ela",
                       "lesion"
                     ],
-                    "pos": "Mozzie the Construction Site drones; roam Kitchen/Lounge and fight 2F early."
+                    "pos": "Mozzie the Construction Site drones; roam Kitchen/Lounge and fight 2F early.",
+                    "task": "Deny the Construction Site drones, roam Kitchen/Lounge, and fight 2F early.",
+                    "how": {
+                      "mozzie": "Pests hijack the Construction Site attacker drones.",
+                      "ela": "Grzmot mines cover the Kitchen/Lounge roam routes.",
+                      "lesion": "Gu mines slow attackers as she fights 2F early."
+                    }
                   }
                 ],
                 "rotations": [
@@ -2276,7 +2816,13 @@ const SEED_DATA =
                       "mira",
                       "rook"
                     ],
-                    "pos": "Mira one-ways in Church and Arsenal cover Central Stairs and Oil Pit; anchor behind them."
+                    "pos": "Mira one-ways in Church and Arsenal cover Central Stairs and Oil Pit; anchor behind them.",
+                    "task": "Set one-ways in Church and Arsenal covering Central Stairs and Oil Pit, and anchor behind them.",
+                    "how": {
+                      "doc": "Stim pistol overheals the anchors behind the one-ways.",
+                      "mira": "Black Mirrors give one-ways onto Central Stairs and Oil Pit.",
+                      "rook": "Armor plates harden the anchors holding behind them."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -2286,7 +2832,13 @@ const SEED_DATA =
                       "maestro"
                     ],
                     "pos": "Watch the Memorial and Basement Hallway approach; call the hit and the rotates.",
-                    "sub": "intel"
+                    "sub": "intel",
+                    "task": "Watch the Memorial and Basement Hallway approach and call the hit and the rotates.",
+                    "how": {
+                      "solis": "SPEC-IO scans out attacker drones on the approach.",
+                      "pulse": "HB scanner reads attackers through walls at Memorial.",
+                      "maestro": "Evil Eye cams cover the hallway to call rotates."
+                    }
                   },
                   {
                     "role": "antibreach-def",
@@ -2295,7 +2847,13 @@ const SEED_DATA =
                       "aruni",
                       "jager"
                     ],
-                    "pos": "Bandit the Arsenal hatch and the Blue Stairs wall; Jager the stair grenades."
+                    "pos": "Bandit the Arsenal hatch and the Blue Stairs wall; Jager the stair grenades.",
+                    "task": "Keep the Arsenal hatch and the Blue Stairs wall denied and stop the stair grenades.",
+                    "how": {
+                      "bandit": "Batteries electrify the Arsenal hatch and Blue Stairs wall.",
+                      "aruni": "Surya gate seals and zaps the hatch and wall breaches.",
+                      "jager": "ADS intercepts the grenades thrown down the stairs."
+                    }
                   },
                   {
                     "role": "roamer-def",
@@ -2304,7 +2862,13 @@ const SEED_DATA =
                       "lesion",
                       "mozzie"
                     ],
-                    "pos": "Roam Blue Hallway and the two staircases; pick the entry before it commits."
+                    "pos": "Roam Blue Hallway and the two staircases; pick the entry before it commits.",
+                    "task": "Roam Blue Hallway and the two staircases and pick the entry before it commits.",
+                    "how": {
+                      "caveira": "Silent Step roams the stairs for an early interrogate pick.",
+                      "lesion": "Gu mines slow and reveal attackers on the staircases.",
+                      "mozzie": "Pests hijack drones scouting Blue Hallway and the stairs."
+                    }
                   },
                   {
                     "role": "trapper-def",
@@ -2313,7 +2877,13 @@ const SEED_DATA =
                       "melusi",
                       "frost"
                     ],
-                    "pos": "Trap Central + Blue Stairs to punish the flood."
+                    "pos": "Trap Central + Blue Stairs to punish the flood.",
+                    "task": "Trap Central and Blue Stairs to punish the flood.",
+                    "how": {
+                      "kapkan": "EDDs blast attackers flooding both staircases.",
+                      "melusi": "Banshees slow the flood down Central and Blue Stairs.",
+                      "frost": "Welcome Mats down attackers dropping the stairs."
+                    }
                   }
                 ],
                 "rotations": [
@@ -2353,7 +2923,13 @@ const SEED_DATA =
                       "oryx",
                       "ela"
                     ],
-                    "pos": "Hunt Central/Blue Stairs for an interrogate or an early pick."
+                    "pos": "Hunt Central/Blue Stairs for an interrogate or an early pick.",
+                    "task": "Hunt Central/Blue Stairs for an interrogate or an early pick.",
+                    "how": {
+                      "caveira": "Silent Step stalks the stairs for an interrogate.",
+                      "oryx": "Dash through soft walls to ambush the stair entry.",
+                      "ela": "Grzmot mines concuss attackers on the staircases."
+                    }
                   },
                   {
                     "role": "antibreach-def",
@@ -2362,7 +2938,13 @@ const SEED_DATA =
                       "aruni",
                       "jager"
                     ],
-                    "pos": "Mute the stair drones; Aruni the Blue Hallway doorway."
+                    "pos": "Mute the stair drones; Aruni the Blue Hallway doorway.",
+                    "task": "Deny the stair drones and lock the Blue Hallway doorway.",
+                    "how": {
+                      "mute": "Signal jammers kill the attacker drones on the stairs.",
+                      "aruni": "Surya gate seals and zaps the Blue Hallway doorway.",
+                      "jager": "ADS catches projectiles thrown at the doorway."
+                    }
                   },
                   {
                     "role": "support-def",
@@ -2371,7 +2953,13 @@ const SEED_DATA =
                       "thunderbird",
                       "smoke"
                     ],
-                    "pos": "Lock down Arsenal Room; soak first contact, deny the defuser and trade for time."
+                    "pos": "Lock down Arsenal Room; soak first contact, deny the defuser and trade for time.",
+                    "task": "Lock down Arsenal Room, soak first contact, deny the defuser, and trade for time.",
+                    "how": {
+                      "doc": "Stim pistol revives and overheals to soak first contact.",
+                      "thunderbird": "Kona stations heal the Arsenal anchor through the trade.",
+                      "smoke": "Gas grenades deny the defuser to stall the round."
+                    }
                   },
                   {
                     "role": "flex-def",
@@ -2381,7 +2969,13 @@ const SEED_DATA =
                       "kaid"
                     ],
                     "pos": "Kaid the Kitchen-hatch and Bar-hatch ceilings; keep the vertical shut.",
-                    "sub": "antibreach"
+                    "sub": "antibreach",
+                    "task": "Keep the Kitchen-hatch and Bar-hatch ceilings shut against the vertical.",
+                    "how": {
+                      "aruni": "Surya gate seals and zaps the hatch ceiling breaches.",
+                      "bandit": "Batteries electrify the Kitchen and Bar hatches.",
+                      "kaid": "Rtila electro-claws electrify both hatch ceilings from below."
+                    }
                   },
                   {
                     "role": "trapper-def",
@@ -2390,7 +2984,13 @@ const SEED_DATA =
                       "frost",
                       "thorn"
                     ],
-                    "pos": "Trap the off-stair and the Memorial doorway so flanks get punished."
+                    "pos": "Trap the off-stair and the Memorial doorway so flanks get punished.",
+                    "task": "Trap the off-stair and the Memorial doorway so flanks get punished.",
+                    "how": {
+                      "kapkan": "EDDs blast flankers at the off-stair and Memorial doorway.",
+                      "frost": "Welcome Mats down attackers vaulting the flank routes.",
+                      "thorn": "Razorbloom shells punish flanks at both choke points."
+                    }
                   }
                 ],
                 "rotations": [
@@ -45034,7 +45634,7 @@ function assignTactic(st,side){
     const ops=(slot?(slot.ops||[]):[]).slice().sort((a,b)=>(favs.has(b)?1:0)-(favs.has(a)?1:0));
     let roleName=role?role.name:"";
     if(slot&&(slot.role==="flex-atk"||slot.role==="flex-def")){ const j=flexSecondJob(slot); if(j) roleName=`Flex — ${j}`; }   // e.g. "Flex — 2nd Entry" / "Flex — 2nd Roamer"
-    return { player:pl.name, roleName, ops, pos:slot?slot.pos:"", favs }; });
+    return { player:pl.name, roleName, ops, pos:slot?slot.pos:"", task:slot?(slot.task||""):"", how:slot?(slot.how||null):null, favs }; });
 }
 /* favourites the stack has flagged on a side (operator id set) */
 function allFavs(side){ const key=side==="attack"?"favAtk":"favDef"; const s=new Set(); DB.roster.forEach(p=>(p[key]||[]).forEach(o=>s.add(o))); return s; }
@@ -45237,11 +45837,16 @@ function renderTacticDetail(host,m,T){
   const mine=getMe()?assign.find(pk=>isMeName(pk.player)):null;
   const yourJob=(mine&&(mine.ops.length||mine.pos))?(()=>{
     const opsHtml=mine.ops.length?mine.ops.map(id=>{const o=opById(id);const fav=mine.favs&&mine.favs.has(id);return `<span class="opchip ${cls}${fav?" fav":""}" data-op="${esc(id)}" role="button" tabindex="0" title="${fav?"★ your favourite · ":""}Click for details">${fav?"★ ":""}${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`;
-    // the task options are alternatives (pick ONE), so don't repeat the whole task per op:
-    // state the shared goal once, then give each operator its own gadget difference.
+    // Prefer the authored gadget-free instruction (`task`) + per-operator "how each does it" (`how`);
+    // for any slot not yet authored, derive from `pos` (don't repeat the whole task per operator).
     const anyClause=mine.ops.some(id=>{const o=opById(id);return o&&opClause(o.name,mine.pos);});
     let goalLine="", taskLines="", subLabel="What to do";
-    if(!mine.ops.length){
+    if(mine.task){
+      // gadget-free instruction, stated once, then how each operator option accomplishes it
+      goalLine=`<div class="tp-yj-goal">${esc(mine.task)}</div>`;
+      subLabel=mine.ops.length>1?"How each operator does it":"How to play it";
+      taskLines=mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const h=(mine.how&&mine.how[id])||(o&&o.notes)||"";return `<li><b>${esc(nm)}</b>${h?` — <span class="muted">${esc(h)}</span>`:""}</li>`;}).join("");
+    } else if(!mine.ops.length){
       taskLines=jobBullets(mine.pos).map(x=>`<li>${esc(x)}</li>`).join("");
     } else if(anyClause){
       // the task calls out operators by name (e.g. "Thatcher the trick; Twitch the batteries") —
@@ -45252,7 +45857,7 @@ function renderTacticDetail(host,m,T){
       // shared goal across the options — state it ONCE, then each operator's gadget nuance
       subLabel="Same goal — pick the operator whose gadget fits";
       goalLine=mine.pos?`<div class="tp-yj-goal">${esc(mine.pos)}</div>`:"";
-      taskLines=mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const note=o&&o.notes?esc(o.notes):"";return `<li><b>${esc(nm)}</b>${note?` — <span class="muted">${note}</span>`:""}</li>`;}).join("");
+      taskLines=mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const note=o&&o.notes?esc(o.notes):"";return `<li><b>${esc(nm)}</b>${note?` — <span class="muted">${esc(note)}</span>`:""}</li>`;}).join("");
     }
     return `<div class="tp-yourjob ${cls}"><div class="tp-yj-h">★ Your job${mine.roleName?` <span class="tag ${cls}">${esc(mine.roleName)}</span>`:""}</div>
       <div class="tp-yj-ops">${opsHtml}</div>
@@ -45857,7 +46462,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 64;
+const APP_BUILD = 65;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
