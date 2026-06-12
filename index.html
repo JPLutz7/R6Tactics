@@ -45113,12 +45113,13 @@ function stratOpProficiency(st){
     if(best!==null){ sum+=Math.max(0,Math.min(1,(best-40)/20)); n++; } });
   return n?sum/n:null;
 }
-// Suggester ranking: COUNTERS first, then SUCCESS RATE, OPERATOR proficiency,
-// FAVOURITES. Each term is [0,1] (concrete is min-max normalized across the site's
-// strats); blended with descending weights so counters dominate.
-function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.10; }
-function rateWeight(){ const w=DB.suggester&&DB.suggester.rateWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.20; }
-function opWeight(){ const w=DB.suggester&&DB.suggester.opWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+// Suggester ranking: COUNTERS first, then OPERATOR proficiency, then SUCCESS RATE
+// and FAVOURITES. Each term is [0,1] (concrete is min-max normalized across the site's
+// strats); blended with descending weights so counters dominate. Counters = the leftover
+// (1 − fav − rate − op), so raising favourites lowers counters by the same amount.
+function favWeight(){ const w=DB.suggester&&DB.suggester.favWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+function rateWeight(){ const w=DB.suggester&&DB.suggester.rateWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.15; }
+function opWeight(){ const w=DB.suggester&&DB.suggester.opWeight; return (typeof w==="number"&&w>=0&&w<=0.5)?w:0.20; }
 function bestCounter(m,siteId,team){
   const atk=(((m.tactics||{}).attack||{})[siteId]||{}).strats||[]; if(!atk.length)return null;
   const Wf=favWeight(), Wr=rateWeight(), Wop=opWeight(), Wc=Math.max(0,1-Wf-Wr-Wop); // counters get the rest (dominant)
@@ -45803,7 +45804,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 57;
+const APP_BUILD = 58;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
