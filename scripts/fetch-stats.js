@@ -70,7 +70,7 @@ async function fetchSeasonOps(handle, platform, season, mode) {
   return null;
 }
 
-async function fetchPlayer(p) {
+async function fetchPlayer(p, prev) {
   const platform = p.platform || "uplay";
   const out = { key: p.key, label: p.label, handle: p.handle, platform, ok: false };
   try {
@@ -103,6 +103,18 @@ async function fetchPlayer(p) {
         await sleep(250);   // be gentle with the website API
       }
     }
+    // keep last-good operator scopes that didn't refresh this run (transient website hiccup) so the
+    // operators never fall out of sync with the rest of the player data; scoped to what we attempted
+    // this run (all-time + the current 4 seasons) so scopes that roll off the window aren't kept forever.
+    const prevOps = prev && prev.ok && prev.ops;
+    if (prevOps) {
+      if (!out.ops["all|all"] && prevOps["all|all"]) out.ops["all|all"] = prevOps["all|all"];
+      for (const season of (out.seasons || []).slice(0, 4))
+        for (const pl of ["ranked", "unranked", "quickmatch"]) {
+          const k = `${pl}|${season}`;
+          if (!out.ops[k] && prevOps[k]) out.ops[k] = prevOps[k];
+        }
+    }
   } catch (e) { out.error = String(e && e.message || e); }
   return out;
 }
@@ -128,7 +140,7 @@ function isAuthFail(p) {
       continue;
     }
     process.stdout.write(`Fetching ${p.label} (${p.handle}/${p.platform})… `);
-    const r = await fetchPlayer(p);
+    const r = await fetchPlayer(p, prevOf(p.key));
     if (!r.ok) {
       const old = prevOf(p.key);
       if (old) { console.log(`FAILED (${r.error}) — kept previous good data`); players.push({ ...old, stale: true, staleReason: r.error }); await sleep(600); continue; }
