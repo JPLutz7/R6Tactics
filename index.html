@@ -44787,7 +44787,7 @@ async function loadStats(force){
   catch(_){}
   finally{ STATS_LOADING=false;
     if(UI.tab==="players") renderPlayersTab(byId("view"));
-    else if(UI.tab==="maps" && UI.maps.suggest && UI.maps.suggest.open){ const m=mapById(UI.maps.selectedId), host=byId("tacticsPanel"); if(m&&host) renderSuggester(host,m); } // refresh suggester once op stats land
+    else if(UI.tab==="maps") renderTacticsPanel(); // re-render the panel once op stats land — suggester + defense op-proficiency ordering both depend on it
   }
 }
 function num(v){ return (typeof v==="number"&&isFinite(v))?v:null; }
@@ -45025,7 +45025,9 @@ function renderTacticsPanel(){
     const items=sites.map(b=>{
       const strats=(((m.tactics||{})[side]||{})[b.id]||{}).strats||[];
       if(!strats.length) return "";
-      const ordered=strats.map((st,si)=>({st,si})).sort((a,c)=>stratSuccessRate(c.st)-stratSuccessRate(a.st)); // best success rate first
+      const ordered=strats.map((st,si)=>({st,si})).sort(side==="defense"
+        ? (a,c)=>defenseStratScore(c.st)-defenseStratScore(a.st)   // defense: op .40 / success-rate .30 / favourites .30 (no counters)
+        : (a,c)=>stratSuccessRate(c.st)-stratSuccessRate(a.st));   // attack: best success rate first
       return `<div class="tp-site"><div class="tp-site-h">${esc(b.name)}</div>${ordered.map(({st,si})=>{ const rec=stratRecord(st); return `<button class="tp-strat" data-side="${side}" data-site="${esc(b.id)}" data-si="${si}"><span class="tp-strat-rate ${rec.n?"logged":"prior"}" title="${rec.n?rec.w+"–"+rec.l+" logged rounds":"estimate from operator data (no rounds logged yet)"}">${Math.round(rec.rate*100)}%</span><span class="tp-strat-nm">${esc(st.name)}</span>${st.summary?`<span class="tp-strat-sum">${esc(st.summary)}</span>`:""}</button>`; }).join("")}</div>`;
     }).join("");
     return `<div class="tp-group ${side==="attack"?"atk":"def"}"><div class="tp-group-h"><span class="tag ${side==="attack"?"atk":"def"}">${label}</span>${side==="attack"?`<div class="grow"></div><button class="btn sm" id="tpSuggest" title="Suggest the best attack vs the defenders you expect (prep)">🎯 Suggest</button>`:""}</div>${items||`<div class="tp-empty muted small">No ${side} tactics yet.</div>`}</div>`;
@@ -45105,13 +45107,21 @@ function playerRankedOps(sp){ const o=(sp&&sp.ops)||{};
   if(recent.length) return aggregateOps(recent);
   return o["ranked|all"]||null;
 }
-function stratOpProficiency(st){
-  const assign=assignTactic(st,"attack"); let sum=0,n=0;
+function stratOpProficiency(st, side){
+  const assign=assignTactic(st, side==="defense"?"defense":"attack"); let sum=0,n=0;
   assign.forEach(pk=>{ if(!pk.ops||!pk.ops.length)return; const sp=statsPlayerForName(pk.player); if(!sp)return;
     const rows=playerRankedOps(sp); if(!rows||!rows.length)return;
     let best=null; pk.ops.forEach(id=>{ const nm=opById(id)&&opById(id).name; if(!nm)return; const r=rows.find(x=>normTxt(x.op)===normTxt(nm)); if(r&&typeof r.wp==="number"&&(best===null||r.wp>best))best=r.wp; });
     if(best!==null){ sum+=Math.max(0,Math.min(1,(best-40)/20)); n++; } });
   return n?sum/n:null;
+}
+// Defense-strat ordering (per site): the attack suggester's factors MINUS counters,
+// kept proportional and renormalized to sum 1 — currently op .40 / success-rate .30 /
+// favourites .30 (the attack weights doubled). Follows the attack weights if they're tuned.
+function defenseStratScore(st){
+  const wop=opWeight(), wr=rateWeight(), wf=favWeight(), tot=(wop+wr+wf)||1;
+  const op=stratOpProficiency(st,"defense");
+  return (wop*(op==null?0.5:op) + wr*stratSuccessRate(st) + wf*favAffinity(st,"defense"))/tot;
 }
 // Suggester ranking: COUNTERS first, then OPERATOR proficiency, then SUCCESS RATE
 // and FAVOURITES. Each term is [0,1] (concrete is min-max normalized across the site's
@@ -45804,7 +45814,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 58;
+const APP_BUILD = 59;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
