@@ -23,12 +23,12 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **Alpha v63.59** (SEED **data v63**, PWA **build 59**). The app shows its version as
+- **Current state:** **Alpha v66.62** (SEED **data v66**, PWA **build 62**). The app shows its version as
   **"Alpha v{data}.{build}"** (`appVersion()`/`dataVersion()`, const `RELEASE`). Still alpha until the full
   5-stack is linked; flip to **v1.0** by setting `RELEASE="1.0"`. Publishing is via a **shared-password
   Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
   now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
-  Cloudflare cron** (GitHub's own cron never fires — §14). **§14 is the latest session log — read it after §13.**
+  Cloudflare cron** (GitHub's own cron never fires — §14). **§15 is the latest session log — read it after §14.**
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -262,12 +262,12 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
 > Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a 5-stack).
 > **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system/
-> structure), and the session log: **§13 then §14** (§14 is the latest and lists the open tasks).
+> structure), and the session log: **§13 → §14 → §15** (§15 is the latest and lists the open task).
 >
 > Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
 > `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v63.59** (SEED data v63,
-> build 59). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v67.63** (SEED data v67,
+> build 63). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
 > (owner is fine with this — handle git/PRs for them).
 >
 > **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
@@ -280,21 +280,22 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 > changes**; splice the data with a `/tmp` node script between the BEGIN/END EMBEDDED DATA markers in
 > `index.html` (don't hand-edit the block).
 >
-> **YOUR TASK — pick from §14's "Still open" (confirm scope with the owner first):** the main one is the
-> **11 "Other" maps** tactics revision — Favela, Hereford, House, Kanal, Presidential Plane, Stadium,
-> Skyscraper, Theme Park, Tower, Villa, Yacht (~310 strats, still on the §12 v38–40 baseline). Use the same
-> **structure-frozen** pipeline as the 14 already done (§14): re-create `SPEC.md` + `validate.js` +
-> `review.js` + `merge.js` in `/tmp/work` from §14's description, run **one Opus 4.8 sub-agent per map**
-> (`WebSearch`/`WebFetch` for written sources + R6 knowledge — **no video**), preserve EVERY invariant
-> (Attack `[hardbreach,entry,support,intel,flex]` 3 strats/site + 3 distinct flex doubles; Defense
-> `[support,antibreach,recon,roamer,flex]` 2 strats/site + 2 distinct doubles; "Flex — 2nd <Job>" labels;
-> regenerate `st.desc`), validate to 0 errors, review for quality, then merge ~5 maps/PR + bump SEED.
+> **YOUR TASK (confirm scope with the owner first):** the tactics revision is **COMPLETE — all 25 maps**
+> are research-revised (§14 did 14, §15 did the last 11). The **one remaining open thread** is to link
+> **Lora + the 5th member** in `scripts/players.config.json` (owner gives the two r6data handles; empty
+> handle ⇒ skipped) → confirm their stats fetch (the per-season endpoint is unauthenticated, testable from
+> any node) → then **set `RELEASE="1.0"`** in `index.html` to leave Alpha (bump build). After that the app
+> is feature-complete; further work is VOD-based tactics refinement in ✎ Edit or owner-requested features.
 >
-> **Other open threads:** link **Lora + the 5th member** in `scripts/players.config.json` (owner gives
-> handles) → then set **`RELEASE="1.0"`** to leave Alpha. **Don't re-investigate** these — they're DONE in
-> §14: per-season/playlist operators (now fetched from the r6data **website** API, no auth, keyed
-> `playlist|season`); reliable daily stats refresh (**Cloudflare cron → `repository_dispatch`**; GitHub's
-> own cron is dead); publish hardening (loud failures + clobber guard); suggester reweight; defense ordering.
+> **Don't re-investigate** these — they're DONE (§14): per-season/playlist operators (now fetched from the
+> r6data **website** API, no auth, keyed `playlist|season`); reliable daily stats refresh (**Cloudflare cron
+> → `repository_dispatch`**; GitHub's own cron is dead); publish hardening (loud failures + clobber guard);
+> suggester reweight; defense ordering. **And the 25-map tactics revision (§14+§15).**
+>
+> **If revisiting tactics:** the `/tmp/work` pipeline is re-creatable from §15 — `validate.js`/`genDesc` are
+> calibrated against the revised maps (0 errors, byte-identical desc), `apply.js` edits live strats in place
+> so `w`/`l` survive, and **verify R6 facts via WebSearch before "correcting" agent content** (see the
+> Reaper MK2 lesson in §15).
 
 ---
 
@@ -367,7 +368,10 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
   side-specific role ids (§4 roles). The old flat `ATK_FIELDS`/`DEF_FIELDS` are kept in data
   (unused by this UI).
 - **Coverage:** **ALL 25 maps are seeded — 490 strats** (2 defense + 3 attack per site; 3
-  sites on Presidential Plane & Stadium). ALL 25 maps are now hand-written/bespoke (v38–v40): every strat references its site's real geography (walls, stairs, windows, hatches, balconies) with site-tailored op picks. Refine further from VOD review.
+  sites on Presidential Plane & Stadium). **ALL 25 maps are now research-revised (v59–v66, §14+§15):** every
+  strat references its site's real geography (walls, stairs, windows, hatches, balconies) with current-meta op
+  leads, written by one Opus sub-agent per map against written web sources + R6 knowledge, structure-frozen.
+  Refine further from VOD review.
 - **Sourcing:** **r6guides.com is dead** (now a parked "FIFA World Cup" page — verified; no
   Wayback guide snapshots, and archive.org is egress-blocked here). r6strat = login-gated
   private builder; Fandom = 403. So there is **no reachable structured strat DB** — strats are
@@ -632,8 +636,7 @@ web sources (`WebSearch`/`WebFetch`) + model R6 knowledge, via parallel sub-agen
   "Snowmobile↔Gaming" wall; Fortress's Tenfold-Pursuit & Outback's High-Calibre reworks; **Calypso Casino
   is a real just-released Y11S2 Vegas-remake map**, not custom — its per-site walls are reasoned, flagged).
 - **REMAINING: the 11 "Other" maps** — Favela, Hereford, House, Kanal, Presidential Plane, Stadium,
-  Skyscraper, Theme Park, Tower, Villa, Yacht (~310 strats) — still on the §12 v38–40 bespoke baseline. Same
-  pipeline (SPEC/validate/review/merge re-creatable from this entry). **This is the main open task.**
+  Skyscraper, Theme Park, Tower, Villa, Yacht. **DONE in §15** (data v65–v66) — all 25 maps are now revised.
 
 ### Per-season + per-playlist operators — SOLVED (the long-open thread)
 The api-key endpoint (`api.r6data.com/api/stats?type=operatorStats`) has **no** season/playlist scoping
@@ -686,9 +689,9 @@ old code failed silently). Fixes (client in `index.html`, server in `cloudflare/
 - Data-menu **app-version no longer overflows** its box.
 
 ### Still open (for the next chat)
-1. **The 11 "Other" maps** tactics revision (above) — the main task.
+1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
-   **`RELEASE="1.0"`** to leave Alpha.
+   **`RELEASE="1.0"`** to leave Alpha. *(Now the only remaining task.)*
 
 ### Verify/pipeline notes
 Container starts **fresh**. Verify with a `vm.Script` syntax check on the inlined `<script>`s + a jsdom
@@ -696,3 +699,43 @@ boot/render smoke (`npm i jsdom` in `/tmp`; stub `fetch`/`serviceWorker`; reach 
 `window.eval`; set `STATS_DATA = <players.json>` to exercise stats/suggester paths). The per-season operator
 endpoint is **unauthenticated**, so the fetch path can be tested live from any node. App changes bump the PWA
 build (`node scripts/bump-build.js`); only embedded-data changes bump SEED `version`.
+
+## 15. Session log — the 11 "Other" maps revised (tactics revision COMPLETE: 25/25), data v64→v67, builds 60→63
+This session finished the tactics-revision pass started in §14. State is now **Alpha v67.63**.
+
+### 11 "Other" maps revised — all 25 maps now research-revised
+Same **structure-frozen / content-revised** pipeline as §14, re-created in `/tmp/work`
+(`SPEC.md` + `lib.js` + `validate.js` + `apply.js` + `review.js` + `check.js` + `splice.js` + `verify.js`).
+**One Opus 4.8 sub-agent per map** (WebSearch/WebFetch on written sources + R6 knowledge — no video; ~70–85k
+tokens/map), writing revised JSON to `/tmp/work/out/<id>.json`; the orchestrator validated + spliced.
+- **Maps (210 strats):** Favela, Hereford Base, House, Kanal, Presidential Plane *(PR #122, data v65)* +
+  Skyscraper, Stadium, Theme Park, Tower, Yacht *(PR #123, data v66)*. (Villa was the pilot in #122.)
+- **Pipeline calibration (the key trick):** `validate.js` + the `genDesc()` regen were calibrated against the
+  **14 already-revised maps** as ground truth — they pass at **0 validation errors** and `genDesc` reproduces
+  their committed `desc` **byte-for-byte** (0 mismatches/280 strats), so the new maps merge identically.
+  Defense role rule (calibrated): `support-def` + `antibreach-def` + `flex-def` (1 each) + **2 distinct** of
+  `{roamer-def, intel-def, trapper-def}` — the basement "lockdown" variant is the no-roamer `intel+trapper`.
+- **`apply.js` applies revisions IN PLACE** onto the live strat objects (re-extracted fresh from `index.html`
+  each PR) so the owner's per-strat **`w`/`l` round records and all other fields are preserved** (an early
+  build that rebuilt strats dropped `w`/`l` — caught + fixed). Frozen-field verify rejects any drift in
+  `id`/`slots[].role`/`sub`/`approach`/counts before splice; result is a **surgical diff** (only the target
+  maps' strats + SEED `version` change; roster/operators/roles/suggester/pools byte-identical).
+- **Quality:** all 210 strats validated **frozen-drift 0 / struct-errors 0**; `review.js` warnings were almost
+  all false positives (the "…as the main wall goes" phrase; legit coordination language like "Fuze the ceiling
+  **after Buck opens it**"; shared-room duplicates where two sites share a room). Agents caught real things —
+  Favela's reworked **solid** walls (retired the old "walls are paper" framing), Stadium = the **Border+Coastline
+  hybrid**, House's Car-is-basement-not-2F, and used **precise gadget names** (Ram's **BU-GI**, Lion's **EE-ONE-D**).
+- **The "Reaper" lesson (data v66→v67, PR #124):** I wrongly "fixed" a Presidential Plane line that put Pulse on
+  "the Reaper" (thought it was a hallucinated weapon) — owner corrected me: the **Reaper MK2 is real**, added
+  **Y10S3** to Sledge/Oryx/**Pulse**/Ying/Rook. Restored as "Reaper MK2" + re-bumped SEED. **Lesson: verify R6
+  facts (WebSearch) before "correcting" agent content — the sub-agents' current-meta knowledge is good.**
+
+### Verify each PR
+`vm.Script` syntax on both inlined `<script>`s + jsdom boot/render smoke (`verify.js`: stub fetch/SW/observers,
+set `UI.maps.view='detail'`, render every target map + an attack & defense tactic detail + the suggester; 0 page
+errors). PRs auto-squash-merged; **rebase onto fresh `main` between PRs** — the owner publishes in-app data edits
+straight to `main` (this session main moved to v64/build60 mid-run; `splice.js` re-extracts so those are kept).
+
+### Still open (for the next chat)
+- **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
+  **`RELEASE="1.0"`** to leave Alpha. **This is now the only remaining task** (tactics revision is 25/25 done).

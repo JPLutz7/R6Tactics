@@ -558,7 +558,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 66,
+  "version": 67,
   "publishedAt": "2026-06-12",
   "maps": [
     {
@@ -31635,7 +31635,7 @@ const SEED_DATA =
                       "ela",
                       "skopos"
                     ],
-                    "pos": "Pulse scan from behind the Luggage crates with the heartbeat sensor and punish the cargo flood as it funnels in."
+                    "pos": "Pulse scan from behind the Luggage crates with the heartbeat sensor and punish the cargo flood with the Reaper MK2."
                   },
                   {
                     "role": "antibreach-def",
@@ -31679,7 +31679,7 @@ const SEED_DATA =
                 "desc": [
                   "Use the crate cover — hunt the lower deck and lock the hatch line",
                   "Reinforce: 2F ceiling hatches above Luggage; Cargo ↔ cargo-door wall; Luggage ↔ rear-stairs wall.",
-                  "Roamer (Pulse/Ela) — Pulse scan from behind the Luggage crates with the heartbeat sensor and punish the cargo flood as it funnels in.",
+                  "Roamer (Pulse/Ela) — Pulse scan from behind the Luggage crates with the heartbeat sensor and punish the cargo flood with the Reaper MK2.",
                   "Anti-Breach / Utility (Kaid/Jäger) — Kaid Rtila-claw the hatches and jam the rear stairwell so the flood comes in deaf and the ceiling holds.",
                   "Support (Mira/Smoke) — Mira a Black Mirror on the Luggage ↔ stairs wall for a one-way; lock the deck and deny the defuser.",
                   "Flex — 2nd Support (Rook/Thunderbird) — Rook drop armour on the crate-line anchors and hold Luggage; win the late round off the lower-deck plates.",
@@ -45840,7 +45840,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 62;
+const APP_BUILD = 63;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
