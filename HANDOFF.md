@@ -23,12 +23,12 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **Alpha v58.47** (SEED **data v58**, PWA **build 47**). The app now shows its
-  version as **"Alpha v{data}.{build}"** (helper `appVersion()`/`dataVersion()`, const `RELEASE`).
-  Still alpha until the full 5-stack is linked; flip to official **v1.0** then by setting `RELEASE="1.0"`.
-  Publishing is now via a **shared-password Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) —
-  teammates publish with a team password, no personal token. Data menu has a **"Check for app updates"**
-  button. (See §13 for the session log.)
+- **Current state:** **Alpha v63.59** (SEED **data v63**, PWA **build 59**). The app shows its version as
+  **"Alpha v{data}.{build}"** (`appVersion()`/`dataVersion()`, const `RELEASE`). Still alpha until the full
+  5-stack is linked; flip to **v1.0** by setting `RELEASE="1.0"`. Publishing is via a **shared-password
+  Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
+  now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
+  Cloudflare cron** (GitHub's own cron never fires — §14). **§14 is the latest session log — read it after §13.**
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -261,43 +261,40 @@ dedup silently removes everything (Python's `set.add` returns None, so a ported 
 Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
 > Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a 5-stack).
-> **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system /
-> structure), and **§13** (the session log) whose **last entry, "NEXT TASK — pilot", is your job**.
+> **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system/
+> structure), and the session log: **§13 then §14** (§14 is the latest and lists the open tasks).
 >
-> Single-file app (`index.html`, ~1.7 MB, all HTML/CSS/JS inlined) + `assets/` + `players.json` +
-> `scripts/` + `cloudflare/` + `.github/workflows/`. Deployed to GitHub Pages from **`main`** (default
-> branch). Live at https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v58.47**
-> (SEED data v58, build 47). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge**
-> PRs per change.
+> Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
+> `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v63.59** (SEED data v63,
+> build 59). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> (owner is fine with this — handle git/PRs for them).
 >
-> **Workflow (container starts fresh — nothing preinstalled):** make the change → verify with a
-> `vm.Script` syntax check on the inlined `<script>`s + a quick **jsdom** boot/render smoke
-> (`npm i jsdom` in `/tmp`; stub `fetch`/`serviceWorker`; `DB` is a top-level `let`, reach it via
-> `window.eval`) → `node scripts/bump-build.js` (bumps `version.json` + `APP_BUILD` together; drives the
-> in-app update banner) → commit → **the branch diverges from `main` after each squash-merge, so
-> `git fetch origin main && git reset --hard origin/main && git cherry-pick <yourcommit>`** (or rebase)
-> before pushing → force-with-lease push → PR → squash-merge. **Bump SEED `version` for any data change**
-> (triggers the "new data — adopt" flow; the app reads `cloudflare/`/proxy-published data too). The data
-> lives in `index.html` between the BEGIN/END EMBEDDED DATA markers; edit it with a `/tmp` node script that
-> splices `JSON.stringify(DB,null,2)` back between the markers (don't hand-edit the 40k-line block).
+> **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
+> check on the inlined `<script>`s + a **jsdom** boot/render smoke (`npm i jsdom` in `/tmp`; stub
+> `fetch`/`serviceWorker`; reach `DB`/functions via `window.eval`; set `STATS_DATA = <players.json>` to
+> exercise stats/suggester paths) → **bump the PWA build for any app change** (`node scripts/bump-build.js`,
+> bumps `version.json` + `APP_BUILD` together) → commit → **the branch diverges from `main` after each
+> squash-merge, so `git fetch origin main && git reset --hard origin/main`** then re-apply (cherry-pick/
+> rebase) → force-with-lease push → PR → squash-merge. **Bump SEED `version` ONLY for embedded-data
+> changes**; splice the data with a `/tmp` node script between the BEGIN/END EMBEDDED DATA markers in
+> `index.html` (don't hand-edit the block).
 >
-> **YOUR TASK — the tactics-revision pilot (4 Pro-pool maps, ~80 strats):** revise those strats against
-> real **written** sources (`WebSearch`/`WebFetch`) + your own R6 knowledge. **You cannot watch video**
-> (YouTube guides / pro VODs are out of reach — see §13); hybrid text+knowledge is the method. **Keep the
-> exact org structure & variety** (spelled out in §13's NEXT-TASK entry + §12): Attack = 5 slots
-> `[hardbreach, entry, support, intel, flex]`, 3 strats/site, **3 distinct flex doubles per site** (drop
-> rotates across the map); Defense = `[support, antibreach, recon, roamer, flex]`, 2 strats/site, **2
-> distinct doubles**; roles are **Position×Job** (Anchor subsection / Roamer / Flex); flex slots labelled
-> "Flex — 2nd <Job>"; **regenerate `st.desc`** after op changes. Pick the Pro maps from `DB.pools` (id
-> `pro`). Rough budget ~1–2M tokens / ~1–2 h. **When the pilot's done, show me sample sites + the actual
-> token cost and ask before doing the remaining ~410 strats.**
+> **YOUR TASK — pick from §14's "Still open" (confirm scope with the owner first):** the main one is the
+> **11 "Other" maps** tactics revision — Favela, Hereford, House, Kanal, Presidential Plane, Stadium,
+> Skyscraper, Theme Park, Tower, Villa, Yacht (~310 strats, still on the §12 v38–40 baseline). Use the same
+> **structure-frozen** pipeline as the 14 already done (§14): re-create `SPEC.md` + `validate.js` +
+> `review.js` + `merge.js` in `/tmp/work` from §14's description, run **one Opus 4.8 sub-agent per map**
+> (`WebSearch`/`WebFetch` for written sources + R6 knowledge — **no video**), preserve EVERY invariant
+> (Attack `[hardbreach,entry,support,intel,flex]` 3 strats/site + 3 distinct flex doubles; Defense
+> `[support,antibreach,recon,roamer,flex]` 2 strats/site + 2 distinct doubles; "Flex — 2nd <Job>" labels;
+> regenerate `st.desc`), validate to 0 errors, review for quality, then merge ~5 maps/PR + bump SEED.
 >
-> **Other open threads (not the pilot):** (1) **per-season/playlist operators** — r6data's `operatorStats`
-> has no scoping, but the r6data *website* shows it, so a different endpoint exists; I'll paste the
-> `api.r6data.com` request URL from the site's DevTools — wire it into `fetch-stats.js` and **strip the
-> `R6_DEBUG_OPS` probe** that's still armed. (2) Link **Lora** + the **5th member** in
-> `scripts/players.config.json` once I give handles → then set **`RELEASE="1.0"`** to leave Alpha. (3) The
-> shared-password publish proxy (`cloudflare/`) is live; teammates publish with the team password.
+> **Other open threads:** link **Lora + the 5th member** in `scripts/players.config.json` (owner gives
+> handles) → then set **`RELEASE="1.0"`** to leave Alpha. **Don't re-investigate** these — they're DONE in
+> §14: per-season/playlist operators (now fetched from the r6data **website** API, no auth, keyed
+> `playlist|season`); reliable daily stats refresh (**Cloudflare cron → `repository_dispatch`**; GitHub's
+> own cron is dead); publish hardening (loud failures + clobber guard); suggester reweight; defense ordering.
 
 ---
 
@@ -615,3 +612,87 @@ the workflow — **committed**. `tailor.js`/`igl.js`/`vary-tactics.js`/`vary-def
 `merge-util.js`/`retag-anchor.js` transforms were run from `/tmp` (logic captured in the entries above).
 Note: the container starts **fresh** — no `/tmp` deps preinstalled; `npm i jsdom` (and `puppeteer` if you
 want screenshots) as needed. Verify via `vm.Script` syntax check + a jsdom boot/render smoke.
+
+## 14. Session log — tactics revision (14/25 maps), per-season operators SOLVED, reliable cron, publish hardening (data v58→v63, builds 47→59)
+This session's work. Read after §13. State is now **Alpha v63.59**.
+
+### Tactics revision against real research — 14 of 25 maps done
+The §13 NEXT-TASK pilot grew into a full revision pass. **14/25 maps** are now revised against **written**
+web sources (`WebSearch`/`WebFetch`) + model R6 knowledge, via parallel sub-agents (**Opus 4.8** for batches
+2–3 — ~half the per-token cost + a leaner tokenizer than Fable, quality held; ~99k Opus tokens/map):
+- **Pro pool (9):** Bank, Border, Chalet, Clubhouse (pilot, PR #107, data v59) + Consulate, Kafe, Lair,
+  Nighthaven Labs, Fortress (PR #108, v60).
+- **Seasonal (4) + Showcased (1):** Oregon, Coastline, Emerald Plains, Outback, Calypso Casino (PR #109, v61).
+- **Method = structure-frozen, content-revised.** Per-map JSON input + a `/tmp/work/SPEC.md`; a
+  `validate.js` enforces EVERY invariant (slot roles/`sub`s, `approach`, op pools, 3-attack/2-defense per
+  site, 3/2 distinct flex doubles, no in-site duplicate op-sets, no `pos` naming an op outside its slot); a
+  `review.js` flags lazy/templated output (change-% vs the old template). One agent per map rewrote every
+  `pos`/reinforce/rotation/breach with **real geography** + current-meta op leads; `merge.js` splices the
+  revised strats back and regenerates every `st.desc`. Caught real errors (Chalet's nonexistent
+  "Snowmobile↔Gaming" wall; Fortress's Tenfold-Pursuit & Outback's High-Calibre reworks; **Calypso Casino
+  is a real just-released Y11S2 Vegas-remake map**, not custom — its per-site walls are reasoned, flagged).
+- **REMAINING: the 11 "Other" maps** — Favela, Hereford, House, Kanal, Presidential Plane, Stadium,
+  Skyscraper, Theme Park, Tower, Villa, Yacht (~310 strats) — still on the §12 v38–40 bespoke baseline. Same
+  pipeline (SPEC/validate/review/merge re-creatable from this entry). **This is the main open task.**
+
+### Per-season + per-playlist operators — SOLVED (the long-open thread)
+The api-key endpoint (`api.r6data.com/api/stats?type=operatorStats`) has **no** season/playlist scoping
+(probe-confirmed: every param ignored, every alt endpoint name 400s). The r6data **website** uses a DIFFERENT
+endpoint that DOES, and **needs no auth**:
+`https://r6data.com/api/operatorStats/<handle>?platformType=<p>&seasonYear=Y11S1&modes=<ranked|unranked|casual>`
+→ full per-operator block, scoped by season + mode (plain GET; the site session cookie is irrelevant). It's on
+`r6data.com`, not `api.r6data.com`, so it doesn't touch the api-key 2,500/mo budget. `fetch-stats.js` now pulls
+per-season×per-playlist ops for each player's last 4 seasons, keyed **`"<playlist>|<season>"`** (e.g.
+`ranked|42`) — exactly the keys the app's `opsFor()` already read, so the Players-tab toggles AND the suggester's
+operator term lit up with **no app change**. Keeps the api-key `all|all` as the all-time fallback; preserve-on-
+fail (scoped to the current 4-season window) so a website hiccup can't blank operators while the rest refreshes.
+
+### Reliable daily refresh via Cloudflare cron (GitHub's cron is dead)
+GitHub's scheduled cron has **never once fired** for this repo (workflow is `active`; it's GitHub's known
+scheduler unreliability — every run in history was manual). Fix: the workflow now also runs on
+**`repository_dispatch` (type `refresh-stats`)**, and the publish Worker gained a **`scheduled()` cron handler**
+that POSTs that dispatch daily (reusing its `Contents:write` token — that's the permission `repository_dispatch`
+needs, so no token change) + a password-gated **`{action:"refresh-stats"}`** test route. **Verified live** (a
+`repository_dispatch` run fired on schedule, green). GitHub's `schedule` cron is kept as a dormant backup.
+**Owner action:** the Worker must be redeployed and a **Cloudflare Cron Trigger** added (Worker → Settings →
+Triggers; `23 6 * * *` UTC) — done this session; if a fresh Worker is ever set up, repeat both.
+
+### Publishing hardened (multi-editor safety)
+"Make changes permanent" overwrites the WHOLE shared dataset with no merge → two editors silently clobber each
+other (this bit us: a teammate's favourites publish never landed — turned out he had no team password, and the
+old code failed silently). Fixes (client in `index.html`, server in `cloudflare/publish-worker.js`):
+- **Loud failures:** no/rejected team password → unmistakable "⚠️ not published" toast + framed modal (was a
+  silent modal a teammate mistook for success); saving the password auto-retries the publish.
+- **Clobber guard:** client pre-check (live `version.json` build vs the build this device synced at, tracked in
+  `SYNCED_BUILD`) warns before overwriting a newer publish; the request sends `baseVersion` and the Worker
+  rejects a stale publish **race-free with 409** → "overwrite anyway?". (Worker side needs the redeploy above.)
+- **Team-password Show/Copy** buttons in the modal, so the owner can reveal/copy the password to share.
+
+### Other changes this session
+- **MMR graph** (Players tab): one point per ranked season's end-of-season MMR + the live current MMR (was the
+  noisy daily snapshot series). Reads the per-season `segments` already in `players.json`.
+- **Roster — attack is ONE unique role per player** (defense unchanged, still a multi-role priority list).
+  `normalizeDB` clamps to ≤1 + dedupes the attack role across players; the editor enforces single+unique
+  (`setAtkRole`); attack chips drop the priority badge. (Current: João=flex, Leme=entry, Max=support,
+  Lora=hardbreach; the unlinked 5th slot has none — assign Intel when linked.)
+- **Suggester reweight:** counters **0.50**, operator-proficiency **0.20**, success-rate **0.15**, favourites
+  **0.15** (`favWeight`/`rateWeight`/`opWeight` defaults; counters = the leftover `1−fav−rate−op`). The op term
+  uses RANKED, **last-4-seasons** data (`playerRankedOps`) — now live thanks to the per-season fetch.
+- **Defense tactics ordering:** the tactics panel now orders each site's **defense** strats by a dedicated
+  equation = the attack factors **minus counters**, renormalized to sum 1 → operator-proficiency **.40** /
+  success-rate **.30** / favourites **.30** (`defenseStratScore`; auto-follows the attack weights if tuned).
+  Attack list ordering unchanged (success-rate). `stratOpProficiency` is now **side-aware**; `loadStats`
+  re-renders the panel when op stats land so the defense order updates.
+- Data-menu **app-version no longer overflows** its box.
+
+### Still open (for the next chat)
+1. **The 11 "Other" maps** tactics revision (above) — the main task.
+2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
+   **`RELEASE="1.0"`** to leave Alpha.
+
+### Verify/pipeline notes
+Container starts **fresh**. Verify with a `vm.Script` syntax check on the inlined `<script>`s + a jsdom
+boot/render smoke (`npm i jsdom` in `/tmp`; stub `fetch`/`serviceWorker`; reach `DB`/functions via
+`window.eval`; set `STATS_DATA = <players.json>` to exercise stats/suggester paths). The per-season operator
+endpoint is **unauthenticated**, so the fetch path can be tested live from any node. App changes bump the PWA
+build (`node scripts/bump-build.js`); only embedded-data changes bump SEED `version`.
