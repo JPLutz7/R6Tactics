@@ -23,12 +23,12 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **Alpha v66.62** (SEED **data v66**, PWA **build 62**). The app shows its version as
+- **Current state:** **Alpha v72.69** (SEED **data v72**, PWA **build 69**). The app shows its version as
   **"Alpha v{data}.{build}"** (`appVersion()`/`dataVersion()`, const `RELEASE`). Still alpha until the full
   5-stack is linked; flip to **v1.0** by setting `RELEASE="1.0"`. Publishing is via a **shared-password
   Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
   now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
-  Cloudflare cron** (GitHub's own cron never fires — §14). **§15 is the latest session log — read it after §14.**
+  Cloudflare cron** (GitHub's own cron never fires — §14). **§16 is the latest session log — read it after §15.**
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -100,10 +100,12 @@ CALLOUT = { name, x, y,            // x,y are PERCENT (0–100) of the floor ima
   peek extras (from PeekabooR6): video (hotlinked .mov URL), steps[] (how-to),
     tip, difficulty (1–5), risk — shown in the click-to-open peek popup.
 TAC = { ...legacy flat fields, strats: [ STRAT ] }          // see §12
-STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos} ], reinforce:[], rotations:[], breach:[], approach? }
-  (attack strats carry approach = hardbreach|vertical|flank|utility, used by the suggester §12)
+STRAT = { id, name, summary, slots:[ {role, ops:[opId], pos, task, how, sub?} ], reinforce:[], rotations:[], breach:[], approach?, w, l }
+  (attack strats carry approach = hardbreach|vertical|flank|utility, used by the suggester §12; w/l = owner's logged round record)
   role = a SIDE-SPECIFIC role id (matches the tactic's side); ops = 2–4 op options for that
-  slot; pos = that player's gadget/job (rendered in the "Gadgets & jobs — by player" section).
+  slot; pos = that player's gadget/job (rendered in the "Gadgets & jobs — by player" section);
+  task = gadget-free player instruction + how = {opId: how-that-op-does-it} (the "★ Your job" card — §16);
+  sub = flex slot's 2nd-job tag (§12/§13).
   reinforce/rotations = defense bullet groups; breach = attack "Open up" walls. The Tactics
   panel assigns each rostered player a slot by their role priority.
 bombsite also carries `site` (the "1".."4" digit) so a tactic can focus the site filter.
@@ -262,12 +264,12 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
 > Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a 5-stack).
 > **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system/
-> structure), and the session log: **§13 → §14 → §15** (§15 is the latest and lists the open task).
+> structure), and the session log: **§13 → §14 → §15 → §16** (§16 is the latest and lists the open task).
 >
 > Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
 > `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v67.63** (SEED data v67,
-> build 63). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v72.69** (SEED data v72,
+> build 69). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
 > (owner is fine with this — handle git/PRs for them).
 >
 > **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
@@ -739,3 +741,46 @@ straight to `main` (this session main moved to v64/build60 mid-run; `splice.js` 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
   **`RELEASE="1.0"`** to leave Alpha. **This is now the only remaining task** (tactics revision is 25/25 done).
+
+## 16. Session log — "★ Your job" card: gadget-free instruction + per-operator "how" (data v67→v72, builds 63→69)
+Owner-driven UX refinement of the tactic detail's **★ Your job** card (the device member's spotlight). State is now **Alpha v72.69**.
+
+### The problem & the model
+The card listed one line per operator option but **repeated the whole task text for each op**, differing only by a trailing
+generic gadget note. Owner wanted: **a separate gadget-free player instruction, then each operator option with how THAT op
+accomplishes the same task**. First pass (#126) de-duplicated the repeat (state the shared goal once, then per-op gadget
+notes). Owner then asked for a real gadget-free instruction + task-specific per-op "how" — which **can't be derived** from
+the existing `pos` (it's authored with the operator as the grammatical subject; stripping the name breaks the sentence —
+verified). So it was **authored**.
+
+### Schema (additive) + render
+Two NEW fields on every **tactic slot** (`map.tactics[side][siteId].strats[].slots[]`):
+- **`task`** — the gadget-free, operator-free player instruction (what/where/timing). Names no friendly op or gadget; MAY name
+  enemy ops/gadgets as targets.
+- **`how`** — `{ opId: "how this op's kit does that task" }`, one entry per op in the slot's `ops`.
+`pos` (and everything else) is **untouched** — still used by `st.desc` and the "Gadgets & jobs — by player" section.
+**Render** (`renderTacticDetail`'s yourJob block + `assignTactic` now surfaces `task`/`how`): shows `task` once, then
+"How each operator does it" with a per-op line (`how[id] || op.notes`). **Fallback** to deriving from `pos` for any slot
+without `task`, so partial rollout was always safe. CSS `.tp-yj-goal`. `normalizeDB` preserves the new fields (mutates in place).
+
+### Rollout — one Opus sub-agent per map, all 25 maps
+Pipeline in `/tmp/work` (re-creatable from here): `SPEC2.md` (the additive task/how contract) + `in2/<id>.json` (current
+slots+pos per map) + `validate2.js` (errors: empty task, missing/extra `how` keys, **task naming its own-slot op = not
+gadget-free**; warns: task naming any other same-side op, with an AMBIG common-word exclusion) + `apply2.js`/`splice2.js`
+(apply `task`/`how` onto live slots in place, bump version). Agents wrote `howout/<id>.json`. **Pilot Clubhouse (#127, with the
+render change), then batches of 6:** #128 Oregon/Bank/Consulate/Kafe/Border/Chalet (v69) · #129 Coastline/Emerald/Favela/
+Fortress/Hereford/House (v70) · #130 Kanal/Lair/Nighthaven/Outback/Presidential-Plane/Skyscraper (v71) · #131 Stadium/
+Theme-Park/Tower/Villa/Yacht/Calypso (v72). **All 2450 slots now have task+how; every map validated to 0 errors** incl. the
+gadget-free check. (Mid-rollout, a batch hit the per-session usage limit and a couple agents hit transient API errors — just
+re-ran those maps; outputs are idempotent.)
+
+### Notes
+- Also fixed in this session (before the authored version): the per-op repeat de-dup (#126).
+- `index.html` grew to **~2.94 MB** (the task/how text). Fine for the precached PWA, but if load time ever matters, splitting
+  the embedded `SEED_DATA` into a separately-fetched JSON is the obvious lever.
+- Verify each PR: `vm.Script` syntax + jsdom render of the **Your job** card (set `r6stack.me`, open a tactic detail) — the
+  `/tmp/work/verify.js` smoke already renders tactic details for all maps.
+
+### Still open (unchanged)
+- **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
+  remaining task.
