@@ -29,6 +29,16 @@ async function gh(env, path, opts = {}) {
   return r.json();
 }
 
+// fire a repository_dispatch that triggers the "Refresh player stats" workflow (used by the cron + the test route)
+async function dispatchRefresh(env) {
+  const repo = (env && env.GH_REPO) || DEFAULTS.GH_REPO;
+  return fetch(`https://api.github.com/repos/${repo}/dispatches`, {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + env.GH_TOKEN, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "r6tactics-stats-cron", "Content-Type": "application/json" },
+    body: JSON.stringify({ event_type: "refresh-stats" }),
+  });
+}
+
 export default {
   async fetch(req, env) {
     const cfg = (k) => (env && env[k]) || DEFAULTS[k];
@@ -41,6 +51,12 @@ export default {
     let body;
     try { body = await req.json(); } catch { return json({ ok: false, error: "bad json" }, 400); }
     if (!env.TEAM_PASSWORD || String(body.password || "") !== String(env.TEAM_PASSWORD)) return json({ ok: false, error: "wrong team password" }, 401);
+    if (body.action === "refresh-stats") {   // password-gated trigger of the stats workflow (the cron's path; lets you test on demand)
+      if (!env.GH_TOKEN) return json({ ok: false, error: "server not configured (GH_TOKEN)" }, 500);
+      const r = await dispatchRefresh(env);
+      if (!r.ok) return json({ ok: false, error: "dispatch failed " + r.status + ": " + (await r.text().catch(() => "")).slice(0, 200) }, 502);
+      return json({ ok: true, dispatched: "refresh-stats" });
+    }
     if (!body.data || typeof body.data !== "object") return json({ ok: false, error: "missing data" }, 400);
     if (!env.GH_TOKEN) return json({ ok: false, error: "server not configured (GH_TOKEN)" }, 500);
 
@@ -91,5 +107,11 @@ export default {
     } catch (e) {
       return json({ ok: false, error: String((e && e.message) || e) }, 500);
     }
+  },
+
+  // Cloudflare Cron Trigger → daily stats refresh (reliable, unlike GitHub's own scheduled cron).
+  async scheduled(event, env, ctx) {
+    const r = await dispatchRefresh(env);
+    if (!r.ok) console.log("repository_dispatch failed: " + r.status + " " + (await r.text().catch(() => "")).slice(0, 200));
   },
 };
