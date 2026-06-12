@@ -477,6 +477,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 .tp-yj-bul{margin:2px 0 8px;padding-left:20px;line-height:1.6;font-size:14px}
 .tp-yj-bul li{margin-bottom:4px}
 .tp-yj-sub{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;color:var(--accent);opacity:.85;margin:6px 0 3px}
+.tp-yj-goal{font-size:14px;line-height:1.5;margin:2px 0 4px}
 .tp-pick{border:1px solid var(--line2);border-radius:9px;padding:8px 10px;margin-bottom:7px;background:var(--panel2)}
 .tp-pick-who{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:13px}
 .pavatar.sm{width:22px;height:22px;font-size:10px;border-radius:6px}
@@ -45236,11 +45237,27 @@ function renderTacticDetail(host,m,T){
   const mine=getMe()?assign.find(pk=>isMeName(pk.player)):null;
   const yourJob=(mine&&(mine.ops.length||mine.pos))?(()=>{
     const opsHtml=mine.ops.length?mine.ops.map(id=>{const o=opById(id);const fav=mine.favs&&mine.favs.has(id);return `<span class="opchip ${cls}${fav?" fav":""}" data-op="${esc(id)}" role="button" tabindex="0" title="${fav?"★ your favourite · ":""}Click for details">${fav?"★ ":""}${esc(o?o.name:id)}${o&&typeof o.winRate==="number"?` <span class="wr">${o.winRate.toFixed(1)}%</span>`:""}</span>`;}).join(""):`<span class="muted small">flex — pick from your own pool</span>`;
-    // one line per operator option: what to do here (op-specific clause or the shared task) + that op's tool
-    const taskLines=mine.ops.length?mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const instr=opClause(nm,mine.pos)||mine.pos||"";const tool=o&&o.notes?` <span class="muted">· ${esc(o.notes)}</span>`:"";return `<li><b>${esc(nm)}</b>${instr?` — ${esc(instr)}`:""}${tool}</li>`;}).join(""):jobBullets(mine.pos).map(x=>`<li>${esc(x)}</li>`).join("");
+    // the task options are alternatives (pick ONE), so don't repeat the whole task per op:
+    // state the shared goal once, then give each operator its own gadget difference.
+    const anyClause=mine.ops.some(id=>{const o=opById(id);return o&&opClause(o.name,mine.pos);});
+    let goalLine="", taskLines="", subLabel="What to do";
+    if(!mine.ops.length){
+      taskLines=jobBullets(mine.pos).map(x=>`<li>${esc(x)}</li>`).join("");
+    } else if(anyClause){
+      // the task calls out operators by name (e.g. "Thatcher the trick; Twitch the batteries") —
+      // show each its own clause (or its gadget note if unnamed); never repeat the full task
+      subLabel="What to do — by operator";
+      taskLines=mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const clause=opClause(nm,mine.pos);const note=o&&o.notes?esc(o.notes):"";const body=clause?`${esc(clause)}${note?` <span class="muted">· ${note}</span>`:""}`:(note?`<span class="muted">${note}</span>`:esc(mine.pos||""));return `<li><b>${esc(nm)}</b>${body?` — ${body}`:""}</li>`;}).join("");
+    } else {
+      // shared goal across the options — state it ONCE, then each operator's gadget nuance
+      subLabel="Same goal — pick the operator whose gadget fits";
+      goalLine=mine.pos?`<div class="tp-yj-goal">${esc(mine.pos)}</div>`:"";
+      taskLines=mine.ops.map(id=>{const o=opById(id);const nm=o?o.name:id;const note=o&&o.notes?esc(o.notes):"";return `<li><b>${esc(nm)}</b>${note?` — <span class="muted">${note}</span>`:""}</li>`;}).join("");
+    }
     return `<div class="tp-yourjob ${cls}"><div class="tp-yj-h">★ Your job${mine.roleName?` <span class="tag ${cls}">${esc(mine.roleName)}</span>`:""}</div>
       <div class="tp-yj-ops">${opsHtml}</div>
-      <div class="tp-yj-sub">What to do — by operator option</div>
+      ${goalLine}
+      <div class="tp-yj-sub">${subLabel}</div>
       ${taskLines?`<ul class="tp-yj-bul">${taskLines}</ul>`:`<div class="muted small">No specific task noted for you on this strat.</div>`}</div>`;
   })():"";
   const setupHead=T.side==="attack"?"Open up":"Reinforce";
@@ -45840,7 +45857,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 63;
+const APP_BUILD = 64;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
