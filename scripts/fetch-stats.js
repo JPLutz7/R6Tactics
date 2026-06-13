@@ -95,8 +95,13 @@ async function fetchPlayer(p, prev) {
     out.ops = {};
     const base = await fetchType(p.handle, platform, "operatorStats");
     if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
-    // per-season × per-playlist, for the player's last 4 seasons (matches the app's "Last 4 seasons" aggregate)
-    for (const season of (out.seasons || []).slice(0, 4)) {
+    // Season window for the per-playlist ops. Normally this run's last-4 seasons; if fullStats hiccupped and
+    // gave us no seasons, fall back to the previous good run's window so a board-fetch failure can't make us
+    // skip EVERY per-playlist (ranked/unranked/quickmatch) operator fetch.
+    let opSeasons = (out.seasons || []).slice(0, 4);
+    if (!opSeasons.length && prev && Array.isArray(prev.seasons)) opSeasons = prev.seasons.slice(0, 4);
+    // per-season × per-playlist (ranked + unranked + quickmatch) for every windowed season
+    for (const season of opSeasons) {
       for (const mode of ["ranked", "unranked", "casual"]) {
         const sops = await fetchSeasonOps(p.handle, platform, season, mode);
         if (sops && sops.length) out.ops[`${MODE_TO_PLAYLIST[mode]}|${season}`] = trimOps(sops);
@@ -104,12 +109,12 @@ async function fetchPlayer(p, prev) {
       }
     }
     // keep last-good operator scopes that didn't refresh this run (transient website hiccup) so the
-    // operators never fall out of sync with the rest of the player data; scoped to what we attempted
-    // this run (all-time + the current 4 seasons) so scopes that roll off the window aren't kept forever.
+    // operators never fall out of sync with the rest of the player data; scoped to the same window
+    // so scopes that roll off it aren't kept forever.
     const prevOps = prev && prev.ok && prev.ops;
     if (prevOps) {
       if (!out.ops["all|all"] && prevOps["all|all"]) out.ops["all|all"] = prevOps["all|all"];
-      for (const season of (out.seasons || []).slice(0, 4))
+      for (const season of opSeasons)
         for (const pl of ["ranked", "unranked", "quickmatch"]) {
           const k = `${pl}|${season}`;
           if (!out.ops[k] && prevOps[k]) out.ops[k] = prevOps[k];
