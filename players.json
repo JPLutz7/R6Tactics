@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-13T12:13:20.130Z",
+  "updated": "2026-06-14T08:24:28.589Z",
   "source": "r6data.com",
   "keyExpires": "2026-09-08",
   "keyStatus": "ok",
@@ -182,9 +182,29 @@
         "name": "Copper 5",
         "color": "#900201",
         "img": "https://r6data.com/assets/img/r6_ranks_img/copper-5.webp",
-        "points": 1062
+        "points": 1072
       },
       "mmrHistory": [
+        {
+          "ts": "2026-06-13T21:19:03.214+00:00",
+          "value": 1072,
+          "rank": "Copper 5"
+        },
+        {
+          "ts": "2026-06-13T20:57:31.465+00:00",
+          "value": 1043,
+          "rank": "Copper 5"
+        },
+        {
+          "ts": "2026-06-13T20:29:15.971+00:00",
+          "value": 1064,
+          "rank": "Copper 5"
+        },
+        {
+          "ts": "2026-06-13T20:02:30.435+00:00",
+          "value": 1086,
+          "rank": "Copper 5"
+        },
         {
           "ts": "2026-06-13T02:11:57.545+00:00",
           "value": 1062,
