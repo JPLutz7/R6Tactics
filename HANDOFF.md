@@ -406,8 +406,8 @@ Big additions since §12. Read this to understand the newest systems.
 - **3rd main tab** (`📊 Players`). Reads `players.json` (same-origin) — **never** calls r6data
   from the browser (the API needs an `api-key` header AND sends no CORS headers, so a static
   PWA can't call it; the key must stay server-side).
-- **Pipeline:** `.github/workflows/player-stats.yml` (live daily trigger is the **Cloudflare cron at 08:23 UTC**
-  → `repository_dispatch`; GitHub `schedule` cron `23 8 * * *` is a dormant backup — see §16), **once daily** to fit
+- **Pipeline:** `.github/workflows/player-stats.yml` (live daily trigger is the **Cloudflare cron at 14:23 UTC**
+  → `repository_dispatch`; GitHub `schedule` cron `23 14 * * *` is a dormant backup — see §16), **once daily** to fit
   r6data's **2,500 calls/month** budget — ~51 calls/run) runs `scripts/fetch-stats.js` using
   the **`R6DATA_API_KEY`** repo secret, writes `players.json`, commits it. `scripts/players.config.json`
   lists members (`joao`=JPLutz7, `leme`=Mtaro., `max`=lnteligent., `lora`/`unknown`=unlinked, empty
@@ -437,7 +437,7 @@ Big additions since §12. Read this to understand the newest systems.
   - **Removed the 15 redundant scoped operator calls/player** (they all returned the same all-time
     data and were what kept tripping the rate limit). Each run is now ~4 calls/player (≈12/run total)
     → no more burst-limit backoff; huge headroom under the 2,500/mo budget.
-  - **Cron moved `0 6` → `23 6`** (off the top of the hour; *corrected later to `23 8`/08:23 — §16*). The schedule was new (added 2026-06-10)
+  - **Cron moved `0 6` → `23 6`** (off the top of the hour; *current schedule is `23 14`/14:23 UTC — §16*). The schedule was new (added 2026-06-10)
     and its only chance (2026-06-11 06:00 UTC) was dropped — GitHub delays/drops `:00` schedules under
     load. `:23` should fire reliably going forward.
 
@@ -572,7 +572,7 @@ since anchor is the default). `normalizeDB` preserves the new group values.
 ### Stats threads RESOLVED + publishing/versioning + the tactics-revision plan (data v58, Alpha v58.47)
 **Player-stats threads closed (see also the Players-tab subsection above):**
 - **Max links** — real tag is **`lnteIigent.`** (capital I), not `lnteligent.`. Fixed in `players.config.json`.
-- **Cron** moved `0 6` → **`23 6`** (off the top of the hour; GitHub drops brand-new `:00` schedules). *(Live Cloudflare cron is actually **08:23/`23 8`** — §16.)*
+- **Cron** moved `0 6` → **`23 6`** (off the top of the hour; GitHub drops brand-new `:00` schedules). *(Live Cloudflare cron is now **14:23/`23 14`** — §16.)*
 - **Per-season/playlist operator scoping does NOT exist in r6data** — probed every param
   (`sessionType=pvp_ranked`, `gameMode`, `board_id=pvp_ranked|ranked|<season>`, `playlist`+`season`);
   all ignored, always echo `sessionType=all`/`seasonNumber=null`. So `ops` is `all|all` only.
@@ -661,7 +661,7 @@ that POSTs that dispatch daily (reusing its `Contents:write` token — that's th
 needs, so no token change) + a password-gated **`{action:"refresh-stats"}`** test route. **Verified live** (a
 `repository_dispatch` run fired on schedule, green). GitHub's `schedule` cron is kept as a dormant backup.
 **Owner action:** the Worker must be redeployed and a **Cloudflare Cron Trigger** added (Worker → Settings →
-Triggers; **`23 8 * * *` UTC = 08:23**, owner-set — NOT 06:23, see §16) — if a fresh Worker is ever set up, repeat both.
+Triggers; **`23 14 * * *` UTC = 14:23**, owner-set — see §16) — if a fresh Worker is ever set up, repeat both.
 
 ### Publishing hardened (multi-editor safety)
 "Make changes permanent" overwrites the WHOLE shared dataset with no merge → two editors silently clobber each
@@ -776,10 +776,13 @@ gadget-free check. (Mid-rollout, a batch hit the per-session usage limit and a c
 re-ran those maps; outputs are idempotent.)
 
 ### Notes
-- **Stats schedule — CORRECTION (owner-confirmed):** the live daily refresh fires at **08:23 UTC** (the
-  owner's Cloudflare Worker cron → `repository_dispatch`), NOT 06:23. Earlier logs (§13/§14) said `23 6`/06:23 —
-  that was a wrong assumption; verified a clean automated run landed 2026-06-13 **08:23** UTC (bot commit, real
-  fetch, key OK). The dormant GitHub `schedule` backup in `player-stats.yml` was realigned `23 6`→**`23 8`** to match.
+- **Stats schedule (owner-set Cloudflare cron → `repository_dispatch`):** **now `23 14 * * *` = 14:23 UTC.**
+  History: earlier logs (§13/§14) assumed `23 6`/06:23 (wrong); confirmed it was actually 08:23 on 2026-06-13;
+  then the **owner moved it to 14:23 UTC on 2026-06-15** so the once-daily snapshot reliably includes the prior
+  night's session (r6data lags Ubisoft a few hours — the 08:23 fire was too early to catch the previous evening's
+  games; see §16 "all-playlist" work). The dormant GitHub `schedule` backup in `player-stats.yml` is kept in sync
+  (`23 14`). **Also (#134):** `fetch-stats.js` now falls back to the previous run's season window if `fullStats`
+  hiccups, so a board-fetch failure can't drop the per-playlist (ranked/unranked/quickmatch) operator data.
 - **Stats git-churn (minor):** each daily run rewrites `players.json` with a large diff even when **no stat values
   changed** — `fetch-stats.js` emits the operator/segment arrays in a non-deterministic order, so the diff is pure
   re-ordering + the `updated` timestamp. (Confirmed 2026-06-13: canonical/sorted forms were byte-identical to the

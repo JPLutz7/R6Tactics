@@ -7,11 +7,11 @@ name: Refresh player stats
 
 on:
   schedule:
-    # Once daily (~08:23 UTC) to fit r6data's 2,500 calls/month budget.
-    # NOTE: the RELIABLE trigger is the Cloudflare Worker cron (08:23 UTC) -> repository_dispatch
+    # Once daily (~14:23 UTC) to fit r6data's 2,500 calls/month budget.
+    # NOTE: the RELIABLE trigger is the Cloudflare Worker cron (14:23 UTC) -> repository_dispatch
     # below; this GitHub schedule is a dormant backup (GitHub delays/drops schedules and has
     # never fired here). Off the top of the hour on purpose (the first :00 run was dropped).
-    - cron: "23 8 * * *"
+    - cron: "23 14 * * *"
   workflow_dispatch: {}       # manual "Run workflow" button
   repository_dispatch:        # reliable external trigger — the Cloudflare Worker cron POSTs this daily
     types: [refresh-stats]    #   (GitHub's own scheduled cron is unreliable and has never fired here)
