@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-03T18:48:54.357Z",
+  "updated": "2026-07-04T14:24:22.303Z",
   "source": "r6data.com",
   "keyExpires": "2026-09-08",
   "keyStatus": "ok",
@@ -3605,12 +3605,17 @@
         }
       ],
       "rank": {
-        "name": "Silver 3",
+        "name": "Silver 2",
         "color": "#a4a4a4",
-        "img": "https://r6data.com/assets/img/r6_ranks_img/silver-3.webp",
-        "points": 2298
+        "img": "https://r6data.com/assets/img/r6_ranks_img/silver-2.webp",
+        "points": 2321
       },
       "mmrHistory": [
+        {
+          "ts": "2026-07-03T18:46:29.383+00:00",
+          "value": 2321,
+          "rank": "Silver 2"
+        },
         {
           "ts": "2026-06-29T21:26:31.308+00:00",
           "value": 2298,
