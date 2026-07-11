@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T16:35:05.792Z",
+  "updated": "2026-07-11T14:23:56.839Z",
   "source": "r6data.com",
   "keyExpires": "2026-09-08",
   "keyStatus": "ok",
@@ -3235,7 +3235,9 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "API Key expired. Please create a new one."
     },
     {
       "key": "leme",
@@ -6634,7 +6636,9 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "API Key expired. Please create a new one."
     },
     {
       "key": "max",
@@ -7339,7 +7343,9 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "API Key expired. Please create a new one."
     },
     {
       "key": "lora",
