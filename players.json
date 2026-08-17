@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-16T14:42:56.045Z",
+  "updated": "2026-08-17T14:23:38.444Z",
   "source": "r6data.com",
   "keyExpires": "2026-09-08",
   "keyStatus": "ok",
@@ -3237,7 +3237,7 @@
         ]
       },
       "stale": true,
-      "staleReason": "API Key expired. Please create a new one."
+      "staleReason": "Endpoint removed"
     },
     {
       "key": "leme",
@@ -6638,7 +6638,7 @@
         ]
       },
       "stale": true,
-      "staleReason": "API Key expired. Please create a new one."
+      "staleReason": "Endpoint removed"
     },
     {
       "key": "max",
@@ -7345,7 +7345,7 @@
         ]
       },
       "stale": true,
-      "staleReason": "API Key expired. Please create a new one."
+      "staleReason": "Endpoint removed"
     },
     {
       "key": "lora",
