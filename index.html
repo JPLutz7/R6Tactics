@@ -254,6 +254,11 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .iglbtn{flex:none}
 .iglbtn.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
 .prow.igl{box-shadow:inset 3px 0 0 var(--accent)}
+.prow.reserve{opacity:.7;background:transparent;border-style:dashed}
+.prow.reserve .pavatar{background:linear-gradient(135deg,#8a8a8a,#63636b)}
+.tag.resv{background:var(--line2);color:var(--muted);font-size:9.5px;padding:2px 6px;border-radius:6px;font-weight:900;letter-spacing:.5px;margin-left:6px}
+.reserve-h{display:flex;align-items:center;gap:10px;margin:16px 0 8px;padding-top:13px;border-top:1px dashed var(--line2);font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.reserve-h .rh-note{font-weight:600;text-transform:none;letter-spacing:0;opacity:.85}
 .prow .pname{font-weight:700;font-size:15px;min-width:90px}
 .prow .pavatar{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#5a6b7e,#3a4654);font-size:14px}
 .tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:6px;font-weight:700;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
@@ -559,7 +564,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 75,
+  "version": 76,
   "publishedAt": "2026-06-14",
   "maps": [
     {
@@ -58935,6 +58940,14 @@ const SEED_DATA =
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
+    },
+    {
+      "name": "Reserve",
+      "attackRoles": [],
+      "defenseRoles": [],
+      "favAtk": [],
+      "favDef": [],
+      "reserve": true
     }
   ],
   "playerStats": [],
@@ -59178,6 +59191,7 @@ function clone(o){ try{return structuredClone(o);}catch(e){return JSON.parse(JSO
 function readMeta(){ try{return JSON.parse(localStorage.getItem(META_KEY))||{};}catch(e){return {};} }
 function writeMeta(m){ try{localStorage.setItem(META_KEY,JSON.stringify(m));}catch(e){} }
 let DB, META, UPDATE_AVAILABLE=false;
+const ACTIVE_MAX = 5;   // players in a round — the rest of the roster sits in Reserves (excluded from tactics)
 
 function loadState(){
   const raw=localStorage.getItem(DATA_KEY); META=readMeta();
@@ -59242,7 +59256,11 @@ function normalizeDB(db){
     p.defenseRoles=p.defenseRoles.filter(id=>roleSide(id)==="defense");
     p.favAtk=(Array.isArray(p.favAtk)?p.favAtk:[]).filter(id=>opSide(id)==="attack");
     p.favDef=(Array.isArray(p.favDef)?p.favDef:[]).filter(id=>opSide(id)==="defense");
+    if(p.reserve) p.reserve=true; else delete p.reserve;   // benched member — kept on the roster, left out of tactics
     delete p.roles; delete p.roleId; delete p.notes; });
+  // a round is ACTIVE_MAX players: any extras beyond that fall to the bench, and a benched player is never the IGL
+  let actN=0; db.roster.forEach(p=>{ if(p.reserve)return; if(actN<ACTIVE_MAX)actN++; else p.reserve=true; });
+  db.roster.forEach(p=>{ if(p.reserve) delete p.igl; });
   // attack: exactly one role per player and unique across players (defense keeps its multi-role priority list)
   const usedAtk=new Set();
   db.roster.forEach(p=>{ const pick=(p.attackRoles||[]).find(id=>!usedAtk.has(id)); if(pick)usedAtk.add(pick); p.attackRoles=pick?[pick]:[]; });
@@ -59311,6 +59329,20 @@ function iglPlayer(){ return ((DB&&DB.roster)||[]).find(p=>p.igl)||null; }
 function isIglName(name){ const g=iglPlayer(); return !!g && normTxt(g.name)===normTxt(name); }
 function iglTag(name){ return isIglName(name)?` <span class="iglbadge" title="In-game leader (calls the round)">IGL</span>`:""; }
 function setIgl(idx){ DB.roster.forEach((p,i)=>{ if(i===idx)p.igl=true; else delete p.igl; }); markDirty(); }
+/* ---- reserves: roster members benched for the round (kept on the roster, left out of every tactic) ---- */
+function activeRoster(){ return ((DB&&DB.roster)||[]).filter(p=>!p.reserve); }
+function activeCount(){ return activeRoster().length; }
+function setReserve(i){            // toggle one player between the active lineup and the bench
+  const p=((DB&&DB.roster)||[])[i]; if(!p) return false;
+  if(p.reserve){
+    if(activeCount()>=ACTIVE_MAX){ toast(`Lineup is full — bench someone first (${ACTIVE_MAX} active max)`); return false; }
+    delete p.reserve;
+  } else {
+    delete p.igl;                  // a benched player can't be the in-game leader
+    p.reserve=true;
+  }
+  markDirty(); return true;
+}
 function applyMeDefaults(){ const me=getMe(); if(!me)return; const players=statsPlayers(); const i=players.findIndex(p=>normTxt(p.label)===me||normTxt(p.key)===me); if(i>=0) UI.players.sel=i; }
 let ME_PROMPTED=false;   // session-only flag so 'Skip' doesn't re-pop the prompt this launch
 function showMeModal(){
@@ -59742,7 +59774,8 @@ function flexSecondJob(slot){
 function assignTactic(st,side){
   const prefKey=side==="attack"?"attackRoles":"defenseRoles";
   const slots=(st.slots||[]).map((s,i)=>({...s,_i:i,_taken:null}));
-  const players=DB.roster.map((p,pi)=>({name:p.name||"?",pi,prefs:(p[prefKey]||[]).slice()}));
+  // reserves are benched for the round — they never take a slot and never show up in a tactic
+  const players=DB.roster.map((p,pi)=>({name:p.name||"?",pi,reserve:!!p.reserve,prefs:(p[prefKey]||[]).slice()})).filter(pl=>!pl.reserve);
   const assigned=new Map();
   const maxr=Math.max(0,...players.map(p=>p.prefs.length));
   for(let r=0;r<maxr;r++) players.forEach(pl=>{ if(assigned.has(pl.pi))return; const role=pl.prefs[r]; if(!role)return; const slot=slots.find(s=>s.role===role&&s._taken===null); if(slot){ slot._taken=pl.pi; assigned.set(pl.pi,slot); } });
@@ -59757,7 +59790,7 @@ function assignTactic(st,side){
     return { player:pl.name, roleName, ops, pos:slot?slot.pos:"", task:slot?(slot.task||""):"", how:slot?(slot.how||null):null, favs }; });
 }
 /* favourites the stack has flagged on a side (operator id set) */
-function allFavs(side){ const key=side==="attack"?"favAtk":"favDef"; const s=new Set(); DB.roster.forEach(p=>(p[key]||[]).forEach(o=>s.add(o))); return s; }
+function allFavs(side){ const key=side==="attack"?"favAtk":"favDef"; const s=new Set(); activeRoster().forEach(p=>(p[key]||[]).forEach(o=>s.add(o))); return s; }
 /* fraction of a strat's slots that can be filled with a stack favourite (0..1) */
 function favAffinity(st,side){ const favs=allFavs(side); if(!favs.size)return 0; let hit=0,tot=0; (st.slots||[]).forEach(s=>{ tot++; if((s.ops||[]).some(o=>favs.has(o)))hit++; }); return tot?hit/tot:0; }
 let LAST_REC=null; // last logged round {st,field} — enables one-tap "undo last"
@@ -60339,20 +60372,28 @@ function renderPlayers(){
   };
   const meI=meRosterIdx();   // account holder first (display order only; data-p keeps real indices)
   const order=DB.roster.map((_,i)=>i); if(meI>=0){ order.splice(order.indexOf(meI),1); order.unshift(meI); }
-  wrap.innerHTML=order.map(i=>{ const p=DB.roster[i];
+  const row=i=>{ const p=DB.roster[i];
     const initials=(p.name||"?").trim().slice(0,2).toUpperCase(); const isMe=normTxt(p.name)===getMe();
-    return `<div class="prow${isMe?" me":""}${p.igl?" igl":""}" data-p="${i}">
+    return `<div class="prow${isMe?" me":""}${p.igl?" igl":""}${p.reserve?" reserve":""}" data-p="${i}">
       <div class="pavatar">${esc(initials)}</div>
-      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}${iglTag(p.name)}${meTag(p.name)}</div>`}
-      ${edit?`<button class="btn sm iglbtn${p.igl?" on":""}" data-iglset="${i}" title="In-game leader (one at a time)">${p.igl?"★ IGL":"IGL"}</button>`:""}
+      ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}${p.reserve?`<span class="tag resv">RESERVE</span>`:""}${iglTag(p.name)}${meTag(p.name)}</div>`}
+      ${edit?`<button class="btn sm iglbtn${p.igl?" on":""}" data-iglset="${i}" title="${p.reserve?"Benched players can't be IGL":"In-game leader (one at a time)"}"${p.reserve?" disabled":""}>${p.igl?"★ IGL":"IGL"}</button>`:""}
+      ${edit?`<button class="btn sm" data-resv="${i}" title="${p.reserve?"Move into the active lineup":"Move to reserves — benched, left out of tactics"}">${p.reserve?"↑ Activate":"↓ Bench"}</button>`:""}
       <div class="psides">${sideRow(p,i,"attack")}${sideRow(p,i,"defense")}</div>
       <div class="grow"></div>
       ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
       <div class="pfavs"><div class="pfav-h muted">Favourite operators</div>${favRow(p,i,"attack")}${favRow(p,i,"defense")}</div>
     </div>`;
-  }).join("")||`<div class="empty">No players.</div>`;
+  };
+  const actIdx=order.filter(i=>!DB.roster[i].reserve), resIdx=order.filter(i=>DB.roster[i].reserve);
+  wrap.innerHTML = DB.roster.length
+    ? actIdx.map(row).join("")
+      + ((resIdx.length||edit)?`<div class="reserve-h"><span>Reserves</span><span class="rh-note">${resIdx.length} benched · left out of tactics${edit?"":" · ✎ Edit to swap"}</span></div>`:"")
+      + (resIdx.length?resIdx.map(row).join(""):`<div class="empty muted">Nobody benched — use ↓ Bench to move a player here.</div>`)
+    : `<div class="empty">No players.</div>`;
   wrap.querySelectorAll(".favchip[data-op]").forEach(c=>{ c.onclick=()=>openOpModal(c.dataset.op); c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openOpModal(c.dataset.op); } }; });
   wrap.querySelectorAll("[data-iglset]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.iglset; setIgl(DB.roster[i].igl?-1:i); renderPlayers(); });
+  wrap.querySelectorAll("[data-resv]").forEach(b=>b.onclick=()=>{ if(setReserve(+b.dataset.resv)){ renderPlayers(); renderRoleGrid(); } });
   bindPlayers();
 }
 function bindPlayers(){
@@ -60582,7 +60623,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 72;
+const APP_BUILD = 73;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
