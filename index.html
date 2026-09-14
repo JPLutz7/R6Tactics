@@ -59374,11 +59374,14 @@ function renderTabs(){
 }
 function switchTab(tab){ UI.tab=tab; renderTabs(); render(); window.scrollTo({top:0}); }
 function refreshStatus(){ const el=byId("statusLine"); if(el) el.innerHTML=statusHTML(); }
-/* Version label — shows "Alpha v{data}.{build}" while in alpha; flip to the official
-   "v{RELEASE}" once the full 5-stack is in by setting RELEASE below (e.g. "1.0"). */
-const RELEASE = "";   // "" = alpha · otherwise the official version string, e.g. "1.0"
-function appVersion(){ return RELEASE ? ("v"+RELEASE) : ("Alpha v"+SEED_DATA.version+"."+(typeof APP_BUILD!=="undefined"?APP_BUILD:"?")); }
-function dataVersion(v){ const n=(v==null?SEED_DATA.version:v); return RELEASE ? ("v"+RELEASE) : ("Alpha v"+n); }
+/* Version label — "Alpha v{data}.{build}" while in alpha, "v{RELEASE} ({data}.{build})" once
+   released. The data/build numbers stay visible either way: they're how you tell which copy a
+   teammate is actually running, and dataVersion() names a SPECIFIC published data version in
+   the publish/conflict messages, so it can't collapse to the release string. */
+const RELEASE = "1.0";   // "" = alpha · otherwise the official version string, e.g. "1.0"
+function appVersion(){ const b=(typeof APP_BUILD!=="undefined"?APP_BUILD:"?");
+  return RELEASE ? ("v"+RELEASE+" ("+SEED_DATA.version+"."+b+")") : ("Alpha v"+SEED_DATA.version+"."+b); }
+function dataVersion(v){ const n=(v==null?SEED_DATA.version:v); return RELEASE ? ("data v"+n) : ("Alpha v"+n); }
 function statusHTML(){ return `<span class="dot ${META.dirty?"dirty":"clean"}"></span> ${META.dirty?"Local edits":"Published"} · ${appVersion()}`; }
 
 function renderBanner(){
@@ -60668,7 +60671,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 78;
+const APP_BUILD = 79;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
