@@ -8,9 +8,9 @@
   "players": [
     { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
     { "key": "leme", "label": "Leme", "handle": "Mtaro.", "platform": "uplay" },
-    { "key": "snell", "label": "Snell", "handle": "", "platform": "uplay" },
-    { "key": "dennis", "label": "Dennis", "handle": "", "platform": "uplay" },
-    { "key": "pedro-tembra", "label": "Pedro Tembra", "handle": "", "platform": "uplay" },
-    { "key": "jp-korte", "label": "JP Korte", "handle": "", "platform": "uplay" }
+    { "key": "snell", "label": "Snell", "handle": "CaF4SS0_12", "platform": "uplay" },
+    { "key": "dennis", "label": "Dennis", "handle": "yNetinn.Tlz", "platform": "uplay" },
+    { "key": "pedro-tembra", "label": "Pedro Tembra", "handle": "SeekingMine", "platform": "uplay" },
+    { "key": "jp-korte", "label": "JP Korte", "handle": "LiveVessel34", "platform": "uplay" }
   ]
 }
