@@ -22,13 +22,13 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
-- **Dev branch:** `claude/fervent-wright-as3zro` → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **Alpha v72.69** (SEED **data v72**, PWA **build 69**). The app shows its version as
+- **Dev branch:** assigned per session (latest: `claude/nifty-bell-tgz33h`) → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
+- **Current state:** **Alpha v77.77** (SEED **data v77**, PWA **build 77**). The app shows its version as
   **"Alpha v{data}.{build}"** (`appVersion()`/`dataVersion()`, const `RELEASE`). Still alpha until the full
   5-stack is linked; flip to **v1.0** by setting `RELEASE="1.0"`. Publishing is via a **shared-password
   Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
   now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
-  Cloudflare cron** (GitHub's own cron never fires — §14). **§16 is the latest session log — read it after §15.**
+  Cloudflare cron** (GitHub's own cron never fires — §14). **§17 is the latest session log — read it after §16.**
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
 ## 2. Files
@@ -264,12 +264,12 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 
 > Continue work on the **R6 Stack Command Center** (Rainbow Six Siege prep dashboard for a 5-stack).
 > **First read `HANDOFF.md`** in full — especially **§1** (data/ToS rule), **§12** (tactics system/
-> structure), and the session log: **§13 → §14 → §15 → §16** (§16 is the latest and lists the open task).
+> structure), and the session log: **§13 → §14 → §15 → §16 → §17** (§17 is the latest and lists the open tasks).
 >
 > Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
 > `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v72.69** (SEED data v72,
-> build 69). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v77.77** (SEED data v77,
+> build 77). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
 > (owner is fine with this — handle git/PRs for them).
 >
 > **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
@@ -283,11 +283,15 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 > `index.html` (don't hand-edit the block).
 >
 > **YOUR TASK (confirm scope with the owner first):** the tactics revision is **COMPLETE — all 25 maps**
-> are research-revised (§14 did 14, §15 did the last 11). The **one remaining open thread** is to link
-> **Lora + the 5th member** in `scripts/players.config.json` (owner gives the two r6data handles; empty
-> handle ⇒ skipped) → confirm their stats fetch (the per-season endpoint is unauthenticated, testable from
-> any node) → then **set `RELEASE="1.0"`** in `index.html` to leave Alpha (bump build). After that the app
-> is feature-complete; further work is VOD-based tactics refinement in ✎ Edit or owner-requested features.
+> are research-revised (§14 did 14, §15 did the last 11), and every slot has `task`/`how` (§16). The
+> remaining open thread is to link the **unlinked roster members** in `scripts/players.config.json` (owner
+> gives the Ubisoft handles; empty handle ⇒ skipped — the app's "isn't linked yet" card prints the exact
+> snippet per player) → confirm their stats fetch via **Actions → Refresh player stats** → then set
+> **`RELEASE="1.0"`** in `index.html` to leave Alpha (bump build). After that the app is feature-complete;
+> further work is VOD-based tactics refinement in ✎ Edit or owner-requested features.
+>
+> **Stats API:** r6data is dead — it's **arenyze v2** now (`public-api.arenyze.com/r6/api/v2`, key still in the
+> `R6DATA_API_KEY` secret, dashboard at r6.arenyze.com). See §17 before touching `scripts/fetch-stats.js`.
 >
 > **Don't re-investigate** these — they're DONE (§14): per-season/playlist operators (now fetched from the
 > r6data **website** API, no auth, keyed `playlist|season`); reliable daily stats refresh (**Cloudflare cron
@@ -796,3 +800,62 @@ re-ran those maps; outputs are idempotent.)
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
   remaining task.
+
+---
+
+## 17. Session log — reserves, stats API rescue (arenyze v2), Players tab follows the roster (data v73→v77, builds 70→77)
+
+### Reserves (roster > 5)
+`ACTIVE_MAX = 5` + a per-player `reserve` flag. `activeRoster()`/`activeCount()`/`setReserve(i)`; `normalizeDB` caps the
+active lineup (overflow auto-benched) and clears `igl` on a benched player. `assignTactic` filters reserves out, so a
+benched member never appears in a strat. Roster tab renders **active rows, then a "Reserves" header, then benched rows**
+(`.prow.reserve` = dashed + dimmed, `RESERVE` tag, ↓ Bench / ↑ Activate buttons in ✎ Edit).
+
+### Roster layout bug (#138)
+Favourite-operator chips overlapped everything on desktop: `.prow` only got `flex-wrap:wrap` inside the ≤720px media
+query, so the `.pfavs` block had nowhere to go on a wide screen. Fixed by wrapping at every width (`+ .iglbtn,.resvbtn{flex:none}`).
+Verified with real Chromium box measurements, not by eye. **Note: it was a pre-existing bug, not caused by reserves.**
+
+### Stats pipeline rescue (#139) — TWO stacked failures
+The Players tab had been frozen since ~2026-07-11 and **nothing alarmed**. Diagnosis (verified live, not from memory):
+1. **2026-07-11** — the r6data key expired (`players.config.json` wrongly claimed 2026-09-08).
+2. **2026-08-17** — **r6data became [arenyze](https://r6.arenyze.com) and deleted its v1 API**: `api.r6data.com` returns
+   **HTTP 410 with or without a key**, and the old unauthenticated website endpoint 301s into a 404.
+
+Why it was silent: **preserve-on-fail copied the previous run's `ok:true`**, so `isAuthFail()` saw healthy players and
+returned early. Fixed:
+- `fetch-stats.js` → **arenyze v2** (`https://public-api.arenyze.com/r6/api/v2`): `/profile` (one call replaces three —
+  `seasons` → segments, `history` → rank + MMR history) and `/operators` (native `seasonYear` + `modes`, so the scraped
+  website endpoint is gone). Modes map `ranked|standard|quick-match` → playlist keys `ranked|unranked|quickmatch`;
+  `REFRESH_SEASONS = 2`. Live quota from `/r6/api/me/usage`.
+- **Failure is judged on the CURRENT run** (`failedThisRun()` + `fetchFailed`/`lastStatus` on preserved players), and a
+  total outage sets `keyStatus:"down"` → `key-alarm-decide.js` opens a GitHub Issue **and** the app shows a red banner.
+  That would have caught August on day one.
+- `api_key_expires: null` (arenyze keys carry no documented expiry).
+- Verified by running the workflow on the branch *before* merging: `keyStatus ok`, quota 27/3000, JPLutz7 Copper 4
+  1163 RP, season **43** populated across all three playlists.
+
+### Players tab now follows the Roster tab (this change)
+The two tabs had drifted: the roster was João/Leme/Snell/Dennis/Pedro Tembra/JP Korte while the Players tab still listed
+the `players.config.json` names (max/lora/unknown). **The roster is now the source of truth for *who*; `players.json`
+only supplies the *numbers*.** `statsPlayers()` builds the list from `DB.roster` (you first, then active, then reserves)
+and joins each member to a stats record via `statsRecordFor()` (matches **label OR config key OR Ubisoft handle**,
+accent-insensitive). Consequences:
+- Rename / add / bench on the Roster tab ⇒ the Players tab updates with **no config edit**.
+- A roster member with no linked account gets an "isn't linked yet" card that prints the exact
+  `players.config.json` snippet to paste (its `key` is a slug of their name, `label` is the roster name).
+- A record with real fetched data but **no** roster entry is kept at the end tagged **OFF ROSTER** (never silently
+  dropped) — that's how `Max` still shows.
+- `UI.players.sel` is now a **player key, not an index**, so the selection survives roster reorders/renames.
+- `statsPlayerForName()` (operator-proficiency join used by the suggester) delegates to the same matcher.
+
+Verified in real Chromium: chip list matches the roster, live rename/bench transfers, selection survives a reorder,
+0 chip overlaps, 0 page errors, no horizontal overflow at 1280px **or** 390px (the config snippet needed
+`.pl-empty .mono{overflow-wrap:anywhere}` to wrap on a phone).
+
+### Still open
+- **Link the unlinked roster members** (Snell, Dennis, Pedro Tembra, JP Korte) in `scripts/players.config.json` — the app
+  now prints the exact snippet for each. Then **`RELEASE="1.0"`** to leave Alpha.
+- Decide whether `max` stays in the config (it still costs a daily fetch; it shows as OFF ROSTER until it's removed or
+  he's added back to the roster).
+- Optional: stable-sort `fetch-stats.js` output to kill the daily no-op git churn (§16).
