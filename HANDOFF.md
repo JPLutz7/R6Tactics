@@ -805,6 +805,23 @@ source-disagreements were put to the owner, who read them off the in-game ban sc
 Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
 not a code change.
 
+### Cards tab — operator flashcards (build 87)
+A 4th tab, `🃏 Cards`, drilling the 76 operators off `DB.operators` (`notes` = the prompt/answer, `howToCounter`
+shown on the card back). Two modes, per the owner: **`op2desc` (DEFAULT)** shows the NAME and you pick what they do;
+**`desc2op`** shows the JOB and you pick whose it is. Side filter All / Attack / Defense, running score + streak +
+best, reset, and a "Full operator card" button into `openOpModal`.
+
+Design points worth keeping:
+- **Distractors always come from the same side as the answer** — otherwise "which of these is a defender" hands over
+  the answer for free. Verified over 200 draws.
+- The deck is a shuffled queue of the whole filtered pool, so **every operator appears once before any repeat**
+  (verified: 76 unique in 76 draws). Changing the side filter *re-filters* the deck rather than rebuilding it, so it
+  doesn't restart your run.
+- Keyboard: on this tab **1-4 answer** and Enter/Space deals the next card. Everywhere else the digits stay tab
+  shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
+  reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
+- Pure code, no seed change — `DB.operators` already carried everything the drill needs.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -953,6 +970,23 @@ source-disagreements were put to the owner, who read them off the in-game ban sc
 
 Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
 not a code change.
+
+### Cards tab — operator flashcards (build 87)
+A 4th tab, `🃏 Cards`, drilling the 76 operators off `DB.operators` (`notes` = the prompt/answer, `howToCounter`
+shown on the card back). Two modes, per the owner: **`op2desc` (DEFAULT)** shows the NAME and you pick what they do;
+**`desc2op`** shows the JOB and you pick whose it is. Side filter All / Attack / Defense, running score + streak +
+best, reset, and a "Full operator card" button into `openOpModal`.
+
+Design points worth keeping:
+- **Distractors always come from the same side as the answer** — otherwise "which of these is a defender" hands over
+  the answer for free. Verified over 200 draws.
+- The deck is a shuffled queue of the whole filtered pool, so **every operator appears once before any repeat**
+  (verified: 76 unique in 76 draws). Changing the side filter *re-filters* the deck rather than rebuilding it, so it
+  doesn't restart your run.
+- Keyboard: on this tab **1-4 answer** and Enter/Space deals the next card. Everywhere else the digits stay tab
+  shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
+  reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
+- Pure code, no seed change — `DB.operators` already carried everything the drill needs.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -1108,6 +1142,23 @@ source-disagreements were put to the owner, who read them off the in-game ban sc
 
 Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
 not a code change.
+
+### Cards tab — operator flashcards (build 87)
+A 4th tab, `🃏 Cards`, drilling the 76 operators off `DB.operators` (`notes` = the prompt/answer, `howToCounter`
+shown on the card back). Two modes, per the owner: **`op2desc` (DEFAULT)** shows the NAME and you pick what they do;
+**`desc2op`** shows the JOB and you pick whose it is. Side filter All / Attack / Defense, running score + streak +
+best, reset, and a "Full operator card" button into `openOpModal`.
+
+Design points worth keeping:
+- **Distractors always come from the same side as the answer** — otherwise "which of these is a defender" hands over
+  the answer for free. Verified over 200 draws.
+- The deck is a shuffled queue of the whole filtered pool, so **every operator appears once before any repeat**
+  (verified: 76 unique in 76 draws). Changing the side filter *re-filters* the deck rather than rebuilding it, so it
+  doesn't restart your run.
+- Keyboard: on this tab **1-4 answer** and Enter/Space deals the next card. Everywhere else the digits stay tab
+  shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
+  reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
+- Pure code, no seed change — `DB.operators` already carried everything the drill needs.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1293,6 +1344,23 @@ source-disagreements were put to the owner, who read them off the in-game ban sc
 
 Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
 not a code change.
+
+### Cards tab — operator flashcards (build 87)
+A 4th tab, `🃏 Cards`, drilling the 76 operators off `DB.operators` (`notes` = the prompt/answer, `howToCounter`
+shown on the card back). Two modes, per the owner: **`op2desc` (DEFAULT)** shows the NAME and you pick what they do;
+**`desc2op`** shows the JOB and you pick whose it is. Side filter All / Attack / Defense, running score + streak +
+best, reset, and a "Full operator card" button into `openOpModal`.
+
+Design points worth keeping:
+- **Distractors always come from the same side as the answer** — otherwise "which of these is a defender" hands over
+  the answer for free. Verified over 200 draws.
+- The deck is a shuffled queue of the whole filtered pool, so **every operator appears once before any repeat**
+  (verified: 76 unique in 76 draws). Changing the side filter *re-filters* the deck rather than rebuilding it, so it
+  doesn't restart your run.
+- Keyboard: on this tab **1-4 answer** and Enter/Space deals the next card. Everywhere else the digits stay tab
+  shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
+  reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
+- Pure code, no seed change — `DB.operators` already carried everything the drill needs.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
