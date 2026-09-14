@@ -23,9 +23,10 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** assigned per session (latest: `claude/nifty-bell-tgz33h`) → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **Alpha v77.77** (SEED **data v77**, PWA **build 77**). The app shows its version as
-  **"Alpha v{data}.{build}"** (`appVersion()`/`dataVersion()`, const `RELEASE`). Still alpha until the full
-  5-stack is linked; flip to **v1.0** by setting `RELEASE="1.0"`. Publishing is via a **shared-password
+- **Current state:** **v1.0 (77.79)** — RELEASED (SEED **data v77**, PWA **build 79**). `RELEASE="1.0"` is set, so
+  `appVersion()` reads **"v{RELEASE} ({data}.{build})"** and `dataVersion()` reads **"data v{n}"**; the data/build
+  numbers deliberately stay visible (they're how you tell what a teammate is actually running, and `dataVersion()`
+  names a *specific* published version in the publish/conflict messages). Set `RELEASE=""` to go back to Alpha. Publishing is via a **shared-password
   Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
   now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
   Cloudflare cron** (GitHub's own cron never fires — §14). **§17 is the latest session log — read it after §16.**
@@ -268,8 +269,8 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 >
 > Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
 > `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **Alpha v77.77** (SEED data v77,
-> build 77). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **v1.0 (77.79)** (SEED data v77,
+> build 79). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
 > (owner is fine with this — handle git/PRs for them).
 >
 > **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
@@ -287,8 +288,8 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 > remaining open thread is to link the **unlinked roster members** in `scripts/players.config.json` (owner
 > gives the Ubisoft handles; empty handle ⇒ skipped — the app's "isn't linked yet" card prints the exact
 > snippet per player) → confirm their stats fetch via **Actions → Refresh player stats** → then set
-> **`RELEASE="1.0"`** in `index.html` to leave Alpha (bump build). After that the app is feature-complete;
-> further work is VOD-based tactics refinement in ✎ Edit or owner-requested features.
+> ~~**`RELEASE="1.0"`**~~ — DONE, the app shipped 1.0 on 2026-09-14 with all six roster members linked. The app is
+> feature-complete; further work is VOD-based tactics refinement in ✎ Edit or owner-requested features.
 >
 > **Stats API:** r6data is dead — it's **arenyze v2** now (`public-api.arenyze.com/r6/api/v2`, key still in the
 > `R6DATA_API_KEY` secret, dashboard at r6.arenyze.com). See §17 before touching `scripts/fetch-stats.js`.
@@ -871,9 +872,17 @@ code path, fuller data. So **after any long sync gap, run the workflow twice** a
 season-board fix stands on its own: Leme's history log is *still* empty — 0 entries — so without it he has no rank
 badge at all, cache or no cache.)
 
+### 1.0 — shipped
+All four remaining members were linked on 2026-09-14 (uplay/PC): **Snell** `CaF4SS0_12`, **Dennis** `yNetinn.Tlz`,
+**Pedro Tembra** `SeekingMine`, **JP Korte** `LiveVessel34`. Six linked players ≈ 44 calls/run (quota went 46 → 90),
+still trivial against 3,000/month. With the stack complete, **`RELEASE="1.0"`** was set — see §1 for the label format.
+
+**The cold cache is real and slow.** That first run took **4m26s** (vs ~30s warm) and came back with Dennis and Pedro
+Tembra at **0 season segments** — all-time operator rows only. A second run right after populates them. Related
+robustness gap, still open: `api()` calls `fetch` with **no timeout** (undici's default header timeout is 300s) and
+`player-stats.yml` sets no `timeout-minutes`, so a wedged provider request can park the sync for a long time.
+
 ### Still open
-- **Link the unlinked roster members** (Snell, Dennis, Pedro Tembra, JP Korte) in `scripts/players.config.json` — the app
-  now prints the exact snippet for each. Then **`RELEASE="1.0"`** to leave Alpha.
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
   replaced by the four real unlinked members, so the config now mirrors the roster exactly.
 - Optional: stable-sort `fetch-stats.js` output to kill the daily no-op git churn (§16).
