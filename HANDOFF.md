@@ -764,10 +764,23 @@ the Roster tab, the operator modal, the favourite-op picker, the suggester (`com
 and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
-**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
-each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
-him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
-(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+**Tactics pass DONE — data v82.** Noor is in **100 of 980** defence slots, across all 25 maps, each with its own
+authored `how` line (100 distinct strings, no copy-paste).
+
+*Append, never replace.* `desc` renders only `ops[0]/ops[1]` — **verified across all 2450 slots before relying on it**
+— so appending a 4th op cannot desync the stored desc strings and removes none of the owner's authored picks. 100
+slots now carry 4 ops, 880 still carry 3; `apply-noor.js` asserts desc is byte-identical after the write.
+
+*Which slots.* Started from the 229 support-flavoured slots (`support-def`, plus `flex-def` with `sub:"support"`),
+then excluded any whose task demands a capability he lacks — two passes, because the `task` text is **not** as
+gadget-free as §16 intended:
+1. one-way / mirror / viewport / watch-window / screen / set intel (Mira), plate / armour (Rook), heal / revive /
+   stim / Kona / rearm (Doc, Thunderbird), gas (Smoke) → 119 dropped.
+2. **anything built on a REINFORCED surface** — exactly what the nerf ruined for him — plus heal verbs that slipped
+   the first pass (harden, buff, sustain, "keep the anchors up") → 10 more dropped.
+
+Leaving **100**. Verified in Chromium: his chip renders in the tactics panel, and the **★ Your job** card shows the
+authored line for the player holding that slot (4/4 sampled), no page errors.
 
 ### Map pools collapsed to Ranked / Unranked — data v79
 Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
@@ -900,10 +913,23 @@ the Roster tab, the operator modal, the favourite-op picker, the suggester (`com
 and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
-**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
-each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
-him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
-(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+**Tactics pass DONE — data v82.** Noor is in **100 of 980** defence slots, across all 25 maps, each with its own
+authored `how` line (100 distinct strings, no copy-paste).
+
+*Append, never replace.* `desc` renders only `ops[0]/ops[1]` — **verified across all 2450 slots before relying on it**
+— so appending a 4th op cannot desync the stored desc strings and removes none of the owner's authored picks. 100
+slots now carry 4 ops, 880 still carry 3; `apply-noor.js` asserts desc is byte-identical after the write.
+
+*Which slots.* Started from the 229 support-flavoured slots (`support-def`, plus `flex-def` with `sub:"support"`),
+then excluded any whose task demands a capability he lacks — two passes, because the `task` text is **not** as
+gadget-free as §16 intended:
+1. one-way / mirror / viewport / watch-window / screen / set intel (Mira), plate / armour (Rook), heal / revive /
+   stim / Kona / rearm (Doc, Thunderbird), gas (Smoke) → 119 dropped.
+2. **anything built on a REINFORCED surface** — exactly what the nerf ruined for him — plus heal verbs that slipped
+   the first pass (harden, buff, sustain, "keep the anchors up") → 10 more dropped.
+
+Leaving **100**. Verified in Chromium: his chip renders in the tactics panel, and the **★ Your job** card shows the
+authored line for the player holding that slot (4/4 sampled), no page errors.
 
 ### Map pools collapsed to Ranked / Unranked — data v79
 Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
@@ -1042,10 +1068,23 @@ the Roster tab, the operator modal, the favourite-op picker, the suggester (`com
 and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
-**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
-each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
-him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
-(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+**Tactics pass DONE — data v82.** Noor is in **100 of 980** defence slots, across all 25 maps, each with its own
+authored `how` line (100 distinct strings, no copy-paste).
+
+*Append, never replace.* `desc` renders only `ops[0]/ops[1]` — **verified across all 2450 slots before relying on it**
+— so appending a 4th op cannot desync the stored desc strings and removes none of the owner's authored picks. 100
+slots now carry 4 ops, 880 still carry 3; `apply-noor.js` asserts desc is byte-identical after the write.
+
+*Which slots.* Started from the 229 support-flavoured slots (`support-def`, plus `flex-def` with `sub:"support"`),
+then excluded any whose task demands a capability he lacks — two passes, because the `task` text is **not** as
+gadget-free as §16 intended:
+1. one-way / mirror / viewport / watch-window / screen / set intel (Mira), plate / armour (Rook), heal / revive /
+   stim / Kona / rearm (Doc, Thunderbird), gas (Smoke) → 119 dropped.
+2. **anything built on a REINFORCED surface** — exactly what the nerf ruined for him — plus heal verbs that slipped
+   the first pass (harden, buff, sustain, "keep the anchors up") → 10 more dropped.
+
+Leaving **100**. Verified in Chromium: his chip renders in the tactics panel, and the **★ Your job** card shows the
+authored line for the player holding that slot (4/4 sampled), no page errors.
 
 ### Map pools collapsed to Ranked / Unranked — data v79
 Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
@@ -1214,10 +1253,23 @@ the Roster tab, the operator modal, the favourite-op picker, the suggester (`com
 and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
-**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
-each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
-him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
-(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+**Tactics pass DONE — data v82.** Noor is in **100 of 980** defence slots, across all 25 maps, each with its own
+authored `how` line (100 distinct strings, no copy-paste).
+
+*Append, never replace.* `desc` renders only `ops[0]/ops[1]` — **verified across all 2450 slots before relying on it**
+— so appending a 4th op cannot desync the stored desc strings and removes none of the owner's authored picks. 100
+slots now carry 4 ops, 880 still carry 3; `apply-noor.js` asserts desc is byte-identical after the write.
+
+*Which slots.* Started from the 229 support-flavoured slots (`support-def`, plus `flex-def` with `sub:"support"`),
+then excluded any whose task demands a capability he lacks — two passes, because the `task` text is **not** as
+gadget-free as §16 intended:
+1. one-way / mirror / viewport / watch-window / screen / set intel (Mira), plate / armour (Rook), heal / revive /
+   stim / Kona / rearm (Doc, Thunderbird), gas (Smoke) → 119 dropped.
+2. **anything built on a REINFORCED surface** — exactly what the nerf ruined for him — plus heal verbs that slipped
+   the first pass (harden, buff, sustain, "keep the anchors up") → 10 more dropped.
+
+Leaving **100**. Verified in Chromium: his chip renders in the tactics panel, and the **★ Your job** card shows the
+authored line for the player holding that slot (4/4 sampled), no page errors.
 
 ### Map pools collapsed to Ranked / Unranked — data v79
 Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
