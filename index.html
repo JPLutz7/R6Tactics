@@ -245,13 +245,13 @@ label.field .lab{font-size:11px;letter-spacing:1px;text-transform:uppercase;colo
 .panel-b{padding:16px}
 
 .players{display:flex;flex-direction:column;gap:8px}
-.prow{display:flex;align-items:center;gap:12px;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
+.prow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
 .prow.me{border-color:var(--atk-line);box-shadow:inset 3px 0 0 var(--accent)}
 .me-picks{gap:8px}
 .me-pick{display:flex;align-items:center;gap:10px;justify-content:flex-start;font-weight:800;font-size:15px;padding:10px 12px}
 .metag{color:var(--accent);font-weight:800;font-size:.8em}
 .iglbadge{display:inline-block;margin-left:6px;font-size:9px;font-weight:900;letter-spacing:.5px;padding:1px 5px;border-radius:5px;background:var(--accent);color:#fff;vertical-align:middle}
-.iglbtn{flex:none}
+.iglbtn,.resvbtn{flex:none}
 .iglbtn.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
 .prow.igl{box-shadow:inset 3px 0 0 var(--accent)}
 .prow.reserve{opacity:.7;background:transparent;border-style:dashed}
@@ -60378,7 +60378,7 @@ function renderPlayers(){
       <div class="pavatar">${esc(initials)}</div>
       ${edit?`<input type="text" data-pname value="${esc(p.name)}" style="max-width:120px;font-weight:700">`:`<div class="pname">${esc(p.name)}${p.reserve?`<span class="tag resv">RESERVE</span>`:""}${iglTag(p.name)}${meTag(p.name)}</div>`}
       ${edit?`<button class="btn sm iglbtn${p.igl?" on":""}" data-iglset="${i}" title="${p.reserve?"Benched players can't be IGL":"In-game leader (one at a time)"}"${p.reserve?" disabled":""}>${p.igl?"★ IGL":"IGL"}</button>`:""}
-      ${edit?`<button class="btn sm" data-resv="${i}" title="${p.reserve?"Move into the active lineup":"Move to reserves — benched, left out of tactics"}">${p.reserve?"↑ Activate":"↓ Bench"}</button>`:""}
+      ${edit?`<button class="btn sm resvbtn" data-resv="${i}" title="${p.reserve?"Move into the active lineup":"Move to reserves — benched, left out of tactics"}">${p.reserve?"↑ Activate":"↓ Bench"}</button>`:""}
       <div class="psides">${sideRow(p,i,"attack")}${sideRow(p,i,"defense")}</div>
       <div class="grow"></div>
       ${edit?`<button class="iconbtn" data-pdel title="Remove player">✕</button>`:""}
@@ -60623,7 +60623,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 73;
+const APP_BUILD = 74;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
