@@ -23,17 +23,25 @@ const USAGE_URL = "https://public-api.arenyze.com/r6/api/me/usage";
 if (!KEY) { console.error("ERROR: R6DATA_API_KEY is not set."); process.exit(1); }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+/* Every request is capped. Without this, fetch() inherits undici's 300s header timeout, so a
+   single wedged request could park the whole sync for five minutes with no output — and the
+   workflow had no job timeout either. 45s is generous next to a warm call (<1s) while still
+   covering a cold-cache profile lookup, which is the slow case (a first-ever lookup made the
+   2026-09-14 run take 4m26s across ~50 calls). Timeouts retry like any other network error. */
+const REQ_TIMEOUT_MS = 45000;
 async function api(path, params, base) {
   const qs = Object.entries(params || {}).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
   const url = (base || V2) + path + (qs ? "?" + qs : "");
   for (let attempt = 0; attempt < 4; attempt++) {
     let r, text;
     try {
-      r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
+      r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" }, signal: AbortSignal.timeout(REQ_TIMEOUT_MS) });
       text = await r.text();
     } catch (e) {
-      if (attempt < 3) { await sleep(1000 * Math.pow(2, attempt)); continue; }
-      return { status: 0, ok: false, error: String((e && e.message) || e) };
+      const timedOut = e && (e.name === "TimeoutError" || e.name === "AbortError");
+      const why = timedOut ? `timed out after ${REQ_TIMEOUT_MS / 1000}s` : String((e && e.message) || e);
+      if (attempt < 3) { console.log(`      (${path}: ${why} — retry ${attempt + 1}/3)`); await sleep(1000 * Math.pow(2, attempt)); continue; }
+      return { status: 0, ok: false, error: why };
     }
     if (r.status === 429 && attempt < 3) { await sleep(1500 * Math.pow(2, attempt)); continue; }   // backoff on rate limit
     let json = null; try { json = JSON.parse(text); } catch (_) {}
