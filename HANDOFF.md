@@ -756,6 +756,23 @@ each, each with its own `how` line), not derived from the pools — so Noor is i
 him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
 (196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
 
+### Map pools collapsed to Ranked / Unranked — data v79
+Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
+Pro / Seasonal / Showcased are gone; `DB.pools` is now exactly **Ranked Pool (16)** and **Unranked Pool (7)**, with
+Hereford Base + Calypso Casino falling to **Other Maps**.
+
+**A pool is a TOC section and `normalizeDB()` enforces one pool per map** (the `claimed` set). The first attempt put
+the full 23-map Unranked list in — normalizeDB silently stripped the 16 overlapping ids back to 7, which the browser
+check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
+`fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
+
+**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
+mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
+Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
+pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
+screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
+is a UI change, not a code change.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -855,6 +872,23 @@ operator *name*.
 each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
 him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
 (196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+
+### Map pools collapsed to Ranked / Unranked — data v79
+Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
+Pro / Seasonal / Showcased are gone; `DB.pools` is now exactly **Ranked Pool (16)** and **Unranked Pool (7)**, with
+Hereford Base + Calypso Casino falling to **Other Maps**.
+
+**A pool is a TOC section and `normalizeDB()` enforces one pool per map** (the `claimed` set). The first attempt put
+the full 23-map Unranked list in — normalizeDB silently stripped the 16 overlapping ids back to 7, which the browser
+check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
+`fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
+
+**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
+mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
+Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
+pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
+screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
+is a UI change, not a code change.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -961,6 +995,23 @@ operator *name*.
 each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
 him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
 (196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+
+### Map pools collapsed to Ranked / Unranked — data v79
+Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
+Pro / Seasonal / Showcased are gone; `DB.pools` is now exactly **Ranked Pool (16)** and **Unranked Pool (7)**, with
+Hereford Base + Calypso Casino falling to **Other Maps**.
+
+**A pool is a TOC section and `normalizeDB()` enforces one pool per map** (the `claimed` set). The first attempt put
+the full 23-map Unranked list in — normalizeDB silently stripped the 16 overlapping ids back to 7, which the browser
+check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
+`fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
+
+**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
+mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
+Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
+pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
+screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
+is a UI change, not a code change.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1097,6 +1148,23 @@ operator *name*.
 each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
 him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
 (196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+
+### Map pools collapsed to Ranked / Unranked — data v79
+Owner: *"remove all this separation and just do Ranked Pool and Unranked Pool. Both of which have changed this season."*
+Pro / Seasonal / Showcased are gone; `DB.pools` is now exactly **Ranked Pool (16)** and **Unranked Pool (7)**, with
+Hereford Base + Calypso Casino falling to **Other Maps**.
+
+**A pool is a TOC section and `normalizeDB()` enforces one pool per map** (the `claimed` set). The first attempt put
+the full 23-map Unranked list in — normalizeDB silently stripped the 16 overlapping ids back to 7, which the browser
+check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
+`fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
+
+**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
+mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
+Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
+pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
+screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
+is a UI change, not a code change.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were

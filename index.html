@@ -568,7 +568,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 78,
+  "version": 79,
   "publishedAt": "2026-09-14",
   "maps": [
     {
@@ -58968,39 +58968,41 @@ const SEED_DATA =
   "playerStats": [],
   "pools": [
     {
-      "id": "pro",
-      "name": "Pro Pool",
-      "note": "Locked all season — mirrors the competitive / esports pool.",
+      "id": "ranked",
+      "name": "Ranked Pool",
       "mapIds": [
         "bank",
         "border",
         "chalet",
         "clubhouse",
+        "coastline",
         "consulate",
+        "fortress",
         "kafe",
+        "kanal",
         "lair",
         "nighthaven-labs",
-        "fortress"
-      ]
-    },
-    {
-      "id": "seasonal",
-      "name": "Seasonal Pool",
-      "note": "Rotates between updates — in at the season's start.",
-      "mapIds": [
         "oregon",
-        "coastline",
-        "emerald-plains",
-        "outback"
-      ]
+        "outback",
+        "skyscraper",
+        "theme-park",
+        "villa"
+      ],
+      "note": "Maps that can appear in Ranked. Re-check the in-game ban screen each season — last verified Mar 2026."
     },
     {
-      "id": "showcased",
-      "name": "Showcased",
-      "note": "A single spotlight map that changes every few weeks.",
+      "id": "unranked",
+      "name": "Unranked Pool",
       "mapIds": [
-        "calypso-casino"
-      ]
+        "emerald-plains",
+        "favela",
+        "house",
+        "presidential-plane",
+        "stadium",
+        "tower",
+        "yacht"
+      ],
+      "note": "Unranked-only maps — everything in the Ranked Pool above is playable in Unranked as well."
     }
   ],
   "suggester": {
@@ -60707,7 +60709,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 82;
+const APP_BUILD = 83;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
