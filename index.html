@@ -564,8 +564,8 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 76,
-  "publishedAt": "2026-06-14",
+  "version": 77,
+  "publishedAt": "2026-09-14",
   "maps": [
     {
       "id": "clubhouse",
@@ -58912,10 +58912,11 @@ const SEED_DATA =
         "smoke",
         "valkyrie",
         "vigil"
-      ]
+      ],
+      "reserve": true
     },
     {
-      "name": "Max",
+      "name": "Snell",
       "attackRoles": [
         "support-atk"
       ],
@@ -58928,26 +58929,25 @@ const SEED_DATA =
       "favDef": []
     },
     {
-      "name": "Lora",
+      "name": "Dennis",
       "attackRoles": [],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     },
     {
-      "name": "unknown",
+      "name": "Pedro Tembra",
       "attackRoles": [],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     },
     {
-      "name": "Reserve",
+      "name": "JP Korte",
       "attackRoles": [],
       "defenseRoles": [],
       "favAtk": [],
-      "favDef": [],
-      "reserve": true
+      "favDef": []
     }
   ],
   "playerStats": [],
@@ -60623,7 +60623,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 74;
+const APP_BUILD = 75;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
