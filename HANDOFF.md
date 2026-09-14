@@ -732,6 +732,30 @@ one of the two numbers the API gives per season. His S42 segment is `rankPoints:
 **Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
 falls back to all-time/all-playlist operator rows; nothing to fix.
 
+### Noor added (Y11S3) — data v78
+Owner asked for *"the new op that came out this season"* as **"Nook"** — the operator is **Noor** (Egyptian defender,
+Op **Split Fire**, launched 2026-09-01). Facts taken from **Ubisoft's own operator page** plus corroborating launch
+coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pierce shields and destructible surfaces
+before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
+Bailiff 410, Deployable Shield / Barbed Wire.
+
+Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
+`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+**Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
+`typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
+next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
+labelling a blank.
+
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
+per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+operator *name*.
+
+**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
+each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
+him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
+(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -807,6 +831,30 @@ number.
 
 **Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
 falls back to all-time/all-playlist operator rows; nothing to fix.
+
+### Noor added (Y11S3) — data v78
+Owner asked for *"the new op that came out this season"* as **"Nook"** — the operator is **Noor** (Egyptian defender,
+Op **Split Fire**, launched 2026-09-01). Facts taken from **Ubisoft's own operator page** plus corroborating launch
+coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pierce shields and destructible surfaces
+before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
+Bailiff 410, Deployable Shield / Barbed Wire.
+
+Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
+`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+**Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
+`typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
+next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
+labelling a blank.
+
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
+per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+operator *name*.
+
+**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
+each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
+him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
+(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -889,6 +937,30 @@ number.
 
 **Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
 falls back to all-time/all-playlist operator rows; nothing to fix.
+
+### Noor added (Y11S3) — data v78
+Owner asked for *"the new op that came out this season"* as **"Nook"** — the operator is **Noor** (Egyptian defender,
+Op **Split Fire**, launched 2026-09-01). Facts taken from **Ubisoft's own operator page** plus corroborating launch
+coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pierce shields and destructible surfaces
+before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
+Bailiff 410, Deployable Shield / Barbed Wire.
+
+Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
+`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+**Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
+`typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
+next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
+labelling a blank.
+
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
+per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+operator *name*.
+
+**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
+each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
+him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
+(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1001,6 +1073,30 @@ number.
 
 **Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
 falls back to all-time/all-playlist operator rows; nothing to fix.
+
+### Noor added (Y11S3) — data v78
+Owner asked for *"the new op that came out this season"* as **"Nook"** — the operator is **Noor** (Egyptian defender,
+Op **Split Fire**, launched 2026-09-01). Facts taken from **Ubisoft's own operator page** plus corroborating launch
+coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pierce shields and destructible surfaces
+before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
+Bailiff 410, Deployable Shield / Barbed Wire.
+
+Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
+`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+**Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
+`typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
+next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
+labelling a blank.
+
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
+per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+operator *name*.
+
+**NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
+each, each with its own `how` line), not derived from the pools — so Noor is in **0 of 980** defence slots. Putting
+him in means *replacing* an op in chosen slots and authoring a `how` for each, across up to **457** candidate slots
+(196 anti-breach + 196 support + 65 flex with those subs). That's the §16-style authored pass, not a scripted edit.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
