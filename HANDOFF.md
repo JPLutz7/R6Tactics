@@ -864,6 +864,13 @@ from an older season as "Y11 S2 · latest ranked" instead of "current" (`liveSea
 **Also:** rank icons were still pointing at `r6data.com`, which now 301s to `r6.arenyze.com` — switched to the real host
 (all 35 rank slugs verified 200 image/webp).
 
+**Operational note — arenyze serves a COLD CACHE on the first fetch after a long gap.** Run 207 (the first successful
+run after the 2-month outage) returned João's history capped at 2026-06-23 and Leme's S42 board as 25W-18L/max 2321.
+Run 208, twenty minutes later, returned João's history through 2026-09-13 and Leme's S42 as 34W-24L/max 2525 — same
+code path, fuller data. So **after any long sync gap, run the workflow twice** and trust the second run. (The
+season-board fix stands on its own: Leme's history log is *still* empty — 0 entries — so without it he has no rank
+badge at all, cache or no cache.)
+
 ### Still open
 - **Link the unlinked roster members** (Snell, Dennis, Pedro Tembra, JP Korte) in `scripts/players.config.json` — the app
   now prints the exact snippet for each. Then **`RELEASE="1.0"`** to leave Alpha.
