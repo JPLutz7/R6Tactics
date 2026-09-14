@@ -13,23 +13,39 @@ const root = path.join(__dirname, "..");
 const cfg = JSON.parse(fs.readFileSync(path.join(root, "scripts/players.config.json"), "utf8"));
 const KEY = process.env.R6DATA_API_KEY || "";
 const FAM = cfg.platform_families || "pc";
-const BASE = "https://api.r6data.com/api/stats";
-const WEB = "https://r6data.com/api/operatorStats";   // website API: per-season/per-playlist operators, no auth (not the api-key budget)
+/* r6data rebranded to arenyze and REMOVED its v1 API on 2026-08-17 (api.r6data.com now
+   answers HTTP 410 API_V1_REMOVED, with or without a key), and the old unauthenticated
+   r6data.com/api/operatorStats website endpoint 301s to a 404. Everything now comes from
+   the arenyze v2 API, which needs the same `api-key` header. Docs: r6.arenyze.com/api-docs */
+const V2 = "https://public-api.arenyze.com/r6/api/v2";
+const USAGE_URL = "https://public-api.arenyze.com/r6/api/me/usage";
 
 if (!KEY) { console.error("ERROR: R6DATA_API_KEY is not set."); process.exit(1); }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-async function fetchType(handle, platform, type, extra) {
-  let url = `${BASE}?type=${type}&nameOnPlatform=${encodeURIComponent(handle)}&platformType=${encodeURIComponent(platform)}&platform_families=${encodeURIComponent(FAM)}`;
-  if (extra) for (const k in extra) url += `&${k}=${encodeURIComponent(extra[k])}`;
+async function api(path, params, base) {
+  const qs = Object.entries(params || {}).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+  const url = (base || V2) + path + (qs ? "?" + qs : "");
   for (let attempt = 0; attempt < 4; attempt++) {
-    const r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
+    let r, text;
+    try {
+      r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" } });
+      text = await r.text();
+    } catch (e) {
+      if (attempt < 3) { await sleep(1000 * Math.pow(2, attempt)); continue; }
+      return { status: 0, ok: false, error: String((e && e.message) || e) };
+    }
     if (r.status === 429 && attempt < 3) { await sleep(1500 * Math.pow(2, attempt)); continue; }   // backoff on rate limit
-    const text = await r.text();
     let json = null; try { json = JSON.parse(text); } catch (_) {}
-    return { status: r.status, ok: r.ok, json, text: json ? undefined : text.slice(0, 400) };
+    const msg = json && (json.error || json.message);
+    return { status: r.status, ok: r.ok, json, error: r.ok ? null : (msg || ("HTTP " + r.status)), text: json ? undefined : String(text).slice(0, 300) };
   }
 }
+/* one /profile call replaces v1's stats + fullStats + seasonalStats:
+   .seasons -> {data:{segments}} (same shape flattenSegments wants)
+   .history -> {data:{history:{data}}} (same shape parseRank/parseHistory want) */
+const fetchProfile = (handle, platform) =>
+  api("/profile", { nameOnPlatform: handle, platformType: platform, platform_families: FAM });
 
 const numv = x => (x && typeof x === "object") ? (typeof x.value === "number" ? x.value : null) : (typeof x === "number" ? x : null);
 
@@ -52,66 +68,66 @@ function trimOps(arr) {
     .map(o => ({ op: o.operator, side: o.side, rp: o.roundsPlayed, wp: o.winPercent, kd: o.kd, hs: o.headshotPercent, hsc: o.headshots, w: o.wins, l: o.losses, k: o.kills, d: o.deaths }));
 }
 
-// per-season / per-playlist operators from the r6data WEBSITE API (r6data.com, no auth needed).
-// website "modes" → the app's playlist ids; season number → "Y{yr}S{s}" (41 → "Y11S1").
-const MODE_TO_PLAYLIST = { ranked: "ranked", unranked: "unranked", casual: "quickmatch" };
+/* per-season / per-playlist operators, now from the keyed v2 /operators endpoint.
+   v2 playlist names -> the app's playlist ids (the app keys ops "<playlist>|<season>").
+   season number -> "Y{yr}S{s}" (41 -> "Y11S1"). */
+const MODES = [{ v2: "ranked", pl: "ranked" }, { v2: "standard", pl: "unranked" }, { v2: "quick-match", pl: "quickmatch" }];
 const seasonYearStr = n => "Y" + Math.ceil(n / 4) + "S" + (((n - 1) % 4) + 1);
-async function fetchSeasonOps(handle, platform, season, mode) {
-  const url = `${WEB}/${encodeURIComponent(handle)}?platformType=${encodeURIComponent(platform)}&seasonYear=${seasonYearStr(season)}&modes=${mode}`;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const r = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (r.status === 429 && attempt < 2) { await sleep(1500 * Math.pow(2, attempt)); continue; }
-      if (!r.ok) return null;
-      const j = await r.json();
-      return (j && Array.isArray(j.operators)) ? j.operators : null;
-    } catch (_) { if (attempt < 2) { await sleep(1000); continue; } return null; }
-  }
-  return null;
+/* Completed seasons are frozen, so only the newest few are re-fetched each run and the rest
+   are carried forward — per-season operators used to come from a free unauthenticated
+   endpoint, but on v2 they count against the key's monthly quota. */
+const REFRESH_SEASONS = 2;
+async function fetchSeasonOps(handle, platform, seasonYear, mode) {
+  const r = await api("/operators", { nameOnPlatform: handle, platformType: platform, seasonYear, modes: mode });
+  if (!r.ok || !r.json) return null;
+  const blk = r.json.operators;                                   // { seasonYear, seasonNumber, sessionType, operators:[...] }
+  const arr = Array.isArray(blk) ? blk : (blk && Array.isArray(blk.operators) ? blk.operators : null);
+  if (!arr) console.log(`      (unexpected /operators shape: ${Object.keys(r.json).join(",")})`);
+  return arr;
 }
 
 async function fetchPlayer(p, prev) {
   const platform = p.platform || "uplay";
   const out = { key: p.key, label: p.label, handle: p.handle, platform, ok: false };
   try {
-    const stats = await fetchType(p.handle, platform, "stats");
-    out.status = stats.status;
-    if (!stats.ok) { out.error = (stats.json && (stats.json.error || stats.json.message)) || stats.text || ("HTTP " + stats.status); return out; }
+    // ONE /profile call now carries what v1 needed three for (stats + fullStats + seasonalStats)
+    const prof = await fetchProfile(p.handle, platform);
+    out.status = prof.status;
+    if (!prof.ok || !prof.json) { out.error = prof.error || prof.text || ("HTTP " + prof.status); return out; }
     out.ok = true;
-
-    const [full, seasonal] = await Promise.all([
-      fetchType(p.handle, platform, "fullStats"),
-      fetchType(p.handle, platform, "seasonalStats"),
-    ]);
-    out.segments = full.ok ? flattenSegments(full.json) : [];
-    out.rank = seasonal.ok ? parseRank(seasonal.json) : null;
-    out.mmrHistory = seasonal.ok ? parseHistory(seasonal.json) : [];
+    const j = prof.json;
+    out.segments = flattenSegments(j.seasons);          // {data:{segments}}
+    out.rank = parseRank(j.history);                    // {data:{history:{data}}}
+    out.mmrHistory = parseHistory(j.history);
     out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
+    if (j.meta && j.meta.partial) console.log(`      (partial profile: ${JSON.stringify(j.meta.errors || {}).slice(0, 160)})`);
+    if (!out.segments.length) console.log(`      (no segments — /profile keys: ${Object.keys(j).join(",")})`);
 
-    // operators. The api.r6data.com operatorStats endpoint (api-key) has NO season/playlist scoping —
-    // it always returns all-time/all-playlist — so we keep that as the "all|all" fallback. Per-season
-    // AND per-playlist operators come from the r6data WEBSITE API (r6data.com/api/operatorStats, no
-    // auth), keyed "<playlist>|<season>" exactly as the app's opsFor() expects.
+    // operators, keyed "<playlist>|<season>" exactly as the app's opsFor() expects.
     out.ops = {};
-    const base = await fetchType(p.handle, platform, "operatorStats");
-    if (base && base.ok && base.json && base.json.operators) out.ops["all|all"] = trimOps(base.json.operators);
-    // Season window for the per-playlist ops. Normally this run's last-4 seasons; if fullStats hiccupped and
-    // gave us no seasons, fall back to the previous good run's window so a board-fetch failure can't make us
-    // skip EVERY per-playlist (ranked/unranked/quickmatch) operator fetch.
+    const prevOps = prev && prev.ok && prev.ops;
+    const allOps = await fetchSeasonOps(p.handle, platform, "all", "all");   // all-time fallback
+    if (allOps && allOps.length) out.ops["all|all"] = trimOps(allOps);
+    // Season window for the per-playlist ops. Normally this run's last-4 seasons; if the profile hiccupped
+    // and gave us no seasons, fall back to the previous good run's window so a board-fetch failure can't
+    // make us skip EVERY per-playlist (ranked/unranked/quickmatch) operator fetch.
     let opSeasons = (out.seasons || []).slice(0, 4);
     if (!opSeasons.length && prev && Array.isArray(prev.seasons)) opSeasons = prev.seasons.slice(0, 4);
-    // per-season × per-playlist (ranked + unranked + quickmatch) for every windowed season
-    for (const season of opSeasons) {
-      for (const mode of ["ranked", "unranked", "casual"]) {
-        const sops = await fetchSeasonOps(p.handle, platform, season, mode);
-        if (sops && sops.length) out.ops[`${MODE_TO_PLAYLIST[mode]}|${season}`] = trimOps(sops);
-        await sleep(250);   // be gentle with the website API
+    // per-season × per-playlist. Only the newest REFRESH_SEASONS are re-fetched; older seasons are
+    // finished and never change, so we carry them forward instead of spending quota on them.
+    for (let si = 0; si < opSeasons.length; si++) {
+      const season = opSeasons[si];
+      for (const m of MODES) {
+        const k = `${m.pl}|${season}`;
+        if (si >= REFRESH_SEASONS && prevOps && prevOps[k]) { out.ops[k] = prevOps[k]; continue; }   // frozen season, no call
+        const sops = await fetchSeasonOps(p.handle, platform, seasonYearStr(season), m.v2);
+        if (sops && sops.length) out.ops[k] = trimOps(sops);
+        await sleep(250);   // be gentle with the rate limit
       }
     }
-    // keep last-good operator scopes that didn't refresh this run (transient website hiccup) so the
+    // keep last-good operator scopes that didn't refresh this run (transient hiccup) so the
     // operators never fall out of sync with the rest of the player data; scoped to the same window
     // so scopes that roll off it aren't kept forever.
-    const prevOps = prev && prev.ok && prev.ops;
     if (prevOps) {
       if (!out.ops["all|all"] && prevOps["all|all"]) out.ops["all|all"] = prevOps["all|all"];
       for (const season of opSeasons)
@@ -124,11 +140,17 @@ async function fetchPlayer(p, prev) {
   return out;
 }
 
-// an auth/key problem (vs a per-player handle problem) — drives the expiry alarm
+/* an auth/key problem (vs a per-player handle problem) — drives the expiry alarm.
+   NOTE: a preserve-on-fail record carries the PREVIOUS run's ok:true, so this used to
+   return false for every failure and the alarm went blind — that's how a dead key (Jul
+   2026) and then the v1 endpoint removal (Aug 2026) sat unnoticed for two months while
+   the app quietly served frozen data. Always judge on THIS run's outcome. */
+function failedThisRun(p) { return !!p.fetchFailed || (!p.ok && !p.unlinked); }
 function isAuthFail(p) {
-  if (p.ok) return false;
-  if (p.status === 401 || p.status === 403) return true;
-  return /api[- ]?key|invalid key|unauthor|expired|forbidden/i.test(p.error || "");
+  if (!failedThisRun(p)) return false;
+  const status = p.fetchFailed ? p.lastStatus : p.status;
+  if (status === 401 || status === 403) return true;
+  return /api[- ]?key|invalid key|unauthor|expired|forbidden/i.test(p.error || p.staleReason || "");
 }
 
 (async () => {
@@ -148,23 +170,39 @@ function isAuthFail(p) {
     const r = await fetchPlayer(p, prevOf(p.key));
     if (!r.ok) {
       const old = prevOf(p.key);
-      if (old) { console.log(`FAILED (${r.error}) — kept previous good data`); players.push({ ...old, stale: true, staleReason: r.error }); await sleep(600); continue; }
+      // preserve last-good data, but mark THIS run as failed so the health check isn't fooled by old ok:true
+      if (old) { console.log(`FAILED (${r.error}) — kept previous good data`); players.push({ ...old, stale: true, staleReason: r.error, fetchFailed: true, lastStatus: r.status }); await sleep(600); continue; }
     }
     console.log(r.ok ? "ok" : `FAILED: ${r.error}`);
     players.push(r);
     await sleep(600);   // be gentle with the rate limit between players
   }
-  // key health: "invalid" if every player auth-fails (key rejected); "expired" if past the recorded date
-  const anyOk = players.some(p => p.ok);
-  const allAuthFail = players.length > 0 && players.every(isAuthFail);
+  // real quota/plan straight from the API, instead of a hand-maintained expiry date that
+  // drifted out of sync last time (config said Sep 8 while the key actually died Jul 11)
+  let quota = null;
+  const u = await api("", null, USAGE_URL);
+  if (u.ok && u.json) {
+    quota = { plan: u.json.plan || null, limit: u.json.limit || null, used: (u.json.usage && u.json.usage.total_calls) || null, checked: new Date().toISOString() };
+    console.log(`Quota: ${quota.used}/${quota.limit} calls this month (plan ${quota.plan})`);
+  } else console.log(`Quota check failed: ${u.error || u.status}`);
+
+  /* Health. Judged on THIS run: "invalid" when every linked player auth-fails (key rejected),
+     "down" when they all fail for some other reason (e.g. the API being removed — the case the
+     old blind check missed), "expired" only if a recorded date has passed. */
+  const linked = players.filter(p => !p.unlinked);
+  const allAuthFail = linked.length > 0 && linked.every(isAuthFail);
+  const allFailed = linked.length > 0 && linked.every(failedThisRun);
   const expires = cfg.api_key_expires || null;
   const pastDate = expires && (Date.now() > Date.parse(expires + "T23:59:59Z"));
   let keyStatus = "ok";
   if (allAuthFail) keyStatus = "invalid";
-  else if (!anyOk && pastDate) keyStatus = "expired";
+  else if (allFailed) keyStatus = "down";
   else if (pastDate) keyStatus = "expired";
+  const syncError = allFailed ? ((linked[0] && (linked[0].staleReason || linked[0].error)) || "all player fetches failed") : null;
 
-  const data = { updated: new Date().toISOString(), source: "r6data.com", keyExpires: expires, keyStatus, players };
+  const data = { updated: new Date().toISOString(), source: "arenyze.com (r6 v2)", keyExpires: expires, keyStatus, quota, syncError, players };
   fs.writeFileSync(path.join(root, "players.json"), JSON.stringify(data, null, 2) + "\n");
-  console.log("Wrote players.json (" + players.filter(p => p.ok).length + "/" + players.length + " ok, keyStatus=" + keyStatus + ")");
+  const fresh = players.filter(p => p.ok && !p.fetchFailed).length;
+  console.log(`Wrote players.json (${fresh}/${linked.length} refreshed, keyStatus=${keyStatus}${syncError ? ", syncError=" + syncError : ""})`);
+  if (allFailed) console.error(`ERROR: no player refreshed this run — ${syncError}`);
 })().catch(e => { console.error("FATAL:", e); process.exit(1); });

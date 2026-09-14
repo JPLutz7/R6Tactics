@@ -59579,12 +59579,15 @@ function keyBanner(){
   const ex=STATS_DATA.keyExpires;
   const days=ex?Math.ceil((Date.parse(ex+"T00:00:00Z")-Date.now())/86400000):null;       // intuitive countdown
   const past=ex?(Date.now()>Date.parse(ex+"T23:59:59Z")):false;                            // truly past the day
-  const dead=STATS_DATA.keyStatus==="invalid"||STATS_DATA.keyStatus==="expired"||past;
+  const rejected=STATS_DATA.keyStatus==="invalid"||STATS_DATA.keyStatus==="expired"||past;
+  const down=STATS_DATA.keyStatus==="down";                                                 // every fetch failed (e.g. the API changed)
+  const dead=rejected||down;
   const soon=!dead&&days!=null&&days<=14;
   if(!dead&&!soon) return "";
-  const steps=`<ol class="muted small" style="line-height:1.7;margin:6px 0 0;padding-left:18px"><li>Get a fresh key at <a href="https://r6data.com" target="_blank" rel="noopener">r6data.com</a>.</li><li>Repo → <b>Settings → Secrets and variables → Actions</b> → update <span class="mono">R6DATA_API_KEY</span>.</li><li>Update <span class="mono">api_key_expires</span> in <span class="mono">scripts/players.config.json</span>, then re-run the action.</li></ol>`;
-  if(dead) return `<div class="pl-keybanner dead"><b>⚠️ r6data API key expired — stats are frozen.</b>${steps}</div>`;
-  return `<div class="pl-keybanner soon"><b>⏳ r6data API key expires in ${days} day${days===1?"":"s"}</b> (on ${esc(STATS_DATA.keyExpires)}). Renew it before it stops syncing.${steps}</div>`;
+  const steps=`<ol class="muted small" style="line-height:1.7;margin:6px 0 0;padding-left:18px"><li>Get a fresh key at <a href="https://r6.arenyze.com/dashboard" target="_blank" rel="noopener">r6.arenyze.com</a> (free tier is plenty).</li><li>Repo → <b>Settings → Secrets and variables → Actions</b> → update <span class="mono">R6DATA_API_KEY</span>.</li><li>Repo → <b>Actions → Refresh player stats → Run workflow</b> to confirm it syncs.</li></ol>`;
+  if(down) return `<div class="pl-keybanner dead"><b>⚠️ Stats sync is down — the numbers below are frozen.</b>${STATS_DATA.syncError?` <span class="muted small">(${esc(STATS_DATA.syncError)})</span>`:""}${steps}</div>`;
+  if(rejected) return `<div class="pl-keybanner dead"><b>⚠️ Stats API key rejected — stats are frozen.</b>${steps}</div>`;
+  return `<div class="pl-keybanner soon"><b>⏳ Stats API key expires in ${days} day${days===1?"":"s"}</b> (on ${esc(STATS_DATA.keyExpires)}). Renew it before it stops syncing.${steps}</div>`;
 }
 // ---- normalized stats model (computed live from players.json each render) ----
 const PLAYLISTS=[{id:"ranked",label:"Ranked",gm:"pvp_ranked"},{id:"unranked",label:"Unranked",gm:"pvp_standard"},{id:"quickmatch",label:"Quick Match",gm:"pvp_casual"}];
@@ -60623,7 +60626,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 75;
+const APP_BUILD = 76;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
