@@ -59664,7 +59664,9 @@ const R6_RANKS=[["Copper 5",1000,"#8a5a3c"],["Copper 4",1100,"#8a5a3c"],["Copper
  ["Emerald 5",3500,"#2e9e6b"],["Emerald 4",3600,"#2e9e6b"],["Emerald 3",3700,"#2e9e6b"],["Emerald 2",3800,"#2e9e6b"],["Emerald 1",3900,"#2e9e6b"],
  ["Diamond 5",4000,"#7b6cf0"],["Diamond 4",4100,"#7b6cf0"],["Diamond 3",4200,"#7b6cf0"],["Diamond 2",4300,"#7b6cf0"],["Diamond 1",4400,"#7b6cf0"],["Champion",4500,"#b0303a"]];
 function rankFromPoints(pts){ if(pts==null) return null; let cur=R6_RANKS[0]; for(const r of R6_RANKS){ if(pts>=r[1]) cur=r; else break; }
-  return { name:cur[0], color:cur[2], img:"https://r6data.com/assets/img/r6_ranks_img/"+cur[0].toLowerCase().replace(/\s+/g,"-")+".webp", points:pts }; }
+  return { name:cur[0], color:cur[2], img:"https://r6.arenyze.com/assets/img/r6_ranks_img/"+cur[0].toLowerCase().replace(/\s+/g,"-")+".webp", points:pts }; }
+// newest season anyone in the stack has data for = the live season (used to tell "current" from "latest ranked")
+function liveSeason(){ let n=null; ((STATS_DATA&&STATS_DATA.players)||[]).forEach(p=>(p.seasons||[]).forEach(s=>{ if(n==null||s>n)n=s; })); return n; }
 function opsFor(p,playlistId,season){ const o=(p&&p.ops)||{};
   if(season!=="all"){
     if(o[`${playlistId}|${season}`]) return {rows:o[`${playlistId}|${season}`],scope:null};                // exact playlist+season
@@ -59695,7 +59697,12 @@ function boardGridHTML(p){
 }
 function rankBadgeHTML(p){ if(UI.players.playlist!=="ranked") return "";
   let c, sub;
-  if(UI.players.season==="all"){ c=p&&p.rank; sub="current"; }                  // all seasons → current rank
+  if(UI.players.season==="all"){                                                // all seasons → current standing
+    const r=p&&p.rank;
+    c=(r&&r.points!=null)?rankFromPoints(r.points):r;                           // derive name/colour/icon from points so every badge on the tab matches
+    const live=liveSeason();
+    sub=(r&&r.season!=null&&live!=null&&r.season!==live)?seasonLabel(r.season)+" · latest ranked":"current";
+  }
   else { const seg=(p&&p.segments||[]).find(s=>s.type==="season"&&s.gamemode==="pvp_ranked"&&String(s.season)===String(UI.players.season));
     c=seg?rankFromPoints(seg.rankPoints):null; sub=seasonLabel(UI.players.season); }
   if(!c||!c.name) return "";
@@ -60661,7 +60668,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 77;
+const APP_BUILD = 78;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){

@@ -61,6 +61,20 @@ function flattenSegments(full) {
   }));
 }
 function parseRank(ss) { try { const c = ss.data.history.data[0][1]; return { name: c.metadata.rank, color: c.metadata.color, img: c.metadata.imageUrl, points: c.value }; } catch (_) { return null; } }
+/* CURRENT rank. v2's /history is a *sampled* MMR log that can lag badly — JPLutz7's newest
+   history point was 2026-06-23 (Copper 4, 1163 RP) while the live S43 board already read
+   2204 RP (Silver 3) — and for some players it's empty entirely (Leme: 0 points, rank null).
+   So the authoritative standing is the newest ranked SEASON segment's rankPoints; history is
+   kept only for the trend line, and as a fallback when there's no season board at all.
+   `season` is carried so the app can label a rank that isn't from the live season. */
+function currentRank(segments, hist) {
+  const segs = (segments || []).filter(s => s.type === "season" && s.gamemode === "pvp_ranked" && s.rankPoints != null);
+  if (!segs.length) return hist || null;
+  const newest = segs.reduce((a, b) => (b.season > a.season ? b : a));
+  const meta = (hist && hist.points === newest.rankPoints) ? hist : null;   // only trust the log's name/colour/icon when it agrees
+  return { name: meta ? meta.name : null, color: meta ? meta.color : null, img: meta ? meta.img : null,
+           points: newest.rankPoints, season: newest.season };
+}
 function parseHistory(ss) { try { return ss.data.history.data.map(e => ({ ts: e[0], value: e[1].value, rank: e[1].metadata && e[1].metadata.rank })); } catch (_) { return []; } }
 function trimOps(arr) {
   arr = Array.isArray(arr) ? arr : Object.values(arr || {});
@@ -97,8 +111,8 @@ async function fetchPlayer(p, prev) {
     out.ok = true;
     const j = prof.json;
     out.segments = flattenSegments(j.seasons);          // {data:{segments}}
-    out.rank = parseRank(j.history);                    // {data:{history:{data}}}
     out.mmrHistory = parseHistory(j.history);
+    out.rank = currentRank(out.segments, parseRank(j.history));   // season board wins over the (often stale) history log
     out.seasons = [...new Set(out.segments.filter(s => s.type === "season" && s.season != null).map(s => s.season))].sort((a, b) => b - a);
     if (j.meta && j.meta.partial) console.log(`      (partial profile: ${JSON.stringify(j.meta.errors || {}).slice(0, 160)})`);
     if (!out.segments.length) console.log(`      (no segments — /profile keys: ${Object.keys(j).join(",")})`);
