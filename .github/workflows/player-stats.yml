@@ -27,6 +27,10 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    # Backstop for a wedged provider. A warm run is ~30s; the slowest real run so far was
+    # 4m26s (cold-cache first lookups for four new profiles), so 15 min is comfortably clear
+    # of normal while still failing loudly instead of burning an hour of Actions time.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

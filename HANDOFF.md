@@ -23,12 +23,15 @@ stats are fine under this rule **as long as they're static/delayed, never live**
 - **Live URL:** https://jplutz7.github.io/R6Tactics/  (path is **case-sensitive** — capital R/T)
 - **Repo:** `jplutz7/R6Tactics`
 - **Dev branch:** assigned per session (latest: `claude/nifty-bell-tgz33h`) → merged to `main` via squash PRs. **`main` is the default branch** (fixed mid-session; was a leftover `claude/*` — this matters because GitHub Actions/cron only run from the default branch). GitHub Pages serves `main`, root.
-- **Current state:** **v1.0 (77.79)** — RELEASED (SEED **data v77**, PWA **build 79**). `RELEASE="1.0"` is set, so
-  `appVersion()` reads **"v{RELEASE} ({data}.{build})"** and `dataVersion()` reads **"data v{n}"**; the data/build
-  numbers deliberately stay visible (they're how you tell what a teammate is actually running, and `dataVersion()`
-  names a *specific* published version in the publish/conflict messages). Set `RELEASE=""` to go back to Alpha. Publishing is via a **shared-password
-  Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team password,
-  now hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
+- **Current state:** **v1.1** — RELEASED. One user-visible number: `v{RELEASE_MAJOR}.{patch}`, where the patch is
+  `APP_BUILD - RELEASE_BASE` (`RELEASE_MAJOR="1"`, `RELEASE_BASE=79` = the build 1.0 shipped at). It moves on every
+  patch **and** every in-app publish. The old "Alpha v{data}.{build}" label, `dataVersion()` and every "build N" string
+  are gone. **`APP_BUILD` / `version.json` still climb forever and must never be reset** — update detection is
+  `live > APP_BUILD` — they're just never shown. **Do not rename `APP_BUILD`:** the Cloudflare publish worker
+  pattern-matches `const APP_BUILD = N;` and throws if it's missing, so a rename needs a worker redeploy in the same
+  change. To cut a major: set `RELEASE_MAJOR` and set `RELEASE_BASE` to the current build. Publishing is via a
+  **shared-password Cloudflare Worker** (`cloudflare/`, `PUBLISH_PROXY_URL` set) — teammates publish with a team
+  password, hardened (loud failures + clobber guard, §14). The Worker also runs the **daily stats refresh on a
   Cloudflare cron** (GitHub's own cron never fires — §14). **§17 is the latest session log — read it after §16.**
 - **Owner/maintainer:** João (IGL of the stack). Began as a non-GitHub user; prefers the assistant to handle git/PRs and image/data sourcing.
 
@@ -269,8 +272,8 @@ Paste this into a fresh Claude Code session on the `jplutz7/R6Tactics` repo:
 >
 > Single-file app (`index.html`, all HTML/CSS/JS inlined) + `assets/` + `players.json` + `scripts/` +
 > `cloudflare/` + `.github/workflows/`. GitHub Pages from **`main`** (default branch). Live at
-> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **v1.0 (77.79)** (SEED data v77,
-> build 79). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
+> https://jplutz7.github.io/R6Tactics/ (case-sensitive R/T). Current: **v1.1** (the label is
+> `v{RELEASE_MAJOR}.{APP_BUILD - RELEASE_BASE}`; SEED data v77, APP_BUILD 80 — internal only). Develop on the assigned `claude/*` branch; **auto-create + auto-squash-merge** PRs per change
 > (owner is fine with this — handle git/PRs for them).
 >
 > **Workflow (fresh container — nothing preinstalled):** make the change → verify with a `vm.Script` syntax
@@ -696,6 +699,20 @@ old code failed silently). Fixes (client in `index.html`, server in `cloudflare/
   re-renders the panel when op stats land so the defense order updates.
 - Data-menu **app-version no longer overflows** its box.
 
+### Single-number versioning + a request cap (v1.1)
+Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the old build counter."*
+- `appVersion()` is now `verLabel(APP_BUILD)` = `v{RELEASE_MAJOR}.{APP_BUILD-RELEASE_BASE}`; `dataVersion()` is
+  **deleted** and the publish/adopt/conflict/update-prompt strings were reworded off data versions and raw builds.
+  The proxy 409 no longer names a number at all — the worker reports the *data* version it guards on, which isn't
+  the displayed patch.
+- The raw counter is kept and merely hidden, for two hard reasons: update detection is `live > APP_BUILD` (reset it
+  and every installed PWA goes deaf), and **the Cloudflare worker rewrites `const APP_BUILD = N;` by regex** — renaming
+  it in `index.html` alone would break in-app publishing until the worker is redeployed.
+- `fetch-stats.js`: every request now carries `AbortSignal.timeout(45s)` (undici's default header timeout is 300s, so
+  one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
+  `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
+  attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -743,6 +760,20 @@ tokens/map), writing revised JSON to `/tmp/work/out/<id>.json`; the orchestrator
 set `UI.maps.view='detail'`, render every target map + an attack & defense tactic detail + the suggester; 0 page
 errors). PRs auto-squash-merged; **rebase onto fresh `main` between PRs** — the owner publishes in-app data edits
 straight to `main` (this session main moved to v64/build60 mid-run; `splice.js` re-extracts so those are kept).
+
+### Single-number versioning + a request cap (v1.1)
+Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the old build counter."*
+- `appVersion()` is now `verLabel(APP_BUILD)` = `v{RELEASE_MAJOR}.{APP_BUILD-RELEASE_BASE}`; `dataVersion()` is
+  **deleted** and the publish/adopt/conflict/update-prompt strings were reworded off data versions and raw builds.
+  The proxy 409 no longer names a number at all — the worker reports the *data* version it guards on, which isn't
+  the displayed patch.
+- The raw counter is kept and merely hidden, for two hard reasons: update detection is `live > APP_BUILD` (reset it
+  and every installed PWA goes deaf), and **the Cloudflare worker rewrites `const APP_BUILD = N;` by regex** — renaming
+  it in `index.html` alone would break in-app publishing until the worker is redeployed.
+- `fetch-stats.js`: every request now carries `AbortSignal.timeout(45s)` (undici's default header timeout is 300s, so
+  one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
+  `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
+  attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -797,6 +828,20 @@ re-ran those maps; outputs are idempotent.)
   the embedded `SEED_DATA` into a separately-fetched JSON is the obvious lever.
 - Verify each PR: `vm.Script` syntax + jsdom render of the **Your job** card (set `r6stack.me`, open a tactic detail) — the
   `/tmp/work/verify.js` smoke already renders tactic details for all maps.
+
+### Single-number versioning + a request cap (v1.1)
+Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the old build counter."*
+- `appVersion()` is now `verLabel(APP_BUILD)` = `v{RELEASE_MAJOR}.{APP_BUILD-RELEASE_BASE}`; `dataVersion()` is
+  **deleted** and the publish/adopt/conflict/update-prompt strings were reworded off data versions and raw builds.
+  The proxy 409 no longer names a number at all — the worker reports the *data* version it guards on, which isn't
+  the displayed patch.
+- The raw counter is kept and merely hidden, for two hard reasons: update detection is `live > APP_BUILD` (reset it
+  and every installed PWA goes deaf), and **the Cloudflare worker rewrites `const APP_BUILD = N;` by regex** — renaming
+  it in `index.html` alone would break in-app publishing until the worker is redeployed.
+- `fetch-stats.js`: every request now carries `AbortSignal.timeout(45s)` (undici's default header timeout is 300s, so
+  one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
+  `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
+  attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -881,6 +926,20 @@ still trivial against 3,000/month. With the stack complete, **`RELEASE="1.0"`** 
 Tembra at **0 season segments** — all-time operator rows only. A second run right after populates them. Related
 robustness gap, still open: `api()` calls `fetch` with **no timeout** (undici's default header timeout is 300s) and
 `player-stats.yml` sets no `timeout-minutes`, so a wedged provider request can park the sync for a long time.
+
+### Single-number versioning + a request cap (v1.1)
+Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the old build counter."*
+- `appVersion()` is now `verLabel(APP_BUILD)` = `v{RELEASE_MAJOR}.{APP_BUILD-RELEASE_BASE}`; `dataVersion()` is
+  **deleted** and the publish/adopt/conflict/update-prompt strings were reworded off data versions and raw builds.
+  The proxy 409 no longer names a number at all — the worker reports the *data* version it guards on, which isn't
+  the displayed patch.
+- The raw counter is kept and merely hidden, for two hard reasons: update detection is `live > APP_BUILD` (reset it
+  and every installed PWA goes deaf), and **the Cloudflare worker rewrites `const APP_BUILD = N;` by regex** — renaming
+  it in `index.html` alone would break in-app publishing until the worker is redeployed.
+- `fetch-stats.js`: every request now carries `AbortSignal.timeout(45s)` (undici's default header timeout is 300s, so
+  one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
+  `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
+  attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
