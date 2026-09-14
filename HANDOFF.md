@@ -853,9 +853,20 @@ Verified in real Chromium: chip list matches the roster, live rename/bench trans
 0 chip overlaps, 0 page errors, no horizontal overflow at 1280px **or** 390px (the config snippet needed
 `.pl-empty .mono{overflow-wrap:anywhere}` to wrap on a phone).
 
+### Current rank was 3 months stale (follow-up)
+The Players tab showed João as **Copper 4 / 1163 RP** while he was actually **Silver 3**. The numbers weren't wrong —
+the wrong field was being read. v2's `/history` is a *sampled* MMR log that can lag badly (his newest history point was
+**2026-06-23**) and is **empty for some players** (Leme: 0 points, `rank: null`), while the S43 season board already read
+**2204 RP**. `fetch-stats.js` now derives `rank` from the **newest ranked SEASON segment** (`currentRank()`), keeping the
+history log only for the trend line / as a fallback, and carries `rank.season`. The app derives the badge's
+name/colour/icon from `rank.points` via `rankFromPoints()` so every badge on the tab uses one palette, and labels a rank
+from an older season as "Y11 S2 · latest ranked" instead of "current" (`liveSeason()` = newest season any player has).
+**Also:** rank icons were still pointing at `r6data.com`, which now 301s to `r6.arenyze.com` — switched to the real host
+(all 35 rank slugs verified 200 image/webp).
+
 ### Still open
 - **Link the unlinked roster members** (Snell, Dennis, Pedro Tembra, JP Korte) in `scripts/players.config.json` — the app
   now prints the exact snippet for each. Then **`RELEASE="1.0"`** to leave Alpha.
-- Decide whether `max` stays in the config (it still costs a daily fetch; it shows as OFF ROSTER until it's removed or
-  he's added back to the roster).
+- ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
+  replaced by the four real unlinked members, so the config now mirrors the roster exactly.
 - Optional: stable-sort `fetch-stats.js` output to kill the daily no-op git churn (§16).

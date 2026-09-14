@@ -1,5 +1,6 @@
 {
-  "_comment": "Stack members wired to the r6data API. Add an entry per player; the daily GitHub Action (player-stats.yml) fetches each and writes players.json. platform: uplay | psn | xbl | steam.",
+  "_comment": "Stack members wired to the arenyze API. Add an entry per player; the daily GitHub Action (player-stats.yml) fetches each and writes players.json. platform: uplay | psn | xbl | steam.",
+  "_roster_note": "The app's Players tab lists whoever is on the ROSTER tab; this file only supplies the numbers. Keep each label matching the roster name (or the key matching its slug) so the two stay joined — a roster member with no entry here still gets a card, just an unlinked one.",
   "_handle_note": "Leave handle empty (\"\") to reserve a slot without linking — it shows a 'not linked yet' card and costs no API calls. Fill in the exact Ubisoft name (with any trailing dot) to activate it.",
   "_api_key_note": "R6DATA_API_KEY now holds an arenyze (r6.arenyze.com) v2 key. Arenyze keys have no documented fixed expiry, so api_key_expires is null; set a date only if your key has one and you want the early warning. Live quota/plan is reported per run from /r6/api/me/usage.",
   "api_key_expires": null,
@@ -7,8 +8,9 @@
   "players": [
     { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
     { "key": "leme", "label": "Leme", "handle": "Mtaro.", "platform": "uplay" },
-    { "key": "max", "label": "Max", "handle": "lnteIigent.", "platform": "uplay" },
-    { "key": "lora", "label": "Lora", "handle": "", "platform": "uplay" },
-    { "key": "unknown", "label": "unknown", "handle": "", "platform": "uplay" }
+    { "key": "snell", "label": "Snell", "handle": "", "platform": "uplay" },
+    { "key": "dennis", "label": "Dennis", "handle": "", "platform": "uplay" },
+    { "key": "pedro-tembra", "label": "Pedro Tembra", "handle": "", "platform": "uplay" },
+    { "key": "jp-korte", "label": "JP Korte", "handle": "", "platform": "uplay" }
   ]
 }
