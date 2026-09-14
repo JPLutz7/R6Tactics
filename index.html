@@ -568,7 +568,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 80,
+  "version": 81,
   "publishedAt": "2026-09-14",
   "maps": [
     {
@@ -58612,9 +58612,9 @@ const SEED_DATA =
       "id": "noor",
       "name": "Noor",
       "side": "defense",
-      "role": "antibreach",
-      "notes": "Horus Lance burns through walls, floors, hatches and shields — denies breaches and plants.",
-      "howToCounter": "Once a lance lands, stop stacking that breach point — the flames vent from both ends and kill in seconds. A lance stuck in your shield means drop or rotate it and pull the device out, don't tank it. The fire burns defenders too, so the spot is often pushable a beat after it goes out."
+      "role": "support",
+      "notes": "Horus Lance burns shields off attackers and denies plants through floors/hatches — slow on reinforcements, so not a breach-denier.",
+      "howToCounter": "A lance in your shield kills in seconds: drop or rotate the shield and pull the device out rather than tanking it. Don't stack a burning breach point — the flames vent from both ends. They burn his own team too, so the spot is pushable a beat after they go out."
     }
   ],
   "roles": [
@@ -58769,8 +58769,7 @@ const SEED_DATA =
         "tachanka",
         "azami",
         "sentry",
-        "oryx",
-        "noor"
+        "oryx"
       ]
     },
     {
@@ -59186,6 +59185,9 @@ const SEED_DATA =
         "intel": 0.4
       },
       "sentry": {
+        "anchor": 1
+      },
+      "noor": {
         "anchor": 1
       }
     },
@@ -60710,7 +60712,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 84;
+const APP_BUILD = 85;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
