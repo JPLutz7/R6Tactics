@@ -450,6 +450,30 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-mmrrow{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
 .pl-mmrrow b{min-width:54px}
 .pl-extra{margin-bottom:8px}
+/* ---- Cards: operator flashcard drills ---- */
+.fc-score{display:flex;align-items:center;gap:14px;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:var(--muted);flex-wrap:wrap}
+.fc-score b{color:var(--text);font-size:15px}
+.fc-prompt{padding:20px 16px;border:1px solid var(--line2);border-radius:12px;background:var(--panel2);margin-bottom:14px}
+.fc-kicker{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:800;color:var(--muted);margin-bottom:7px}
+.fc-op{font-size:27px;font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.fc-desc{font-size:17px;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.fc-opts{display:flex;flex-direction:column;gap:9px}
+.fc-opt{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--line2);background:var(--panel2);color:var(--text);font:inherit;font-size:14px;line-height:1.45;cursor:pointer;touch-action:manipulation}
+.fc-opt:hover:not(:disabled){border-color:var(--accent)}
+.fc-opt:disabled{cursor:default}
+.fc-opt .num{flex:none;width:21px;height:21px;border-radius:6px;background:var(--line2);color:var(--muted);
+  font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+.fc-opt.right{border-color:#2e9e6b;background:rgba(46,158,107,.12)}
+.fc-opt.right .num{background:#2e9e6b;color:#fff}
+.fc-opt.wrong{border-color:#b0303a;background:rgba(176,48,58,.10)}
+.fc-opt.wrong .num{background:#b0303a;color:#fff}
+.fc-back{margin-top:14px;padding:13px 15px;border:1px solid var(--line2);border-radius:11px;background:var(--panel2)}
+.fc-back .op-line{margin:7px 0 0;line-height:1.55;font-size:13.5px}
+.fc-verdict{font-weight:800;font-size:14px;margin-bottom:2px}
+.fc-verdict.ok{color:#2e9e6b}.fc-verdict.no{color:#b0303a}
+.fc-hint{margin-top:12px;font-size:11.5px;line-height:1.5}
+@media(max-width:720px){ .fc-op{font-size:23px} .fc-desc{font-size:15.5px} }
 .pl-extra>summary{cursor:pointer;font-weight:700;font-size:12.5px;color:var(--accent);padding:6px 0}
 .pl-raw{background:var(--panel3);border:1px solid var(--line2);border-radius:8px;padding:8px;font-size:11px;overflow:auto;max-height:340px;white-space:pre-wrap}
 .tp-sidetoggle{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
@@ -59530,11 +59554,12 @@ function toast(msg){ const t=byId("toast"); if(!t)return; t.textContent=msg; t.c
 /* =================================================================== *
  *  UI STATE
  * =================================================================== */
-const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Players"]];
+const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Players"],["cards","🃏 Cards"]];
 const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null, tacticSide:"attack" },
   roster:{ edit:false },
-  players:{ sel:"", touched:false, allOps:false, playlist:"ranked", season:"all" } };   // sel = player key (survives roster reorders/renames)
+  players:{ sel:"", touched:false, allOps:false, playlist:"ranked", season:"all" },   // sel = player key (survives roster reorders/renames)
+  cards:{ mode:"op2desc", side:"all", deck:[], q:null, picked:null, seen:0, right:0, streak:0, best:0 } };
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 // ---- device identity: which stack member is using this device (local only;
@@ -60024,7 +60049,93 @@ function renderPlayersTab(root){
   const rf=byId("plRefresh"); if(rf) rf.onclick=()=>{ loadStats(true); toast("Refreshing…"); };
   const mo=byId("plMoreOps"); if(mo) mo.onclick=()=>{ UI.players.allOps=!UI.players.allOps; renderPlayersTab(root); };
 }
-const VIEWS={ maps:renderMaps, roster:renderRoster, players:renderPlayersTab };
+/* =================================================================== *
+ *  CARDS  (operator flashcards — learn the roster's kit, both directions)
+ *  op2desc (default): shown a NAME, pick what they do.
+ *  desc2op:           shown a JOB, pick whose it is.
+ *  Distractors always come from the SAME SIDE as the answer, otherwise
+ *  "which of these is a defender" gives the answer away for free.
+ * =================================================================== */
+const CARD_MODES=[["op2desc","Operator → job"],["desc2op","Job → operator"]];
+const CARD_SIDES=[["all","All"],["attack","⚔ Attack"],["defense","🛡 Defense"]];
+function shuffled(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function cardsPool(){ const s=UI.cards.side; return ((DB&&DB.operators)||[]).filter(o=>o.notes&&(s==="all"||o.side===s)); }
+/* Draw the next card. The deck is a shuffled queue of the whole filtered pool, so every
+   operator comes up once before any repeats; it's re-filtered (not rebuilt) when the side
+   toggle changes so switching filters mid-deck doesn't restart your run. */
+function nextCard(){
+  const C=UI.cards, pool=cardsPool(); C.picked=null;
+  if(pool.length<2){ C.q=null; return; }
+  const live=new Set(pool.map(o=>o.id));
+  C.deck=(C.deck||[]).filter(id=>live.has(id));
+  if(!C.deck.length) C.deck=shuffled(pool.map(o=>o.id));
+  const ans=opById(C.deck.shift()); if(!ans){ C.q=null; return; }
+  let others=((DB&&DB.operators)||[]).filter(o=>o.notes&&o.side===ans.side&&o.id!==ans.id);
+  if(others.length<3) others=((DB&&DB.operators)||[]).filter(o=>o.notes&&o.id!==ans.id);   // tiny-pool fallback
+  C.q={ ansId:ans.id, opts:shuffled([ans.id,...shuffled(others).slice(0,3).map(o=>o.id)]) };
+}
+function answerCard(id){
+  const C=UI.cards; if(C.picked||!C.q) return;
+  C.picked=id; C.seen++;
+  if(id===C.q.ansId){ C.right++; C.streak++; if(C.streak>C.best) C.best=C.streak; } else C.streak=0;
+  renderCardsTab(byId("view"));
+}
+function renderCardsTab(root){
+  const C=UI.cards;
+  if(!C.q) nextCard();
+  const pool=cardsPool();
+  if(!C.q){
+    root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Cards</div></div>
+      <div class="panel"><div class="panel-b"><div class="pl-empty"><b>Not enough operators to drill.</b>
+      <div class="muted small" style="margin-top:6px">This side has ${pool.length} operator(s) with a description.</div></div></div></div>`;
+    return;
+  }
+  const ans=opById(C.q.ansId), done=!!C.picked, right=done&&C.picked===C.q.ansId;
+  const byName=C.mode==="op2desc";
+  const pct=C.seen?Math.round(C.right/C.seen*100):0;
+  const modeSeg=CARD_MODES.map(([v,lab])=>`<button class="pl-seg ${C.mode===v?"on":""}" data-fcmode="${v}">${esc(lab)}</button>`).join("");
+  const sideSeg=CARD_SIDES.map(([v,lab])=>`<button class="pl-seg ${C.side===v?"on":""}" data-fcside="${v}">${esc(lab)}</button>`).join("");
+  const opt=(id,i)=>{
+    const o=opById(id); if(!o) return "";
+    const cls=done?(id===C.q.ansId?" right":(id===C.picked?" wrong":"")):"";
+    const body=byName?esc(o.notes):esc(o.name);
+    return `<button class="fc-opt${cls}" data-fcpick="${esc(id)}"${done?" disabled":""}><span class="num">${i+1}</span><span>${body}</span></button>`;
+  };
+  const prompt=byName
+    ? `<div class="fc-kicker">What does this operator do?</div>
+       <div class="fc-op">${esc(ans.name)} <span class="tag ${ans.side==="defense"?"def":"atk"}">${ans.side==="defense"?"Defense":"Attack"}</span></div>`
+    : `<div class="fc-kicker">Whose job is this?</div><div class="fc-desc">${esc(ans.notes)}</div>`;
+  const back=done?`<div class="fc-back">
+      <div class="fc-verdict ${right?"ok":"no"}">${right?"✓ Correct":"✕ Not quite"}</div>
+      <div><b>${esc(ans.name)}</b> <span class="tag ${ans.side==="defense"?"def":"atk"}">${ans.side==="defense"?"Defense":"Attack"}</span></div>
+      <p class="op-line"><b>What they do.</b> ${esc(ans.notes)}</p>
+      <p class="op-line"><b>How to counter.</b> ${esc(ans.howToCounter||"—")}</p>
+      <div style="margin-top:11px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary sm" id="fcNext">Next card →</button>
+        <button class="btn sm" data-fcop="${esc(ans.id)}">Full operator card</button>
+      </div></div>`:"";
+  root.innerHTML=`<div class="toolbar">
+      <div class="section-title" style="margin:0">Cards <span class="muted" style="text-transform:none;letter-spacing:0">· operator drills</span></div>
+      <div class="grow"></div>
+      <div class="fc-score"><span><b>${C.right}</b>/${C.seen} ${C.seen?`· ${pct}%`:""}</span><span>streak <b>${C.streak}</b></span><span>best <b>${C.best}</b></span>
+        ${C.seen?`<button class="lnk" id="fcReset">reset</button>`:""}</div>
+    </div>
+    <div class="pl-seg-row">${modeSeg}</div>
+    <div class="pl-seg-row season">${sideSeg}</div>
+    <div class="panel"><div class="panel-b">
+      <div class="fc-prompt">${prompt}</div>
+      <div class="fc-opts">${C.q.opts.map(opt).join("")}</div>
+      ${back}
+      <div class="muted small fc-hint">${done?"<b>Enter</b> or <b>Space</b> for the next card.":`Pick one &mdash; or press <b>1</b>&ndash;<b>4</b>. ${pool.length} operators in this deck.`}</div>
+    </div></div>`;
+  root.querySelectorAll("[data-fcpick]").forEach(b=>b.onclick=()=>answerCard(b.dataset.fcpick));
+  root.querySelectorAll("[data-fcmode]").forEach(b=>b.onclick=()=>{ C.mode=b.dataset.fcmode; renderCardsTab(root); });
+  root.querySelectorAll("[data-fcside]").forEach(b=>b.onclick=()=>{ if(C.side===b.dataset.fcside)return; C.side=b.dataset.fcside; nextCard(); renderCardsTab(root); });
+  root.querySelectorAll("[data-fcop]").forEach(b=>b.onclick=()=>openOpModal(b.dataset.fcop));
+  const nx=byId("fcNext"); if(nx) nx.onclick=()=>{ nextCard(); renderCardsTab(root); };
+  const rs=byId("fcReset"); if(rs) rs.onclick=()=>{ C.seen=0; C.right=0; C.streak=0; C.best=0; C.deck=[]; nextCard(); renderCardsTab(root); };
+}
+const VIEWS={ maps:renderMaps, roster:renderRoster, players:renderPlayersTab, cards:renderCardsTab };
 function render(){ const v=byId("view"); v.innerHTML=""; VIEWS[UI.tab](v); }
 
 /* =================================================================== *
@@ -60878,7 +60989,14 @@ function showPublishModal(text){
 function isTyping(){ const a=document.activeElement; return a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA"||a.tagName==="SELECT"); }
 document.addEventListener("keydown",e=>{
   if(e.metaKey||e.ctrlKey||e.altKey||isTyping()) return;
-  if(/^[1-2]$/.test(e.key)){ switchTab(TABS[+e.key-1][0]); return; }
+  // On Cards, 1-4 answer the current card (and Enter/Space deals the next) — everywhere else
+  // the digits are the tab shortcuts, which previously only reached tabs 1-2.
+  if(UI.tab==="cards"){
+    const C=UI.cards;
+    if(/^[1-4]$/.test(e.key) && C.q && !C.picked){ const id=C.q.opts[+e.key-1]; if(id){ e.preventDefault(); answerCard(id); } return; }
+    if((e.key==="Enter"||e.key===" ") && C.picked){ e.preventDefault(); nextCard(); renderCardsTab(byId("view")); return; }
+  }
+  if(/^[1-9]$/.test(e.key) && TABS[+e.key-1]){ switchTab(TABS[+e.key-1][0]); return; }
   if(UI.tab==="maps" && UI.maps.view==="detail"){
     if(e.key==="["||e.key==="]") cycleMap(e.key==="]"?1:-1);
     else if(e.key==="Escape"){ UI.maps.view="toc"; renderMaps(byId("view")); }
@@ -60912,7 +61030,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 86;
+const APP_BUILD = 87;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
