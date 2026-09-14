@@ -59643,11 +59643,23 @@ function boardFor(p,gm,season){
   const pick=season==="all"?segs.filter(s=>recent.includes(String(s.season))):segs.filter(s=>String(s.season)===String(season));
   let won=0,lost=0,kills=0,deaths=0; pick.forEach(s=>{ won+=s.won||0; lost+=s.lost||0; kills+=s.kills||0; deaths+=s.deaths||0; });
   const games=won+lost, wr=games>0?won/games:null, kd=deaths>0?kills/deaths:(kills>0?kills:null);
-  let mmr=null,peak=null;
+  let mmr=null,peak=null,live=true;
   if(gm==="pvp_ranked"){ if(season==="all"){ peak=Math.max(0,...pick.map(s=>s.maxRankPoints||0))||null; mmr=(p.rank&&p.rank.points)||null; }
-    else{ const s=pick[0]; if(s){ mmr=s.rankPoints||null; peak=s.maxRankPoints||null; } } }
-  return { won,lost,kills,deaths,wr,kd,mmr,peak,has:pick.length>0 };
+    else{ const s=pick[0]; if(s){ live=seasonIsLive(s.season); mmr=seasonRP(s); peak=s.maxRankPoints||null; } } }
+  return { won,lost,kills,deaths,wr,kd,mmr,peak,live,has:pick.length>0 };
 }
+/* A FINISHED season is shown by its peak RP (maxRankPoints), for two independent reasons:
+   1. Siege scores a season by the HIGHEST rank you reached — Ubisoft's end-of-season rewards
+      go up to your peak — so that's the rank the season is remembered and rewarded by.
+   2. The other number is not a closing value and must NOT be presented as one. The provider
+      documents `rankPoints` as "current points in that season", and its MMR history is a
+      short rolling window (~10 days), so for a past season it's just wherever their last
+      sample happened to land MID-season. JPLutz7's S42 reads 1454 but he finished Silver 5
+      (>=2000) — the peak, 2000, is the only figure that matches what actually happened.
+   The live season still shows current RP: there, "where you are right now" is the point. */
+function seasonIsLive(n){ const l=liveSeason(); return l!=null && +n===+l; }
+function seasonRP(seg){ if(!seg) return null;
+  return seasonIsLive(seg.season) ? seg.rankPoints : (seg.maxRankPoints!=null?seg.maxRankPoints:seg.rankPoints); }
 // sum per-operator rows across season scopes, recomputing win%/K-D/HS% from totals
 function aggregateOps(scopes){
   const m=new Map();
@@ -59694,7 +59706,9 @@ function boardGridHTML(p){
   if(!b.has) return `<div class="pl-empty muted">No ${esc(pl.label)} data${UI.players.season==="all"?"":" for "+esc(seasonLabel(UI.players.season))}.</div>`;
   const wr=b.wr!=null?Math.round(b.wr*100)+"%":"—", kd=b.kd!=null?b.kd.toFixed(2):"—", ranked=pl.gm==="pvp_ranked";
   return `<div class="pl-grid">
-    ${ranked?statBox("MMR", b.mmr!=null?b.mmr.toLocaleString():"—", b.peak!=null?("peak "+b.peak.toLocaleString()):""):""}
+    ${ranked?(b.live
+       ? statBox("MMR", b.mmr!=null?b.mmr.toLocaleString():"—", b.peak!=null?("peak "+b.peak.toLocaleString()):"")
+       : statBox("Peak RP", b.mmr!=null?b.mmr.toLocaleString():"—", "highest reached")):""}
     ${statBox("Win rate", wr, b.won+"W / "+b.lost+"L")}
     ${statBox("K/D", kd, b.kills+" / "+b.deaths)}
     ${statBox("Wins", b.won, "")}
@@ -59712,7 +59726,8 @@ function rankBadgeHTML(p){ if(UI.players.playlist!=="ranked") return "";
     sub=(r&&r.season!=null&&live!=null&&r.season!==live)?seasonLabel(r.season)+" · latest ranked":"current";
   }
   else { const seg=(p&&p.segments||[]).find(s=>s.type==="season"&&s.gamemode==="pvp_ranked"&&String(s.season)===String(UI.players.season));
-    c=seg?rankFromPoints(seg.rankPoints):null; sub=seasonLabel(UI.players.season); }
+    c=seg?rankFromPoints(seasonRP(seg)):null;                                   // finished season → the peak it's remembered by
+    sub=seasonLabel(UI.players.season)+(seg&&!seasonIsLive(seg.season)?" · peak":""); }
   if(!c||!c.name) return "";
   return `<div class="pl-rankbadge">${c.img?`<img src="${esc(c.img)}" alt="" class="pl-rankimg" loading="lazy">`:""}<div><div class="pl-rankname" style="color:${esc(c.color||'var(--text)')}">${esc(c.name)}</div><div class="muted small">${esc(String(c.points!=null?c.points.toLocaleString():""))} RP · ${esc(sub)}</div></div></div>`; }
 function operatorTableHTML(p){ const {rows,scope}=opsFor(p,UI.players.playlist,UI.players.season); if(!rows||!rows.length) return "";
@@ -59725,9 +59740,10 @@ function sparklineSVG(vals){ if(!vals||vals.length<2) return ""; const w=260,h=4
   const pts=vals.map((v,i)=>{ const x=pad+i*(w-2*pad)/(vals.length-1); const y=h-pad-((v-min)/rng)*(h-2*pad); return x.toFixed(1)+","+y.toFixed(1); }).join(" ");
   return `<svg class="pl-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/></svg>`; }
 function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return "";
-  // One point per ranked season — that season's end-of-season standing (rankPoints) — plus the live current MMR.
+  // One point per ranked season — the rank that season is remembered by (peak for a finished
+  // season, current for the live one; see seasonRP) — plus the live current MMR.
   const segs=(p&&p.segments||[]).filter(s=>s.type==="season"&&s.gamemode==="pvp_ranked"&&s.rankPoints!=null);
-  const bySeason=new Map(); segs.forEach(s=>bySeason.set(+s.season,s.rankPoints));   // de-dupe to one entry per season
+  const bySeason=new Map(); segs.forEach(s=>bySeason.set(+s.season,seasonRP(s)));    // de-dupe to one entry per season
   const order=[...bySeason.keys()].sort((a,b)=>a-b);                                 // oldest → newest for the trend line
   const pts=order.map(n=>({label:seasonLabel(n), value:bySeason.get(n), rank:(rankFromPoints(bySeason.get(n))||{}).name}));
   const cur=(p&&p.rank&&p.rank.points!=null)?p.rank.points:null;                      // live current MMR
@@ -59735,7 +59751,7 @@ function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return "";
     if(last&&last.value===cur) last.label+=" · now";                                  // newest season standing already equals the current MMR
     else pts.push({label:"Current", value:cur, rank:(p.rank.name)||(rankFromPoints(cur)||{}).name}); }
   if(pts.length<2) return "";
-  return `<div class="pl-section-h">MMR by season</div>${sparklineSVG(pts.map(x=>x.value))}
+  return `<div class="pl-section-h">Rank by season <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">· peak reached each season</span></div>${sparklineSVG(pts.map(x=>x.value))}
     <div class="pl-mmrlist">${pts.slice().reverse().map(x=>`<div class="pl-mmrrow"><span class="muted small">${esc(x.label)}</span><b>${x.value!=null?x.value.toLocaleString():""}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
 function renderPlayersTab(root){
   loadStats(false);
@@ -60680,7 +60696,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 80;
+const APP_BUILD = 81;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){

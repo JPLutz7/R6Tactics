@@ -713,6 +713,25 @@ Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the 
   `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
   attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
 
+### Season rank = PEAK (v1.2)
+Owner: *"My last season rank doesn't seem right, I was Silver 5 in the end."* He was — the app was showing the wrong
+one of the two numbers the API gives per season. His S42 segment is `rankPoints: 1454` and `maxRankPoints: 2000`
+(Silver 5). Two independent reasons the peak is the right one:
+1. **Siege scores a season by the highest rank reached** — Ubisoft's end-of-season rewards go up to your peak
+   (verified by WebSearch before changing anything), so that's the rank a season is remembered and rewarded by.
+2. **`rankPoints` is NOT a closing value.** The provider documents it as *"current points in that season"*, and its
+   MMR history is a short **rolling window** (JPLutz7's spanned only 2026-09-04 → 09-13), so for a past season it's
+   just wherever their last sample landed **mid-season**. The owner confirmed he did **not** finish S42 on 1454.
+   *(First cut of this change labelled it "ended on 1,454" — that was a fabricated claim about an unverified field,
+   caught by the owner. Don't describe a provider field until its meaning is confirmed.)*
+
+`seasonRP(seg)` returns the peak for a finished season and current RP for the **live** one (`seasonIsLive()` vs
+`liveSeason()`), feeding the season badge (`Silver 5 · Y11 S2 · peak`), the stat box (label flips to **Peak RP /
+"highest reached"**) and the trend list ("Rank by season · peak reached each season"). The live season is untouched.
+
+**Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
+falls back to all-time/all-playlist operator rows; nothing to fix.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -774,6 +793,20 @@ Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the 
   one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
   `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
   attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
+
+### Season rank = PEAK, not final RP (v1.2)
+Owner: *"My last season rank doesn't seem right, I was Silver 5 in the end."* He was — the app was showing the wrong
+one of two numbers the API gives per season. His S42 segment is `rankPoints: 1454` (Copper 1, where he finished after
+a late slide) and `maxRankPoints: 2000` (Silver 5, his peak). **Verified via WebSearch before changing anything:**
+Siege's end-of-season rewards go up to the *highest rank reached* that season, so the peak is the rank a season is
+actually remembered and rewarded by. So `seasonRP(seg)` returns the peak for a FINISHED season and current RP for the
+**live** one (`seasonIsLive()` compares against `liveSeason()`), and it feeds the season badge (`Silver 5 · Y11 S2 ·
+peak`), the stat box (label flips to **Peak RP** with `ended on 1,454` underneath) and the trend list (now "Rank by
+season · peak reached each season"). The live season is untouched — there "where you are right now" is the useful
+number.
+
+**Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
+falls back to all-time/all-playlist operator rows; nothing to fix.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -842,6 +875,20 @@ Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the 
   one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
   `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
   attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
+
+### Season rank = PEAK, not final RP (v1.2)
+Owner: *"My last season rank doesn't seem right, I was Silver 5 in the end."* He was — the app was showing the wrong
+one of two numbers the API gives per season. His S42 segment is `rankPoints: 1454` (Copper 1, where he finished after
+a late slide) and `maxRankPoints: 2000` (Silver 5, his peak). **Verified via WebSearch before changing anything:**
+Siege's end-of-season rewards go up to the *highest rank reached* that season, so the peak is the rank a season is
+actually remembered and rewarded by. So `seasonRP(seg)` returns the peak for a FINISHED season and current RP for the
+**live** one (`seasonIsLive()` compares against `liveSeason()`), and it feeds the season badge (`Silver 5 · Y11 S2 ·
+peak`), the stat box (label flips to **Peak RP** with `ended on 1,454` underneath) and the trend list (now "Rank by
+season · peak reached each season"). The live season is untouched — there "where you are right now" is the useful
+number.
+
+**Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
+falls back to all-time/all-playlist operator rows; nothing to fix.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -940,6 +987,20 @@ Owner: *"patches and in-app updates only change the x in v1.x. Also, remove the 
   one wedged call could park the sync for 5 min), timeouts log + retry like any other network error, and
   `player-stats.yml` gained `timeout-minutes: 15`. Verified against a socket that accepts and never answers: 4 capped
   attempts, then `{status:0, ok:false, error:"timed out after 45s"}` — no hang.
+
+### Season rank = PEAK, not final RP (v1.2)
+Owner: *"My last season rank doesn't seem right, I was Silver 5 in the end."* He was — the app was showing the wrong
+one of two numbers the API gives per season. His S42 segment is `rankPoints: 1454` (Copper 1, where he finished after
+a late slide) and `maxRankPoints: 2000` (Silver 5, his peak). **Verified via WebSearch before changing anything:**
+Siege's end-of-season rewards go up to the *highest rank reached* that season, so the peak is the rank a season is
+actually remembered and rewarded by. So `seasonRP(seg)` returns the peak for a FINISHED season and current RP for the
+**live** one (`seasonIsLive()` compares against `liveSeason()`), and it feeds the season badge (`Silver 5 · Y11 S2 ·
+peak`), the stat box (label flips to **Peak RP** with `ended on 1,454` underneath) and the trend list (now "Rank by
+season · peak reached each season"). The live season is untouched — there "where you are right now" is the useful
+number.
+
+**Pedro Tembra has no ranked data on purpose** — he isn't level 50 yet, so he can't play ranked. His card correctly
+falls back to all-time/all-playlist operator rows; nothing to fix.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
