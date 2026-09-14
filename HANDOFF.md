@@ -739,16 +739,29 @@ coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pier
 before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
 Bailiff 410, Deployable Shield / Barbed Wire.
 
-Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
-`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+Added to `DB.operators` (release order, at the end) and to **`support-def` + `flex-def`**.
+
+**Reclassified in data v81 — he is anti-SHIELD, not a breach-denier.** He first went in as `role:"antibreach"` and
+into the `antibreach-def` pool on the owner's initial "anti-breach and support" instruction. The owner then corrected
+it: *"he is more of an anti-shield than breach, his anti-breach was very nerfed — he should not be in tactics as a
+hardbreacher."* **Verified:** Ubisoft slowed the Horus Lance on **reinforced** surfaces four days after his reveal,
+shipped as a *bug fix*, which removed his use as a Bandit/Kaid/Tubarão substitute — and Ubisoft's gadget text only
+ever claimed "shields and **destructible** surfaces". So: `role:"support"`, **removed from `antibreach-def`**
+(so a tactic can never assign him breach denial), notes/howToCounter rewritten around burning shields and denying
+plants through floors/hatches, with the reinforcement weakness stated inline.
+
+**`suggester.defenders` was the system I missed first time.** It weights expected enemy defenders by archetype and
+is keyed by op id — Noor wasn't in it, so he contributed nothing to the suggester. Now `{"anchor":1}` (same shape as
+Smoke/Mira), and **all 38 defenders have a weight**. Checking `archetypes` membership was not enough; check this map
+when adding an operator.
 **Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
 `typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
 next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
 labelling a blank.
 
-Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
-the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
-per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`compArchetypes(['noor'])` → `{anchor:1}`),
+and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
 **NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
@@ -862,16 +875,29 @@ coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pier
 before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
 Bailiff 410, Deployable Shield / Barbed Wire.
 
-Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
-`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+Added to `DB.operators` (release order, at the end) and to **`support-def` + `flex-def`**.
+
+**Reclassified in data v81 — he is anti-SHIELD, not a breach-denier.** He first went in as `role:"antibreach"` and
+into the `antibreach-def` pool on the owner's initial "anti-breach and support" instruction. The owner then corrected
+it: *"he is more of an anti-shield than breach, his anti-breach was very nerfed — he should not be in tactics as a
+hardbreacher."* **Verified:** Ubisoft slowed the Horus Lance on **reinforced** surfaces four days after his reveal,
+shipped as a *bug fix*, which removed his use as a Bandit/Kaid/Tubarão substitute — and Ubisoft's gadget text only
+ever claimed "shields and **destructible** surfaces". So: `role:"support"`, **removed from `antibreach-def`**
+(so a tactic can never assign him breach denial), notes/howToCounter rewritten around burning shields and denying
+plants through floors/hatches, with the reinforcement weakness stated inline.
+
+**`suggester.defenders` was the system I missed first time.** It weights expected enemy defenders by archetype and
+is keyed by op id — Noor wasn't in it, so he contributed nothing to the suggester. Now `{"anchor":1}` (same shape as
+Smoke/Mira), and **all 38 defenders have a weight**. Checking `archetypes` membership was not enough; check this map
+when adding an operator.
 **Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
 `typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
 next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
 labelling a blank.
 
-Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
-the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
-per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`compArchetypes(['noor'])` → `{anchor:1}`),
+and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
 **NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
@@ -991,16 +1017,29 @@ coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pier
 before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
 Bailiff 410, Deployable Shield / Barbed Wire.
 
-Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
-`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+Added to `DB.operators` (release order, at the end) and to **`support-def` + `flex-def`**.
+
+**Reclassified in data v81 — he is anti-SHIELD, not a breach-denier.** He first went in as `role:"antibreach"` and
+into the `antibreach-def` pool on the owner's initial "anti-breach and support" instruction. The owner then corrected
+it: *"he is more of an anti-shield than breach, his anti-breach was very nerfed — he should not be in tactics as a
+hardbreacher."* **Verified:** Ubisoft slowed the Horus Lance on **reinforced** surfaces four days after his reveal,
+shipped as a *bug fix*, which removed his use as a Bandit/Kaid/Tubarão substitute — and Ubisoft's gadget text only
+ever claimed "shields and **destructible** surfaces". So: `role:"support"`, **removed from `antibreach-def`**
+(so a tactic can never assign him breach denial), notes/howToCounter rewritten around burning shields and denying
+plants through floors/hatches, with the reinforcement weakness stated inline.
+
+**`suggester.defenders` was the system I missed first time.** It weights expected enemy defenders by archetype and
+is keyed by op id — Noor wasn't in it, so he contributed nothing to the suggester. Now `{"anchor":1}` (same shape as
+Smoke/Mira), and **all 38 defenders have a weight**. Checking `archetypes` membership was not enough; check this map
+when adding an operator.
 **Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
 `typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
 next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
 labelling a blank.
 
-Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
-the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
-per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`compArchetypes(['noor'])` → `{anchor:1}`),
+and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
 **NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
@@ -1150,16 +1189,29 @@ coverage, never memory: *Horus Lance Launcher* — "fire 5 projectiles that pier
 before erupting into flames", works through floors/ceilings/adjacent rooms; Commando 9 / ALDA 5.56, 1911 TACOPS /
 Bailiff 410, Deployable Shield / Barbed Wire.
 
-Added to `DB.operators` (release order, at the end) with `role:"antibreach"`, and to the **`antibreach-def`,
-`support-def` and `flex-def`** pools (the first two per the owner; `flex-def` because it holds every other defender).
+Added to `DB.operators` (release order, at the end) and to **`support-def` + `flex-def`**.
+
+**Reclassified in data v81 — he is anti-SHIELD, not a breach-denier.** He first went in as `role:"antibreach"` and
+into the `antibreach-def` pool on the owner's initial "anti-breach and support" instruction. The owner then corrected
+it: *"he is more of an anti-shield than breach, his anti-breach was very nerfed — he should not be in tactics as a
+hardbreacher."* **Verified:** Ubisoft slowed the Horus Lance on **reinforced** surfaces four days after his reveal,
+shipped as a *bug fix*, which removed his use as a Bandit/Kaid/Tubarão substitute — and Ubisoft's gadget text only
+ever claimed "shields and **destructible** surfaces". So: `role:"support"`, **removed from `antibreach-def`**
+(so a tactic can never assign him breach denial), notes/howToCounter rewritten around burning shields and denying
+plants through floors/hatches, with the reinforcement weakness stated inline.
+
+**`suggester.defenders` was the system I missed first time.** It weights expected enemy defenders by archetype and
+is keyed by op id — Noor wasn't in it, so he contributed nothing to the suggester. Now `{"anchor":1}` (same shape as
+Smoke/Mira), and **all 38 defenders have a weight**. Checking `archetypes` membership was not enough; check this map
+when adding an operator.
 **Deliberately no `winRate`** — he is two weeks old and there's no trustworthy per-op number. Every render site guards
 `typeof winRate === "number"` and `wrOf()` returns `-1`, so his chip shows no % and he sorts last in a pool until the
 next §11 refresh; the op modal's win-rate caption now reads *"no win-rate data yet (new operator)"* instead of
 labelling a blank.
 
-Verified in Chromium that he flows through every system that enumerates operators: `opById`, the three role pools on
-the Roster tab, the operator modal, the favourite-op picker, the suggester (`role` is a known archetype), and the
-per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
+Verified in Chromium that he flows through every system that enumerates operators: `opById`, the role pools on
+the Roster tab, the operator modal, the favourite-op picker, the suggester (`compArchetypes(['noor'])` → `{anchor:1}`),
+and the per-op stats join — which **already found a Noor row** on JPLutz7 (2 rounds), since that join matches on the API's
 operator *name*.
 
 **NOT done — the authored part.** Tactic slot op-lists are hand-written per strat (`slots[].ops`, exactly **3 ops**
