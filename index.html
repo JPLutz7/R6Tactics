@@ -568,7 +568,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 77,
+  "version": 78,
   "publishedAt": "2026-09-14",
   "maps": [
     {
@@ -58607,6 +58607,14 @@ const SEED_DATA =
       "role": "antibreach",
       "notes": "Recruit defender — flexible loadout (barbed wire, deployable shield, prox alarm, etc.).",
       "howToCounter": "No special gadget — read his loadout choices and counter accordingly. Treat as a generalist anchor."
+    },
+    {
+      "id": "noor",
+      "name": "Noor",
+      "side": "defense",
+      "role": "antibreach",
+      "notes": "Horus Lance burns through walls, floors, hatches and shields — denies breaches and plants.",
+      "howToCounter": "Once a lance lands, stop stacking that breach point — the flames vent from both ends and kill in seconds. A lance stuck in your shield means drop or rotate it and pull the device out, don't tank it. The fire burns defenders too, so the spot is often pushable a beat after it goes out."
     }
   ],
   "roles": [
@@ -58761,7 +58769,8 @@ const SEED_DATA =
         "tachanka",
         "azami",
         "sentry",
-        "oryx"
+        "oryx",
+        "noor"
       ]
     },
     {
@@ -58810,7 +58819,8 @@ const SEED_DATA =
         "rook",
         "thunderbird",
         "smoke",
-        "mira"
+        "mira",
+        "noor"
       ]
     },
     {
@@ -58856,7 +58866,8 @@ const SEED_DATA =
         "fenrir",
         "tubarao",
         "skopos",
-        "sentry"
+        "sentry",
+        "noor"
       ]
     }
   ],
@@ -60611,7 +60622,7 @@ function openOpModal(id){
   const roamTag=(o.side==="defense"&&((roleById("roamer-def")||{}).ops||[]).includes(o.id))?` <span class="tag role">Roamer</span>`:"";
   m.innerHTML=`<div class="card op-card">
     <div class="spread" style="margin-bottom:8px"><h3 style="margin:0">${esc(o.name)} ${wr}</h3><button class="iconbtn" id="opClose" title="Close">✕</button></div>
-    <div class="muted small" style="margin-bottom:12px"><span class="tag ${cls}">${sideLabel}</span>${jobLabel?` <span class="tag role">${esc(jobLabel)}</span>`:""}${roamTag} · round win-rate (Ranked Plat+, approx)</div>
+    <div class="muted small" style="margin-bottom:12px"><span class="tag ${cls}">${sideLabel}</span>${jobLabel?` <span class="tag role">${esc(jobLabel)}</span>`:""}${roamTag} · ${(typeof o.winRate==="number")?"round win-rate (Ranked Plat+, approx)":"no win-rate data yet (new operator)"}</div>
     ${o.notes?`<p class="op-line"><b>What they do.</b> ${esc(o.notes)}</p>`:""}
     ${o.howToCounter?`<p class="op-line"><b>How to counter.</b> ${esc(o.howToCounter)}</p>`:""}
   </div>`;
@@ -60696,7 +60707,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 81;
+const APP_BUILD = 82;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
