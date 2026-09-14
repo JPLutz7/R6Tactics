@@ -59643,16 +59643,20 @@ function boardFor(p,gm,season){
   const pick=season==="all"?segs.filter(s=>recent.includes(String(s.season))):segs.filter(s=>String(s.season)===String(season));
   let won=0,lost=0,kills=0,deaths=0; pick.forEach(s=>{ won+=s.won||0; lost+=s.lost||0; kills+=s.kills||0; deaths+=s.deaths||0; });
   const games=won+lost, wr=games>0?won/games:null, kd=deaths>0?kills/deaths:(kills>0?kills:null);
-  let mmr=null,peak=null,ended=null,live=true;
+  let mmr=null,peak=null,live=true;
   if(gm==="pvp_ranked"){ if(season==="all"){ peak=Math.max(0,...pick.map(s=>s.maxRankPoints||0))||null; mmr=(p.rank&&p.rank.points)||null; }
-    else{ const s=pick[0]; if(s){ live=seasonIsLive(s.season); mmr=seasonRP(s); peak=s.maxRankPoints||null; ended=s.rankPoints||null; } } }
-  return { won,lost,kills,deaths,wr,kd,mmr,peak,ended,live,has:pick.length>0 };
+    else{ const s=pick[0]; if(s){ live=seasonIsLive(s.season); mmr=seasonRP(s); peak=s.maxRankPoints||null; } } }
+  return { won,lost,kills,deaths,wr,kd,mmr,peak,live,has:pick.length>0 };
 }
-/* Siege scores a season by the HIGHEST rank you reached, not where you finished — Ubisoft's
-   end-of-season rewards go up to your peak — and that's the rank players name. So a FINISHED
-   season is shown by its peak RP: João ended S42 on 1454 (Copper 1) after peaking at 2000,
-   and Silver 5 is the season he'd tell you he had. The live season still shows current RP,
-   because there "where you are right now" is the thing you actually want. */
+/* A FINISHED season is shown by its peak RP (maxRankPoints), for two independent reasons:
+   1. Siege scores a season by the HIGHEST rank you reached — Ubisoft's end-of-season rewards
+      go up to your peak — so that's the rank the season is remembered and rewarded by.
+   2. The other number is not a closing value and must NOT be presented as one. The provider
+      documents `rankPoints` as "current points in that season", and its MMR history is a
+      short rolling window (~10 days), so for a past season it's just wherever their last
+      sample happened to land MID-season. JPLutz7's S42 reads 1454 but he finished Silver 5
+      (>=2000) — the peak, 2000, is the only figure that matches what actually happened.
+   The live season still shows current RP: there, "where you are right now" is the point. */
 function seasonIsLive(n){ const l=liveSeason(); return l!=null && +n===+l; }
 function seasonRP(seg){ if(!seg) return null;
   return seasonIsLive(seg.season) ? seg.rankPoints : (seg.maxRankPoints!=null?seg.maxRankPoints:seg.rankPoints); }
@@ -59704,7 +59708,7 @@ function boardGridHTML(p){
   return `<div class="pl-grid">
     ${ranked?(b.live
        ? statBox("MMR", b.mmr!=null?b.mmr.toLocaleString():"—", b.peak!=null?("peak "+b.peak.toLocaleString()):"")
-       : statBox("Peak RP", b.mmr!=null?b.mmr.toLocaleString():"—", b.ended!=null?("ended on "+b.ended.toLocaleString()):"")):""}
+       : statBox("Peak RP", b.mmr!=null?b.mmr.toLocaleString():"—", "highest reached")):""}
     ${statBox("Win rate", wr, b.won+"W / "+b.lost+"L")}
     ${statBox("K/D", kd, b.kills+" / "+b.deaths)}
     ${statBox("Wins", b.won, "")}
