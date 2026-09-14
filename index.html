@@ -418,6 +418,9 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .pl-tab{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;font-weight:800;font-size:14px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;touch-action:manipulation}
 .pl-tab.on{background:var(--atk-bg);color:#a83d12;border-color:var(--atk-line)}
+.pl-tab.bench{border-style:dashed;opacity:.72}
+.pl-tab.bench.on{opacity:1}
+.pl-tab .tag.resv{margin-left:2px}
 .pl-tab-av{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font-size:12px;font-weight:800}
 .pl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .pl-stat{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px}
@@ -425,6 +428,7 @@ body.rdragging{user-select:none;-webkit-user-select:none}
 .pl-stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-top:4px}
 .pl-stat-s{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .pl-empty{padding:8px 2px}
+.pl-empty .mono{overflow-wrap:anywhere;word-break:break-word}   /* the config snippet must wrap on a phone */
 .pl-seg-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .pl-seg-row.season{margin-bottom:14px}
 .pl-seg{padding:7px 12px;font-weight:700;font-size:12.5px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);cursor:pointer;touch-action:manipulation}
@@ -59314,7 +59318,7 @@ const TABS=[["maps","🗺 Maps"],["roster","👥 Roster"],["players","📊 Playe
 const UI={ tab:"maps",
   maps:{ view:"toc", selectedId:null, floorIdx:0, edit:false, layerNames:true, layerSites:true, layerPeeks:true, siteFilter:"all", tactic:null, suggest:null, tacticSide:"attack" },
   roster:{ edit:false },
-  players:{ sel:0, touched:false, allOps:false, playlist:"ranked", season:"all" } };
+  players:{ sel:"", touched:false, allOps:false, playlist:"ranked", season:"all" } };   // sel = player key (survives roster reorders/renames)
 let imgTarget=null; // {mapId, floorIdx} pending image upload
 let ROSTER_DRAG=null; // {kind:'pool'|'chip', roleId?, player?, idx?}
 // ---- device identity: which stack member is using this device (local only;
@@ -59343,7 +59347,7 @@ function setReserve(i){            // toggle one player between the active lineu
   }
   markDirty(); return true;
 }
-function applyMeDefaults(){ const me=getMe(); if(!me)return; const players=statsPlayers(); const i=players.findIndex(p=>normTxt(p.label)===me||normTxt(p.key)===me); if(i>=0) UI.players.sel=i; }
+function applyMeDefaults(){ const me=getMe(); if(!me)return; const p=statsPlayers().find(x=>normTxt(x.label)===me||normTxt(x.key)===me); if(p) UI.players.sel=p.key; }
 let ME_PROMPTED=false;   // session-only flag so 'Skip' doesn't re-pop the prompt this launch
 function showMeModal(){
   const roster=(DB&&DB.roster)||[]; if(!roster.length) return;
@@ -59558,7 +59562,36 @@ function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.
  * =================================================================== */
 let STATS_DATA=null, STATS_FETCHED=0, STATS_LOADING=false;
 const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPLutz7"},{key:"leme",label:"Leme",handle:"Mtaro."},{key:"max",label:"Max",handle:"lnteligent."},{key:"lora",label:"Lora",handle:"",unlinked:true},{key:"unknown",label:"unknown",handle:"",unlinked:true}];
-function statsPlayers(){ return (STATS_DATA&&STATS_DATA.players&&STATS_DATA.players.length)?STATS_DATA.players:STATS_FALLBACK; }
+function statsRecords(){ return (STATS_DATA&&STATS_DATA.players&&STATS_DATA.players.length)?STATS_DATA.players:STATS_FALLBACK; }
+// find the fetched stats record for a roster name (match on label, config key, or Ubisoft handle)
+function statsRecordFor(name,recs){ const nm=normTxt(name); if(!nm) return null;
+  return (recs||statsRecords()).find(p=>normTxt(p.label)===nm||normTxt(p.key)===nm||normTxt(p.handle)===nm)||null; }
+/* The ROSTER tab is the source of truth for WHO is in the stack; players.json only carries
+   the fetched numbers. So build this tab's list from DB.roster — same people, same order,
+   reserves last — and join each member to their stats record by name/key/handle. A rename,
+   an added player or a bench on the Roster tab therefore shows up here straight away, with
+   no config edit. A record that has really fetched data but is no longer on the roster is
+   kept at the end (flagged) instead of being silently dropped. */
+function statsPlayers(){
+  const roster=(DB&&DB.roster)||[], recs=statsRecords();
+  if(!roster.length) return recs;
+  const used=new Set(), keys=new Set();
+  const slug=s=>normTxt(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const uniq=k=>{ let v=k||"player",n=2; while(keys.has(v)) v=(k||"player")+"-"+(n++); keys.add(v); return v; };
+  const join=p=>{ const r=statsRecordFor(p.name,recs); if(r) used.add(r);
+    return Object.assign({}, r||{}, {
+      key:uniq((r&&r.key)||slug(p.name)),
+      label:p.name||(r&&r.label)||"?",                 // roster name wins — renames transfer
+      handle:(r&&r.handle)||"",
+      unlinked:!(r&&r.handle),                          // on the roster but not wired to an account yet
+      reserve:!!p.reserve, igl:!!p.igl, onRoster:true });
+  };
+  const meI=meRosterIdx(), order=roster.map((_,i)=>i);
+  if(meI>=0){ order.splice(order.indexOf(meI),1); order.unshift(meI); }     // your card first, same as the Roster tab
+  const list=[...order.filter(i=>!roster[i].reserve),...order.filter(i=>roster[i].reserve)].map(i=>join(roster[i]));
+  recs.forEach(r=>{ if(!used.has(r)&&r.handle) list.push(Object.assign({},r,{offRoster:true})); });
+  return list;
+}
 async function loadStats(force){
   if(STATS_LOADING) return; if(!force && STATS_DATA && Date.now()-STATS_FETCHED<5*60*1000) return;
   STATS_LOADING=true;
@@ -59693,16 +59726,18 @@ function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
   if(!UI.players.touched) applyMeDefaults();   // default to your own card when you open the tab
-  if(UI.players.sel>=players.length) UI.players.sel=0;
-  const p=players[UI.players.sel]||players[0];
-  const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===UI.players.sel?"on":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}${meTag(pl.label)}</button>`).join("");
+  let si=players.findIndex(x=>x.key===UI.players.sel); if(si<0) si=0;
+  const p=players[si]||players[0];
+  const plTag=pl=>pl.offRoster?`<span class="tag resv" title="Has synced stats but is no longer on the roster">OFF ROSTER</span>`
+    :(pl.reserve?`<span class="tag resv" title="Benched — on the roster, left out of tactics">RES</span>`:"");
+  const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===si?"on":""}${(pl.reserve||pl.offRoster)?" bench":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}${meTag(pl.label)}${plTag(pl)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
   if(p&&(p.unlinked||!p.handle)){
-    body=`<div class="pl-empty"><b>${esc(p.label||"This player")} isn't linked yet.</b>
-      <div class="muted small" style="margin-top:8px;line-height:1.6">Reserve slot — add their account to start tracking stats:</div>
+    body=`<div class="pl-empty"><b>${esc(p.label||"This player")} isn't linked to a Ubisoft account yet.</b>
+      <div class="muted small" style="margin-top:8px;line-height:1.6">${p.onRoster?"They're on the roster, so their card shows up here automatically — link the account to start pulling stats:":"Add their account to start tracking stats:"}</div>
       <ol class="muted small" style="line-height:1.7;margin:8px 0 0;padding-left:18px">
-        <li>Edit <span class="mono">scripts/players.config.json</span> → set this player's <span class="mono">handle</span> to their exact Ubisoft name (include any trailing <span class="mono">.</span>), and <span class="mono">platform</span> (uplay/psn/xbl/steam).</li>
+        <li>Edit <span class="mono">scripts/players.config.json</span> → add (or fill in) <span class="mono">{"key":"${esc(p.key||"player")}","label":"${esc(p.label||"")}","handle":"…","platform":"uplay"}</span> — <span class="mono">handle</span> is their exact Ubisoft name (include any trailing <span class="mono">.</span>); keep <span class="mono">label</span> matching the roster name so the two tabs stay joined.</li>
         <li>Run <b>Actions → Refresh player stats → Run workflow</b> (or wait for the daily sync).</li>
       </ol></div>`;
   } else if(p&&p.ok&&(p.segments&&p.segments.length || (p.ops&&Object.keys(p.ops).length))){
@@ -59733,10 +59768,10 @@ function renderPlayersTab(root){
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div>${canRefresh?`<button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button>`:""}</div>
     ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
-    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")}${p?meTag(p.label):""} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
+    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")}${p?meTag(p.label):""}${p?iglTag(p.label):""}${p&&p.reserve?`<span class="tag resv">RESERVE</span>`:""}${p&&p.offRoster?`<span class="tag resv">OFF ROSTER</span>`:""} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
       <div class="panel-b">${body}</div></div>
-    <div class="muted small" style="margin-top:10px;line-height:1.5">Auto-syncs daily via GitHub Actions (the API key stays a server-side repo secret). Edit <span class="mono">scripts/players.config.json</span> to add or link players.</div>`;
-  root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ UI.players.sel=+b.dataset.plsel; UI.players.touched=true; UI.players.allOps=false; renderPlayersTab(root); });
+    <div class="muted small" style="margin-top:10px;line-height:1.5">This list follows the <b>Roster</b> tab — add, rename or bench someone there and they update here too. Auto-syncs daily via GitHub Actions (the API key stays a server-side repo secret); link a player's Ubisoft account in <span class="mono">scripts/players.config.json</span>.</div>`;
+  root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ const pl=players[+b.dataset.plsel]; UI.players.sel=pl?pl.key:""; UI.players.touched=true; UI.players.allOps=false; renderPlayersTab(root); });
   root.querySelectorAll("[data-plpl]").forEach(b=>b.onclick=()=>{ UI.players.playlist=b.dataset.plpl; UI.players.allOps=false; renderPlayersTab(root); });
   root.querySelectorAll("[data-plseason]").forEach(b=>b.onclick=()=>{ UI.players.season=b.dataset.plseason; UI.players.allOps=false; renderPlayersTab(root); });
   const rf=byId("plRefresh"); if(rf) rf.onclick=()=>{ loadStats(true); toast("Refreshing…"); };
@@ -59880,7 +59915,7 @@ function siteRecord(m,side,siteId){
 // ---- operator proficiency: how well the roster-assigned players perform on the
 // ops a strat uses (live ranked, last-4-seasons win% from the Players tab) ----
 function normTxt(s){ return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim(); }
-function statsPlayerForName(name){ const nm=normTxt(name); const ps=(STATS_DATA&&STATS_DATA.players)||[]; return ps.find(p=>normTxt(p.label)===nm||normTxt(p.key)===nm)||null; }
+function statsPlayerForName(name){ return statsRecordFor(name,(STATS_DATA&&STATS_DATA.players)||[]); }
 // for a strat: average (over assigned players who have data) of their best ranked
 // win% among that slot's ops, mapped 40%→0 / 60%→1. null when no player has data.
 // RANKED only: last-4-seasons ranked aggregate, else ranked all-time. Never uses
@@ -60626,7 +60661,7 @@ boot();
    APP_BUILD is the build this copy is running; version.json holds the latest
    deployed build. Bump BOTH together on every deploy (see HANDOFF §13). When a
    newer build is live, a banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 76;
+const APP_BUILD = 77;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
