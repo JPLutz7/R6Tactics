@@ -766,12 +766,18 @@ the full 23-map Unranked list in — normalizeDB silently stripped the 16 overla
 check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
 `fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
 
-**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
-mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
-Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
-pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
-screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
-is a UI change, not a code change.
+**Membership: OWNER-CONFIRMED 2026-09-14 (data v80).** No site publishes the Y11S3 pool — Ubisoft's Split Fire page
+has no list, siege.gg/mobalytics are 403 from here, and every reachable aggregator (incl. ggchest, which the owner
+also found) is Y11S1-era. Seeded from Dexerto's per-playlist pages (stamped 2026-03-20), then the four
+source-disagreements were put to the owner, who read them off the in-game ban screen:
+- **Coastline, Villa → Ranked** (as seeded) · **Emerald Plains, Stadium → unranked-only** (as seeded)
+- **Favela → Unranked** — the tell that ggchest's list was stale, since it has Favela in Ranked
+- **Calypso Casino → Ranked** (was unassigned; now the 17th)
+- **District / Neighborhood** aren't in the game and aren't in this app either
+- **Hereford** isn't in the playlists → stays in **Other Maps**, keeping its authored tactics (don't delete it)
+
+Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
+not a code change.
 
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
@@ -883,12 +889,18 @@ the full 23-map Unranked list in — normalizeDB silently stripped the 16 overla
 check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
 `fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
 
-**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
-mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
-Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
-pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
-screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
-is a UI change, not a code change.
+**Membership: OWNER-CONFIRMED 2026-09-14 (data v80).** No site publishes the Y11S3 pool — Ubisoft's Split Fire page
+has no list, siege.gg/mobalytics are 403 from here, and every reachable aggregator (incl. ggchest, which the owner
+also found) is Y11S1-era. Seeded from Dexerto's per-playlist pages (stamped 2026-03-20), then the four
+source-disagreements were put to the owner, who read them off the in-game ban screen:
+- **Coastline, Villa → Ranked** (as seeded) · **Emerald Plains, Stadium → unranked-only** (as seeded)
+- **Favela → Unranked** — the tell that ggchest's list was stale, since it has Favela in Ranked
+- **Calypso Casino → Ranked** (was unassigned; now the 17th)
+- **District / Neighborhood** aren't in the game and aren't in this app either
+- **Hereford** isn't in the playlists → stays in **Other Maps**, keeping its authored tactics (don't delete it)
+
+Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
+not a code change.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -1006,12 +1018,18 @@ the full 23-map Unranked list in — normalizeDB silently stripped the 16 overla
 check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
 `fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
 
-**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
-mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
-Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
-pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
-screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
-is a UI change, not a code change.
+**Membership: OWNER-CONFIRMED 2026-09-14 (data v80).** No site publishes the Y11S3 pool — Ubisoft's Split Fire page
+has no list, siege.gg/mobalytics are 403 from here, and every reachable aggregator (incl. ggchest, which the owner
+also found) is Y11S1-era. Seeded from Dexerto's per-playlist pages (stamped 2026-03-20), then the four
+source-disagreements were put to the owner, who read them off the in-game ban screen:
+- **Coastline, Villa → Ranked** (as seeded) · **Emerald Plains, Stadium → unranked-only** (as seeded)
+- **Favela → Unranked** — the tell that ggchest's list was stale, since it has Favela in Ranked
+- **Calypso Casino → Ranked** (was unassigned; now the 17th)
+- **District / Neighborhood** aren't in the game and aren't in this app either
+- **Hereford** isn't in the playlists → stays in **Other Maps**, keeping its authored tactics (don't delete it)
+
+Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
+not a code change.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1159,12 +1177,18 @@ the full 23-map Unranked list in — normalizeDB silently stripped the 16 overla
 check caught. So **Unranked Pool holds the unranked-ONLY maps** and its note says the Ranked maps play there too;
 `fix-pools.js` now asserts no map appears twice rather than letting the stripping happen quietly.
 
-**⚠️ Membership is NOT confirmed for Y11S3.** Ubisoft's Split Fire page publishes no pool list, siege.gg and
-mobalytics are 403 from here, and the aggregator lists that *are* reachable are Y11S1-era. The lists used come from
-Dexerto's per-playlist map pages (the only per-playlist source reachable), stamped **2026-03-20** — so the Ranked
-pool's `note` says "last verified Mar 2026" and the owner was asked for this season's deltas off the in-game ban
-screen. Do **not** present these as current without that confirmation. Pools are editable in ✎ Edit, so a correction
-is a UI change, not a code change.
+**Membership: OWNER-CONFIRMED 2026-09-14 (data v80).** No site publishes the Y11S3 pool — Ubisoft's Split Fire page
+has no list, siege.gg/mobalytics are 403 from here, and every reachable aggregator (incl. ggchest, which the owner
+also found) is Y11S1-era. Seeded from Dexerto's per-playlist pages (stamped 2026-03-20), then the four
+source-disagreements were put to the owner, who read them off the in-game ban screen:
+- **Coastline, Villa → Ranked** (as seeded) · **Emerald Plains, Stadium → unranked-only** (as seeded)
+- **Favela → Unranked** — the tell that ggchest's list was stale, since it has Favela in Ranked
+- **Calypso Casino → Ranked** (was unassigned; now the 17th)
+- **District / Neighborhood** aren't in the game and aren't in this app either
+- **Hereford** isn't in the playlists → stays in **Other Maps**, keeping its authored tactics (don't delete it)
+
+Final: **Ranked 17 · Unranked-only 7 · Other 1**. Pools are editable in ✎ Edit, so future rotations are a UI change,
+not a code change.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were

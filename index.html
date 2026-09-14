@@ -568,7 +568,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 79,
+  "version": 80,
   "publishedAt": "2026-09-14",
   "maps": [
     {
@@ -58973,6 +58973,7 @@ const SEED_DATA =
       "mapIds": [
         "bank",
         "border",
+        "calypso-casino",
         "chalet",
         "clubhouse",
         "coastline",
@@ -58988,7 +58989,7 @@ const SEED_DATA =
         "theme-park",
         "villa"
       ],
-      "note": "Maps that can appear in Ranked. Re-check the in-game ban screen each season — last verified Mar 2026."
+      "note": "Maps that can appear in Ranked — confirmed with the stack Sep 2026. Re-check the in-game ban screen each season."
     },
     {
       "id": "unranked",
@@ -60709,7 +60710,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 83;
+const APP_BUILD = 84;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
