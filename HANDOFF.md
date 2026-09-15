@@ -822,6 +822,25 @@ Design points worth keeping:
   reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
 - Pure code, no seed change — `DB.operators` already carried everything the drill needs.
 
+### Attack roles may now repeat across players (build 88)
+Owner: *"make it so u are able to have more than one player with the same attacking role."* The old rule was "one
+attack role per player **and unique across the roster**"; the uniqueness half is gone (two entries or two supports is
+a legitimate comp). Still **one** attack role per player — that part wasn't asked about and defense keeps its
+multi-role priority list.
+
+Four places enforced it, all in `index.html`:
+1. `normalizeDB` — the `usedAtk` set silently **stripped** a duplicate on every load, so without this the change
+   wouldn't have survived a reload; now just `slice(0,1)`.
+2. `roleSelect` in `renderPlayers` — the ＋ role dropdown filtered out roles teammates held; now offers all attack roles.
+3. `setAtkRole` — cleared the role off every other player before assigning; now only sets the target.
+4. `rosterDoDrop` — unchanged in code but its behaviour flips: dragging an attack role onto a second player now
+   **copies** rather than moves it, because setAtkRole no longer strips the source. Comment updated to say so.
+
+`assignTactic` needed **no** change — it already walks preference rounds and falls back to any free slot, so if four
+players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
+sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
+double-booked.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -987,6 +1006,25 @@ Design points worth keeping:
   shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
   reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
 - Pure code, no seed change — `DB.operators` already carried everything the drill needs.
+
+### Attack roles may now repeat across players (build 88)
+Owner: *"make it so u are able to have more than one player with the same attacking role."* The old rule was "one
+attack role per player **and unique across the roster**"; the uniqueness half is gone (two entries or two supports is
+a legitimate comp). Still **one** attack role per player — that part wasn't asked about and defense keeps its
+multi-role priority list.
+
+Four places enforced it, all in `index.html`:
+1. `normalizeDB` — the `usedAtk` set silently **stripped** a duplicate on every load, so without this the change
+   wouldn't have survived a reload; now just `slice(0,1)`.
+2. `roleSelect` in `renderPlayers` — the ＋ role dropdown filtered out roles teammates held; now offers all attack roles.
+3. `setAtkRole` — cleared the role off every other player before assigning; now only sets the target.
+4. `rosterDoDrop` — unchanged in code but its behaviour flips: dragging an attack role onto a second player now
+   **copies** rather than moves it, because setAtkRole no longer strips the source. Comment updated to say so.
+
+`assignTactic` needed **no** change — it already walks preference rounds and falls back to any free slot, so if four
+players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
+sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
+double-booked.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -1159,6 +1197,25 @@ Design points worth keeping:
   shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
   reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
 - Pure code, no seed change — `DB.operators` already carried everything the drill needs.
+
+### Attack roles may now repeat across players (build 88)
+Owner: *"make it so u are able to have more than one player with the same attacking role."* The old rule was "one
+attack role per player **and unique across the roster**"; the uniqueness half is gone (two entries or two supports is
+a legitimate comp). Still **one** attack role per player — that part wasn't asked about and defense keeps its
+multi-role priority list.
+
+Four places enforced it, all in `index.html`:
+1. `normalizeDB` — the `usedAtk` set silently **stripped** a duplicate on every load, so without this the change
+   wouldn't have survived a reload; now just `slice(0,1)`.
+2. `roleSelect` in `renderPlayers` — the ＋ role dropdown filtered out roles teammates held; now offers all attack roles.
+3. `setAtkRole` — cleared the role off every other player before assigning; now only sets the target.
+4. `rosterDoDrop` — unchanged in code but its behaviour flips: dragging an attack role onto a second player now
+   **copies** rather than moves it, because setAtkRole no longer strips the source. Comment updated to say so.
+
+`assignTactic` needed **no** change — it already walks preference rounds and falls back to any free slot, so if four
+players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
+sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
+double-booked.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1361,6 +1418,25 @@ Design points worth keeping:
   shortcuts — and that handler was fixed while here: it tested `/^[1-2]$/`, so tab 3 (Players) had never been
   reachable by key. Now `/^[1-9]$/` bounded by `TABS.length`.
 - Pure code, no seed change — `DB.operators` already carried everything the drill needs.
+
+### Attack roles may now repeat across players (build 88)
+Owner: *"make it so u are able to have more than one player with the same attacking role."* The old rule was "one
+attack role per player **and unique across the roster**"; the uniqueness half is gone (two entries or two supports is
+a legitimate comp). Still **one** attack role per player — that part wasn't asked about and defense keeps its
+multi-role priority list.
+
+Four places enforced it, all in `index.html`:
+1. `normalizeDB` — the `usedAtk` set silently **stripped** a duplicate on every load, so without this the change
+   wouldn't have survived a reload; now just `slice(0,1)`.
+2. `roleSelect` in `renderPlayers` — the ＋ role dropdown filtered out roles teammates held; now offers all attack roles.
+3. `setAtkRole` — cleared the role off every other player before assigning; now only sets the target.
+4. `rosterDoDrop` — unchanged in code but its behaviour flips: dragging an attack role onto a second player now
+   **copies** rather than moves it, because setAtkRole no longer strips the source. Comment updated to say so.
+
+`assignTactic` needed **no** change — it already walks preference rounds and falls back to any free slot, so if four
+players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
+sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
+double-booked.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were
