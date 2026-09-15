@@ -592,7 +592,7 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 83,
+  "version": 84,
   "publishedAt": "2026-09-15",
   "maps": [
     {
@@ -59144,7 +59144,9 @@ const SEED_DATA =
     },
     {
       "name": "Leme",
-      "attackRoles": [],
+      "attackRoles": [
+        "entry-atk"
+      ],
       "defenseRoles": [
         "roamer-def",
         "antibreach-def",
@@ -59185,21 +59187,27 @@ const SEED_DATA =
     },
     {
       "name": "Dennis",
-      "attackRoles": [],
+      "attackRoles": [
+        "flex-atk"
+      ],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     },
     {
       "name": "Pedro Tembra",
-      "attackRoles": [],
+      "attackRoles": [
+        "support-atk"
+      ],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
     },
     {
       "name": "JP Korte",
-      "attackRoles": [],
+      "attackRoles": [
+        "intel-atk"
+      ],
       "defenseRoles": [],
       "favAtk": [],
       "favDef": []
@@ -61048,7 +61056,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 88;
+const APP_BUILD = 89;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
