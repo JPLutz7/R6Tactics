@@ -592,8 +592,8 @@ ul.tp-desc li:last-child{margin-bottom:0}
 const SEED_DATA =
 /* ====== BEGIN EMBEDDED DATA — replace this whole object to publish ====== */
 {
-  "version": 82,
-  "publishedAt": "2026-09-14",
+  "version": 83,
+  "publishedAt": "2026-09-15",
   "maps": [
     {
       "id": "clubhouse",
@@ -58850,11 +58850,10 @@ const SEED_DATA =
       "ops": [
         "ash",
         "zofia",
-        "iana",
-        "sledge",
-        "blackbeard",
-        "buck",
-        "finka"
+        "solid-snake",
+        "nokk",
+        "amaru",
+        "striker"
       ],
       "group": "job"
     },
@@ -58868,7 +58867,7 @@ const SEED_DATA =
         "ace",
         "hibana",
         "maverick",
-        "kali"
+        "striker"
       ],
       "group": "job"
     },
@@ -58884,7 +58883,22 @@ const SEED_DATA =
         "flores",
         "osa",
         "fuze",
-        "zofia"
+        "zofia",
+        "montagne",
+        "blitz",
+        "blackbeard",
+        "brava",
+        "sens",
+        "striker",
+        "ying",
+        "capitao",
+        "buck",
+        "gridlock",
+        "kali",
+        "nomad",
+        "ram",
+        "sledge",
+        "finka"
       ],
       "group": "job"
     },
@@ -58899,7 +58913,12 @@ const SEED_DATA =
         "dokkaebi",
         "iana",
         "zero",
-        "brava"
+        "brava",
+        "solid-snake",
+        "twitch",
+        "iq",
+        "grim",
+        "deimos"
       ],
       "group": "job"
     },
@@ -58993,7 +59012,9 @@ const SEED_DATA =
         "tachanka",
         "azami",
         "sentry",
-        "oryx"
+        "oryx",
+        "melusi",
+        "smoke"
       ]
     },
     {
@@ -59027,8 +59048,8 @@ const SEED_DATA =
         "mozzie",
         "pulse",
         "caveira",
-        "vigil",
-        "skopos"
+        "skopos",
+        "clash"
       ]
     },
     {
@@ -59104,28 +59125,26 @@ const SEED_DATA =
         "flex-def"
       ],
       "favAtk": [
-        "ash",
-        "ram",
         "solid-snake",
-        "capitao",
-        "brava"
+        "zofia",
+        "ash",
+        "thermite",
+        "ace",
+        "striker"
       ],
       "favDef": [
-        "alibi",
-        "azami",
-        "echo",
-        "thorn",
-        "mozzie",
+        "mute",
         "lesion",
-        "valkyrie"
+        "thorn",
+        "azami",
+        "bandit",
+        "mira"
       ],
       "igl": true
     },
     {
       "name": "Leme",
-      "attackRoles": [
-        "entry-atk"
-      ],
+      "attackRoles": [],
       "defenseRoles": [
         "roamer-def",
         "antibreach-def",
@@ -59156,11 +59175,9 @@ const SEED_DATA =
     {
       "name": "Snell",
       "attackRoles": [
-        "support-atk"
+        "entry-atk"
       ],
-      "defenseRoles": [
-        "antibreach-def"
-      ],
+      "defenseRoles": [],
       "favAtk": [
         "fuze"
       ],
@@ -61030,7 +61047,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 87;
+const APP_BUILD = 88;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
