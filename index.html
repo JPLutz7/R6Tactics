@@ -59522,9 +59522,9 @@ function normalizeDB(db){
   // a round is ACTIVE_MAX players: any extras beyond that fall to the bench, and a benched player is never the IGL
   let actN=0; db.roster.forEach(p=>{ if(p.reserve)return; if(actN<ACTIVE_MAX)actN++; else p.reserve=true; });
   db.roster.forEach(p=>{ if(p.reserve) delete p.igl; });
-  // attack: exactly one role per player and unique across players (defense keeps its multi-role priority list)
-  const usedAtk=new Set();
-  db.roster.forEach(p=>{ const pick=(p.attackRoles||[]).find(id=>!usedAtk.has(id)); if(pick)usedAtk.add(pick); p.attackRoles=pick?[pick]:[]; });
+  // attack: one role per player, but the SAME role may be shared by several players — two entries
+  // or two supports is a legitimate comp. (Defense keeps its multi-role priority list.)
+  db.roster.forEach(p=>{ p.attackRoles=(p.attackRoles||[]).slice(0,1); });
   if(Array.isArray(db.rankedPool) && db.rankedPool.length && !db.pools.length)
     db.pools=[{id:"ranked",name:"Ranked Pool",note:"",mapIds:db.rankedPool.slice()}];
   const claimed=new Set();
@@ -60754,10 +60754,9 @@ function renderPlayers(){
   const wrap=byId("players"); const edit=UI.roster.edit;
   const roleSelect=(p,i,side)=>{
     const cls=side==="attack"?"atk":"def"; let avail;
-    if(side==="attack"){                                   // single role per player + unique → offer only when empty, only free roles
+    if(side==="attack"){                                   // one role per player → offer only when empty; roles may repeat across players
       if((p.attackRoles||[]).length) return "";
-      const taken=new Set(DB.roster.flatMap(q=>q.attackRoles||[]));
-      avail=DB.roles.filter(r=>r.side==="attack" && !taken.has(r.id));
+      avail=DB.roles.filter(r=>r.side==="attack");
     } else { avail=DB.roles.filter(r=>r.side==="defense" && !(p.defenseRoles||[]).includes(r.id)); }
     if(!avail.length) return "";
     return `<select class="roleadd ${cls}" data-roleadd="${i}|${side}"><option value="">＋ role…</option>${avail.map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join("")}</select>`;
@@ -60812,7 +60811,7 @@ function renderPlayers(){
 function bindPlayers(){
   const wrap=byId("players"); if(!UI.roster.edit) return;
   wrap.querySelectorAll("[data-roleadd]").forEach(sel=>sel.onchange=()=>{ const [i,side]=sel.dataset.roleadd.split("|"); const rid=sel.value; if(!rid)return;
-    if(side==="attack"){ setAtkRole(+i,rid); return; }   // one unique attack role per player
+    if(side==="attack"){ setAtkRole(+i,rid); return; }   // one attack role per player (teammates may share it)
     const key="defenseRoles"; if(!DB.roster[+i][key].includes(rid)){ DB.roster[+i][key].push(rid); markDirty(); renderPlayers(); renderRoleGrid(); } });
   wrap.querySelectorAll("[data-favadd]").forEach(b=>b.onclick=()=>{ const [i,side]=b.dataset.favadd.split("|"); showFavPicker(+i,side); });
   wrap.querySelectorAll("[data-favrm]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const [i,side,k]=x.dataset.favrm.split("|"); const key=side==="attack"?"favAtk":"favDef"; DB.roster[+i][key].splice(+k,1); markDirty(); renderPlayers(); });
@@ -60864,13 +60863,15 @@ function rosterPointerDrag(downEv,drag,label){
   };
   document.addEventListener("pointermove",onMove,{passive:false}); document.addEventListener("pointerup",onUp); document.addEventListener("pointercancel",onUp);
 }
-function setAtkRole(i,rid){   // give player i one attack role, unique across the roster
-  if(!rid)return; DB.roster.forEach(p=>{ p.attackRoles=(p.attackRoles||[]).filter(id=>id!==rid); });
+function setAtkRole(i,rid){   // give player i their one attack role — teammates may hold the same one
+  if(!rid)return;
   DB.roster[i].attackRoles=[rid]; markDirty(); renderPlayers(); renderRoleGrid();
 }
 function rosterDoDrop(box,clientX){
   const [pi,side]=box.dataset.drop.split("|"); const i=+pi;
-  if(side==="attack"){   // single role per player, unique across players (no list/reorder)
+  if(side==="attack"){   // one role per player (no list/reorder). Dragging a role onto a second
+                         // player now COPIES it — duplicates are allowed, so it can't move it off
+                         // the first. Use the chip's ✕ if you meant to hand it over.
     const rid=ROSTER_DRAG.kind==="pool"?ROSTER_DRAG.roleId:((DB.roster[ROSTER_DRAG.player].attackRoles||[])[ROSTER_DRAG.idx]);
     ROSTER_DRAG=null; setAtkRole(i,rid); return;
   }
