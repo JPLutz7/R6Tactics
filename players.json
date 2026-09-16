@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-16T14:24:49.812Z",
+  "updated": "2026-09-16T18:15:28.570Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
-  "keyStatus": "ok",
+  "keyStatus": "down",
   "quota": null,
-  "syncError": null,
+  "syncError": "Rate limit exceeded",
   "players": [
     {
       "key": "joao",
@@ -4952,7 +4952,11 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "leme",
@@ -9140,7 +9144,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "snell",
@@ -12623,7 +12631,11 @@
             "d": 2
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "dennis",
@@ -14442,7 +14454,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "pedro-tembra",
