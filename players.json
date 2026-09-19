@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-18T17:44:50.859Z",
+  "updated": "2026-09-19T14:25:37.537Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
-  "keyStatus": "down",
+  "keyStatus": "ok",
   "quota": null,
-  "syncError": "Rate limit exceeded",
+  "syncError": null,
   "players": [
     {
       "key": "joao",
@@ -18,12 +18,12 @@
           "type": "season",
           "season": 43,
           "gamemode": "pvp_ranked",
-          "won": 27,
+          "won": 29,
           "lost": 20,
-          "kills": 276,
-          "deaths": 208,
-          "rankPoints": 2345,
-          "maxRankPoints": 2378
+          "kills": 287,
+          "deaths": 216,
+          "rankPoints": 2428,
+          "maxRankPoints": 2428
         },
         {
           "type": "season",
@@ -51,10 +51,10 @@
           "type": "overview",
           "season": null,
           "gamemode": null,
-          "won": 200,
+          "won": 202,
           "lost": 181,
-          "kills": 1719,
-          "deaths": 1577,
+          "kills": 1730,
+          "deaths": 1585,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -62,10 +62,10 @@
           "type": "gamemode",
           "season": null,
           "gamemode": "pvp_ranked",
-          "won": 86,
+          "won": 88,
           "lost": 77,
-          "kills": 757,
-          "deaths": 729,
+          "kills": 768,
+          "deaths": 737,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -116,12 +116,12 @@
         {
           "type": "season",
           "season": 43,
-          "gamemode": "pvp_standard",
-          "won": 15,
-          "lost": 9,
-          "kills": 131,
-          "deaths": 98,
-          "rankPoints": 0,
+          "gamemode": "pvp_warmup",
+          "won": 0,
+          "lost": 4,
+          "kills": 66,
+          "deaths": 70,
+          "rankPoints": null,
           "maxRankPoints": null
         },
         {
@@ -138,17 +138,6 @@
         {
           "type": "season",
           "season": 43,
-          "gamemode": "pvp_warmup",
-          "won": 0,
-          "lost": 4,
-          "kills": 66,
-          "deaths": 70,
-          "rankPoints": null,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 43,
           "gamemode": "pvp_casual",
           "won": 10,
           "lost": 8,
@@ -159,13 +148,13 @@
         },
         {
           "type": "season",
-          "season": 42,
-          "gamemode": "pvp_casual",
-          "won": 4,
-          "lost": 2,
-          "kills": 16,
-          "deaths": 17,
-          "rankPoints": null,
+          "season": 43,
+          "gamemode": "pvp_standard",
+          "won": 15,
+          "lost": 9,
+          "kills": 131,
+          "deaths": 98,
+          "rankPoints": 0,
           "maxRankPoints": null
         },
         {
@@ -192,23 +181,12 @@
         },
         {
           "type": "season",
-          "season": 41,
-          "gamemode": "pvp_standard",
-          "won": 23,
-          "lost": 25,
-          "kills": 228,
-          "deaths": 180,
-          "rankPoints": 0,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 41,
-          "gamemode": "pvp_event",
-          "won": 0,
+          "season": 42,
+          "gamemode": "pvp_casual",
+          "won": 4,
           "lost": 2,
-          "kills": 15,
-          "deaths": 31,
+          "kills": 16,
+          "deaths": 17,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -226,11 +204,11 @@
         {
           "type": "season",
           "season": 41,
-          "gamemode": "pvp_casual",
-          "won": 15,
-          "lost": 21,
-          "kills": 116,
-          "deaths": 93,
+          "gamemode": "pvp_event",
+          "won": 0,
+          "lost": 2,
+          "kills": 15,
+          "deaths": 31,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -244,9 +222,41 @@
           "deaths": 108,
           "rankPoints": null,
           "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 41,
+          "gamemode": "pvp_standard",
+          "won": 23,
+          "lost": 25,
+          "kills": 228,
+          "deaths": 180,
+          "rankPoints": 0,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 41,
+          "gamemode": "pvp_casual",
+          "won": 15,
+          "lost": 21,
+          "kills": 116,
+          "deaths": 93,
+          "rankPoints": null,
+          "maxRankPoints": null
         }
       ],
       "mmrHistory": [
+        {
+          "ts": "2026-09-17T22:17:36.771+00:00",
+          "value": 2428,
+          "rank": "Silver 1"
+        },
+        {
+          "ts": "2026-09-17T20:31:26.563+00:00",
+          "value": 2387,
+          "rank": "Silver 2"
+        },
         {
           "ts": "2026-09-17T04:46:25.163+00:00",
           "value": 2345,
@@ -464,10 +474,10 @@
         }
       ],
       "rank": {
-        "name": "Silver 2",
+        "name": "Silver 1",
         "color": "#a4a4a4",
-        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/silver-2.webp",
-        "points": 2345,
+        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/silver-1.webp",
+        "points": 2428,
         "season": 43
       },
       "seasons": [
@@ -480,41 +490,41 @@
           {
             "op": "Solid Snake",
             "side": "Attacker",
-            "rp": 208,
-            "wp": 52.4,
+            "rp": 209,
+            "wp": 52.15,
             "kd": 0.99,
-            "hs": 61.04,
-            "hsc": 94,
+            "hs": 61.29,
+            "hsc": 95,
             "w": 109,
-            "l": 99,
-            "k": 154,
-            "d": 156
+            "l": 100,
+            "k": 155,
+            "d": 157
           },
           {
             "op": "Lesion",
             "side": "Defender",
-            "rp": 164,
-            "wp": 60.37,
-            "kd": 1.24,
-            "hs": 51.8,
-            "hsc": 72,
-            "w": 99,
+            "rp": 167,
+            "wp": 61.08,
+            "kd": 1.27,
+            "hs": 52.78,
+            "hsc": 76,
+            "w": 102,
             "l": 65,
-            "k": 139,
-            "d": 112
+            "k": 144,
+            "d": 113
           },
           {
             "op": "Mute",
             "side": "Defender",
-            "rp": 156,
-            "wp": 55.77,
-            "kd": 1.1,
-            "hs": 55.75,
-            "hsc": 63,
+            "rp": 158,
+            "wp": 55.06,
+            "kd": 1.09,
+            "hs": 56.14,
+            "hsc": 64,
             "w": 87,
-            "l": 69,
-            "k": 113,
-            "d": 103
+            "l": 71,
+            "k": 114,
+            "d": 105
           },
           {
             "op": "Thorn",
@@ -610,15 +620,15 @@
           {
             "op": "Zofia",
             "side": "Attacker",
-            "rp": 46,
-            "wp": 43.48,
-            "kd": 1.09,
-            "hs": 45.71,
-            "hsc": 16,
-            "w": 20,
+            "rp": 49,
+            "wp": 46.94,
+            "kd": 1.12,
+            "hs": 44.74,
+            "hsc": 17,
+            "w": 23,
             "l": 26,
-            "k": 35,
-            "d": 32
+            "k": 38,
+            "d": 34
           },
           {
             "op": "Vigil",
@@ -660,6 +670,19 @@
             "d": 21
           },
           {
+            "op": "Bandit",
+            "side": "Defender",
+            "rp": 31,
+            "wp": 41.94,
+            "kd": 1.07,
+            "hs": 41.38,
+            "hsc": 12,
+            "w": 13,
+            "l": 18,
+            "k": 29,
+            "d": 27
+          },
+          {
             "op": "Gridlock",
             "side": "Attacker",
             "rp": 30,
@@ -671,19 +694,6 @@
             "l": 11,
             "k": 27,
             "d": 20
-          },
-          {
-            "op": "Bandit",
-            "side": "Defender",
-            "rp": 30,
-            "wp": 40,
-            "kd": 1.12,
-            "hs": 41.38,
-            "hsc": 12,
-            "w": 12,
-            "l": 18,
-            "k": 29,
-            "d": 26
           },
           {
             "op": "Ram",
@@ -699,19 +709,6 @@
             "d": 19
           },
           {
-            "op": "Sledge",
-            "side": "Attacker",
-            "rp": 24,
-            "wp": 20.83,
-            "kd": 0.7,
-            "hs": 28.57,
-            "hsc": 4,
-            "w": 5,
-            "l": 19,
-            "k": 14,
-            "d": 20
-          },
-          {
             "op": "Amaru",
             "side": "Attacker",
             "rp": 24,
@@ -725,17 +722,30 @@
             "d": 21
           },
           {
+            "op": "Sledge",
+            "side": "Attacker",
+            "rp": 24,
+            "wp": 20.83,
+            "kd": 0.7,
+            "hs": 28.57,
+            "hsc": 4,
+            "w": 5,
+            "l": 19,
+            "k": 14,
+            "d": 20
+          },
+          {
             "op": "Striker",
             "side": "Attacker",
-            "rp": 23,
-            "wp": 65.22,
-            "kd": 1.21,
+            "rp": 24,
+            "wp": 62.5,
+            "kd": 1.13,
             "hs": 52.94,
             "hsc": 9,
             "w": 15,
-            "l": 8,
+            "l": 9,
             "k": 17,
-            "d": 14
+            "d": 15
           },
           {
             "op": "Alibi",
@@ -751,19 +761,6 @@
             "d": 14
           },
           {
-            "op": "Echo",
-            "side": "Defender",
-            "rp": 19,
-            "wp": 52.63,
-            "kd": 1.73,
-            "hs": 47.37,
-            "hsc": 9,
-            "w": 10,
-            "l": 9,
-            "k": 19,
-            "d": 11
-          },
-          {
             "op": "Blitz",
             "side": "Attacker",
             "rp": 19,
@@ -777,30 +774,30 @@
             "d": 16
           },
           {
-            "op": "Lion",
-            "side": "Attacker",
-            "rp": 17,
-            "wp": 29.41,
-            "kd": 0.86,
-            "hs": 33.33,
-            "hsc": 4,
-            "w": 5,
-            "l": 12,
-            "k": 12,
-            "d": 14
+            "op": "Echo",
+            "side": "Defender",
+            "rp": 19,
+            "wp": 52.63,
+            "kd": 1.73,
+            "hs": 47.37,
+            "hsc": 9,
+            "w": 10,
+            "l": 9,
+            "k": 19,
+            "d": 11
           },
           {
-            "op": "Caveira",
-            "side": "Defender",
-            "rp": 17,
-            "wp": 58.82,
-            "kd": 0.58,
-            "hs": 14.29,
-            "hsc": 1,
-            "w": 10,
-            "l": 7,
-            "k": 7,
-            "d": 12
+            "op": "Lion",
+            "side": "Attacker",
+            "rp": 18,
+            "wp": 33.33,
+            "kd": 0.93,
+            "hs": 38.46,
+            "hsc": 5,
+            "w": 6,
+            "l": 12,
+            "k": 13,
+            "d": 14
           },
           {
             "op": "Skopós",
@@ -816,17 +813,17 @@
             "d": 10
           },
           {
-            "op": "Deimos",
-            "side": "Attacker",
-            "rp": 15,
-            "wp": 33.33,
-            "kd": 0.62,
-            "hs": 0,
-            "hsc": 0,
-            "w": 5,
-            "l": 10,
-            "k": 8,
-            "d": 13
+            "op": "Caveira",
+            "side": "Defender",
+            "rp": 17,
+            "wp": 58.82,
+            "kd": 0.58,
+            "hs": 14.29,
+            "hsc": 1,
+            "w": 10,
+            "l": 7,
+            "k": 7,
+            "d": 12
           },
           {
             "op": "Denari",
@@ -855,6 +852,19 @@
             "d": 9
           },
           {
+            "op": "Deimos",
+            "side": "Attacker",
+            "rp": 15,
+            "wp": 33.33,
+            "kd": 0.62,
+            "hs": 0,
+            "hsc": 0,
+            "w": 5,
+            "l": 10,
+            "k": 8,
+            "d": 13
+          },
+          {
             "op": "Osa",
             "side": "Attacker",
             "rp": 13,
@@ -881,19 +891,6 @@
             "d": 8
           },
           {
-            "op": "Oryx",
-            "side": "Defender",
-            "rp": 11,
-            "wp": 54.55,
-            "kd": 0.5,
-            "hs": 60,
-            "hsc": 3,
-            "w": 6,
-            "l": 5,
-            "k": 5,
-            "d": 10
-          },
-          {
             "op": "Maverick",
             "side": "Attacker",
             "rp": 11,
@@ -905,19 +902,6 @@
             "l": 5,
             "k": 7,
             "d": 7
-          },
-          {
-            "op": "Blackbeard",
-            "side": "Attacker",
-            "rp": 11,
-            "wp": 54.55,
-            "kd": 0.11,
-            "hs": 0,
-            "hsc": 0,
-            "w": 6,
-            "l": 5,
-            "k": 1,
-            "d": 9
           },
           {
             "op": "Thatcher",
@@ -933,6 +917,32 @@
             "d": 10
           },
           {
+            "op": "Oryx",
+            "side": "Defender",
+            "rp": 11,
+            "wp": 54.55,
+            "kd": 0.5,
+            "hs": 60,
+            "hsc": 3,
+            "w": 6,
+            "l": 5,
+            "k": 5,
+            "d": 10
+          },
+          {
+            "op": "Blackbeard",
+            "side": "Attacker",
+            "rp": 11,
+            "wp": 54.55,
+            "kd": 0.11,
+            "hs": 0,
+            "hsc": 0,
+            "w": 6,
+            "l": 5,
+            "k": 1,
+            "d": 9
+          },
+          {
             "op": "Mozzie",
             "side": "Defender",
             "rp": 10,
@@ -944,6 +954,19 @@
             "l": 7,
             "k": 7,
             "d": 10
+          },
+          {
+            "op": "Dokkaebi",
+            "side": "Attacker",
+            "rp": 9,
+            "wp": 55.56,
+            "kd": 1.33,
+            "hs": 12.5,
+            "hsc": 1,
+            "w": 5,
+            "l": 4,
+            "k": 8,
+            "d": 6
           },
           {
             "op": "Mira",
@@ -983,19 +1006,6 @@
             "l": 5,
             "k": 8,
             "d": 4
-          },
-          {
-            "op": "Dokkaebi",
-            "side": "Attacker",
-            "rp": 9,
-            "wp": 55.56,
-            "kd": 1.33,
-            "hs": 12.5,
-            "hsc": 1,
-            "w": 5,
-            "l": 4,
-            "k": 8,
-            "d": 6
           },
           {
             "op": "Pulse",
@@ -1050,6 +1060,19 @@
             "d": 3
           },
           {
+            "op": "Hibana",
+            "side": "Attacker",
+            "rp": 7,
+            "wp": 28.57,
+            "kd": 0.5,
+            "hs": 66.67,
+            "hsc": 2,
+            "w": 2,
+            "l": 5,
+            "k": 3,
+            "d": 6
+          },
+          {
             "op": "Noor",
             "side": "Defender",
             "rp": 7,
@@ -1063,15 +1086,28 @@
             "d": 5
           },
           {
-            "op": "Hibana",
+            "op": "Twitch",
             "side": "Attacker",
-            "rp": 7,
-            "wp": 28.57,
+            "rp": 6,
+            "wp": 33.33,
+            "kd": 0.4,
+            "hs": 50,
+            "hsc": 1,
+            "w": 2,
+            "l": 4,
+            "k": 2,
+            "d": 5
+          },
+          {
+            "op": "Jackal",
+            "side": "Attacker",
+            "rp": 6,
+            "wp": 50,
             "kd": 0.5,
             "hs": 66.67,
             "hsc": 2,
-            "w": 2,
-            "l": 5,
+            "w": 3,
+            "l": 3,
             "k": 3,
             "d": 6
           },
@@ -1089,17 +1125,17 @@
             "d": 6
           },
           {
-            "op": "Twitch",
+            "op": "Nomad",
             "side": "Attacker",
             "rp": 6,
-            "wp": 33.33,
-            "kd": 0.4,
-            "hs": 50,
+            "wp": 16.67,
+            "kd": 0.83,
+            "hs": 20,
             "hsc": 1,
-            "w": 2,
-            "l": 4,
-            "k": 2,
-            "d": 5
+            "w": 1,
+            "l": 5,
+            "k": 5,
+            "d": 6
           },
           {
             "op": "Ying",
@@ -1113,32 +1149,6 @@
             "l": 4,
             "k": 1,
             "d": 4
-          },
-          {
-            "op": "Jackal",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 50,
-            "kd": 0.5,
-            "hs": 66.67,
-            "hsc": 2,
-            "w": 3,
-            "l": 3,
-            "k": 3,
-            "d": 6
-          },
-          {
-            "op": "Nomad",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 16.67,
-            "kd": 0.83,
-            "hs": 20,
-            "hsc": 1,
-            "w": 1,
-            "l": 5,
-            "k": 5,
-            "d": 6
           },
           {
             "op": "Fuze",
@@ -1167,16 +1177,16 @@
             "d": 2
           },
           {
-            "op": "Tachanka",
+            "op": "Aruni",
             "side": "Defender",
             "rp": 3,
-            "wp": 66.67,
-            "kd": 0.33,
+            "wp": 33.33,
+            "kd": 0.67,
             "hs": 0,
             "hsc": 0,
-            "w": 2,
-            "l": 1,
-            "k": 1,
+            "w": 1,
+            "l": 2,
+            "k": 2,
             "d": 3
           },
           {
@@ -1193,30 +1203,43 @@
             "d": 0
           },
           {
-            "op": "Aruni",
+            "op": "Tachanka",
             "side": "Defender",
             "rp": 3,
-            "wp": 33.33,
-            "kd": 0.67,
+            "wp": 66.67,
+            "kd": 0.33,
             "hs": 0,
             "hsc": 0,
-            "w": 1,
-            "l": 2,
-            "k": 2,
+            "w": 2,
+            "l": 1,
+            "k": 1,
             "d": 3
           },
           {
-            "op": "Rauora",
-            "side": "Attacker",
+            "op": "Solis",
+            "side": "Defender",
             "rp": 2,
             "wp": 50,
-            "kd": 3,
-            "hs": 0,
-            "hsc": 0,
+            "kd": 2,
+            "hs": 100,
+            "hsc": 2,
             "w": 1,
             "l": 1,
-            "k": 3,
+            "k": 2,
             "d": 1
+          },
+          {
+            "op": "Buck",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 0,
+            "kd": 0.5,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 2,
+            "k": 1,
+            "d": 2
           },
           {
             "op": "Sentry",
@@ -1245,16 +1268,16 @@
             "d": 2
           },
           {
-            "op": "Solis",
+            "op": "Ela",
             "side": "Defender",
             "rp": 2,
             "wp": 50,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
             "w": 1,
             "l": 1,
-            "k": 2,
+            "k": 1,
             "d": 1
           },
           {
@@ -1271,46 +1294,20 @@
             "d": 2
           },
           {
-            "op": "Ela",
-            "side": "Defender",
+            "op": "Rauora",
+            "side": "Attacker",
             "rp": 2,
             "wp": 50,
-            "kd": 1,
+            "kd": 3,
             "hs": 0,
             "hsc": 0,
             "w": 1,
             "l": 1,
-            "k": 1,
+            "k": 3,
             "d": 1
           },
           {
-            "op": "Buck",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 0,
-            "kd": 0.5,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 2,
-            "k": 1,
-            "d": 2
-          },
-          {
-            "op": "Jäger",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 0
-          },
-          {
-            "op": "Castle",
+            "op": "Thunderbird",
             "side": "Defender",
             "rp": 1,
             "wp": 100,
@@ -1336,29 +1333,16 @@
             "d": 0
           },
           {
-            "op": "Doc",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Wamai",
+            "op": "Jäger",
             "side": "Defender",
             "rp": 1,
             "wp": 100,
-            "kd": 1,
+            "kd": 0,
             "hs": 0,
             "hsc": 0,
             "w": 1,
             "l": 0,
-            "k": 1,
+            "k": 0,
             "d": 0
           },
           {
@@ -1375,15 +1359,15 @@
             "d": 1
           },
           {
-            "op": "Thunderbird",
+            "op": "Doc",
             "side": "Defender",
             "rp": 1,
-            "wp": 100,
+            "wp": 0,
             "kd": 0,
             "hs": 0,
             "hsc": 0,
-            "w": 1,
-            "l": 0,
+            "w": 0,
+            "l": 1,
             "k": 0,
             "d": 1
           },
@@ -1412,60 +1396,86 @@
             "l": 1,
             "k": 0,
             "d": 1
+          },
+          {
+            "op": "Castle",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Wamai",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
           }
         ],
         "ranked|43": [
           {
-            "op": "Solid Snake",
-            "side": "Attacker",
-            "rp": 45,
-            "wp": 57.78,
-            "kd": 1.06,
-            "hs": 67.57,
-            "hsc": 25,
-            "w": 26,
-            "l": 19,
-            "k": 37,
-            "d": 35
-          },
-          {
             "op": "Mute",
             "side": "Defender",
-            "rp": 44,
-            "wp": 56.82,
-            "kd": 1.35,
-            "hs": 62.86,
-            "hsc": 22,
+            "rp": 46,
+            "wp": 54.35,
+            "kd": 1.29,
+            "hs": 63.89,
+            "hsc": 23,
             "w": 25,
-            "l": 19,
-            "k": 35,
-            "d": 26
+            "l": 21,
+            "k": 36,
+            "d": 28
+          },
+          {
+            "op": "Solid Snake",
+            "side": "Attacker",
+            "rp": 46,
+            "wp": 56.52,
+            "kd": 1.06,
+            "hs": 68.42,
+            "hsc": 26,
+            "w": 26,
+            "l": 20,
+            "k": 38,
+            "d": 36
           },
           {
             "op": "Zofia",
             "side": "Attacker",
-            "rp": 30,
-            "wp": 43.33,
-            "kd": 1.15,
-            "hs": 52.17,
-            "hsc": 12,
-            "w": 13,
+            "rp": 33,
+            "wp": 48.48,
+            "kd": 1.18,
+            "hs": 50,
+            "hsc": 13,
+            "w": 16,
             "l": 17,
-            "k": 23,
-            "d": 20
+            "k": 26,
+            "d": 22
           },
           {
             "op": "Lesion",
             "side": "Defender",
-            "rp": 29,
-            "wp": 72.41,
-            "kd": 1.33,
-            "hs": 50,
-            "hsc": 12,
-            "w": 21,
+            "rp": 32,
+            "wp": 75,
+            "kd": 1.53,
+            "hs": 55.17,
+            "hsc": 16,
+            "w": 24,
             "l": 8,
-            "k": 24,
-            "d": 18
+            "k": 29,
+            "d": 19
           },
           {
             "op": "Thorn",
@@ -1496,14 +1506,27 @@
           {
             "op": "Bandit",
             "side": "Defender",
-            "rp": 13,
-            "wp": 30.77,
-            "kd": 1,
+            "rp": 14,
+            "wp": 35.71,
+            "kd": 0.91,
             "hs": 40,
             "hsc": 4,
-            "w": 4,
+            "w": 5,
             "l": 9,
             "k": 10,
+            "d": 11
+          },
+          {
+            "op": "Striker",
+            "side": "Attacker",
+            "rp": 13,
+            "wp": 38.46,
+            "kd": 1.3,
+            "hs": 53.85,
+            "hsc": 7,
+            "w": 5,
+            "l": 8,
+            "k": 13,
             "d": 10
           },
           {
@@ -1518,19 +1541,6 @@
             "l": 4,
             "k": 16,
             "d": 6
-          },
-          {
-            "op": "Striker",
-            "side": "Attacker",
-            "rp": 12,
-            "wp": 41.67,
-            "kd": 1.44,
-            "hs": 53.85,
-            "hsc": 7,
-            "w": 5,
-            "l": 7,
-            "k": 13,
-            "d": 9
           },
           {
             "op": "Ash",
@@ -1572,6 +1582,19 @@
             "d": 4
           },
           {
+            "op": "Lion",
+            "side": "Attacker",
+            "rp": 7,
+            "wp": 28.57,
+            "kd": 1.5,
+            "hs": 44.44,
+            "hsc": 4,
+            "w": 2,
+            "l": 5,
+            "k": 9,
+            "d": 6
+          },
+          {
             "op": "Smoke",
             "side": "Defender",
             "rp": 6,
@@ -1585,19 +1608,6 @@
             "d": 3
           },
           {
-            "op": "Lion",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 16.67,
-            "kd": 1.33,
-            "hs": 37.5,
-            "hsc": 3,
-            "w": 1,
-            "l": 5,
-            "k": 8,
-            "d": 6
-          },
-          {
             "op": "Amaru",
             "side": "Attacker",
             "rp": 4,
@@ -1608,6 +1618,19 @@
             "w": 2,
             "l": 2,
             "k": 4,
+            "d": 3
+          },
+          {
+            "op": "Ace",
+            "side": "Attacker",
+            "rp": 3,
+            "wp": 33.33,
+            "kd": 1.67,
+            "hs": 40,
+            "hsc": 2,
+            "w": 1,
+            "l": 2,
+            "k": 5,
             "d": 3
           },
           {
@@ -1624,17 +1647,17 @@
             "d": 2
           },
           {
-            "op": "Ace",
-            "side": "Attacker",
-            "rp": 3,
-            "wp": 33.33,
-            "kd": 1.67,
-            "hs": 40,
-            "hsc": 2,
+            "op": "Noor",
+            "side": "Defender",
+            "rp": 2,
+            "wp": 50,
+            "kd": 2,
+            "hs": 0,
+            "hsc": 0,
             "w": 1,
-            "l": 2,
-            "k": 5,
-            "d": 3
+            "l": 1,
+            "k": 2,
+            "d": 1
           },
           {
             "op": "Blitz",
@@ -1663,16 +1686,16 @@
             "d": 2
           },
           {
-            "op": "Noor",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 50,
-            "kd": 2,
+            "op": "Capitão",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 0,
             "hs": 0,
             "hsc": 0,
             "w": 1,
-            "l": 1,
-            "k": 2,
+            "l": 0,
+            "k": 0,
             "d": 1
           },
           {
@@ -1686,6 +1709,19 @@
             "w": 0,
             "l": 1,
             "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Kapkan",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 1,
             "d": 1
           },
           {
@@ -1715,6 +1751,32 @@
             "d": 1
           },
           {
+            "op": "Brava",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Ram",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 0,
+            "d": 0
+          },
+          {
             "op": "Skopós",
             "side": "Defender",
             "rp": 1,
@@ -1726,6 +1788,19 @@
             "l": 0,
             "k": 3,
             "d": 0
+          },
+          {
+            "op": "Mozzie",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
           },
           {
             "op": "Rauora",
@@ -1751,71 +1826,6 @@
             "w": 0,
             "l": 1,
             "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Brava",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 1,
-            "d": 1
-          },
-          {
-            "op": "Mozzie",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Capitão",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Ram",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 0
-          },
-          {
-            "op": "Kapkan",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 1,
             "d": 1
           }
         ],
@@ -1938,6 +1948,19 @@
             "d": 2
           },
           {
+            "op": "Blitz",
+            "side": "Attacker",
+            "rp": 3,
+            "wp": 66.67,
+            "kd": 1,
+            "hs": 33.33,
+            "hsc": 1,
+            "w": 2,
+            "l": 1,
+            "k": 3,
+            "d": 3
+          },
+          {
             "op": "Amaru",
             "side": "Attacker",
             "rp": 3,
@@ -1964,19 +1987,6 @@
             "d": 3
           },
           {
-            "op": "Blitz",
-            "side": "Attacker",
-            "rp": 3,
-            "wp": 66.67,
-            "kd": 1,
-            "hs": 33.33,
-            "hsc": 1,
-            "w": 2,
-            "l": 1,
-            "k": 3,
-            "d": 3
-          },
-          {
             "op": "Denari",
             "side": "Defender",
             "rp": 3,
@@ -1985,6 +1995,19 @@
             "hs": 66.67,
             "hsc": 2,
             "w": 3,
+            "l": 0,
+            "k": 3,
+            "d": 1
+          },
+          {
+            "op": "Mira",
+            "side": "Defender",
+            "rp": 2,
+            "wp": 100,
+            "kd": 3,
+            "hs": 33.33,
+            "hsc": 1,
+            "w": 2,
             "l": 0,
             "k": 3,
             "d": 1
@@ -2016,19 +2039,6 @@
             "d": 1
           },
           {
-            "op": "Mira",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 100,
-            "kd": 3,
-            "hs": 33.33,
-            "hsc": 1,
-            "w": 2,
-            "l": 0,
-            "k": 3,
-            "d": 1
-          },
-          {
             "op": "Gridlock",
             "side": "Attacker",
             "rp": 1,
@@ -2040,58 +2050,6 @@
             "l": 0,
             "k": 2,
             "d": 0
-          },
-          {
-            "op": "Maverick",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Nomad",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 3,
-            "hs": 33.33,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 3,
-            "d": 1
-          },
-          {
-            "op": "Thatcher",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 1,
-            "d": 1
-          },
-          {
-            "op": "Tachanka",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
           },
           {
             "op": "Smoke",
@@ -2120,6 +2078,19 @@
             "d": 0
           },
           {
+            "op": "Nomad",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 3,
+            "hs": 33.33,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 3,
+            "d": 1
+          },
+          {
             "op": "Ace",
             "side": "Attacker",
             "rp": 1,
@@ -2131,6 +2102,45 @@
             "l": 0,
             "k": 1,
             "d": 0
+          },
+          {
+            "op": "Tachanka",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Thatcher",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Maverick",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 0,
+            "d": 1
           }
         ],
         "quickmatch|43": [
@@ -2200,55 +2210,16 @@
             "d": 3
           },
           {
-            "op": "Azami ",
+            "op": "Oryx",
             "side": "Defender",
-            "rp": 2,
-            "wp": 50,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 1,
-            "k": 0,
-            "d": 2
-          },
-          {
-            "op": "Blitz",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 1,
-            "k": 0,
-            "d": 2
-          },
-          {
-            "op": "Tubarão",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 50,
-            "kd": 1.5,
-            "hs": 100,
-            "hsc": 3,
-            "w": 1,
-            "l": 1,
-            "k": 3,
-            "d": 2
-          },
-          {
-            "op": "Thermite",
-            "side": "Attacker",
             "rp": 2,
             "wp": 0,
-            "kd": 1,
-            "hs": 50,
-            "hsc": 1,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
             "w": 0,
             "l": 2,
-            "k": 2,
+            "k": 0,
             "d": 2
           },
           {
@@ -2304,6 +2275,19 @@
             "d": 1
           },
           {
+            "op": "Tubarão",
+            "side": "Defender",
+            "rp": 2,
+            "wp": 50,
+            "kd": 1.5,
+            "hs": 100,
+            "hsc": 3,
+            "w": 1,
+            "l": 1,
+            "k": 3,
+            "d": 2
+          },
+          {
             "op": "Bandit",
             "side": "Defender",
             "rp": 2,
@@ -2317,29 +2301,68 @@
             "d": 2
           },
           {
-            "op": "Oryx",
+            "op": "Blitz",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 1,
+            "k": 0,
+            "d": 2
+          },
+          {
+            "op": "Thermite",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 0,
+            "kd": 1,
+            "hs": 50,
+            "hsc": 1,
+            "w": 0,
+            "l": 2,
+            "k": 2,
+            "d": 2
+          },
+          {
+            "op": "Azami ",
             "side": "Defender",
             "rp": 2,
+            "wp": 50,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 1,
+            "k": 0,
+            "d": 2
+          },
+          {
+            "op": "Kali",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 4,
+            "hs": 25,
+            "hsc": 1,
+            "w": 1,
+            "l": 0,
+            "k": 4,
+            "d": 0
+          },
+          {
+            "op": "Doc",
+            "side": "Defender",
+            "rp": 1,
             "wp": 0,
             "kd": 0,
             "hs": 0,
             "hsc": 0,
             "w": 0,
-            "l": 2,
+            "l": 1,
             "k": 0,
-            "d": 2
-          },
-          {
-            "op": "Ash",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
             "d": 1
           },
           {
@@ -2356,17 +2379,17 @@
             "d": 1
           },
           {
-            "op": "Doc",
+            "op": "Clash",
             "side": "Defender",
             "rp": 1,
-            "wp": 0,
-            "kd": 0,
+            "wp": 100,
+            "kd": 1,
             "hs": 0,
             "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
           },
           {
             "op": "Vigil",
@@ -2392,19 +2415,6 @@
             "w": 1,
             "l": 0,
             "k": 2,
-            "d": 0
-          },
-          {
-            "op": "Clash",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
             "d": 0
           },
           {
@@ -2434,17 +2444,17 @@
             "d": 1
           },
           {
-            "op": "Kali",
+            "op": "Ash",
             "side": "Attacker",
             "rp": 1,
             "wp": 100,
-            "kd": 4,
-            "hs": 25,
-            "hsc": 1,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
             "w": 1,
             "l": 0,
-            "k": 4,
-            "d": 0
+            "k": 1,
+            "d": 1
           }
         ],
         "ranked|42": [
@@ -5020,11 +5030,7 @@
             "d": 0
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Rate limit exceeded",
-      "fetchFailed": true,
-      "lastStatus": 429
+      }
     },
     {
       "key": "leme",
@@ -5246,12 +5252,12 @@
         {
           "type": "season",
           "season": 42,
-          "gamemode": "pvp_standard",
-          "won": 7,
-          "lost": 5,
-          "kills": 103,
-          "deaths": 43,
-          "rankPoints": 0,
+          "gamemode": "pvp_casual",
+          "won": 13,
+          "lost": 12,
+          "kills": 93,
+          "deaths": 65,
+          "rankPoints": null,
           "maxRankPoints": null
         },
         {
@@ -5268,12 +5274,12 @@
         {
           "type": "season",
           "season": 42,
-          "gamemode": "pvp_casual",
-          "won": 13,
-          "lost": 12,
-          "kills": 93,
-          "deaths": 65,
-          "rankPoints": null,
+          "gamemode": "pvp_standard",
+          "won": 7,
+          "lost": 5,
+          "kills": 103,
+          "deaths": 43,
+          "rankPoints": 0,
           "maxRankPoints": null
         },
         {
@@ -5645,19 +5651,6 @@
             "d": 10
           },
           {
-            "op": "Jäger",
-            "side": "Defender",
-            "rp": 16,
-            "wp": 31.25,
-            "kd": 0.58,
-            "hs": 57.14,
-            "hsc": 4,
-            "w": 5,
-            "l": 11,
-            "k": 7,
-            "d": 12
-          },
-          {
             "op": "Buck",
             "side": "Attacker",
             "rp": 16,
@@ -5669,6 +5662,19 @@
             "l": 11,
             "k": 13,
             "d": 14
+          },
+          {
+            "op": "Jäger",
+            "side": "Defender",
+            "rp": 16,
+            "wp": 31.25,
+            "kd": 0.58,
+            "hs": 57.14,
+            "hsc": 4,
+            "w": 5,
+            "l": 11,
+            "k": 7,
+            "d": 12
           },
           {
             "op": "Valkyrie",
@@ -5697,6 +5703,19 @@
             "d": 11
           },
           {
+            "op": "Clash",
+            "side": "Defender",
+            "rp": 13,
+            "wp": 69.23,
+            "kd": 2,
+            "hs": 91.67,
+            "hsc": 11,
+            "w": 9,
+            "l": 4,
+            "k": 12,
+            "d": 6
+          },
+          {
             "op": "Ace",
             "side": "Attacker",
             "rp": 13,
@@ -5710,17 +5729,17 @@
             "d": 9
           },
           {
-            "op": "Clash",
-            "side": "Defender",
-            "rp": 13,
-            "wp": 69.23,
-            "kd": 2,
-            "hs": 91.67,
-            "hsc": 11,
-            "w": 9,
-            "l": 4,
+            "op": "Glaz",
+            "side": "Attacker",
+            "rp": 12,
+            "wp": 58.33,
+            "kd": 1.5,
+            "hs": 33.33,
+            "hsc": 4,
+            "w": 7,
+            "l": 5,
             "k": 12,
-            "d": 6
+            "d": 8
           },
           {
             "op": "Aruni",
@@ -5760,19 +5779,6 @@
             "l": 3,
             "k": 15,
             "d": 7
-          },
-          {
-            "op": "Glaz",
-            "side": "Attacker",
-            "rp": 12,
-            "wp": 58.33,
-            "kd": 1.5,
-            "hs": 33.33,
-            "hsc": 4,
-            "w": 7,
-            "l": 5,
-            "k": 12,
-            "d": 8
           },
           {
             "op": "Pulse",
@@ -5840,30 +5846,17 @@
             "d": 4
           },
           {
-            "op": "Blackbeard",
-            "side": "Attacker",
-            "rp": 8,
-            "wp": 62.5,
-            "kd": 3.25,
-            "hs": 46.15,
-            "hsc": 6,
-            "w": 5,
-            "l": 3,
-            "k": 13,
-            "d": 4
-          },
-          {
-            "op": "Goyo",
+            "op": "Rook",
             "side": "Defender",
             "rp": 8,
-            "wp": 62.5,
-            "kd": 3,
-            "hs": 50,
-            "hsc": 6,
-            "w": 5,
-            "l": 3,
-            "k": 12,
-            "d": 4
+            "wp": 87.5,
+            "kd": 2.33,
+            "hs": 100,
+            "hsc": 7,
+            "w": 7,
+            "l": 1,
+            "k": 7,
+            "d": 3
           },
           {
             "op": "Oryx",
@@ -5918,17 +5911,30 @@
             "d": 6
           },
           {
-            "op": "Rook",
+            "op": "Blackbeard",
+            "side": "Attacker",
+            "rp": 8,
+            "wp": 62.5,
+            "kd": 3.25,
+            "hs": 46.15,
+            "hsc": 6,
+            "w": 5,
+            "l": 3,
+            "k": 13,
+            "d": 4
+          },
+          {
+            "op": "Goyo",
             "side": "Defender",
             "rp": 8,
-            "wp": 87.5,
-            "kd": 2.33,
-            "hs": 100,
-            "hsc": 7,
-            "w": 7,
-            "l": 1,
-            "k": 7,
-            "d": 3
+            "wp": 62.5,
+            "kd": 3,
+            "hs": 50,
+            "hsc": 6,
+            "w": 5,
+            "l": 3,
+            "k": 12,
+            "d": 4
           },
           {
             "op": "Nøkk",
@@ -5957,32 +5963,6 @@
             "d": 5
           },
           {
-            "op": "Kali",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 50,
-            "kd": 4.25,
-            "hs": 35.29,
-            "hsc": 6,
-            "w": 3,
-            "l": 3,
-            "k": 17,
-            "d": 4
-          },
-          {
-            "op": "Rauora",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 83.33,
-            "kd": 1.67,
-            "hs": 80,
-            "hsc": 4,
-            "w": 5,
-            "l": 1,
-            "k": 5,
-            "d": 3
-          },
-          {
             "op": "Thatcher",
             "side": "Attacker",
             "rp": 6,
@@ -6009,17 +5989,43 @@
             "d": 2
           },
           {
-            "op": "Zero",
+            "op": "Kali",
             "side": "Attacker",
-            "rp": 5,
-            "wp": 60,
-            "kd": 1.25,
+            "rp": 6,
+            "wp": 50,
+            "kd": 4.25,
+            "hs": 35.29,
+            "hsc": 6,
+            "w": 3,
+            "l": 3,
+            "k": 17,
+            "d": 4
+          },
+          {
+            "op": "Rauora",
+            "side": "Attacker",
+            "rp": 6,
+            "wp": 83.33,
+            "kd": 1.67,
             "hs": 80,
             "hsc": 4,
-            "w": 3,
-            "l": 2,
+            "w": 5,
+            "l": 1,
             "k": 5,
-            "d": 4
+            "d": 3
+          },
+          {
+            "op": "Caveira",
+            "side": "Defender",
+            "rp": 5,
+            "wp": 40,
+            "kd": 1.33,
+            "hs": 0,
+            "hsc": 0,
+            "w": 2,
+            "l": 3,
+            "k": 4,
+            "d": 3
           },
           {
             "op": "Warden",
@@ -6048,16 +6054,29 @@
             "d": 3
           },
           {
-            "op": "Caveira",
-            "side": "Defender",
+            "op": "Zero",
+            "side": "Attacker",
             "rp": 5,
-            "wp": 40,
-            "kd": 1.33,
-            "hs": 0,
-            "hsc": 0,
+            "wp": 60,
+            "kd": 1.25,
+            "hs": 80,
+            "hsc": 4,
+            "w": 3,
+            "l": 2,
+            "k": 5,
+            "d": 4
+          },
+          {
+            "op": "Iana",
+            "side": "Attacker",
+            "rp": 4,
+            "wp": 50,
+            "kd": 2,
+            "hs": 50,
+            "hsc": 3,
             "w": 2,
-            "l": 3,
-            "k": 4,
+            "l": 2,
+            "k": 6,
             "d": 3
           },
           {
@@ -6074,32 +6093,6 @@
             "d": 2
           },
           {
-            "op": "Thunderbird",
-            "side": "Defender",
-            "rp": 4,
-            "wp": 25,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 3,
-            "w": 1,
-            "l": 3,
-            "k": 3,
-            "d": 3
-          },
-          {
-            "op": "Iana",
-            "side": "Attacker",
-            "rp": 4,
-            "wp": 50,
-            "kd": 2,
-            "hs": 50,
-            "hsc": 3,
-            "w": 2,
-            "l": 2,
-            "k": 6,
-            "d": 3
-          },
-          {
             "op": "Striker",
             "side": "Attacker",
             "rp": 4,
@@ -6109,6 +6102,19 @@
             "hsc": 3,
             "w": 2,
             "l": 2,
+            "k": 3,
+            "d": 3
+          },
+          {
+            "op": "Thunderbird",
+            "side": "Defender",
+            "rp": 4,
+            "wp": 25,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 3,
+            "w": 1,
+            "l": 3,
             "k": 3,
             "d": 3
           },
@@ -6126,42 +6132,16 @@
             "d": 4
           },
           {
-            "op": "Blitz",
+            "op": "Ram",
             "side": "Attacker",
             "rp": 3,
-            "wp": 0,
-            "kd": 0.67,
-            "hs": 50,
-            "hsc": 1,
-            "w": 0,
-            "l": 3,
-            "k": 2,
-            "d": 3
-          },
-          {
-            "op": "Ying",
-            "side": "Attacker",
-            "rp": 3,
-            "wp": 100,
-            "kd": 4,
-            "hs": 25,
-            "hsc": 1,
-            "w": 3,
-            "l": 0,
-            "k": 4,
-            "d": 1
-          },
-          {
-            "op": "Maestro",
-            "side": "Defender",
-            "rp": 3,
-            "wp": 0,
-            "kd": 0,
+            "wp": 33.33,
+            "kd": 0.33,
             "hs": 0,
             "hsc": 0,
-            "w": 0,
-            "l": 3,
-            "k": 0,
+            "w": 1,
+            "l": 2,
+            "k": 1,
             "d": 3
           },
           {
@@ -6178,17 +6158,17 @@
             "d": 2
           },
           {
-            "op": "Jackal",
+            "op": "Blitz",
             "side": "Attacker",
             "rp": 3,
-            "wp": 33.33,
-            "kd": 1.5,
-            "hs": 100,
-            "hsc": 3,
-            "w": 1,
-            "l": 2,
-            "k": 3,
-            "d": 2
+            "wp": 0,
+            "kd": 0.67,
+            "hs": 50,
+            "hsc": 1,
+            "w": 0,
+            "l": 3,
+            "k": 2,
+            "d": 3
           },
           {
             "op": "Amaru",
@@ -6204,17 +6184,43 @@
             "d": 1
           },
           {
-            "op": "Ram",
+            "op": "Maestro",
+            "side": "Defender",
+            "rp": 3,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 3,
+            "k": 0,
+            "d": 3
+          },
+          {
+            "op": "Ying",
+            "side": "Attacker",
+            "rp": 3,
+            "wp": 100,
+            "kd": 4,
+            "hs": 25,
+            "hsc": 1,
+            "w": 3,
+            "l": 0,
+            "k": 4,
+            "d": 1
+          },
+          {
+            "op": "Jackal",
             "side": "Attacker",
             "rp": 3,
             "wp": 33.33,
-            "kd": 0.33,
-            "hs": 0,
-            "hsc": 0,
+            "kd": 1.5,
+            "hs": 100,
+            "hsc": 3,
             "w": 1,
             "l": 2,
-            "k": 1,
-            "d": 3
+            "k": 3,
+            "d": 2
           },
           {
             "op": "Fenrir",
@@ -6243,19 +6249,6 @@
             "d": 2
           },
           {
-            "op": "Brava",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 100,
-            "kd": 3,
-            "hs": 33.33,
-            "hsc": 1,
-            "w": 2,
-            "l": 0,
-            "k": 3,
-            "d": 1
-          },
-          {
             "op": "Tachanka",
             "side": "Defender",
             "rp": 2,
@@ -6269,16 +6262,16 @@
             "d": 1
           },
           {
-            "op": "Denari",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
-            "w": 0,
-            "l": 1,
-            "k": 2,
+            "op": "Brava",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 100,
+            "kd": 3,
+            "hs": 33.33,
+            "hsc": 1,
+            "w": 2,
+            "l": 0,
+            "k": 3,
             "d": 1
           },
           {
@@ -6295,19 +6288,6 @@
             "d": 1
           },
           {
-            "op": "Montagne",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
-            "d": 0
-          },
-          {
             "op": "Gridlock",
             "side": "Attacker",
             "rp": 1,
@@ -6321,6 +6301,19 @@
             "d": 1
           },
           {
+            "op": "Denari",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 2,
+            "hs": 100,
+            "hsc": 2,
+            "w": 0,
+            "l": 1,
+            "k": 2,
+            "d": 1
+          },
+          {
             "op": "Thorn",
             "side": "Defender",
             "rp": 1,
@@ -6328,6 +6321,19 @@
             "kd": 1,
             "hs": 100,
             "hsc": 1,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
+          },
+          {
+            "op": "Montagne",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
             "w": 1,
             "l": 0,
             "k": 1,
@@ -9212,11 +9218,7 @@
             "d": 1
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Rate limit exceeded",
-      "fetchFailed": true,
-      "lastStatus": 429
+      }
     },
     {
       "key": "snell",
@@ -9449,11 +9451,11 @@
         {
           "type": "season",
           "season": 38,
-          "gamemode": "pvp_event",
-          "won": 1,
-          "lost": 0,
-          "kills": 2,
-          "deaths": 3,
+          "gamemode": "pvp_casual",
+          "won": 2,
+          "lost": 1,
+          "kills": 8,
+          "deaths": 9,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -9482,11 +9484,11 @@
         {
           "type": "season",
           "season": 38,
-          "gamemode": "pvp_casual",
-          "won": 2,
-          "lost": 1,
-          "kills": 8,
-          "deaths": 9,
+          "gamemode": "pvp_event",
+          "won": 1,
+          "lost": 0,
+          "kills": 2,
+          "deaths": 3,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -9730,19 +9732,6 @@
             "d": 51
           },
           {
-            "op": "Sledge",
-            "side": "Attacker",
-            "rp": 62,
-            "wp": 45.16,
-            "kd": 1.5,
-            "hs": 51.52,
-            "hsc": 34,
-            "w": 28,
-            "l": 34,
-            "k": 66,
-            "d": 44
-          },
-          {
             "op": "Thatcher",
             "side": "Attacker",
             "rp": 62,
@@ -9754,6 +9743,19 @@
             "l": 32,
             "k": 40,
             "d": 47
+          },
+          {
+            "op": "Sledge",
+            "side": "Attacker",
+            "rp": 62,
+            "wp": 45.16,
+            "kd": 1.5,
+            "hs": 51.52,
+            "hsc": 34,
+            "w": 28,
+            "l": 34,
+            "k": 66,
+            "d": 44
           },
           {
             "op": "Ace",
@@ -9808,19 +9810,6 @@
             "d": 36
           },
           {
-            "op": "Fuze",
-            "side": "Attacker",
-            "rp": 42,
-            "wp": 42.86,
-            "kd": 1,
-            "hs": 33.33,
-            "hsc": 10,
-            "w": 18,
-            "l": 24,
-            "k": 30,
-            "d": 30
-          },
-          {
             "op": "Frost",
             "side": "Defender",
             "rp": 42,
@@ -9832,6 +9821,19 @@
             "l": 21,
             "k": 26,
             "d": 26
+          },
+          {
+            "op": "Fuze",
+            "side": "Attacker",
+            "rp": 42,
+            "wp": 42.86,
+            "kd": 1,
+            "hs": 33.33,
+            "hsc": 10,
+            "w": 18,
+            "l": 24,
+            "k": 30,
+            "d": 30
           },
           {
             "op": "Blackbeard",
@@ -9873,19 +9875,6 @@
             "d": 21
           },
           {
-            "op": "Lesion",
-            "side": "Defender",
-            "rp": 27,
-            "wp": 74.07,
-            "kd": 0.88,
-            "hs": 64.29,
-            "hsc": 9,
-            "w": 20,
-            "l": 7,
-            "k": 14,
-            "d": 16
-          },
-          {
             "op": "Jäger",
             "side": "Defender",
             "rp": 27,
@@ -9897,6 +9886,19 @@
             "l": 16,
             "k": 20,
             "d": 19
+          },
+          {
+            "op": "Lesion",
+            "side": "Defender",
+            "rp": 27,
+            "wp": 74.07,
+            "kd": 0.88,
+            "hs": 64.29,
+            "hsc": 9,
+            "w": 20,
+            "l": 7,
+            "k": 14,
+            "d": 16
           },
           {
             "op": "Zero",
@@ -9925,19 +9927,6 @@
             "d": 18
           },
           {
-            "op": "Finka",
-            "side": "Attacker",
-            "rp": 18,
-            "wp": 44.44,
-            "kd": 0.64,
-            "hs": 14.29,
-            "hsc": 1,
-            "w": 8,
-            "l": 10,
-            "k": 7,
-            "d": 11
-          },
-          {
             "op": "Blitz",
             "side": "Attacker",
             "rp": 18,
@@ -9951,6 +9940,19 @@
             "d": 16
           },
           {
+            "op": "Finka",
+            "side": "Attacker",
+            "rp": 18,
+            "wp": 44.44,
+            "kd": 0.64,
+            "hs": 14.29,
+            "hsc": 1,
+            "w": 8,
+            "l": 10,
+            "k": 7,
+            "d": 11
+          },
+          {
             "op": "Nomad",
             "side": "Attacker",
             "rp": 17,
@@ -9962,19 +9964,6 @@
             "l": 8,
             "k": 6,
             "d": 12
-          },
-          {
-            "op": "Melusi",
-            "side": "Defender",
-            "rp": 16,
-            "wp": 62.5,
-            "kd": 0.8,
-            "hs": 62.5,
-            "hsc": 5,
-            "w": 10,
-            "l": 6,
-            "k": 8,
-            "d": 10
           },
           {
             "op": "Zofia",
@@ -10001,6 +9990,19 @@
             "l": 11,
             "k": 9,
             "d": 13
+          },
+          {
+            "op": "Melusi",
+            "side": "Defender",
+            "rp": 16,
+            "wp": 62.5,
+            "kd": 0.8,
+            "hs": 62.5,
+            "hsc": 5,
+            "w": 10,
+            "l": 6,
+            "k": 8,
+            "d": 10
           },
           {
             "op": "Mira",
@@ -10068,17 +10070,17 @@
             "d": 10
           },
           {
-            "op": "Rook",
+            "op": "Aruni",
             "side": "Defender",
             "rp": 9,
-            "wp": 77.78,
-            "kd": 1,
-            "hs": 60,
-            "hsc": 3,
-            "w": 7,
-            "l": 2,
-            "k": 5,
-            "d": 5
+            "wp": 88.89,
+            "kd": 1.5,
+            "hs": 44.44,
+            "hsc": 4,
+            "w": 8,
+            "l": 1,
+            "k": 9,
+            "d": 6
           },
           {
             "op": "Thunderbird",
@@ -10094,17 +10096,17 @@
             "d": 6
           },
           {
-            "op": "Aruni",
+            "op": "Rook",
             "side": "Defender",
             "rp": 9,
-            "wp": 88.89,
-            "kd": 1.5,
-            "hs": 44.44,
-            "hsc": 4,
-            "w": 8,
-            "l": 1,
-            "k": 9,
-            "d": 6
+            "wp": 77.78,
+            "kd": 1,
+            "hs": 60,
+            "hsc": 3,
+            "w": 7,
+            "l": 2,
+            "k": 5,
+            "d": 5
           },
           {
             "op": "Clash",
@@ -10133,19 +10135,6 @@
             "d": 7
           },
           {
-            "op": "Fenrir",
-            "side": "Defender",
-            "rp": 7,
-            "wp": 57.14,
-            "kd": 0.75,
-            "hs": 100,
-            "hsc": 3,
-            "w": 4,
-            "l": 3,
-            "k": 3,
-            "d": 4
-          },
-          {
             "op": "Kapkan",
             "side": "Defender",
             "rp": 7,
@@ -10156,6 +10145,19 @@
             "w": 7,
             "l": 0,
             "k": 12,
+            "d": 4
+          },
+          {
+            "op": "Fenrir",
+            "side": "Defender",
+            "rp": 7,
+            "wp": 57.14,
+            "kd": 0.75,
+            "hs": 100,
+            "hsc": 3,
+            "w": 4,
+            "l": 3,
+            "k": 3,
             "d": 4
           },
           {
@@ -10211,19 +10213,6 @@
             "d": 4
           },
           {
-            "op": "Oryx",
-            "side": "Defender",
-            "rp": 4,
-            "wp": 50,
-            "kd": 0.25,
-            "hs": 0,
-            "hsc": 0,
-            "w": 2,
-            "l": 2,
-            "k": 1,
-            "d": 4
-          },
-          {
             "op": "IQ",
             "side": "Attacker",
             "rp": 4,
@@ -10237,16 +10226,29 @@
             "d": 4
           },
           {
-            "op": "Ash",
+            "op": "Oryx",
+            "side": "Defender",
+            "rp": 4,
+            "wp": 50,
+            "kd": 0.25,
+            "hs": 0,
+            "hsc": 0,
+            "w": 2,
+            "l": 2,
+            "k": 1,
+            "d": 4
+          },
+          {
+            "op": "Flores",
             "side": "Attacker",
             "rp": 3,
             "wp": 33.33,
-            "kd": 1.5,
-            "hs": 33.33,
-            "hsc": 1,
+            "kd": 0.5,
+            "hs": 0,
+            "hsc": 0,
             "w": 1,
             "l": 2,
-            "k": 3,
+            "k": 1,
             "d": 2
           },
           {
@@ -10263,43 +10265,17 @@
             "d": 3
           },
           {
-            "op": "Flores",
+            "op": "Ash",
             "side": "Attacker",
             "rp": 3,
             "wp": 33.33,
-            "kd": 0.5,
-            "hs": 0,
-            "hsc": 0,
+            "kd": 1.5,
+            "hs": 33.33,
+            "hsc": 1,
             "w": 1,
             "l": 2,
-            "k": 1,
+            "k": 3,
             "d": 2
-          },
-          {
-            "op": "Amaru",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 1,
-            "k": 0,
-            "d": 2
-          },
-          {
-            "op": "Ram",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
-            "w": 1,
-            "l": 1,
-            "k": 2,
-            "d": 1
           },
           {
             "op": "Warden",
@@ -10315,29 +10291,42 @@
             "d": 1
           },
           {
-            "op": "Azami ",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
+            "op": "Ram",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 2,
             "hs": 100,
-            "hsc": 1,
+            "hsc": 2,
             "w": 1,
-            "l": 0,
-            "k": 1,
-            "d": 0
+            "l": 1,
+            "k": 2,
+            "d": 1
           },
           {
-            "op": "Jackal",
+            "op": "Amaru",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 1,
+            "k": 0,
+            "d": 2
+          },
+          {
+            "op": "Striker",
             "side": "Attacker",
             "rp": 1,
             "wp": 0,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 1,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
             "w": 0,
             "l": 1,
-            "k": 1,
+            "k": 0,
             "d": 1
           },
           {
@@ -10367,19 +10356,6 @@
             "d": 1
           },
           {
-            "op": "Striker",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
             "op": "Lion",
             "side": "Attacker",
             "rp": 1,
@@ -10404,6 +10380,32 @@
             "l": 1,
             "k": 1,
             "d": 1
+          },
+          {
+            "op": "Jackal",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Azami ",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
           }
         ],
         "ranked|43": [
@@ -10419,19 +10421,6 @@
             "l": 2,
             "k": 4,
             "d": 4
-          },
-          {
-            "op": "Hibana",
-            "side": "Attacker",
-            "rp": 4,
-            "wp": 75,
-            "kd": 1.67,
-            "hs": 60,
-            "hsc": 3,
-            "w": 3,
-            "l": 1,
-            "k": 5,
-            "d": 3
           },
           {
             "op": "Kaid",
@@ -10460,6 +10449,19 @@
             "d": 4
           },
           {
+            "op": "Hibana",
+            "side": "Attacker",
+            "rp": 4,
+            "wp": 75,
+            "kd": 1.67,
+            "hs": 60,
+            "hsc": 3,
+            "w": 3,
+            "l": 1,
+            "k": 5,
+            "d": 3
+          },
+          {
             "op": "Bandit",
             "side": "Defender",
             "rp": 3,
@@ -10484,6 +10486,32 @@
             "l": 1,
             "k": 3,
             "d": 1
+          },
+          {
+            "op": "Fuze",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 1.5,
+            "hs": 33.33,
+            "hsc": 1,
+            "w": 1,
+            "l": 1,
+            "k": 3,
+            "d": 2
+          },
+          {
+            "op": "Frost",
+            "side": "Defender",
+            "rp": 2,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 2,
+            "l": 0,
+            "k": 2,
+            "d": 2
           },
           {
             "op": "Melusi",
@@ -10512,19 +10540,6 @@
             "d": 2
           },
           {
-            "op": "Fuze",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
-            "kd": 1.5,
-            "hs": 33.33,
-            "hsc": 1,
-            "w": 1,
-            "l": 1,
-            "k": 3,
-            "d": 2
-          },
-          {
             "op": "Jäger",
             "side": "Defender",
             "rp": 2,
@@ -10538,19 +10553,6 @@
             "d": 2
           },
           {
-            "op": "Frost",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 2,
-            "l": 0,
-            "k": 2,
-            "d": 2
-          },
-          {
             "op": "Valkyrie",
             "side": "Defender",
             "rp": 1,
@@ -10561,6 +10563,45 @@
             "w": 0,
             "l": 1,
             "k": 2,
+            "d": 1
+          },
+          {
+            "op": "Aruni",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
+          },
+          {
+            "op": "Goyo",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Zero",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
             "d": 1
           },
           {
@@ -10601,45 +10642,6 @@
             "l": 0,
             "k": 2,
             "d": 0
-          },
-          {
-            "op": "Zero",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Aruni",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
-            "d": 0
-          },
-          {
-            "op": "Goyo",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 1,
-            "d": 1
           }
         ],
         "unranked|43": [
@@ -10670,19 +10672,6 @@
             "d": 4
           },
           {
-            "op": "Kaid",
-            "side": "Defender",
-            "rp": 5,
-            "wp": 40,
-            "kd": 1.75,
-            "hs": 57.14,
-            "hsc": 4,
-            "w": 2,
-            "l": 3,
-            "k": 7,
-            "d": 4
-          },
-          {
             "op": "Ace",
             "side": "Attacker",
             "rp": 5,
@@ -10709,6 +10698,19 @@
             "d": 2
           },
           {
+            "op": "Kaid",
+            "side": "Defender",
+            "rp": 5,
+            "wp": 40,
+            "kd": 1.75,
+            "hs": 57.14,
+            "hsc": 4,
+            "w": 2,
+            "l": 3,
+            "k": 7,
+            "d": 4
+          },
+          {
             "op": "Wamai",
             "side": "Defender",
             "rp": 3,
@@ -10722,16 +10724,16 @@
             "d": 2
           },
           {
-            "op": "Melusi",
-            "side": "Defender",
+            "op": "Thermite",
+            "side": "Attacker",
             "rp": 3,
             "wp": 66.67,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 2,
+            "kd": 2,
+            "hs": 0,
+            "hsc": 0,
             "w": 2,
             "l": 1,
-            "k": 2,
+            "k": 4,
             "d": 2
           },
           {
@@ -10748,40 +10750,14 @@
             "d": 1
           },
           {
-            "op": "Thermite",
-            "side": "Attacker",
+            "op": "Melusi",
+            "side": "Defender",
             "rp": 3,
             "wp": 66.67,
-            "kd": 2,
-            "hs": 0,
-            "hsc": 0,
-            "w": 2,
-            "l": 1,
-            "k": 4,
-            "d": 2
-          },
-          {
-            "op": "Frost",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 2,
-            "l": 0,
-            "k": 0,
-            "d": 0
-          },
-          {
-            "op": "Ying",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
             "kd": 1,
             "hs": 100,
             "hsc": 2,
-            "w": 1,
+            "w": 2,
             "l": 1,
             "k": 2,
             "d": 2
@@ -10800,30 +10776,43 @@
             "d": 2
           },
           {
-            "op": "Smoke",
+            "op": "Ying",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 2,
+            "w": 1,
+            "l": 1,
+            "k": 2,
+            "d": 2
+          },
+          {
+            "op": "Mute",
             "side": "Defender",
             "rp": 2,
             "wp": 100,
-            "kd": 0.5,
+            "kd": 2,
             "hs": 0,
             "hsc": 0,
             "w": 2,
             "l": 0,
-            "k": 1,
-            "d": 2
+            "k": 2,
+            "d": 0
           },
           {
-            "op": "Thunderbird",
+            "op": "Frost",
             "side": "Defender",
             "rp": 2,
-            "wp": 50,
-            "kd": 1,
+            "wp": 100,
+            "kd": 0,
             "hs": 0,
             "hsc": 0,
-            "w": 1,
-            "l": 1,
-            "k": 1,
-            "d": 1
+            "w": 2,
+            "l": 0,
+            "k": 0,
+            "d": 0
           },
           {
             "op": "Blackbeard",
@@ -10865,17 +10854,30 @@
             "d": 1
           },
           {
-            "op": "Mute",
+            "op": "Smoke",
             "side": "Defender",
             "rp": 2,
             "wp": 100,
-            "kd": 2,
+            "kd": 0.5,
             "hs": 0,
             "hsc": 0,
             "w": 2,
             "l": 0,
-            "k": 2,
-            "d": 0
+            "k": 1,
+            "d": 2
+          },
+          {
+            "op": "Thunderbird",
+            "side": "Defender",
+            "rp": 2,
+            "wp": 50,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 1,
+            "k": 1,
+            "d": 1
           },
           {
             "op": "Fuze",
@@ -10888,110 +10890,6 @@
             "w": 0,
             "l": 1,
             "k": 1,
-            "d": 1
-          },
-          {
-            "op": "Zofia",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 2,
-            "hs": 50,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 2,
-            "d": 1
-          },
-          {
-            "op": "Buck",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 1,
-            "d": 1
-          },
-          {
-            "op": "Blitz",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Tachanka",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Dokkaebi",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 2,
-            "hs": 50,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 2,
-            "d": 1
-          },
-          {
-            "op": "Jäger",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
-            "d": 0
-          },
-          {
-            "op": "Goyo",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Twitch",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
             "d": 1
           },
           {
@@ -11008,28 +10906,15 @@
             "d": 0
           },
           {
-            "op": "Valkyrie",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
-            "w": 1,
-            "l": 0,
-            "k": 2,
-            "d": 0
-          },
-          {
-            "op": "Nomad",
+            "op": "Blitz",
             "side": "Attacker",
             "rp": 1,
-            "wp": 0,
+            "wp": 100,
             "kd": 0,
             "hs": 0,
             "hsc": 0,
-            "w": 0,
-            "l": 1,
+            "w": 1,
+            "l": 0,
             "k": 0,
             "d": 1
           },
@@ -11060,6 +10945,97 @@
             "d": 0
           },
           {
+            "op": "Twitch",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Zofia",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 2,
+            "hs": 50,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 2,
+            "d": 1
+          },
+          {
+            "op": "Valkyrie",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 2,
+            "hs": 100,
+            "hsc": 2,
+            "w": 1,
+            "l": 0,
+            "k": 2,
+            "d": 0
+          },
+          {
+            "op": "Goyo",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Dokkaebi",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 2,
+            "hs": 50,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 2,
+            "d": 1
+          },
+          {
+            "op": "Buck",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Tachanka",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
             "op": "Kapkan",
             "side": "Defender",
             "rp": 1,
@@ -11071,6 +11047,32 @@
             "l": 0,
             "k": 4,
             "d": 0
+          },
+          {
+            "op": "Jäger",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
+          },
+          {
+            "op": "Nomad",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
           }
         ],
         "quickmatch|43": [
@@ -11101,19 +11103,6 @@
             "d": 2
           },
           {
-            "op": "Fuze",
-            "side": "Attacker",
-            "rp": 3,
-            "wp": 66.67,
-            "kd": 5,
-            "hs": 40,
-            "hsc": 2,
-            "w": 2,
-            "l": 1,
-            "k": 5,
-            "d": 1
-          },
-          {
             "op": "Bandit",
             "side": "Defender",
             "rp": 3,
@@ -11125,6 +11114,19 @@
             "l": 1,
             "k": 4,
             "d": 2
+          },
+          {
+            "op": "Fuze",
+            "side": "Attacker",
+            "rp": 3,
+            "wp": 66.67,
+            "kd": 5,
+            "hs": 40,
+            "hsc": 2,
+            "w": 2,
+            "l": 1,
+            "k": 5,
+            "d": 1
           },
           {
             "op": "Wamai",
@@ -11153,7 +11155,7 @@
             "d": 1
           },
           {
-            "op": "Warden",
+            "op": "Fenrir",
             "side": "Defender",
             "rp": 1,
             "wp": 100,
@@ -11166,28 +11168,15 @@
             "d": 0
           },
           {
-            "op": "Ace",
+            "op": "Thermite",
             "side": "Attacker",
             "rp": 1,
             "wp": 100,
-            "kd": 3,
-            "hs": 100,
-            "hsc": 3,
-            "w": 1,
-            "l": 0,
-            "k": 3,
-            "d": 0
-          },
-          {
-            "op": "Thatcher",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
             "kd": 0,
             "hs": 0,
             "hsc": 0,
-            "w": 0,
-            "l": 1,
+            "w": 1,
+            "l": 0,
             "k": 0,
             "d": 1
           },
@@ -11203,6 +11192,32 @@
             "l": 0,
             "k": 2,
             "d": 0
+          },
+          {
+            "op": "Warden",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 2,
+            "hs": 100,
+            "hsc": 2,
+            "w": 1,
+            "l": 0,
+            "k": 2,
+            "d": 0
+          },
+          {
+            "op": "Thatcher",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
           },
           {
             "op": "Goyo",
@@ -11231,30 +11246,17 @@
             "d": 1
           },
           {
-            "op": "Fenrir",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
-            "w": 1,
-            "l": 0,
-            "k": 2,
-            "d": 0
-          },
-          {
-            "op": "Thermite",
+            "op": "Ace",
             "side": "Attacker",
             "rp": 1,
             "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
+            "kd": 3,
+            "hs": 100,
+            "hsc": 3,
             "w": 1,
             "l": 0,
-            "k": 0,
-            "d": 1
+            "k": 3,
+            "d": 0
           }
         ],
         "ranked|38": [
@@ -12699,11 +12701,7 @@
             "d": 2
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Rate limit exceeded",
-      "fetchFailed": true,
-      "lastStatus": 429
+      }
     },
     {
       "key": "dennis",
@@ -13262,19 +13260,6 @@
             "d": 9
           },
           {
-            "op": "Ace",
-            "side": "Attacker",
-            "rp": 9,
-            "wp": 44.44,
-            "kd": 0.29,
-            "hs": 0,
-            "hsc": 0,
-            "w": 4,
-            "l": 5,
-            "k": 2,
-            "d": 7
-          },
-          {
             "op": "IQ",
             "side": "Attacker",
             "rp": 9,
@@ -13284,6 +13269,19 @@
             "hsc": 2,
             "w": 3,
             "l": 6,
+            "k": 2,
+            "d": 7
+          },
+          {
+            "op": "Ace",
+            "side": "Attacker",
+            "rp": 9,
+            "wp": 44.44,
+            "kd": 0.29,
+            "hs": 0,
+            "hsc": 0,
+            "w": 4,
+            "l": 5,
             "k": 2,
             "d": 7
           },
@@ -13301,19 +13299,6 @@
             "d": 3
           },
           {
-            "op": "Kaid",
-            "side": "Defender",
-            "rp": 6,
-            "wp": 33.33,
-            "kd": 0.4,
-            "hs": 100,
-            "hsc": 2,
-            "w": 2,
-            "l": 4,
-            "k": 2,
-            "d": 5
-          },
-          {
             "op": "Lesion",
             "side": "Defender",
             "rp": 6,
@@ -13327,17 +13312,17 @@
             "d": 1
           },
           {
-            "op": "Thatcher",
-            "side": "Attacker",
-            "rp": 5,
-            "wp": 20,
-            "kd": 0.75,
+            "op": "Kaid",
+            "side": "Defender",
+            "rp": 6,
+            "wp": 33.33,
+            "kd": 0.4,
             "hs": 100,
-            "hsc": 3,
-            "w": 1,
+            "hsc": 2,
+            "w": 2,
             "l": 4,
-            "k": 3,
-            "d": 4
+            "k": 2,
+            "d": 5
           },
           {
             "op": "Melusi",
@@ -13350,45 +13335,6 @@
             "w": 4,
             "l": 1,
             "k": 2,
-            "d": 4
-          },
-          {
-            "op": "Osa",
-            "side": "Attacker",
-            "rp": 5,
-            "wp": 80,
-            "kd": 0.67,
-            "hs": 100,
-            "hsc": 2,
-            "w": 4,
-            "l": 1,
-            "k": 2,
-            "d": 3
-          },
-          {
-            "op": "Thunderbird",
-            "side": "Defender",
-            "rp": 5,
-            "wp": 60,
-            "kd": 3,
-            "hs": 83.33,
-            "hsc": 5,
-            "w": 3,
-            "l": 2,
-            "k": 6,
-            "d": 2
-          },
-          {
-            "op": "Ying",
-            "side": "Attacker",
-            "rp": 5,
-            "wp": 40,
-            "kd": 1.75,
-            "hs": 71.43,
-            "hsc": 5,
-            "w": 2,
-            "l": 3,
-            "k": 7,
             "d": 4
           },
           {
@@ -13405,6 +13351,32 @@
             "d": 4
           },
           {
+            "op": "Ying",
+            "side": "Attacker",
+            "rp": 5,
+            "wp": 40,
+            "kd": 1.75,
+            "hs": 71.43,
+            "hsc": 5,
+            "w": 2,
+            "l": 3,
+            "k": 7,
+            "d": 4
+          },
+          {
+            "op": "Thunderbird",
+            "side": "Defender",
+            "rp": 5,
+            "wp": 60,
+            "kd": 3,
+            "hs": 83.33,
+            "hsc": 5,
+            "w": 3,
+            "l": 2,
+            "k": 6,
+            "d": 2
+          },
+          {
             "op": "Valkyrie",
             "side": "Defender",
             "rp": 5,
@@ -13415,6 +13387,32 @@
             "w": 4,
             "l": 1,
             "k": 3,
+            "d": 3
+          },
+          {
+            "op": "Thatcher",
+            "side": "Attacker",
+            "rp": 5,
+            "wp": 20,
+            "kd": 0.75,
+            "hs": 100,
+            "hsc": 3,
+            "w": 1,
+            "l": 4,
+            "k": 3,
+            "d": 4
+          },
+          {
+            "op": "Osa",
+            "side": "Attacker",
+            "rp": 5,
+            "wp": 80,
+            "kd": 0.67,
+            "hs": 100,
+            "hsc": 2,
+            "w": 4,
+            "l": 1,
+            "k": 2,
             "d": 3
           },
           {
@@ -13457,17 +13455,17 @@
             "d": 3
           },
           {
-            "op": "Kali",
-            "side": "Attacker",
+            "op": "Oryx",
+            "side": "Defender",
             "rp": 3,
-            "wp": 66.67,
-            "kd": 2,
-            "hs": 100,
-            "hsc": 2,
-            "w": 2,
-            "l": 1,
+            "wp": 33.33,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 2,
             "k": 2,
-            "d": 1
+            "d": 2
           },
           {
             "op": "Wamai",
@@ -13483,28 +13481,15 @@
             "d": 2
           },
           {
-            "op": "Oryx",
-            "side": "Defender",
+            "op": "Kali",
+            "side": "Attacker",
             "rp": 3,
-            "wp": 33.33,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 2,
-            "k": 2,
-            "d": 2
-          },
-          {
-            "op": "Mozzie",
-            "side": "Defender",
-            "rp": 2,
-            "wp": 100,
+            "wp": 66.67,
             "kd": 2,
-            "hs": 50,
-            "hsc": 1,
+            "hs": 100,
+            "hsc": 2,
             "w": 2,
-            "l": 0,
+            "l": 1,
             "k": 2,
             "d": 1
           },
@@ -13522,81 +13507,16 @@
             "d": 2
           },
           {
-            "op": "Amaru",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Kapkan",
+            "op": "Mozzie",
             "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Mira",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 1,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 1,
-            "d": 0
-          },
-          {
-            "op": "Tachanka",
-            "side": "Defender",
-            "rp": 1,
+            "rp": 2,
             "wp": 100,
             "kd": 2,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
+            "hs": 50,
+            "hsc": 1,
+            "w": 2,
             "l": 0,
             "k": 2,
-            "d": 0
-          },
-          {
-            "op": "Skopós",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Glaz",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 1,
-            "w": 0,
-            "l": 1,
-            "k": 1,
             "d": 1
           },
           {
@@ -13613,33 +13533,7 @@
             "d": 1
           },
           {
-            "op": "Pulse",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 100,
-            "kd": 3,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 3,
-            "d": 0
-          },
-          {
-            "op": "Sentry",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Castle",
+            "op": "Kapkan",
             "side": "Defender",
             "rp": 1,
             "wp": 0,
@@ -13663,6 +13557,32 @@
             "l": 1,
             "k": 0,
             "d": 1
+          },
+          {
+            "op": "Amaru",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Mira",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 1,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 1,
+            "d": 0
           },
           {
             "op": "Clash",
@@ -13702,22 +13622,87 @@
             "l": 0,
             "k": 0,
             "d": 1
+          },
+          {
+            "op": "Sentry",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Glaz",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
+            "w": 0,
+            "l": 1,
+            "k": 1,
+            "d": 1
+          },
+          {
+            "op": "Skopós",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Tachanka",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 2,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 2,
+            "d": 0
+          },
+          {
+            "op": "Castle",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Pulse",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 3,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 3,
+            "d": 0
           }
         ],
         "unranked|43": [
-          {
-            "op": "Smoke",
-            "side": "Defender",
-            "rp": 6,
-            "wp": 50,
-            "kd": 0.75,
-            "hs": 66.67,
-            "hsc": 2,
-            "w": 3,
-            "l": 3,
-            "k": 3,
-            "d": 4
-          },
           {
             "op": "Jäger",
             "side": "Defender",
@@ -13730,6 +13715,19 @@
             "l": 2,
             "k": 7,
             "d": 3
+          },
+          {
+            "op": "Smoke",
+            "side": "Defender",
+            "rp": 6,
+            "wp": 50,
+            "kd": 0.75,
+            "hs": 66.67,
+            "hsc": 2,
+            "w": 3,
+            "l": 3,
+            "k": 3,
+            "d": 4
           },
           {
             "op": "Ash",
@@ -13771,17 +13769,17 @@
             "d": 2
           },
           {
-            "op": "Vigil",
-            "side": "Defender",
+            "op": "Iana",
+            "side": "Attacker",
             "rp": 1,
-            "wp": 100,
-            "kd": 3,
-            "hs": 66.67,
-            "hsc": 2,
-            "w": 1,
-            "l": 0,
-            "k": 3,
-            "d": 0
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
           },
           {
             "op": "Jackal",
@@ -13797,29 +13795,16 @@
             "d": 0
           },
           {
-            "op": "Bandit",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Iana",
+            "op": "Twitch",
             "side": "Attacker",
             "rp": 1,
             "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
+            "kd": 1,
+            "hs": 100,
+            "hsc": 1,
             "w": 0,
             "l": 1,
-            "k": 0,
+            "k": 1,
             "d": 1
           },
           {
@@ -13836,16 +13821,29 @@
             "d": 1
           },
           {
-            "op": "Twitch",
-            "side": "Attacker",
+            "op": "Vigil",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 100,
+            "kd": 3,
+            "hs": 66.67,
+            "hsc": 2,
+            "w": 1,
+            "l": 0,
+            "k": 3,
+            "d": 0
+          },
+          {
+            "op": "Bandit",
+            "side": "Defender",
             "rp": 1,
             "wp": 0,
-            "kd": 1,
-            "hs": 100,
-            "hsc": 1,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
             "w": 0,
             "l": 1,
-            "k": 1,
+            "k": 0,
             "d": 1
           },
           {
@@ -13903,6 +13901,19 @@
             "d": 2
           },
           {
+            "op": "Sledge",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
             "op": "Tachanka",
             "side": "Defender",
             "rp": 1,
@@ -13926,19 +13937,6 @@
             "w": 0,
             "l": 1,
             "k": 2,
-            "d": 1
-          },
-          {
-            "op": "Sledge",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
             "d": 1
           }
         ],
@@ -14890,11 +14888,7 @@
             "d": 0
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Rate limit exceeded",
-      "fetchFailed": true,
-      "lastStatus": 429
+      }
     },
     {
       "key": "pedro-tembra",
@@ -15355,11 +15349,7 @@
             "d": 1
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Rate limit exceeded",
-      "fetchFailed": true,
-      "lastStatus": 429
+      }
     },
     {
       "key": "jp-korte",
