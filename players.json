@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-22T18:11:13.612Z",
+  "updated": "2026-09-23T14:25:40.478Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -116,11 +116,33 @@
         {
           "type": "season",
           "season": 43,
+          "gamemode": "pvp_standard",
+          "won": 16,
+          "lost": 11,
+          "kills": 141,
+          "deaths": 113,
+          "rankPoints": 0,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 43,
           "gamemode": "pvp_warmup",
           "won": 0,
           "lost": 5,
           "kills": 84,
           "deaths": 83,
+          "rankPoints": null,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 43,
+          "gamemode": "pvp_event",
+          "won": 1,
+          "lost": 0,
+          "kills": 3,
+          "deaths": 3,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -137,23 +159,12 @@
         },
         {
           "type": "season",
-          "season": 43,
-          "gamemode": "pvp_standard",
-          "won": 16,
-          "lost": 11,
-          "kills": 141,
-          "deaths": 113,
-          "rankPoints": 0,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 43,
-          "gamemode": "pvp_event",
-          "won": 1,
-          "lost": 0,
-          "kills": 3,
-          "deaths": 3,
+          "season": 42,
+          "gamemode": "pvp_casual",
+          "won": 4,
+          "lost": 2,
+          "kills": 16,
+          "deaths": 17,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -181,13 +192,13 @@
         },
         {
           "type": "season",
-          "season": 42,
-          "gamemode": "pvp_casual",
-          "won": 4,
-          "lost": 2,
-          "kills": 16,
-          "deaths": 17,
-          "rankPoints": null,
+          "season": 41,
+          "gamemode": "pvp_living_game_mode",
+          "won": 2,
+          "lost": 0,
+          "kills": 11,
+          "deaths": 15,
+          "rankPoints": 0,
           "maxRankPoints": null
         },
         {
@@ -198,17 +209,6 @@
           "lost": 25,
           "kills": 228,
           "deaths": 180,
-          "rankPoints": 0,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 41,
-          "gamemode": "pvp_living_game_mode",
-          "won": 2,
-          "lost": 0,
-          "kills": 11,
-          "deaths": 15,
           "rankPoints": 0,
           "maxRankPoints": null
         },
@@ -226,22 +226,22 @@
         {
           "type": "season",
           "season": 41,
-          "gamemode": "pvp_event",
-          "won": 0,
-          "lost": 2,
-          "kills": 15,
-          "deaths": 31,
+          "gamemode": "pvp_warmup",
+          "won": 17,
+          "lost": 12,
+          "kills": 81,
+          "deaths": 108,
           "rankPoints": null,
           "maxRankPoints": null
         },
         {
           "type": "season",
           "season": 41,
-          "gamemode": "pvp_warmup",
-          "won": 17,
-          "lost": 12,
-          "kills": 81,
-          "deaths": 108,
+          "gamemode": "pvp_event",
+          "won": 0,
+          "lost": 2,
+          "kills": 15,
+          "deaths": 31,
           "rankPoints": null,
           "maxRankPoints": null
         }
@@ -9504,17 +9504,6 @@
         {
           "type": "season",
           "season": 43,
-          "gamemode": "pvp_casual",
-          "won": 5,
-          "lost": 2,
-          "kills": 33,
-          "deaths": 15,
-          "rankPoints": null,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 43,
           "gamemode": "pvp_standard",
           "won": 9,
           "lost": 5,
@@ -9525,23 +9514,12 @@
         },
         {
           "type": "season",
-          "season": 38,
-          "gamemode": "pvp_standard",
-          "won": 4,
+          "season": 43,
+          "gamemode": "pvp_casual",
+          "won": 5,
           "lost": 2,
-          "kills": 27,
-          "deaths": 20,
-          "rankPoints": 0,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 38,
-          "gamemode": "pvp_event",
-          "won": 1,
-          "lost": 0,
-          "kills": 2,
-          "deaths": 3,
+          "kills": 33,
+          "deaths": 15,
           "rankPoints": null,
           "maxRankPoints": null
         },
@@ -9559,12 +9537,34 @@
         {
           "type": "season",
           "season": 38,
+          "gamemode": "pvp_standard",
+          "won": 4,
+          "lost": 2,
+          "kills": 27,
+          "deaths": 20,
+          "rankPoints": 0,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 38,
           "gamemode": "pvp_living_game_mode",
           "won": 0,
           "lost": 1,
           "kills": 9,
           "deaths": 11,
           "rankPoints": 0,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 38,
+          "gamemode": "pvp_event",
+          "won": 1,
+          "lost": 0,
+          "kills": 2,
+          "deaths": 3,
+          "rankPoints": null,
           "maxRankPoints": null
         },
         {
@@ -15009,6 +15009,17 @@
         {
           "type": "season",
           "season": 43,
+          "gamemode": "pvp_casual",
+          "won": 13,
+          "lost": 14,
+          "kills": 47,
+          "deaths": 78,
+          "rankPoints": null,
+          "maxRankPoints": null
+        },
+        {
+          "type": "season",
+          "season": 43,
           "gamemode": "pvp_standard",
           "won": 8,
           "lost": 9,
@@ -15025,17 +15036,6 @@
           "lost": 0,
           "kills": 3,
           "deaths": 1,
-          "rankPoints": null,
-          "maxRankPoints": null
-        },
-        {
-          "type": "season",
-          "season": 43,
-          "gamemode": "pvp_casual",
-          "won": 13,
-          "lost": 14,
-          "kills": 47,
-          "deaths": 78,
           "rankPoints": null,
           "maxRankPoints": null
         },
