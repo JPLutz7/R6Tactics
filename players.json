@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-30T14:24:30.430Z",
+  "updated": "2026-09-30T19:29:34.824Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
-  "keyStatus": "ok",
+  "keyStatus": "down",
   "quota": null,
-  "syncError": null,
+  "syncError": "Rate limit exceeded",
   "players": [
     {
       "key": "joao",
@@ -5350,7 +5350,11 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "leme",
@@ -9538,7 +9542,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "snell",
@@ -13572,7 +13580,11 @@
             "d": 2
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "dennis",
@@ -15759,7 +15771,11 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "pedro-tembra",
@@ -17288,7 +17304,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "jp-korte",
@@ -20082,7 +20102,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     }
   ]
 }
