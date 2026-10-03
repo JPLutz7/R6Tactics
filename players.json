@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03T14:25:33.882Z",
+  "updated": "2026-10-03T18:03:15.419Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -10000,6 +10000,11 @@
       ],
       "mmrHistory": [
         {
+          "ts": "2026-10-02T22:08:28.268+00:00",
+          "value": 2754,
+          "rank": "Gold 3"
+        },
+        {
           "ts": "2026-10-02T04:56:45.153+00:00",
           "value": 2717,
           "rank": "Gold 3"
@@ -10066,9 +10071,9 @@
         }
       ],
       "rank": {
-        "name": "Gold 3",
-        "color": "#e5c613",
-        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/gold-3.webp",
+        "name": null,
+        "color": null,
+        "img": null,
         "points": 2717,
         "season": 43
       },
