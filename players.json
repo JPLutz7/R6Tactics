@@ -1,14 +1,9 @@
 {
-  "updated": "2026-10-21T14:24:13.713Z",
+  "updated": "2026-10-21T18:45:35.670Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": {
-    "plan": "free",
-    "limit": 2000,
-    "used": 1328,
-    "checked": "2026-10-21T14:24:13.713Z"
-  },
+  "quota": null,
   "syncError": null,
   "players": [
     {
