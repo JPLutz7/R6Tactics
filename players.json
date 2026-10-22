@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T18:45:35.670Z",
+  "updated": "2026-10-22T14:24:20.714Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -21315,7 +21315,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     }
   ]
 }
