@@ -1,14 +1,9 @@
 {
-  "updated": "2026-10-28T19:40:07.453Z",
+  "updated": "2026-10-29T14:24:08.398Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": {
-    "plan": "free",
-    "limit": 2000,
-    "used": 1860,
-    "checked": "2026-10-28T19:40:07.452Z"
-  },
+  "quota": null,
   "syncError": null,
   "players": [
     {
@@ -22362,7 +22357,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     }
   ]
 }
