@@ -1,15 +1,15 @@
 {
-  "updated": "2026-10-30T19:31:15.183Z",
+  "updated": "2026-10-31T14:25:02.721Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
-  "keyStatus": "ok",
+  "keyStatus": "down",
   "quota": {
     "plan": "free",
     "limit": 2000,
     "used": 1999,
-    "checked": "2026-10-30T19:31:15.182Z"
+    "checked": "2026-10-31T14:25:02.721Z"
   },
-  "syncError": null,
+  "syncError": "Monthly quota reached",
   "players": [
     {
       "key": "joao",
@@ -5110,9 +5110,9 @@
         ]
       },
       "stale": true,
-      "staleReason": "Player not found",
+      "staleReason": "Monthly quota reached",
       "fetchFailed": true,
-      "lastStatus": 404
+      "lastStatus": 429
     },
     {
       "key": "leme",
@@ -9300,7 +9300,11 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Monthly quota reached",
+      "fetchFailed": true,
+      "lastStatus": 429
     },
     {
       "key": "snell",
