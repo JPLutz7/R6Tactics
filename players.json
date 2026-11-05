@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T14:25:51.697Z",
+  "updated": "2026-11-05T21:07:56.903Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -5103,7 +5103,11 @@
             "d": 0
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Player not found",
+      "fetchFailed": true,
+      "lastStatus": 404
     },
     {
       "key": "leme",
@@ -9722,6 +9726,26 @@
       ],
       "mmrHistory": [
         {
+          "ts": "2026-11-05T18:35:30.011+00:00",
+          "value": 3070,
+          "rank": "Platinum 5"
+        },
+        {
+          "ts": "2026-11-05T18:13:27.498+00:00",
+          "value": 3100,
+          "rank": "Platinum 4"
+        },
+        {
+          "ts": "2026-11-05T04:48:32.467+00:00",
+          "value": 3069,
+          "rank": "Platinum 5"
+        },
+        {
+          "ts": "2026-11-05T04:05:08.13+00:00",
+          "value": 3100,
+          "rank": "Platinum 4"
+        },
+        {
           "ts": "2026-11-04T04:47:48.874+00:00",
           "value": 3104,
           "rank": "Platinum 4"
@@ -10009,36 +10033,6 @@
         {
           "ts": "2026-10-13T19:44:04.196+00:00",
           "value": 2734,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-06T04:24:15.77+00:00",
-          "value": 2800,
-          "rank": "Gold 2"
-        },
-        {
-          "ts": "2026-10-06T03:46:32.111+00:00",
-          "value": 2822,
-          "rank": "Gold 2"
-        },
-        {
-          "ts": "2026-10-06T03:25:20.517+00:00",
-          "value": 2787,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-06T02:59:46.33+00:00",
-          "value": 2749,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-06T02:40:10.2+00:00",
-          "value": 2714,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-06T01:22:57.755+00:00",
-          "value": 2745,
           "rank": "Gold 3"
         }
       ],
@@ -22374,7 +22368,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     }
   ]
 }
