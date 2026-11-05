@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T20:51:30.840Z",
+  "updated": "2026-11-05T14:25:51.697Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -19411,6 +19411,26 @@
       ],
       "mmrHistory": [
         {
+          "ts": "2026-11-04T04:47:48.874+00:00",
+          "value": 2200,
+          "rank": "Silver 3"
+        },
+        {
+          "ts": "2026-11-03T04:50:45.391+00:00",
+          "value": 2296,
+          "rank": "Silver 3"
+        },
+        {
+          "ts": "2026-11-03T04:20:32.578+00:00",
+          "value": 2257,
+          "rank": "Silver 3"
+        },
+        {
+          "ts": "2026-11-03T03:56:46.051+00:00",
+          "value": 2218,
+          "rank": "Silver 3"
+        },
+        {
           "ts": "2026-10-30T02:17:17.811+00:00",
           "value": 2247,
           "rank": "Silver 3"
@@ -19569,32 +19589,12 @@
           "ts": "2026-10-06T02:40:10.2+00:00",
           "value": 2172,
           "rank": "Silver 4"
-        },
-        {
-          "ts": "2026-10-05T04:28:34.381+00:00",
-          "value": 2200,
-          "rank": "Silver 3"
-        },
-        {
-          "ts": "2026-10-05T03:58:29.557+00:00",
-          "value": 2214,
-          "rank": "Silver 3"
-        },
-        {
-          "ts": "2026-10-05T03:13:35.039+00:00",
-          "value": 2174,
-          "rank": "Silver 4"
-        },
-        {
-          "ts": "2026-10-05T02:46:44.5+00:00",
-          "value": 2200,
-          "rank": "Silver 3"
         }
       ],
       "rank": {
-        "name": "Silver 3",
-        "color": "#a4a4a4",
-        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/silver-3.webp",
+        "name": null,
+        "color": null,
+        "img": null,
         "points": 2247,
         "season": 43
       },
