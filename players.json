@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T21:07:56.903Z",
+  "updated": "2026-11-06T14:24:16.083Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
@@ -9309,12 +9309,12 @@
           "type": "season",
           "season": 43,
           "gamemode": "pvp_ranked",
-          "won": 51,
-          "lost": 36,
-          "kills": 529,
-          "deaths": 350,
-          "rankPoints": 3141,
-          "maxRankPoints": 3184
+          "won": 54,
+          "lost": 42,
+          "kills": 572,
+          "deaths": 391,
+          "rankPoints": 3070,
+          "maxRankPoints": 3204
         },
         {
           "type": "season",
@@ -10037,10 +10037,10 @@
         }
       ],
       "rank": {
-        "name": null,
-        "color": null,
-        "img": null,
-        "points": 3141,
+        "name": "Platinum 5",
+        "color": "#44ccc2",
+        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/platinum-5.webp",
+        "points": 3070,
         "season": 43
       },
       "seasons": [
