@@ -1,14 +1,9 @@
 {
-  "updated": "2026-11-13T14:24:22.245Z",
+  "updated": "2026-11-13T20:57:27.694Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": {
-    "plan": "free",
-    "limit": 2000,
-    "used": 942,
-    "checked": "2026-11-13T14:24:22.245Z"
-  },
+  "quota": null,
   "syncError": null,
   "players": [
     {
@@ -5108,11 +5103,7 @@
             "d": 0
           }
         ]
-      },
-      "stale": true,
-      "staleReason": "Player not found",
-      "fetchFailed": true,
-      "lastStatus": 404
+      }
     },
     {
       "key": "leme",
@@ -9731,6 +9722,16 @@
       ],
       "mmrHistory": [
         {
+          "ts": "2026-11-13T00:10:26.387+00:00",
+          "value": 3162,
+          "rank": "Platinum 4"
+        },
+        {
+          "ts": "2026-11-12T23:43:52.003+00:00",
+          "value": 3131,
+          "rank": "Platinum 4"
+        },
+        {
           "ts": "2026-11-09T04:25:35.653+00:00",
           "value": 3100,
           "rank": "Platinum 4"
@@ -10034,42 +10035,12 @@
           "ts": "2026-10-14T20:59:41.992+00:00",
           "value": 2751,
           "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-14T01:35:20.239+00:00",
-          "value": 2782,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-14T00:49:35.259+00:00",
-          "value": 2747,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-14T00:26:45.842+00:00",
-          "value": 2709,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-13T23:48:41.823+00:00",
-          "value": 2738,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-13T20:08:41.631+00:00",
-          "value": 2769,
-          "rank": "Gold 3"
-        },
-        {
-          "ts": "2026-10-13T19:44:04.196+00:00",
-          "value": 2734,
-          "rank": "Gold 3"
         }
       ],
       "rank": {
-        "name": "Platinum 4",
-        "color": "#44ccc2",
-        "img": "https://r6.arenyze.com/assets/img/r6_ranks_img/platinum-4.webp",
+        "name": null,
+        "color": null,
+        "img": null,
         "points": 3100,
         "season": 43
       },
@@ -16886,26 +16857,6 @@
           "ts": "2026-10-15T04:53:14.933+00:00",
           "value": 1000,
           "rank": "Copper 5"
-        },
-        {
-          "ts": "2026-10-14T03:18:53.225+00:00",
-          "value": 1014,
-          "rank": "Copper 5"
-        },
-        {
-          "ts": "2026-10-14T02:42:48.259+00:00",
-          "value": 1044,
-          "rank": "Copper 5"
-        },
-        {
-          "ts": "2026-10-11T18:45:37.94+00:00",
-          "value": 1073,
-          "rank": "Copper 5"
-        },
-        {
-          "ts": "2026-10-11T18:26:21.812+00:00",
-          "value": 1100,
-          "rank": "Copper 4"
         }
       ],
       "rank": {
@@ -22422,7 +22373,11 @@
             "d": 1
           }
         ]
-      }
+      },
+      "stale": true,
+      "staleReason": "Rate limit exceeded",
+      "fetchFailed": true,
+      "lastStatus": 429
     }
   ]
 }
