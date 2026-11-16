@@ -59835,7 +59835,7 @@ function toggleMenu(force){ const m=byId("dataMenu"); const show=force==null?!m.
  *  GitHub Action that commits players.json — the app just reads it)
  * =================================================================== */
 let STATS_DATA=null, STATS_FETCHED=0, STATS_LOADING=false;
-const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPLutz7"},{key:"leme",label:"Leme",handle:"Mtaro."},{key:"max",label:"Max",handle:"lnteligent."},{key:"lora",label:"Lora",handle:"",unlinked:true},{key:"unknown",label:"unknown",handle:"",unlinked:true}];
+const STATS_FALLBACK=[{key:"joao",label:"Joao",handle:"JPOstra7"},{key:"leme",label:"Leme",handle:"Mtaro."},{key:"max",label:"Max",handle:"lnteligent."},{key:"lora",label:"Lora",handle:"",unlinked:true},{key:"unknown",label:"unknown",handle:"",unlinked:true}];
 function statsRecords(){ return (STATS_DATA&&STATS_DATA.players&&STATS_DATA.players.length)?STATS_DATA.players:STATS_FALLBACK; }
 // find the fetched stats record for a roster name (match on label, config key, or Ubisoft handle)
 function statsRecordFor(name,recs){ const nm=normTxt(name); if(!nm) return null;
@@ -61056,7 +61056,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 89;
+const APP_BUILD = 90;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
