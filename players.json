@@ -1,14 +1,9 @@
 {
-  "updated": "2026-11-16T14:24:06.816Z",
+  "updated": "2026-11-16T21:08:29.878Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": {
-    "plan": "free",
-    "limit": 2000,
-    "used": 1158,
-    "checked": "2026-11-16T14:24:06.816Z"
-  },
+  "quota": null,
   "syncError": null,
   "players": [
     {
@@ -5110,9 +5105,9 @@
         ]
       },
       "stale": true,
-      "staleReason": "Player not found",
+      "staleReason": "Service temporarily unavailable",
       "fetchFailed": true,
-      "lastStatus": 404
+      "lastStatus": 503
     },
     {
       "key": "leme",
