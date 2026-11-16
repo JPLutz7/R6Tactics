@@ -6,7 +6,7 @@
   "api_key_expires": null,
   "platform_families": "pc",
   "players": [
-    { "key": "joao", "label": "Joao", "handle": "JPLutz7", "platform": "uplay" },
+    { "key": "joao", "label": "Joao", "handle": "JPOstra7", "platform": "uplay" },
     { "key": "leme", "label": "Leme", "handle": "Mtaro.", "platform": "uplay" },
     { "key": "snell", "label": "Snell", "handle": "CaF4SS0_12", "platform": "uplay" },
     { "key": "dennis", "label": "Dennis", "handle": "yNetinn.Tlz", "platform": "uplay" },
