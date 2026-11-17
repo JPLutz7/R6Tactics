@@ -841,6 +841,35 @@ players all want Entry, one takes the Entry slot and the rest are placed in the 
 sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
 double-booked.
 
+### Stats sync: rename, rate limits, double schedule, muted alarm (Nov 2026, builds 90-91)
+Found while answering "is the pull working?": **João's card had refreshed in only 9 of the last 50 syncs** (22 Oct-16 Nov)
+and nothing said so. Four separate causes, all fixed:
+1. **Ubisoft rename.** João went JPLutz7 → **JPOstra7**. Arenyze looks players up by **name only** (`nameOnPlatform`; no
+   profile-ID option), so every sync returned `PLAYER_NOT_FOUND` and preserve-on-fail served 13 Nov data. Handle updated
+   in `players.config.json` + `STATS_FALLBACK`. **`JPLutz7` is still his GitHub username** (repo path, publish worker,
+   issue assignee) — don't "fix" those. As of 17 Nov the new name gets `503 Service temporarily unavailable` (2 of 2
+   tries) while the other five fetch fine — unresolved at the time of writing; if it persists, re-check the exact
+   spelling/case with the owner.
+2. **Rate limiting ignored.** Arenyze sends `X-RateLimit-Remaining`, `Retry-After`, `X-Quota-Used/Limit` on every
+   response (docs.arenyze.com/limits). `api()` used to retry a 429 after 1.5/3/6s — still inside the same minute — and
+   give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
+   pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
+   **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
+   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
+   doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
+   Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
+   manual runs: two back-to-back runs on 16 Nov rate-limited all six players.
+4. **Alarm muted since August.** It de-dupes on an open `r6data-key` issue, and nothing ever closed one — so #136 (an
+   Aug key-expiry warning for a key replaced in Sept) silenced every alarm after it. The alarm step now **auto-closes**
+   its open issues when a run is healthy; #136 closed by hand.
+
+**Stale data is now visible.** The sync stamps `fetchedAt` on each player it actually refreshes and carries it over
+when it preserves old data; a preserved record takes its key/label/**handle**/platform from the config (it used to
+keep the old name). The Players tab shows ⏳ on a stale player's chip, "stats from N d ago" in the header, and a
+banner saying when the numbers are from and why, in plain words (`staleWhy()`). João's `fetchedAt` was seeded to
+2026-11-13T20:57:27Z from git history.
+
 ### Still open (for the next chat)
 1. ~~The 11 "Other" maps tactics revision~~ — **DONE in §15** (all 25 maps revised).
 2. **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -1025,6 +1054,35 @@ Four places enforced it, all in `index.html`:
 players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
 sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
 double-booked.
+
+### Stats sync: rename, rate limits, double schedule, muted alarm (Nov 2026, builds 90-91)
+Found while answering "is the pull working?": **João's card had refreshed in only 9 of the last 50 syncs** (22 Oct-16 Nov)
+and nothing said so. Four separate causes, all fixed:
+1. **Ubisoft rename.** João went JPLutz7 → **JPOstra7**. Arenyze looks players up by **name only** (`nameOnPlatform`; no
+   profile-ID option), so every sync returned `PLAYER_NOT_FOUND` and preserve-on-fail served 13 Nov data. Handle updated
+   in `players.config.json` + `STATS_FALLBACK`. **`JPLutz7` is still his GitHub username** (repo path, publish worker,
+   issue assignee) — don't "fix" those. As of 17 Nov the new name gets `503 Service temporarily unavailable` (2 of 2
+   tries) while the other five fetch fine — unresolved at the time of writing; if it persists, re-check the exact
+   spelling/case with the owner.
+2. **Rate limiting ignored.** Arenyze sends `X-RateLimit-Remaining`, `Retry-After`, `X-Quota-Used/Limit` on every
+   response (docs.arenyze.com/limits). `api()` used to retry a 429 after 1.5/3/6s — still inside the same minute — and
+   give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
+   pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
+   **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
+   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
+   doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
+   Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
+   manual runs: two back-to-back runs on 16 Nov rate-limited all six players.
+4. **Alarm muted since August.** It de-dupes on an open `r6data-key` issue, and nothing ever closed one — so #136 (an
+   Aug key-expiry warning for a key replaced in Sept) silenced every alarm after it. The alarm step now **auto-closes**
+   its open issues when a run is healthy; #136 closed by hand.
+
+**Stale data is now visible.** The sync stamps `fetchedAt` on each player it actually refreshes and carries it over
+when it preserves old data; a preserved record takes its key/label/**handle**/platform from the config (it used to
+keep the old name). The Players tab shows ⏳ on a stale player's chip, "stats from N d ago" in the header, and a
+banner saying when the numbers are from and why, in plain words (`staleWhy()`). João's `fetchedAt` was seeded to
+2026-11-13T20:57:27Z from git history.
 
 ### Still open (for the next chat)
 - **Link Lora + the 5th member** in `scripts/players.config.json` (owner gives handles) → then set
@@ -1216,6 +1274,35 @@ Four places enforced it, all in `index.html`:
 players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
 sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
 double-booked.
+
+### Stats sync: rename, rate limits, double schedule, muted alarm (Nov 2026, builds 90-91)
+Found while answering "is the pull working?": **João's card had refreshed in only 9 of the last 50 syncs** (22 Oct-16 Nov)
+and nothing said so. Four separate causes, all fixed:
+1. **Ubisoft rename.** João went JPLutz7 → **JPOstra7**. Arenyze looks players up by **name only** (`nameOnPlatform`; no
+   profile-ID option), so every sync returned `PLAYER_NOT_FOUND` and preserve-on-fail served 13 Nov data. Handle updated
+   in `players.config.json` + `STATS_FALLBACK`. **`JPLutz7` is still his GitHub username** (repo path, publish worker,
+   issue assignee) — don't "fix" those. As of 17 Nov the new name gets `503 Service temporarily unavailable` (2 of 2
+   tries) while the other five fetch fine — unresolved at the time of writing; if it persists, re-check the exact
+   spelling/case with the owner.
+2. **Rate limiting ignored.** Arenyze sends `X-RateLimit-Remaining`, `Retry-After`, `X-Quota-Used/Limit` on every
+   response (docs.arenyze.com/limits). `api()` used to retry a 429 after 1.5/3/6s — still inside the same minute — and
+   give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
+   pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
+   **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
+   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
+   doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
+   Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
+   manual runs: two back-to-back runs on 16 Nov rate-limited all six players.
+4. **Alarm muted since August.** It de-dupes on an open `r6data-key` issue, and nothing ever closed one — so #136 (an
+   Aug key-expiry warning for a key replaced in Sept) silenced every alarm after it. The alarm step now **auto-closes**
+   its open issues when a run is healthy; #136 closed by hand.
+
+**Stale data is now visible.** The sync stamps `fetchedAt` on each player it actually refreshes and carries it over
+when it preserves old data; a preserved record takes its key/label/**handle**/platform from the config (it used to
+keep the old name). The Players tab shows ⏳ on a stale player's chip, "stats from N d ago" in the header, and a
+banner saying when the numbers are from and why, in plain words (`staleWhy()`). João's `fetchedAt` was seeded to
+2026-11-13T20:57:27Z from git history.
 
 ### Still open (unchanged)
 - **Link Lora + the 5th member** in `scripts/players.config.json` → then **`RELEASE="1.0"`** to leave Alpha. Still the only
@@ -1437,6 +1524,35 @@ Four places enforced it, all in `index.html`:
 players all want Entry, one takes the Entry slot and the rest are placed in the remaining slots. Verified: 4 players
 sharing `entry-atk` survive `normalizeDB` and a save round-trip, and all 5 active players still get a slot with none
 double-booked.
+
+### Stats sync: rename, rate limits, double schedule, muted alarm (Nov 2026, builds 90-91)
+Found while answering "is the pull working?": **João's card had refreshed in only 9 of the last 50 syncs** (22 Oct-16 Nov)
+and nothing said so. Four separate causes, all fixed:
+1. **Ubisoft rename.** João went JPLutz7 → **JPOstra7**. Arenyze looks players up by **name only** (`nameOnPlatform`; no
+   profile-ID option), so every sync returned `PLAYER_NOT_FOUND` and preserve-on-fail served 13 Nov data. Handle updated
+   in `players.config.json` + `STATS_FALLBACK`. **`JPLutz7` is still his GitHub username** (repo path, publish worker,
+   issue assignee) — don't "fix" those. As of 17 Nov the new name gets `503 Service temporarily unavailable` (2 of 2
+   tries) while the other five fetch fine — unresolved at the time of writing; if it persists, re-check the exact
+   spelling/case with the owner.
+2. **Rate limiting ignored.** Arenyze sends `X-RateLimit-Remaining`, `Retry-After`, `X-Quota-Used/Limit` on every
+   response (docs.arenyze.com/limits). `api()` used to retry a 429 after 1.5/3/6s — still inside the same minute — and
+   give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
+   pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
+   **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
+   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
+   doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
+   Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
+   manual runs: two back-to-back runs on 16 Nov rate-limited all six players.
+4. **Alarm muted since August.** It de-dupes on an open `r6data-key` issue, and nothing ever closed one — so #136 (an
+   Aug key-expiry warning for a key replaced in Sept) silenced every alarm after it. The alarm step now **auto-closes**
+   its open issues when a run is healthy; #136 closed by hand.
+
+**Stale data is now visible.** The sync stamps `fetchedAt` on each player it actually refreshes and carries it over
+when it preserves old data; a preserved record takes its key/label/**handle**/platform from the config (it used to
+keep the old name). The Players tab shows ⏳ on a stale player's chip, "stats from N d ago" in the header, and a
+banner saying when the numbers are from and why, in plain words (`staleWhy()`). João's `fetchedAt` was seeded to
+2026-11-13T20:57:27Z from git history.
 
 ### Still open
 - ~~Decide whether `max` stays in the config~~ — removed at the owner's request; `lora`/`unknown` (also off-roster) were

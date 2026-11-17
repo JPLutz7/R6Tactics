@@ -60019,14 +60019,29 @@ function mmrHistoryHTML(p){ if(UI.players.playlist!=="ranked") return "";
   if(pts.length<2) return "";
   return `<div class="pl-section-h">Rank by season <span class="muted small" style="font-weight:500;text-transform:none;letter-spacing:0">· peak reached each season</span></div>${sparklineSVG(pts.map(x=>x.value))}
     <div class="pl-mmrlist">${pts.slice().reverse().map(x=>`<div class="pl-mmrrow"><span class="muted small">${esc(x.label)}</span><b>${x.value!=null?x.value.toLocaleString():""}</b>${x.rank?`<span class="muted small">${esc(x.rank)}</span>`:""}</div>`).join("")}</div>`; }
+/* A card whose numbers are older than this sync. The sync keeps last-good data when a fetch fails
+   (so a blip never blanks a card), but until now nothing on screen said so — João's card sat on
+   13 Nov data for days after a Ubisoft rename with no hint. fetchedAt = when THIS player last
+   actually refreshed; older players.json files don't carry it, so it may be missing. */
+function staleWhy(reason){ const r=String(reason||"");
+  if(/not found/i.test(r)) return "Arenyze can't find this Ubisoft name. If they renamed, update their handle in scripts/players.config.json.";
+  if(/rate limit/i.test(r)) return "Arenyze rate-limited the sync. It retries automatically next run.";
+  if(/unavailable|upstream|timed out|50\d/i.test(r)) return "Arenyze's lookup was down. It retries automatically next run.";
+  if(/quota/i.test(r)) return "The monthly API allowance is used up. It resets with the next month.";
+  return r?("Last error: "+r):"The last sync couldn't refresh this player."; }
+function staleBannerHTML(p){ if(!p||!p.stale) return "";
+  const when=p.fetchedAt?new Date(p.fetchedAt).toLocaleDateString(undefined,{day:"numeric",month:"short"}):null;
+  return `<div class="pl-keybanner soon"><b>⏳ ${when?`These numbers are from ${esc(when)} (${esc(agoText(p.fetchedAt))})`:"These numbers are out of date"}</b> — the latest sync couldn't refresh ${esc(p.label||p.handle||"this player")}.
+    <div class="small" style="margin-top:4px">${esc(staleWhy(p.staleReason))}</div></div>`; }
 function renderPlayersTab(root){
   loadStats(false);
   const players=statsPlayers();
   if(!UI.players.touched) applyMeDefaults();   // default to your own card when you open the tab
   let si=players.findIndex(x=>x.key===UI.players.sel); if(si<0) si=0;
   const p=players[si]||players[0];
-  const plTag=pl=>pl.offRoster?`<span class="tag resv" title="Has synced stats but is no longer on the roster">OFF ROSTER</span>`
-    :(pl.reserve?`<span class="tag resv" title="Benched — on the roster, left out of tactics">RES</span>`:"");
+  const staleMark=pl=>pl.stale?` <span title="Stats out of date — the last sync couldn't refresh this player" aria-label="stats out of date">⏳</span>`:"";
+  const plTag=pl=>staleMark(pl)+(pl.offRoster?`<span class="tag resv" title="Has synced stats but is no longer on the roster">OFF ROSTER</span>`
+    :(pl.reserve?`<span class="tag resv" title="Benched — on the roster, left out of tactics">RES</span>`:""));
   const toggle=players.map((pl,i)=>`<button class="pl-tab ${i===si?"on":""}${(pl.reserve||pl.offRoster)?" bench":""}" data-plsel="${i}"><span class="pl-tab-av">${esc((pl.label||pl.handle||"?").slice(0,2).toUpperCase())}</span>${esc(pl.label||pl.handle)}${meTag(pl.label)}${plTag(pl)}</button>`).join("");
   const updated=STATS_DATA?STATS_DATA.updated:null;
   let body;
@@ -60042,7 +60057,7 @@ function renderPlayersTab(root){
     const plToggle=PLAYLISTS.map(pl=>`<button class="pl-seg ${pl.id===UI.players.playlist?"on":""}" data-plpl="${pl.id}">${esc(pl.label)}</button>`).join("");
     const seasonOpts=[["all","Last 4 seasons"],...seasonsFor(p).map(s=>[String(s),seasonLabel(s)])];
     const seToggle=seasonOpts.map(([v,lab])=>`<button class="pl-seg ${String(UI.players.season)===v?"on":""}" data-plseason="${esc(v)}">${esc(lab)}</button>`).join("");
-    body=`<div class="pl-seg-row">${plToggle}</div>
+    body=`${staleBannerHTML(p)}<div class="pl-seg-row">${plToggle}</div>
       <div class="pl-seg-row season">${seToggle}</div>
       ${rankBadgeHTML(p)}
       ${boardGridHTML(p)}
@@ -60065,7 +60080,7 @@ function renderPlayersTab(root){
   root.innerHTML=`<div class="toolbar"><div class="section-title" style="margin:0">Players <span class="muted" style="text-transform:none;letter-spacing:0">· live stats</span></div><div class="grow"></div>${canRefresh?`<button class="btn sm" id="plRefresh" title="Re-read latest synced stats">↻ Refresh</button>`:""}</div>
     ${keyBanner()}
     <div class="pl-tabs">${toggle}</div>
-    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")}${p?meTag(p.label):""}${p?iglTag(p.label):""}${p&&p.reserve?`<span class="tag resv">RESERVE</span>`:""}${p&&p.offRoster?`<span class="tag resv">OFF ROSTER</span>`:""} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":"updated "+agoText(updated)}</span></div>
+    <div class="panel"><div class="panel-h"><h3>${esc(p?(p.label||p.handle):"—")}${p?meTag(p.label):""}${p?iglTag(p.label):""}${p&&p.reserve?`<span class="tag resv">RESERVE</span>`:""}${p&&p.offRoster?`<span class="tag resv">OFF ROSTER</span>`:""} <span class="muted small" style="font-weight:500">${p&&p.handle?esc("@"+p.handle+" · "+(p.platform||"uplay")):(p&&(p.unlinked||!p.handle)?"not linked":"")}</span></h3><span class="muted small">${p&&(p.unlinked||!p.handle)?"":(p&&p.stale?(p.fetchedAt?"⏳ stats from "+agoText(p.fetchedAt):"⏳ out of date"):"updated "+agoText((p&&p.fetchedAt)||updated))}</span></div>
       <div class="panel-b">${body}</div></div>
     <div class="muted small" style="margin-top:10px;line-height:1.5">This list follows the <b>Roster</b> tab — add, rename or bench someone there and they update here too. Auto-syncs daily via GitHub Actions (the API key stays a server-side repo secret); link a player's Ubisoft account in <span class="mono">scripts/players.config.json</span>.</div>`;
   root.querySelectorAll("[data-plsel]").forEach(b=>b.onclick=()=>{ const pl=players[+b.dataset.plsel]; UI.players.sel=pl?pl.key:""; UI.players.touched=true; UI.players.allOps=false; renderPlayersTab(root); });
@@ -61056,7 +61071,7 @@ boot();
    pattern-matches `const APP_BUILD = N;` here, so don't rename it without redeploying that
    worker (cloudflare/publish-worker.js) in the same change. When a newer one is live, a
    banner offers Update → reload (localStorage data kept). */
-const APP_BUILD = 90;
+const APP_BUILD = 91;
 let SYNCED_BUILD = APP_BUILD;   // highest build this device is known to be in sync with (raised on its own publishes) — drives the publish clobber-guard
 async function liveBuild(){ try{ const r=await fetch("version.json?_="+Date.now(),{cache:"no-store"}); if(r.ok){ const j=await r.json(); if(j&&typeof j.build==="number") return j.build; } }catch(_){} return null; }
 function r6ShowUpdate(){
