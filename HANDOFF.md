@@ -855,7 +855,17 @@ and nothing said so. Four separate causes, all fixed:
    give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
    pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
    **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
-   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+   is only called when the plan name isn't known yet.
+   **⚠️ First version regressed (17 Nov, fixed same day).** It capped `Retry-After` at 90s and kept retrying — but R6
+   also has **per-hour/per-day windows by endpoint**, and once `/operators`' longer window was spent it answered 429
+   with a Retry-After beyond 90s every time. JP Korte's operator calls waited 9 × 90s and the job hit its 15-min cap,
+   cancelled with **nothing written**; the alarm then logged it "healthy" because it read the previous run's file.
+   Fixed: a Retry-After > 60s (or a third 429) marks that endpoint **spent for the run** (`EXHAUSTED`) — no more calls
+   to it, last-good data carried forward; every wait checks a 9-min `RUN_DEADLINE`, so the script always finishes
+   and writes; `REFRESH_SEASONS` 2 → 1 cuts `/operators` from ~42 to ~24 calls a run, which is the real reason the
+   sixth player was always the one starved; and the alarm now reads `steps.fetch.outcome`, so a cancelled or crashed
+   fetch opens an issue with the run link instead of passing as healthy. Tested: 10/10 retry cases, and the real
+   script against a fake arenyze that 429s `/operators` with Retry-After 3600 mid-run finishes in 53s.
 3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
    doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
    Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
@@ -1069,7 +1079,17 @@ and nothing said so. Four separate causes, all fixed:
    give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
    pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
    **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
-   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+   is only called when the plan name isn't known yet.
+   **⚠️ First version regressed (17 Nov, fixed same day).** It capped `Retry-After` at 90s and kept retrying — but R6
+   also has **per-hour/per-day windows by endpoint**, and once `/operators`' longer window was spent it answered 429
+   with a Retry-After beyond 90s every time. JP Korte's operator calls waited 9 × 90s and the job hit its 15-min cap,
+   cancelled with **nothing written**; the alarm then logged it "healthy" because it read the previous run's file.
+   Fixed: a Retry-After > 60s (or a third 429) marks that endpoint **spent for the run** (`EXHAUSTED`) — no more calls
+   to it, last-good data carried forward; every wait checks a 9-min `RUN_DEADLINE`, so the script always finishes
+   and writes; `REFRESH_SEASONS` 2 → 1 cuts `/operators` from ~42 to ~24 calls a run, which is the real reason the
+   sixth player was always the one starved; and the alarm now reads `steps.fetch.outcome`, so a cancelled or crashed
+   fetch opens an issue with the run link instead of passing as healthy. Tested: 10/10 retry cases, and the real
+   script against a fake arenyze that 429s `/operators` with Retry-After 3600 mid-run finishes in 53s.
 3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
    doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
    Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
@@ -1289,7 +1309,17 @@ and nothing said so. Four separate causes, all fixed:
    give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
    pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
    **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
-   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+   is only called when the plan name isn't known yet.
+   **⚠️ First version regressed (17 Nov, fixed same day).** It capped `Retry-After` at 90s and kept retrying — but R6
+   also has **per-hour/per-day windows by endpoint**, and once `/operators`' longer window was spent it answered 429
+   with a Retry-After beyond 90s every time. JP Korte's operator calls waited 9 × 90s and the job hit its 15-min cap,
+   cancelled with **nothing written**; the alarm then logged it "healthy" because it read the previous run's file.
+   Fixed: a Retry-After > 60s (or a third 429) marks that endpoint **spent for the run** (`EXHAUSTED`) — no more calls
+   to it, last-good data carried forward; every wait checks a 9-min `RUN_DEADLINE`, so the script always finishes
+   and writes; `REFRESH_SEASONS` 2 → 1 cuts `/operators` from ~42 to ~24 calls a run, which is the real reason the
+   sixth player was always the one starved; and the alarm now reads `steps.fetch.outcome`, so a cancelled or crashed
+   fetch opens an issue with the run link instead of passing as healthy. Tested: 10/10 retry cases, and the real
+   script against a fake arenyze that 429s `/operators` with Retry-After 3600 mid-run finishes in 53s.
 3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
    doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
    Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
@@ -1539,7 +1569,17 @@ and nothing said so. Four separate causes, all fixed:
    give up (JP Korte, fetched last, was stale 27/50). Now: honours `Retry-After` (capped 90s; 30s/60s without one),
    pauses 61s when `remaining` hits 0, retries 502/503 at 10s+30s, never retries 404. Quota now comes from the
    **headers** (free) instead of `/me/usage`, which was itself rate-limited ~3 runs in 4 (quota read null); `/me/usage`
-   is only called when the plan name isn't known yet. Tested against a fake arenyze: 9/9 cases.
+   is only called when the plan name isn't known yet.
+   **⚠️ First version regressed (17 Nov, fixed same day).** It capped `Retry-After` at 90s and kept retrying — but R6
+   also has **per-hour/per-day windows by endpoint**, and once `/operators`' longer window was spent it answered 429
+   with a Retry-After beyond 90s every time. JP Korte's operator calls waited 9 × 90s and the job hit its 15-min cap,
+   cancelled with **nothing written**; the alarm then logged it "healthy" because it read the previous run's file.
+   Fixed: a Retry-After > 60s (or a third 429) marks that endpoint **spent for the run** (`EXHAUSTED`) — no more calls
+   to it, last-good data carried forward; every wait checks a 9-min `RUN_DEADLINE`, so the script always finishes
+   and writes; `REFRESH_SEASONS` 2 → 1 cuts `/operators` from ~42 to ~24 calls a run, which is the real reason the
+   sixth player was always the one starved; and the alarm now reads `steps.fetch.outcome`, so a cancelled or crashed
+   fetch opens an issue with the run link instead of passing as healthy. Tested: 10/10 retry cases, and the real
+   script against a fake arenyze that 429s `/operators` with Retry-After 3600 mid-run finishes in 53s.
 3. **Two syncs a day.** The GitHub `schedule:` "dormant backup" (§14 said it never fired) **was firing daily ~5h late**,
    doubling quota use (~88 calls/day vs a free tier now **2,000/month**, down from 3,000; ran dry 31 Oct). Removed — the
    Cloudflare cron `repository_dispatch` at 14:23 UTC is the only automatic trigger. Leave a few minutes between
