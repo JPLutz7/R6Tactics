@@ -35,6 +35,7 @@ jobs:
         with:
           node-version: "20"
       - name: Fetch ranked stats
+        id: fetch
         env:
           R6DATA_API_KEY: ${{ secrets.R6DATA_API_KEY }}
         run: node scripts/fetch-stats.js
@@ -62,7 +63,20 @@ jobs:
             const fs = require('fs');
             const { decide } = require('./scripts/key-alarm-decide.js');
             const d = JSON.parse(fs.readFileSync('players.json', 'utf8'));
-            const r = decide(d);
+            let r = decide(d);
+            // players.json alone can't tell a healthy run from one that never finished: if the fetch
+            // step was killed or crashed, the file on disk is the PREVIOUS run's and reads "ok". That's
+            // exactly how the 17 Nov run, cancelled at the 15-min cap, got logged as "healthy".
+            const fetchOutcome = '${{ steps.fetch.outcome }}';
+            if (fetchOutcome !== 'success') {
+              const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+              r = { state: 'bad',
+                title: `🚨 Players stats sync did not finish (fetch step: ${fetchOutcome})`,
+                body: [`**The stats sync stopped before writing players.json** (fetch step: \`${fetchOutcome}\`), so the Players tab still shows the previous run's numbers.`,
+                  '', `Run log: ${runUrl}`, '',
+                  '`cancelled` usually means the 15-minute job timeout; `failure` means scripts/fetch-stats.js crashed. The log shows which call it was stuck on.',
+                  '', '_Auto-opened by the stats workflow; it closes itself after the next healthy run._', 'cc @JPLutz7'].join('\n') };
+            }
             const repo = { owner: context.repo.owner, repo: context.repo.repo };
             const label = 'r6data-key';
             const open = await github.rest.issues.listForRepo({ ...repo, state: 'open', labels: label });

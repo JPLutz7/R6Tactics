@@ -37,13 +37,26 @@ const REQ_TIMEOUT_MS = 45000;
    27 of 50 syncs, and it rate-limited every player on a run started two minutes after another. */
 const LIMITS = { remaining: null, quotaUsed: null, quotaLimit: null };
 const hdrNum = (r, h) => { const v = r.headers.get(h); const n = v == null ? NaN : Number(v); return Number.isFinite(n) ? n : null; };
-const RL_WAIT_MAX_S = 90;          // never trust a Retry-After longer than this (job has a 15-min cap)
+/* Waiting only helps a PER-MINUTE limit. R6 also keeps per-hour and per-day windows by endpoint,
+   and when one of those is spent arenyze answers 429 with a Retry-After far beyond a minute.
+   The first version of this capped that at 90s and kept retrying: on 17 Nov /operators said
+   "retry after >90s" nine times running for JP Korte, and the job hit its 15-min cap and was
+   cancelled with nothing written. So: a Retry-After over RL_WAIT_MAX_S means "this endpoint is
+   done for this run" — stop calling it (the caller carries forward last-good data) instead of
+   waiting. And no wait may run past RUN_DEADLINE, so the script always finishes and writes
+   players.json well inside the job's 15-minute timeout. */
+const RL_WAIT_MAX_S = 60;
+const RUN_DEADLINE = Date.now() + 9 * 60 * 1000;
+const EXHAUSTED = {};               // endpoint path -> Retry-After seconds, for endpoints spent this run
+const canWait = s => Date.now() + s * 1000 < RUN_DEADLINE;
 async function api(path, params, base) {
   const qs = Object.entries(params || {}).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
   const url = (base || V2) + path + (qs ? "?" + qs : "");
-  for (let attempt = 0; attempt < 4; attempt++) {
+  if (EXHAUSTED[path] != null)
+    return { status: 429, ok: false, error: `Rate limit exceeded (${path} spent for this run)`, exhausted: true };
+  for (let attempt = 0; attempt < 3; attempt++) {
     // pace proactively: if the last response said this minute is used up, wait it out first
-    if (LIMITS.remaining === 0) { console.log(`      (per-minute limit used up — pausing 61s)`); await sleep(61000); LIMITS.remaining = null; }
+    if (LIMITS.remaining === 0 && canWait(61)) { console.log(`      (per-minute limit used up — pausing 61s)`); await sleep(61000); LIMITS.remaining = null; }
     let r, text;
     try {
       r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" }, signal: AbortSignal.timeout(REQ_TIMEOUT_MS) });
@@ -51,30 +64,39 @@ async function api(path, params, base) {
     } catch (e) {
       const timedOut = e && (e.name === "TimeoutError" || e.name === "AbortError");
       const why = timedOut ? `timed out after ${REQ_TIMEOUT_MS / 1000}s` : String((e && e.message) || e);
-      if (attempt < 3) { console.log(`      (${path}: ${why} — retry ${attempt + 1}/3)`); await sleep(1000 * Math.pow(2, attempt)); continue; }
+      if (attempt < 2 && canWait(2)) { console.log(`      (${path}: ${why} — retry ${attempt + 1}/2)`); await sleep(1000 * Math.pow(2, attempt)); continue; }
       return { status: 0, ok: false, error: why };
     }
     const rem = hdrNum(r, "x-ratelimit-remaining"); if (rem != null) LIMITS.remaining = rem;
     const qu = hdrNum(r, "x-quota-used"), ql = hdrNum(r, "x-quota-limit");
     if (qu != null) LIMITS.quotaUsed = Math.max(LIMITS.quotaUsed || 0, qu);
     if (ql != null) LIMITS.quotaLimit = ql;
-    if (r.status === 429 && attempt < 3) {
-      const ra = hdrNum(r, "retry-after");
-      const wait = Math.min(RL_WAIT_MAX_S, ra != null && ra > 0 ? ra + 1 : 30 * (attempt + 1));
-      console.log(`      (${path}: rate-limited — waiting ${wait}s${ra != null ? " (Retry-After)" : ""}, retry ${attempt + 1}/3)`);
+    if (r.status === 429) {
+      const ra = hdrNum(r, "retry-after"), lim = hdrNum(r, "x-ratelimit-limit");
+      const wait = ra != null && ra > 0 ? ra + 1 : 30;
+      // a long window (hour/day), out of retries, or no time left → give this endpoint up for the run
+      if (wait > RL_WAIT_MAX_S || attempt >= 2 || !canWait(wait)) {
+        EXHAUSTED[path] = ra;
+        console.log(`      (${path}: rate-limited, Retry-After ${ra == null ? "absent" : ra + "s"}${lim != null ? ", limit " + lim : ""} — no more ${path} calls this run)`);
+        break;
+      }
+      console.log(`      (${path}: rate-limited — waiting ${wait}s${ra != null ? " (Retry-After)" : ""}, retry ${attempt + 1}/2)`);
       await sleep(wait * 1000); LIMITS.remaining = null; continue;
     }
     // 502/503 = arenyze's upstream (the tracker or Ubisoft) is briefly down: its docs say retry later.
     // Two spaced retries; a 404 PLAYER_NOT_FOUND is NOT retried — per the docs it won't change.
     if ((r.status === 502 || r.status === 503) && attempt < 2) {
       const wait = attempt === 0 ? 10 : 30;
-      console.log(`      (${path}: upstream unavailable (${r.status}) — waiting ${wait}s, retry ${attempt + 1}/2)`);
-      await sleep(wait * 1000); continue;
+      if (canWait(wait)) {
+        console.log(`      (${path}: upstream unavailable (${r.status}) — waiting ${wait}s, retry ${attempt + 1}/2)`);
+        await sleep(wait * 1000); continue;
+      }
     }
     let json = null; try { json = JSON.parse(text); } catch (_) {}
     const msg = json && (json.error || json.message);
     return { status: r.status, ok: r.ok, json, error: r.ok ? null : (msg || ("HTTP " + r.status)), text: json ? undefined : String(text).slice(0, 300) };
   }
+  return { status: 429, ok: false, error: "Rate limit exceeded", exhausted: true };   // reached only via the 429 give-up above
 }
 /* one /profile call replaces v1's stats + fullStats + seasonalStats:
    .seasons -> {data:{segments}} (same shape flattenSegments wants)
@@ -124,8 +146,12 @@ const MODES = [{ v2: "ranked", pl: "ranked" }, { v2: "standard", pl: "unranked" 
 const seasonYearStr = n => "Y" + Math.ceil(n / 4) + "S" + (((n - 1) % 4) + 1);
 /* Completed seasons are frozen, so only the newest few are re-fetched each run and the rest
    are carried forward — per-season operators used to come from a free unauthenticated
-   endpoint, but on v2 they count against the key's monthly quota. */
-const REFRESH_SEASONS = 2;
+   endpoint, but on v2 they count against the key's monthly quota.
+   1, not 2: refreshing the previous (finished) season too made ~7 /operators calls per player,
+   ~42 a run — enough to exhaust /operators' longer rate window by the sixth player, which is
+   why JP Korte, fetched last, was the one perpetually stale. The current season only is 4 calls
+   a player (~24 a run); a finished season can't change, and its scopes are carried forward. */
+const REFRESH_SEASONS = 1;
 async function fetchSeasonOps(handle, platform, seasonYear, mode) {
   const r = await api("/operators", { nameOnPlatform: handle, platformType: platform, seasonYear, modes: mode });
   if (!r.ok || !r.json) return null;
