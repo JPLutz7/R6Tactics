@@ -29,10 +29,21 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    covering a cold-cache profile lookup, which is the slow case (a first-ever lookup made the
    2026-09-14 run take 4m26s across ~50 calls). Timeouts retry like any other network error. */
 const REQ_TIMEOUT_MS = 45000;
+/* Rate limiting, driven by the numbers arenyze sends on EVERY response (docs.arenyze.com/limits):
+   X-RateLimit-Remaining = calls left this minute, Retry-After = seconds to wait on a 429,
+   X-Quota-Used / X-Quota-Limit = this month's usage. The old code ignored all of these and
+   retried a 429 after 1.5s/3s/6s, i.e. still inside the same minute — so it just gave up.
+   Over 22 Oct–16 Nov that left JP Korte (fetched last, when the window is most spent) stale in
+   27 of 50 syncs, and it rate-limited every player on a run started two minutes after another. */
+const LIMITS = { remaining: null, quotaUsed: null, quotaLimit: null };
+const hdrNum = (r, h) => { const v = r.headers.get(h); const n = v == null ? NaN : Number(v); return Number.isFinite(n) ? n : null; };
+const RL_WAIT_MAX_S = 90;          // never trust a Retry-After longer than this (job has a 15-min cap)
 async function api(path, params, base) {
   const qs = Object.entries(params || {}).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
   const url = (base || V2) + path + (qs ? "?" + qs : "");
   for (let attempt = 0; attempt < 4; attempt++) {
+    // pace proactively: if the last response said this minute is used up, wait it out first
+    if (LIMITS.remaining === 0) { console.log(`      (per-minute limit used up — pausing 61s)`); await sleep(61000); LIMITS.remaining = null; }
     let r, text;
     try {
       r = await fetch(url, { headers: { "api-key": KEY, "Accept": "application/json" }, signal: AbortSignal.timeout(REQ_TIMEOUT_MS) });
@@ -43,7 +54,23 @@ async function api(path, params, base) {
       if (attempt < 3) { console.log(`      (${path}: ${why} — retry ${attempt + 1}/3)`); await sleep(1000 * Math.pow(2, attempt)); continue; }
       return { status: 0, ok: false, error: why };
     }
-    if (r.status === 429 && attempt < 3) { await sleep(1500 * Math.pow(2, attempt)); continue; }   // backoff on rate limit
+    const rem = hdrNum(r, "x-ratelimit-remaining"); if (rem != null) LIMITS.remaining = rem;
+    const qu = hdrNum(r, "x-quota-used"), ql = hdrNum(r, "x-quota-limit");
+    if (qu != null) LIMITS.quotaUsed = Math.max(LIMITS.quotaUsed || 0, qu);
+    if (ql != null) LIMITS.quotaLimit = ql;
+    if (r.status === 429 && attempt < 3) {
+      const ra = hdrNum(r, "retry-after");
+      const wait = Math.min(RL_WAIT_MAX_S, ra != null && ra > 0 ? ra + 1 : 30 * (attempt + 1));
+      console.log(`      (${path}: rate-limited — waiting ${wait}s${ra != null ? " (Retry-After)" : ""}, retry ${attempt + 1}/3)`);
+      await sleep(wait * 1000); LIMITS.remaining = null; continue;
+    }
+    // 502/503 = arenyze's upstream (the tracker or Ubisoft) is briefly down: its docs say retry later.
+    // Two spaced retries; a 404 PLAYER_NOT_FOUND is NOT retried — per the docs it won't change.
+    if ((r.status === 502 || r.status === 503) && attempt < 2) {
+      const wait = attempt === 0 ? 10 : 30;
+      console.log(`      (${path}: upstream unavailable (${r.status}) — waiting ${wait}s, retry ${attempt + 1}/2)`);
+      await sleep(wait * 1000); continue;
+    }
     let json = null; try { json = JSON.parse(text); } catch (_) {}
     const msg = json && (json.error || json.message);
     return { status: r.status, ok: r.ok, json, error: r.ok ? null : (msg || ("HTTP " + r.status)), text: json ? undefined : String(text).slice(0, 300) };
@@ -192,21 +219,44 @@ function isAuthFail(p) {
     const r = await fetchPlayer(p, prevOf(p.key));
     if (!r.ok) {
       const old = prevOf(p.key);
-      // preserve last-good data, but mark THIS run as failed so the health check isn't fooled by old ok:true
-      if (old) { console.log(`FAILED (${r.error}) — kept previous good data`); players.push({ ...old, stale: true, staleReason: r.error, fetchFailed: true, lastStatus: r.status }); await sleep(600); continue; }
+      // Preserve last-good data, but mark THIS run as failed so the health check isn't fooled by old ok:true.
+      // Identity fields come from the CONFIG, not the old record: otherwise a renamed player (JPLutz7 ->
+      // JPOstra7) kept showing the old name on their card for as long as the new one kept failing.
+      // fetchedAt is carried over untouched, so the app can say how old the preserved numbers really are.
+      if (old) {
+        console.log(`FAILED (${r.error}) — kept previous good data${old.fetchedAt ? " from " + old.fetchedAt.slice(0, 10) : ""}`);
+        players.push({ ...old, key: p.key, label: p.label, handle: p.handle, platform: p.platform || "uplay",
+          stale: true, staleReason: r.error, fetchFailed: true, lastStatus: r.status, fetchedAt: old.fetchedAt || null });
+        await sleep(600); continue;
+      }
     }
     console.log(r.ok ? "ok" : `FAILED: ${r.error}`);
+    if (r.ok) r.fetchedAt = new Date().toISOString();   // when THIS player's numbers were last actually refreshed
     players.push(r);
     await sleep(600);   // be gentle with the rate limit between players
   }
   // real quota/plan straight from the API, instead of a hand-maintained expiry date that
   // drifted out of sync last time (config said Sep 8 while the key actually died Jul 11)
+  // Prefer the X-Quota-* headers every response already carried: free, and immune to the
+  // /me/usage call that was itself rate-limited on most runs (quota read null ~3 runs in 4).
+  // /me/usage is now only a fallback, and the plan name is carried over from the last run.
   let quota = null;
-  const u = await api("", null, USAGE_URL);
-  if (u.ok && u.json) {
-    quota = { plan: u.json.plan || null, limit: u.json.limit || null, used: (u.json.usage && u.json.usage.total_calls) || null, checked: new Date().toISOString() };
-    console.log(`Quota: ${quota.used}/${quota.limit} calls this month (plan ${quota.plan})`);
-  } else console.log(`Quota check failed: ${u.error || u.status}`);
+  let prevQuota = null;
+  try { prevQuota = JSON.parse(fs.readFileSync(path.join(root, "players.json"), "utf8")).quota || null; } catch (_) {}
+  const knownPlan = (prevQuota && prevQuota.plan) || null;
+  if (LIMITS.quotaUsed != null && LIMITS.quotaLimit != null)
+    quota = { plan: knownPlan, limit: LIMITS.quotaLimit, used: LIMITS.quotaUsed, checked: new Date().toISOString(), via: "headers" };
+  // The headers carry usage but not the plan NAME, so ask /me/usage only when we don't know it yet
+  // (or when the headers were missing) — one extra call now and then, not every run.
+  if (!quota || !quota.plan) {
+    const u = await api("", null, USAGE_URL);
+    if (u.ok && u.json) {
+      const viaUsage = { plan: u.json.plan || null, limit: u.json.limit || null, used: (u.json.usage && u.json.usage.total_calls) || null, checked: new Date().toISOString(), via: "me/usage" };
+      quota = quota ? { ...quota, plan: viaUsage.plan } : viaUsage;
+    }
+  }
+  if (quota) console.log(`Quota: ${quota.used}/${quota.limit} calls this month${quota.plan ? " (plan " + quota.plan + ")" : ""} [${quota.via}]`);
+  else console.log("Quota: unknown this run (no X-Quota headers and /me/usage failed)");
 
   /* Health. Judged on THIS run: "invalid" when every linked player auth-fails (key rejected),
      "down" when they all fail for some other reason (e.g. the API being removed — the case the
