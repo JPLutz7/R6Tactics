@@ -9301,7 +9301,7 @@
       "staleReason": "Rate limit exceeded (/profile spent for this run)",
       "fetchFailed": true,
       "lastStatus": 429,
-      "fetchedAt": null
+      "fetchedAt": "2026-11-16T23:28:19.956Z"
     },
     {
       "key": "snell",
@@ -14476,7 +14476,7 @@
       "staleReason": "Rate limit exceeded (/profile spent for this run)",
       "fetchFailed": true,
       "lastStatus": 429,
-      "fetchedAt": null
+      "fetchedAt": "2026-11-16T23:28:19.956Z"
     },
     {
       "key": "dennis",
@@ -16668,7 +16668,7 @@
       "staleReason": "Rate limit exceeded (/profile spent for this run)",
       "fetchFailed": true,
       "lastStatus": 429,
-      "fetchedAt": null
+      "fetchedAt": "2026-11-16T23:28:19.956Z"
     },
     {
       "key": "pedro-tembra",
@@ -19324,7 +19324,7 @@
       "staleReason": "Rate limit exceeded (/profile spent for this run)",
       "fetchFailed": true,
       "lastStatus": 429,
-      "fetchedAt": null
+      "fetchedAt": "2026-11-16T23:28:19.956Z"
     },
     {
       "key": "jp-korte",
@@ -22511,7 +22511,7 @@
       "staleReason": "Rate limit exceeded (/profile spent for this run)",
       "fetchFailed": true,
       "lastStatus": 429,
-      "fetchedAt": null
+      "fetchedAt": "2026-11-16T23:28:19.956Z"
     }
   ]
 }
