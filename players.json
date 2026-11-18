@@ -1,10 +1,16 @@
 {
-  "updated": "2026-11-17T14:50:23.578Z",
+  "updated": "2026-11-18T14:26:01.447Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
-  "keyStatus": "down",
-  "quota": null,
-  "syncError": "Rate limit exceeded",
+  "keyStatus": "ok",
+  "quota": {
+    "plan": "free",
+    "limit": 2000,
+    "used": 1326,
+    "checked": "2026-11-18T14:26:01.446Z",
+    "via": "me/usage"
+  },
+  "syncError": null,
   "players": [
     {
       "key": "joao",
@@ -5105,9 +5111,9 @@
         ]
       },
       "stale": true,
-      "staleReason": "Rate limit exceeded",
+      "staleReason": "Service temporarily unavailable",
       "fetchFailed": true,
-      "lastStatus": 429,
+      "lastStatus": 503,
       "fetchedAt": "2026-11-13T20:57:27.694Z"
     },
     {
@@ -9297,11 +9303,7 @@
           }
         ]
       },
-      "stale": true,
-      "staleReason": "Rate limit exceeded (/profile spent for this run)",
-      "fetchFailed": true,
-      "lastStatus": 429,
-      "fetchedAt": "2026-11-16T23:28:19.956Z"
+      "fetchedAt": "2026-11-18T14:25:41.886Z"
     },
     {
       "key": "snell",
@@ -14472,11 +14474,7 @@
           }
         ]
       },
-      "stale": true,
-      "staleReason": "Rate limit exceeded (/profile spent for this run)",
-      "fetchFailed": true,
-      "lastStatus": 429,
-      "fetchedAt": "2026-11-16T23:28:19.956Z"
+      "fetchedAt": "2026-11-18T14:25:45.929Z"
     },
     {
       "key": "dennis",
@@ -16664,11 +16662,7 @@
           }
         ]
       },
-      "stale": true,
-      "staleReason": "Rate limit exceeded (/profile spent for this run)",
-      "fetchFailed": true,
-      "lastStatus": 429,
-      "fetchedAt": "2026-11-16T23:28:19.956Z"
+      "fetchedAt": "2026-11-18T14:25:50.013Z"
     },
     {
       "key": "pedro-tembra",
@@ -19320,11 +19314,7 @@
           }
         ]
       },
-      "stale": true,
-      "staleReason": "Rate limit exceeded (/profile spent for this run)",
-      "fetchFailed": true,
-      "lastStatus": 429,
-      "fetchedAt": "2026-11-16T23:28:19.956Z"
+      "fetchedAt": "2026-11-18T14:25:53.465Z"
     },
     {
       "key": "jp-korte",
@@ -19710,112 +19700,6 @@
         38
       ],
       "ops": {
-        "quickmatch|38": [
-          {
-            "op": "Valkyrie",
-            "side": "Defender",
-            "rp": 7,
-            "wp": 42.86,
-            "kd": 0.33,
-            "hs": 100,
-            "hsc": 2,
-            "w": 3,
-            "l": 4,
-            "k": 2,
-            "d": 6
-          },
-          {
-            "op": "Dokkaebi",
-            "side": "Attacker",
-            "rp": 6,
-            "wp": 16.67,
-            "kd": 0.6,
-            "hs": 100,
-            "hsc": 3,
-            "w": 1,
-            "l": 5,
-            "k": 3,
-            "d": 5
-          },
-          {
-            "op": "Bandit",
-            "side": "Defender",
-            "rp": 4,
-            "wp": 50,
-            "kd": 2,
-            "hs": 50,
-            "hsc": 2,
-            "w": 2,
-            "l": 2,
-            "k": 4,
-            "d": 2
-          },
-          {
-            "op": "Buck",
-            "side": "Attacker",
-            "rp": 3,
-            "wp": 33.33,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 2,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Zofia",
-            "side": "Attacker",
-            "rp": 2,
-            "wp": 50,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Blackbeard",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Caveira",
-            "side": "Defender",
-            "rp": 1,
-            "wp": 0,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 0,
-            "l": 1,
-            "k": 0,
-            "d": 1
-          },
-          {
-            "op": "Thermite",
-            "side": "Attacker",
-            "rp": 1,
-            "wp": 100,
-            "kd": 0,
-            "hs": 0,
-            "hsc": 0,
-            "w": 1,
-            "l": 0,
-            "k": 0,
-            "d": 1
-          }
-        ],
         "all|all": [
           {
             "op": "Mozzie",
@@ -22505,13 +22389,115 @@
             "k": 3,
             "d": 1
           }
+        ],
+        "quickmatch|38": [
+          {
+            "op": "Valkyrie",
+            "side": "Defender",
+            "rp": 7,
+            "wp": 42.86,
+            "kd": 0.33,
+            "hs": 100,
+            "hsc": 2,
+            "w": 3,
+            "l": 4,
+            "k": 2,
+            "d": 6
+          },
+          {
+            "op": "Dokkaebi",
+            "side": "Attacker",
+            "rp": 6,
+            "wp": 16.67,
+            "kd": 0.6,
+            "hs": 100,
+            "hsc": 3,
+            "w": 1,
+            "l": 5,
+            "k": 3,
+            "d": 5
+          },
+          {
+            "op": "Bandit",
+            "side": "Defender",
+            "rp": 4,
+            "wp": 50,
+            "kd": 2,
+            "hs": 50,
+            "hsc": 2,
+            "w": 2,
+            "l": 2,
+            "k": 4,
+            "d": 2
+          },
+          {
+            "op": "Buck",
+            "side": "Attacker",
+            "rp": 3,
+            "wp": 33.33,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 2,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Zofia",
+            "side": "Attacker",
+            "rp": 2,
+            "wp": 50,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Blackbeard",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Caveira",
+            "side": "Defender",
+            "rp": 1,
+            "wp": 0,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 0,
+            "l": 1,
+            "k": 0,
+            "d": 1
+          },
+          {
+            "op": "Thermite",
+            "side": "Attacker",
+            "rp": 1,
+            "wp": 100,
+            "kd": 0,
+            "hs": 0,
+            "hsc": 0,
+            "w": 1,
+            "l": 0,
+            "k": 0,
+            "d": 1
+          }
         ]
       },
-      "stale": true,
-      "staleReason": "Rate limit exceeded (/profile spent for this run)",
-      "fetchFailed": true,
-      "lastStatus": 429,
-      "fetchedAt": "2026-11-16T23:28:19.956Z"
+      "fetchedAt": "2026-11-18T14:25:57.484Z"
     }
   ]
 }
