@@ -1,9 +1,15 @@
 {
-  "updated": "2026-11-22T14:23:56.539Z",
+  "updated": "2026-11-23T14:25:02.173Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": null,
+  "quota": {
+    "plan": "free",
+    "limit": 2000,
+    "used": 1521,
+    "checked": "2026-11-23T14:25:02.173Z",
+    "via": "me/usage"
+  },
   "syncError": null,
   "players": [
     {
@@ -9297,7 +9303,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-22T14:23:43.362Z"
+      "fetchedAt": "2026-11-23T14:23:58.125Z"
     },
     {
       "key": "snell",
@@ -14468,7 +14474,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-22T14:23:46.630Z"
+      "fetchedAt": "2026-11-23T14:24:17.481Z"
     },
     {
       "key": "dennis",
@@ -16656,7 +16662,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-22T14:23:49.679Z"
+      "fetchedAt": "2026-11-23T14:24:32.344Z"
     },
     {
       "key": "pedro-tembra",
@@ -19308,7 +19314,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-22T14:23:52.589Z"
+      "fetchedAt": "2026-11-23T14:24:40.566Z"
     },
     {
       "key": "jp-korte",
@@ -22491,7 +22497,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-22T14:23:55.849Z"
+      "fetchedAt": "2026-11-23T14:24:49.863Z"
     }
   ]
 }
