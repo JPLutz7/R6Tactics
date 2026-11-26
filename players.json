@@ -1,9 +1,15 @@
 {
-  "updated": "2026-11-25T14:23:49.663Z",
+  "updated": "2026-11-26T14:26:01.415Z",
   "source": "arenyze.com (r6 v2)",
   "keyExpires": null,
   "keyStatus": "ok",
-  "quota": null,
+  "quota": {
+    "plan": "free",
+    "limit": 2000,
+    "used": 1638,
+    "checked": "2026-11-26T14:26:01.415Z",
+    "via": "me/usage"
+  },
   "syncError": null,
   "players": [
     {
@@ -5105,9 +5111,9 @@
         ]
       },
       "stale": true,
-      "staleReason": "Player not found",
+      "staleReason": "Service temporarily unavailable",
       "fetchFailed": true,
-      "lastStatus": 404,
+      "lastStatus": 503,
       "fetchedAt": "2026-11-13T20:57:27.694Z"
     },
     {
@@ -9297,7 +9303,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-25T14:23:34.360Z"
+      "fetchedAt": "2026-11-26T14:25:12.704Z"
     },
     {
       "key": "snell",
@@ -14468,7 +14474,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-25T14:23:38.053Z"
+      "fetchedAt": "2026-11-26T14:25:16.035Z"
     },
     {
       "key": "dennis",
@@ -16656,7 +16662,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-25T14:23:41.519Z"
+      "fetchedAt": "2026-11-26T14:25:19.143Z"
     },
     {
       "key": "pedro-tembra",
@@ -19308,7 +19314,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-25T14:23:45.322Z"
+      "fetchedAt": "2026-11-26T14:25:22.156Z"
     },
     {
       "key": "jp-korte",
@@ -22491,7 +22497,7 @@
           }
         ]
       },
-      "fetchedAt": "2026-11-25T14:23:48.936Z"
+      "fetchedAt": "2026-11-26T14:25:25.473Z"
     }
   ]
 }
